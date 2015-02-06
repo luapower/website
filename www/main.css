@@ -38,8 +38,8 @@ html {
 }
 
 body {
-	font-family: Helvetica;
-	font-size: 14px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
 	line-height: 150%;
 }
 
@@ -148,7 +148,7 @@ button {
 	padding-bottom: 30px;
 }
 
-/* common colors */
+/* common colors ---------------------------------------------------------- */
 
 .topbar {
 	background-color: #333;
@@ -159,6 +159,7 @@ button {
 .topbar a:visited { color: #ccc; }
 .topbar a:hover, .topbar a:visited:hover { color: #ddd; }
 .main { border-bottom-color: #000; }
+html { background-color: #333; }
 .footer { background-color: #333; color: #fff;}
 .footer a { color: #aaa; }
 .footer a:visited { color: #aaa; }
@@ -256,12 +257,16 @@ button {
 .doc dd, .doc dt,
 .doc embed, .doc object {
 	margin-top: 20px;
-	margin-bottom: 10px;
+	margin-bottom: 6px;
+}
+
+.doc h1, .doc h2 {
+	margin-top: 30px;
 }
 
 .doc p {
 	margin-top: 20px;
-	margin-bottom: 10px;
+	margin-bottom: 6px;
 }
 
 .doc h1, .doc h2, .doc h3 {
@@ -275,6 +280,10 @@ button {
 .doc dt {
 	font-style: italic;
 	font-weight: bold;
+}
+
+.doc ul {
+	margin: 0;
 }
 
 .doc ul li {
@@ -311,7 +320,6 @@ button {
 
 .doc pre {
 	padding: 10px;
-
 }
 
 /* don't highlight code in headers and tables */

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}{{^title}}Lua, JIT, Batteries{{/title}} - luapower.com</title>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="/main.css">
 	<link rel="stylesheet" type="text/css" href="/lights{{lights}}.css">
 	<link rel="stylesheet" type="text/css" href="/font-awesome.css">
@@ -40,7 +41,9 @@
 			<table width=960>
 				<tr>
 					<td align=left valign=top>
-						{{>content}}
+						<div style="min-height: 400px">
+							{{>content}}
+						</div>
 					</td>
 				</tr>
 			</table>

@@ -250,16 +250,20 @@ function action.default(s, ...)
 end
 
 function action.status()
-	local status = {}
+	local statuses = {}
 	for platform, server in glue.sortedpairs(servers) do
 		local ip, port = unpack(server)
 		local lp, err = luapower.connect(ip, port, _G.connect)
+		if lp then
+			local s, err1 = pcall(lp.echo, 'hello')
+			if not s then lp, err = nil, err1 end
+		end
 		local t = {}
 		t.platform = platform
 		t.ip = ip
 		t.port = port
 		t.status = lp and 'up', 'down'
-		t.error = err
+		t.error = err and err:match'^.-:.-: (.*)'
 		if lp then
 			t.installed_package_count = glue.count(lp.installed_packages())
 			t.known_package_count = glue.count(lp.known_packages())
@@ -267,9 +271,9 @@ function action.status()
 			t.load_error_count = glue.count(t.load_errors)
 			lp.close()
 		end
-		table.insert(status, t)
+		table.insert(statuses, t)
 	end
-	out(render_main('status.html', {status = status}))
+	out(render_main('status.html', {statuses = statuses}))
 end
 
 function action.load_errors(platform)
