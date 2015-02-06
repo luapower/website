@@ -273,10 +273,6 @@ html { background-color: #333; }
 	letter-spacing: -0.03em;
 }
 
-.doc h1 code, .doc h2 code, .doc h3 code, .doc h4 code {
-	text-transform: none;
-}
-
 .doc dt {
 	font-style: italic;
 	font-weight: bold;
@@ -329,6 +325,7 @@ html { background-color: #333; }
 .doc td code {
 	color: inherit;
 	background-color: inherit;
+	font-weight: normal;
 }
 
 .doc th {
