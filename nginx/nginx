@@ -1,0 +1,41 @@
+#!/bin/sh
+
+OPENRESTY_DIR=/usr/local/openresty
+WWW_DIR=../www
+LUAPOWER_DIR=../..
+
+# ------------------------------------------------------------
+
+cd "$(dirname "$(readlink "$0")")"
+DIR="$PWD"
+
+cd "$DIR"; cd "$WWW_DIR"; WWW_DIR="$PWD"
+cd "$DIR"; cd "$LUAPOWER_DIR"; LUAPOWER_DIR="$PWD"
+cd "$DIR"
+
+[ "$ENV" ] || {
+    [ -f ../env ] || { echo "../env file not found."; exit 1; }
+    ENV=`cat ../env`
+}
+
+[ "$(uname -m)" != x86_64 ] && P=32 || P=64
+[ "${OSTYPE#darwin}" ] && P=osx$P || P=linux$P
+
+WWWL="$WWW_DIR/?.lua"
+LPB="$LUAPOWER_DIR/bin/$P"
+LPBL="$LPB/lua/?.lua"
+LPBB="$LPB/clib/?.so"
+LPL="$LUAPOWER_DIR/?.lua"
+ORL="$OPENRESTY_DIR/lualib/?.lua"
+ORB="$OPENRESTY_DIR/lualib/?.so"
+SYSB="/usr/local/lib"
+
+export LUA_PATH="$WWWL;$LPBL;$LPL;$ORL"
+export LUA_CPATH="$LPBB;$ORB"
+export WWW_DIR="$WWW_DIR"
+export LUAPOWER_DIR="$LUAPOWER_DIR"
+export LD_LIBRARY_PATH="$LPB:$SYSB"
+export OSTYPE="$OSTYPE"
+
+exec "$OPENRESTY_DIR/nginx/sbin/nginx" -p "$DIR" \
+    -c "$DIR/conf/nginx.$ENV.conf" "$@"

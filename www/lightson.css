@@ -1,0 +1,37 @@
+
+body { background-color: #fff; color: #000; }
+
+a { color: #666; }
+a:visited { color: #999; }
+a:hover { color: #000; }
+a[target=_blank] { color: #d00; }
+a[target=_blank]:visited { color: #f66; }
+
+hr { border-top-color: #ccc; }
+
+input { border-color: #ccc; }
+input:hover { border-color: #999; }
+
+button {
+	color: #000;
+	background: #fff;
+	border-color: #ccc;
+}
+button:hover { color: #cc8800; }
+button:disabled {
+	color: #666;
+	background: #ccc;
+	cursor: default;
+}
+button:hover:disabled { color: #666; }
+
+.grep .result.active { border-color: #f00; }
+.grep pre { border-color: #ccc; }
+.grep .line { color: #888; border-color: #ccc; }
+.grep .hl { background-color: #ff0; }
+
+.doc th { border-bottom-color: #666; }
+.doc tr + tr {
+	border-top-color: #ccc;
+	border-bottom-color: #ccc;
+}

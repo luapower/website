@@ -1,0 +1,9 @@
+nginx/*_temp
+nginx/logs/*
+nginx.win/logs/*
+nginx/ssl/
+nginx/conf/secrets.conf
+env
+www/_git
+www/docs/*
+luapower

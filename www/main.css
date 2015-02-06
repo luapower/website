@@ -1,0 +1,392 @@
+
+/* reset ------------------------------------------------------------------ */
+
+html, body, table, tr, td, div, img, hr, button, input, select, textarea {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+h1 {
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+}
+
+input {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+img {
+	display: inline-block;
+}
+
+table {
+	border-spacing: 0;
+   border-collapse: collapse;
+}
+
+tbody, tr, th, td {
+	border: inherit;
+	padding: inherit;
+}
+
+/* metrics ---------------------------------------------------------------- */
+
+html {
+	overflow-y: scroll; /* fixate page width */
+}
+
+body {
+	font-family: Helvetica;
+	font-size: 14px;
+	line-height: 150%;
+}
+
+a {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+hr {
+	border-top-width: 1px;
+	border-top-style: solid;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+pre {
+	line-height: 120%;
+	font-size: 90%;
+	overflow-x: auto;
+	tab-size: 3;
+	white-space: pre-wrap;
+}
+
+input {
+	border: 1px solid;
+	font-size: 90%;
+	height: 27px;
+	padding: .5em;
+}
+
+button {
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+	font-weight: normal;
+	font-size: 14px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+}
+
+.tight { margin: 0; }
+.small { font-size: 90%; }
+
+/* icons ------------------------------------------------------------------ */
+
+@font-face {
+	font-family: Icons;
+	src:url('icons.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"], [class="icon"] {
+	font-family: Icons;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.icon-lua:before { content: "\e600"; }
+.icon-luajit:before { content: "\e601"; }
+.icon-luas:before { content: "\e602"; }
+.icon-linux:before { content: "\e603"; }
+.icon-linux32:before { content: "\e604"; }
+.icon-linux64:before { content: "\e605"; }
+.icon-mingw:before { content: "\e606"; }
+.icon-mingw32:before { content: "\e607"; }
+.icon-mingw64:before { content: "\e608"; }
+.icon-osx:before { content: "\e609"; }
+.icon-osx32:before { content: "\e60a"; }
+.icon-osx64:before { content: "\e60b"; }
+
+/* main template ---------------------------------------------------------- */
+
+.topbar {
+	height: 33px;
+	border-bottom: 1px solid;
+}
+
+.topbar_content {
+	margin-top: 4px;
+}
+
+#lights_btn {
+	text-decoration: none;
+}
+
+.main {
+	padding-top: 30px;
+	padding-bottom: 30px;
+	border-bottom: 1px solid;
+}
+
+.footer {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+/* common colors */
+
+.topbar {
+	background-color: #333;
+	border-bottom-color: #333;
+	box-shadow: 0px 2px 2px #000;
+}
+.topbar a { color: #999; }
+.topbar a:visited { color: #ccc; }
+.topbar a:hover, .topbar a:visited:hover { color: #ddd; }
+.main { border-bottom-color: #000; }
+.footer { background-color: #333; color: #fff;}
+.footer a { color: #aaa; }
+.footer a:visited { color: #aaa; }
+.footer a:hover, .footer a:visited:hover { color: #ddd; }
+
+.gray { color: #999; }
+.gray a, .gray a:visited { color: #ccc; }
+
+/* grep ------------------------------------------------------------------- */
+
+.grep .result {
+	border: 1px solid rgba(0,0,0,0);
+	margin-bottom: 30px;
+}
+
+.grep .result.active {
+	border-width: 1px;
+	border-style: solid;
+}
+
+.grep .more {
+	max-height: 80px;
+	overflow-y: hidden;
+}
+
+.grep .expand {
+	font-size: 90%;
+	text-decoration: underline;
+}
+
+.grep pre {
+	padding: 1em 0;
+	border-width: 1px;
+	border-style: solid;
+}
+
+.grep .line {
+	width: 3em;
+	display: inline-block;
+	padding-right: 6px;
+	margin-right: 10px;
+	border-right-width: 1px;
+	border-right-style: solid;
+	text-align: right;
+}
+
+/* packages --------------------------------------------------------------- */
+
+.selected { background-color: #ff0; }
+.searched { background-color: #0f0; }
+.type-module { color: #00f; }
+.type-script { color: #f0f; }
+.type-doc { color: #080; }
+.type-bin { color: #080; }
+.type-csrc { color: #000; }
+.type-unknown { color: #888; }
+.disabled { color: #ccc; }
+
+/* back-to-top button ----------------------------------------------------- */
+
+.top {
+	display: inline-block;
+	width: 40px;
+	height: 30px;
+	position: fixed;
+	left: 90%;
+	bottom: 20px;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity .3s 0s;
+}
+
+.top:before {
+	font-family: FontAwesome;
+	content: '\f077';
+}
+
+.top.visible {
+	visibility: visible;
+	opacity: .7;
+}
+
+.top:hover {
+	opacity: 1;
+}
+
+.top.visible, .top:hover {
+	transition: opacity 0.3s 0s;
+}
+
+/* document --------------------------------------------------------------- */
+
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
+.doc hr, .doc table, .doc pre, .doc blockquote,
+.doc dd, .doc dt,
+.doc embed, .doc object {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.doc p {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.doc h1, .doc h2, .doc h3 {
+	letter-spacing: -0.03em;
+}
+
+.doc h1 code, .doc h2 code, .doc h3 code, .doc h4 code {
+	text-transform: none;
+}
+
+.doc dt {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.doc ul li {
+	list-style: none;
+	list-style-position: outside;
+	padding-left: 1.5em;
+	overflow: visible;
+   position: relative;
+}
+
+.doc ul li:before {
+	content: "»";
+	position: absolute;
+	left: 0;
+	font-size: 13px;
+}
+
+.doc ol li {
+	list-style: decimal;
+	margin-left: 2em;
+	padding-left: 0em;
+	overflow: visible;
+   position: relative;
+}
+
+.doc ol li:before {
+	content: none;
+}
+
+.doc blockquote {
+	padding-left: 10px;
+	border-left: 1px dotted;
+}
+
+.doc pre {
+	padding: 10px;
+
+}
+
+/* don't highlight code in headers and tables */
+.doc h2 code,
+.doc h3 code,
+.doc h4 code,
+.doc pre code,
+.doc td code {
+	color: inherit;
+	background-color: inherit;
+}
+
+.doc th {
+	font-size: 110%;
+	text-align: left;
+	border-bottom: 1px solid;
+	padding-top: 8px;
+	padding-bottom: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.doc tr + tr {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+
+.doc td {
+	padding: 4px;
+	padding-bottom: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+/* hack: use <strong> in a table means a header */
+.doc td strong {
+	font-size: 16px;
+	margin-top: 6px;
+	display: inline-block;
+}
+
+.doc dt {
+	font-size: 14px;
+	font-style: normal;
+	border-top: 1px solid;
+	padding-top: 20px;
+}
+
+.doc dd {
+	text-indent: 2em;
+}
+
+/* Syntax highlighting */
+
+.doc .sourceCode {}
+
+/*  KeyWordTok */
+.doc .sourceCode .kw {}
+/*  DataTypeTok */
+.doc .sourceCode .dt {}
+/*  DecValTok (decimal value), BaseNTok, FloatTok */
+.doc .sourceCode .dv, .doc .sourceCode .bn, .doc .sourceCode .fl {}
+/*  CharTok */
+.doc .sourceCode .ch {}
+/*  StringTok */
+.doc .sourceCode .st {}
+/*  CommentTok */
+.doc .sourceCode .co {}
+/*  OtherTok */
+.doc .sourceCode .ot {}
+/*  AlertTok */
+.doc .sourceCode .al {}
+/*  FunctionTok */
+.doc .sourceCode .fu {}
+/*  RegionMarkerTok */
+.doc .sourceCode .re {}
+/*  ErrorTok */
+.doc .sourceCode .er {}

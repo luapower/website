@@ -1,0 +1,46 @@
+<div class=grep>
+<table width=100%>
+	<tr>
+		<td valign=top width=160>
+			<table width=100% class=small>
+			{{#results}}
+				<tr>
+					<td><a class=goto>{{file}}</a></td>
+					<td align=right class=gray>{{matchcount}}{{#limited}}&#43;{{/limited}}</td>
+				</tr>
+			{{/results}}
+			</table>
+		</td>
+
+		<td valign=top style="padding-left: 20px">
+		{{#results}}
+			<div class=result file="{{file}}">
+			<table width=100%>
+				<tr>
+					<td><h3><a href="https://github.com/luapower/{{package}}/blob/master/{{file}}" target=_blank>{{file}}</a></h3></td>
+					<td align=right valign=bottom>{{matchcount}}{{#limited}}&#43;{{/limited}} maches</td>
+				</tr>
+				<tr>
+					<td colspan=2>
+						<div class=more>
+						{{#chunks}}
+<pre>
+{{#text}}<span class=line>{{line}}</span>{{#fragments}}{{#hl}}<span class=hl>{{hl}}</span>{{/hl}}{{s}}{{/fragments}}<br>{{/text}}</pre>
+						{{/chunks}}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2 align=right valign=top>
+						<a class=expand>expand...</a>
+					</td>
+				</tr>
+			</table>
+			</div>
+		{{/results}}
+		</div>
+		</td>
+	</tr>
+</table>
+</div>
+<script src="/grep.js"></script>

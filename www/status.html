@@ -1,0 +1,23 @@
+<h1>luapower VMs</h1>
+<table style="padding-right: 20px">
+	<tr>
+		<th align=left>platform</th>
+		<th align=left>host</th>
+		<th align=left>port</th>
+		<th align=left>status</th>
+		<th align=left>packages</th>
+		<th align=left nowrap>load errors</th>
+		<th align=left></th>
+	</tr>
+	{{#status}}
+	<tr>
+		<td>{{platform}}</td>
+		<td>{{ip}}</td>
+		<td>{{port}}</td>
+		<td>{{status}}</td>
+		<td width=1>{{installed_package_count}} / {{known_package_count}}</td>
+		<td width=1>{{load_error_count}}</td>
+		<td>{{error}}</td>
+	</tr>
+	{{/status}}
+</table>

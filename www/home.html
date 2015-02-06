@@ -1,0 +1,25 @@
+<table width=100% class=doc>
+	<tr>
+		<th align=left>Type</th>
+		<th align=left>Package</th>
+		<th align=left>What</th>
+		<th align=left>Version</th>
+		<th align=left>Platforms</th>
+		<th align=left>License</th>
+	</tr>
+	{{#packages}}
+	<tr>
+		<td>{{type}}</td>
+		<td><a href="/{{name}}">{{name}}</a></td>
+		<td>{{tagline}}</td>
+		<td>{{version}}</td>
+		<td>
+			{{#platform_icons}}
+				<span class="icon-{{name}} {{disabled}}"></span>
+			{{/platform_icons}}
+		</td>
+		<td>{{license}}</td>
+	</tr>
+	{{/packages}}
+</table>
+<script src="/home.js"></script>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{{title}}{{^title}}Lua, JIT, Batteries{{/title}} - luapower.com</title>
+	<link rel="stylesheet" type="text/css" href="/main.css">
+	<link rel="stylesheet" type="text/css" href="/lights{{lights}}.css">
+	<link rel="stylesheet" type="text/css" href="/font-awesome.css">
+	<script src="/jquery.js"></script>
+	<script src="/jquery.easing.js"></script>
+	<script src="/jquery.history.js"></script>
+	<script src="/jquery.scrollintoview.js"></script>
+	<script src="/util.js"></script>
+</head>
+<body>
+
+<table width=100%>
+	<tr>
+		<td align=center valign=top class=topbar>
+			<table width=960 class=topbar_content>
+				<tr>
+					<td valign=middle>
+						<h3 class=tight>
+							<a href="/">luapower.com</a>
+							&nbsp;<a id=lights_btn
+								inverse_lights="{{inverse_lights}}"
+								class="fa fa-toggle-{{lights}}"
+								title="lights {{inverse_lights}}"></a>
+						</h3>
+					</td>
+					<td width=20% valign=middle>
+						<input type=text value="{{{search}}}" placeholder="grep" id="grep">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align=center valign=top class=main>
+			<table width=960>
+				<tr>
+					<td align=left valign=top>
+						{{>content}}
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align=center class=footer>
+			<table width=960>
+				<tr>
+					<td><a href="/luapower-git">Luapower with Git</a></td>
+					<td><a href="/get-involved">Getting Involved</a></td>
+					<td><a href="/cosmin">About the Author</a></td>
+				</tr>
+				<tr>
+					<td><a href="/building">Building Binaries</a></td>
+					<td><a href="/problem-solution">Luapower Philosophy</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan=3 class="small gray" valign=bottom height=60>
+					Made with <a href="http://lua.org/">Love</a>, <a href="http://luajit.org/">Spice</a> and <a href="http://openresty.org/">Everything nice</a> by <a href="/cosmin">Cosmin Apreutesei</a>.
+					Published as <a href="http://unlicense.org/">Public Domain</a>.<br>
+					The website is developed on <a href="http://github.com/luapower/website">github</a>.
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<a class=top>Top</a>
+
+<script>
+$(function() {
+
+	$('#lights_btn').click(function(e) {
+		e.preventDefault()
+		document.cookie =
+			'lights=' + $(this).attr('inverse_lights') +
+			'; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/'
+		location.reload()
+	})
+
+	$('#grep').keydown(function(e) {
+		if (e.which == 13)
+			location = '/grep/'+encodeURIComponent($(this).val())
+	})
+})
+</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-10841867-16', 'auto');
+ga('send', 'pageview');
+</script>
+</body>
+</html>
