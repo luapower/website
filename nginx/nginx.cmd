@@ -19,4 +19,4 @@ echo LUA_PATH=%LUA_PATH%
 echo LUA_CPATH=%LUA_CPATH%
 echo PATH=%PATH%
 
-start /b nginx.exe -p . -c conf/nginx.dev.conf %*
+start /b bin/win32/nginx.exe -p . -c conf/nginx.dev.conf %*
