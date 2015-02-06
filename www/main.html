@@ -79,6 +79,12 @@
 <script>
 $(function() {
 
+	$('a[href]').each(function() {
+		var url = $(this).attr('href')
+		if (url.match(/\w+:\/\//))
+			$(this).attr('target', '_blank')
+	})
+
 	$('#lights_btn').click(function(e) {
 		e.preventDefault()
 		document.cookie =
