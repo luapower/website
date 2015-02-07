@@ -152,31 +152,42 @@ local function platform_icons(platforms)
 end
 
 local function package_icons(ptype, platforms, small)
+	local has_lua = ptype:find'Lua'
+	local has_ffi = ptype:find'ffi'
 	local t = {}
-	if ptype == 'Lua' or ptype == 'Lua/C' then
-		table.insert(t, {
-			name = small and 'luas' or 'lua',
-			title = 'written in pure Lua',
-		})
-	elseif ptype == 'Lua+ffi' then
+	if has_ffi then
 		table.insert(t, {
 			name = 'luajit',
 			title = 'written in Lua with ffi extension',
 		})
-		if next(platforms) then
-			glue.extend(t, platform_icons(platforms))
-		end
-	elseif ptype == 'C' then
+	elseif has_lua then
+		table.insert(t, {
+			name = small and 'luas' or 'lua',
+			title = 'written in pure Lua',
+		})
+	else
 		table.insert(t, {
 			name = 'lua',
 			invisible = 'invisible',
 		})
-		glue.extend(t, platform_icons(platforms))
 	end
-	if ptype == 'Lua/C' then
-		glue.extend(t, platform_icons(platforms))
+	local pn, ps = 0, ''
+	if next(platforms) then
+		local picons = platform_icons(platforms)
+		pn = #picons
+		for i,icon in ipairs(picons) do
+			if not icon.disabled then
+				ps = ps .. icon.name .. ';'
+			end
+		end
+		glue.extend(t, picons)
 	end
-	return t
+	if pn == 0 and has_lua then
+		ps = #platforms .. (has_ffi and 1 or 2)
+	elseif pn > 0 then
+		ps = (has_lua and (has_ffi and 1 or 2) or 0) .. ';' .. ps
+	end
+	return t, ps
 end
 
 local function action_package(pkg)
@@ -187,7 +198,7 @@ local function action_package(pkg)
 		if doc then
 			data.tagline = doc.tagline
 			data.doc_html = render_docfile(lp, powerpath(doc.file))
-			data.icons = package_icons(t.type, t.platforms)
+			data.icons, data.platform_string = package_icons(t.type, t.platforms)
 		end
 		return data
 	end)
@@ -233,7 +244,7 @@ local function action_home()
 		return data
 	end)
 	for _,pkg in ipairs(data.packages) do
-		pkg.icons = package_icons(pkg.type, pkg.platforms, true)
+		pkg.icons, pkg.platform_string = package_icons(pkg.type, pkg.platforms, true)
 	end
 	out(render_main('home.html', data))
 end

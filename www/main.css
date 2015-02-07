@@ -184,6 +184,7 @@ table .home .icon {
 }
 
 .invisible { visibility: hidden; }
+.hidden { display: none; }
 
 /* common colors ---------------------------------------------------------- */
 
@@ -203,6 +204,34 @@ html { background-color: #333; }
 
 .gray { color: #999; }
 .gray a, .gray a:visited { color: #ccc; }
+
+/* homepage --------------------------------------------------------------- */
+
+#package_table th {
+	cursor: pointer;
+	position: relative;
+}
+
+#package_table th.tablesorter-headerAsc:after,
+#package_table th.tablesorter-headerDesc:after {
+	font-family: FontAwesome;
+	position: absolute;
+	top: 10px;
+	right: 8px;
+	display: block;
+}
+
+#package_table th.tablesorter-headerAsc:after { content: '\f077'; }
+#package_table th.tablesorter-headerDesc:after { content: '\f078'; }
+
+#package_table th:hover {
+	text-decoration: underline;
+}
+
+#package_table .icon {
+	width: 22px;
+	display: inline-block;
+}
 
 /* grep ------------------------------------------------------------------- */
 

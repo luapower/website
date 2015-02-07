@@ -1,28 +1,32 @@
 <center>
 	<img src="/luapower.png">
 </center>
-<table width=100% class="doc home">
-	<tr>
-		<th align=left>Type</th>
-		<th align=left>Package</th>
-		<th align=left>What</th>
-		<th align=left>Version</th>
-		<th align=left>Platforms</th>
-		<th align=left>License</th>
-	</tr>
-	{{#packages}}
-	<tr>
-		<td>{{type}}</td>
-		<td><a href="/{{name}}">{{name}}</a></td>
-		<td>{{tagline}}</td>
-		<td>{{version}}</td>
-		<td>
-			{{#icons}}
-				<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>
-			{{/icons}}
-		</td>
-		<td>{{license}}</td>
-	</tr>
-	{{/packages}}
+<table width=100% id=package_table class="doc home">
+	<thead>
+		<tr>
+			<th align=left title="Hold Shift to sort by multiple columns">Type</th>
+			<th align=left title="Hold Shift to sort by multiple columns">Package</th>
+			<th align=left title="Hold Shift to sort by multiple columns">What</th>
+			<th align=left title="Hold Shift to sort by multiple columns">Version</th>
+			<th align=left title="Hold Shift to sort by multiple columns">Platforms</th>
+			<th align=left title="Hold Shift to sort by multiple columns">License</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#packages}}
+		<tr>
+			<td>{{type}}</td>
+			<td><a href="/{{name}}">{{name}}</a></td>
+			<td>{{tagline}}</td>
+			<td>{{version}}</td>
+			<td><span class=hidden>{{platform_string}}</span>
+				{{#icons}}
+					<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>
+				{{/icons}}
+			</td>
+			<td>{{license}}</td>
+		</tr>
+		{{/packages}}
+	</tbody>
 </table>
 <script src="/home.js"></script>
