@@ -23,14 +23,23 @@
 					<td valign=middle>
 						<h3 class=tight>
 							<a href="/">luapower.com</a>
-							&nbsp;<a id=lights_btn
+							&nbsp;&nbsp;
+							<a id=lights_btn
 								inverse_lights="{{inverse_lights}}"
-								class="fa fa-toggle-{{lights}}"
-								title="lights {{inverse_lights}}"></a>
+								title="lights {{inverse_lights}}">
+									<span style="font-size: 90%">lights </span>
+									<i class="fa fa-toggle-{{lights}}"></i></a>
+
+						</h3>
+					</td>
+					<td valign=middle width=150>
+						<h3 class=tight>
+						<a href="http://github.com/luapower">view on github
+						<i class="fa fa-github" style="font-size: 180%; text-decoration: none;"></i></a>
 						</h3>
 					</td>
 					<td width=20% valign=middle>
-						<input type=text value="{{{search}}}" placeholder="grep" id="grep">
+						<input type=text value="{{{search}}}" placeholder="grep the sources" id="grep">
 					</td>
 				</tr>
 			</table>

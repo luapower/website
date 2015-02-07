@@ -72,10 +72,9 @@ local function older(file1, file2)
 	return mtime1 < mtime2
 end
 
-local function render_doc(docfile)
+local function render_docfile(infile)
 	connect()
-	local infile = powerpath(docfile)
-	local outfile = wwwpath('docs/'..docfile..'.html')
+	local outfile = wwwpath('docs/'..(infile:gsub('[/\\]', '-'))..'.html')
 	if older(outfile, infile) then
 		local s = glue.readfile(infile)
 		local t = {s,'',''}
@@ -155,7 +154,7 @@ local function package_data(pkg)
 	data.has_docs = #data.docs > 0
 	]]
 	local docfile = docs[pkg] or next(docs)
-	data.doc_html = docfile and render_doc(docfile)
+	data.doc_html = docfile and render_docfile(powerpath(docfile))
 
 	return data
 end
@@ -167,7 +166,7 @@ local function module_data(mod, pkg)
 	return data
 end
 
-function action.package(pkg)
+local function action_package(pkg)
 	connect()
 	local data = {}
 	glue.update(data, package_data(pkg))
@@ -184,14 +183,14 @@ function action.grep(s)
 	connect()
 	local results = lp.grep(s)
 	local data = {
-		title = 'grepping for '..s,
+		title = 'grepping for '..(s or ''),
 		search = s,
 		results = results,
 	}
 	out(render_main('grep.html', data))
 end
 
-function action.home()
+local function action_home()
 	connect()
 	local data = {}
 	local t = {}
@@ -212,18 +211,29 @@ function action.home()
 	out(render_main('home.html', data))
 end
 
-function action.doc(doc)
-	connect()
-	local docfile = lp.docs()[doc]
-	local html = render_doc(docfile)
-	local pkg = lp.doc_package(doc)
-	render_main('doc.html', {
-		package = pkg,
-		doc_html = html,
-	})
+local function www_docfile(doc)
+	local docfile = wwwpath('md/'..doc..'.md')
+	if not lfs.attributes(docfile, 'mtime') then return end
+	return docfile
 end
 
-function action.browse()
+local function action_docfile(docfile)
+	local html = render_docfile(docfile)
+	local dtags = luapower.docfile_tags(docfile)
+	out(render_main('doc.html', {
+		title = dtags.title,
+		tagline = dtags.tagline,
+		doc_html = html,
+	}))
+end
+
+function action_doc(doc)
+	connect()
+	local docfile = lp.docs()[doc]
+	action_docfile(powerpath(docfile))
+end
+
+function action_browse()
 	local data = {}
 	data.files = {}
 	for i,pkg in ipairs(data.packages) do
@@ -239,13 +249,18 @@ end
 function action.default(s, ...)
 	connect()
 	if not s then
-		action.home()
+		action_home()
 	elseif lp.installed_packages()[s] then
-		action.package(s)
+		action_package(s)
 	elseif lp.docs()[s] then
-		action.doc(s)
+		action_doc(s)
 	else
-		redirect'/'
+		local docfile = www_docfile(s)
+		if docfile then
+			action_docfile(docfile)
+		else
+			redirect'/'
+		end
 	end
 end
 
