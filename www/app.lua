@@ -20,7 +20,7 @@ setfenv(1, app)
 
 --logging API ----------------------------------------------------------------
 
-function debug(...)
+function log(...)
     ngx.log(ngx.DEBUG, ...)
 end
 

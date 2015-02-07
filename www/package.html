@@ -4,14 +4,14 @@
 			<table width=100%>
 				<tr>
 					<td valign=top>
-						<h1 class=tight>{{package_name}}</h1>
-						<h4 class=tight>{{package_tagline}}</h4>
+						<h1 class=tight>{{name}}</h1>
+						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td valign=top align=right>
 						<h1 class=tight>
-							{{#package_platform_icons}}
-								<span class="icon-{{name}} {{disabled}}"></span>
-							{{/package_platform_icons}}
+							{{#icons}}
+								<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+							{{/icons}}
 						</h1>
 					</td>
 				</tr>

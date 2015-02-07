@@ -28,6 +28,7 @@ local luapower_dir = config'luapower_dir'
 luapower.config.luapower_dir = luapower_dir
 
 local function powerpath(file)
+	if not file then return luapower_dir end
 	assert(not file:find('..', 1, true))
 	return luapower_dir..'/'..file
 end
@@ -48,10 +49,25 @@ local servers = ffi.os ~= 'Linux' and {
 	osx64   = {'172.16.134.128', '1993'},
 }
 
-local lp
-local function connect()
-	local ip, port = unpack(servers.linux64 or servers.linux32)
-	lp = lp or luapower.connect(ip, port, _G.connect)
+local function connect(platform)
+	platform = platform or (servers.linux64 and 'linux64' or 'linux32')
+	local ip, port = unpack(servers[platform])
+	local lp, err = luapower.connect(ip, port, _G.connect)
+	--openresty doesn't error on connect, so we have to issue a no-op.
+	if lp then
+		local s, err1 = pcall(lp.exec, function() return true end)
+		if not s then lp, err = nil, err1 end
+	end
+	return lp, err
+end
+
+local function with_connect(platform, func, ...)
+	local lp, err = assert(connect(platform))
+	local function pass(ok, ...)
+		lp.close()
+		return ...
+	end
+	return pass(xpcall(func, debug.traceback, lp, ...))
 end
 
 local function in_dir(dir, func, ...)
@@ -62,7 +78,7 @@ local function in_dir(dir, func, ...)
 		assert(ok, ...)
 		return ...
 	end
-	pass(xpcall(func, debug.traceback, ...))
+	return pass(xpcall(func, debug.traceback, ...))
 end
 
 local function older(file1, file2)
@@ -73,8 +89,7 @@ local function older(file1, file2)
 	return mtime1 < mtime2
 end
 
-local function render_docfile(infile)
-	connect()
+local function render_docfile(lp, infile)
 	local outfile = wwwpath('docs/'..(infile:gsub('[/\\]', '-'))..'.html')
 	if older(outfile, infile) then
 		local s = glue.readfile(infile)
@@ -99,6 +114,18 @@ local function render_docfile(infile)
 	return glue.readfile(outfile)
 end
 
+local platform_icon_titles = {
+	mingw   = 'works on Windows (32bit and 64bit)',
+	mingw32 = 'works on 32bit Windows',
+	mingw64 = 'works on 64bit Windows',
+	linux   = 'works on Linux (32bit and 64bit)',
+	linux32 = 'works on 32bit Linux',
+	linux64 = 'works on 64bit Linux',
+	osx     = 'works on OS X (32bit and 64bit)',
+	osx32   = 'works on 32bit OS X',
+	osx64   = 'works on 64bit OS X',
+}
+
 local function platform_icons(platforms)
 	local t = {}
 	for i,p in ipairs(luapower.config.platforms) do
@@ -116,99 +143,79 @@ local function platform_icons(platforms)
 		end
 		i = i + 1
 	end
+	for i,pt in ipairs(t) do
+		pt.title = platform_icon_titles[pt.name]
+	end
 	return t
 end
 
-local function package_data(pkg)
-	local data = {package_name = pkg}
-	local docs = lp.docs(pkg)
-
-	data.package_tagline = docs[pkg] and lp.doc_tags(pkg, pkg).tagline
-
-	local ptype = lp.package_type(pkg)
+local function package_icons(pkg, ptype, platforms)
+	local t = {}
 	if ptype == 'Lua' then
-		data.package_platform_icons = {{name = 'lua'}}
+		table.insert(t, {
+			name = 'lua',
+			title = 'written in pure Lua',
+		})
 	elseif ptype == 'Lua+ffi' then
-		local platforms = lp.platforms(pkg)
-		if not next(platforms) then
-			data.package_platform_icons = {{name = 'luajit'}}
-		else
-			data.package_platform_icons = platform_icons(platforms)
+		table.insert(t, {
+			name = 'luajit',
+			title = 'written in Lua with ffi extension',
+		})
+		if next(platforms) then
+			glue.extend(t, platform_icons(platforms))
 		end
 	end
-
-	--[[
-	data.modules = {}
-	local modules = lp.modules(pkg)
-	for i,mod in ipairs(glue.keys(modules, true)) do
-		local doctags = docs[mod] and lp.doc_tags(pkg, mod)
-		table.insert(data.modules, {
-			name = mod,
-			doc = docs[mod],
-			file = modules[mod],
-			tagline = doctags and doctags.tagline,
-		})
-	end
-
-	data.has_modules = #data.modules > 0
-	data.docs = glue.keys(docs, true)
-	data.has_docs = #data.docs > 0
-	]]
-	local docfile = docs[pkg] or next(docs)
-	data.doc_html = docfile and render_docfile(powerpath(docfile))
-
-	return data
-end
-
-local function module_data(mod, pkg)
-	if not mod then return end
-	local data = {module_name = mod}
-	data.module_requires = glue.keys(lp.module_requires(mod, pkg), true)
-	return data
+	return t
 end
 
 local function action_package(pkg)
-	connect()
-	local data = {}
-	glue.update(data, package_data(pkg))
-	if GET.partial then
-		out(render('package.html', data))
-		return
-	end
-	data.packages = glue.keys(lp.installed_packages(), true)
-	glue.update(data, package_data(pkg))
-	out(render_main('packages.html', data))
+	local data = with_connect(nil, function(lp)
+		local t = lp.package_info(pkg)
+		local data = {name = pkg}
+		local doc = t.docs[pkg]
+		if doc then
+			data.tagline = doc.tagline
+			data.doc_html = render_docfile(lp, powerpath(doc.file))
+			data.icons = package_icons(pkg, t.type, t.platforms)
+		end
+		return data
+	end)
+	out(render_main('package.html', data))
 end
 
 function action.grep(s)
-	connect()
-	local results = lp.grep(s)
-	local data = {
-		title = 'grepping for '..(s or ''),
-		search = s,
-		results = results,
-	}
+	local data = with_connect(nil, function(lp)
+		local results = lp.grep(s)
+		local data = {
+			title = 'grepping for '..(s or ''),
+			search = s,
+			results = results,
+		}
+		return data
+	end)
 	out(render_main('grep.html', data))
 end
 
 local function action_home()
-	connect()
-	local data = {}
-	local t = {}
-	for pkg in glue.sortedpairs(lp.installed_packages()) do
-		local dtags = lp.doc_tags(pkg, pkg) or {}
-		local ctags = lp.c_tags(pkg) or {}
-		local version = lp.git_version(pkg)
-		table.insert(t, {
-			type = lp.package_type(pkg),
-			name = pkg,
-			tagline = dtags.tagline,
-			version = version,
-			platform_icons = platform_icons(lp.platforms(pkg)),
-			license = ctags.license or 'PD',
-		})
-	end
-	data.packages = t
+	local data = with_connect(nil, function(lp)
+		local data = {}
+		local t = {}
+		for pkg in glue.sortedpairs(lp.installed_packages()) do
+			local dtags = lp.doc_tags(pkg, pkg) or {}
+			local ctags = lp.c_tags(pkg) or {}
+			local version = lp.git_version(pkg)
+			table.insert(t, {
+				type = lp.package_type(pkg),
+				name = pkg,
+				tagline = dtags.tagline,
+				version = version,
+				platform_icons = platform_icons(lp.platforms(pkg)),
+				license = ctags.license or 'PD',
+			})
+		end
+		data.packages = t
+		return data
+	end)
 	out(render_main('home.html', data))
 end
 
@@ -218,20 +225,19 @@ local function www_docfile(doc)
 	return docfile
 end
 
-local function action_docfile(docfile)
-	local html = render_docfile(docfile)
+local function action_docfile(lp, docfile)
+	data.doc_html = render_docfile(lp, docfile)
 	local dtags = luapower.docfile_tags(docfile)
-	out(render_main('doc.html', {
-		title = dtags.title,
-		tagline = dtags.tagline,
-		doc_html = html,
-	}))
+	data.title = dtags.title
+	data.tagline = dtags.tagline
+	out(render_main('doc.html', data))
 end
 
 function action_doc(doc)
-	connect()
-	local docfile = lp.docs()[doc]
-	action_docfile(powerpath(docfile))
+	with_connect(nil, function(lp)
+		local docfile = lp.docs()[doc]
+		action_docfile(lp, powerpath(docfile))
+	end)
 end
 
 function action_browse()
@@ -248,7 +254,6 @@ function action_browse()
 end
 
 function action.default(s, ...)
-	connect()
 	if not s then
 		action_home()
 	elseif lp.installed_packages()[s] then
@@ -258,7 +263,9 @@ function action.default(s, ...)
 	else
 		local docfile = www_docfile(s)
 		if docfile then
-			action_docfile(docfile)
+			with_connect(nil, function(lp)
+				action_docfile(lp, docfile)
+			end)
 		else
 			redirect'/'
 		end
@@ -269,23 +276,18 @@ function action.status()
 	local statuses = {}
 	for platform, server in glue.sortedpairs(servers) do
 		local ip, port = unpack(server)
-		local lp, err = luapower.connect(ip, port, _G.connect)
-		if lp then
-			local s, err1 = pcall(lp.echo, 'hello')
-			if not s then lp, err = nil, err1 end
-		end
-		local t = {}
-		t.platform = platform
-		t.ip = ip
-		t.port = port
+		local t = {platform = platform, ip = ip, port = port}
+		local lp, err = connect(platform)
 		t.status = lp and 'up', 'down'
 		t.error = err and err:match'^.-:.-: (.*)'
 		if lp then
-			t.installed_package_count = glue.count(lp.installed_packages())
-			t.known_package_count = glue.count(lp.known_packages())
-			t.load_errors = lp.package_load_errors()
-			t.load_error_count = glue.count(t.load_errors)
-			lp.close()
+			glue.fcall(function(finally)
+				finally(lp.close)
+				t.installed_package_count = glue.count(lp.installed_packages())
+				t.known_package_count = glue.count(lp.known_packages())
+				t.load_errors = lp.package_load_errors()
+				t.load_error_count = glue.count(t.load_errors)
+			end)
 		end
 		table.insert(statuses, t)
 	end
@@ -298,14 +300,22 @@ end
 
 function action.github(...)
 	if not POST then return end
-	debug(pp.format(POST, '  '))
+	--log(pp.format(POST, '  '))
 	local repo = POST.repository.name
-	if not repo:match('^[a-zA-Z0-9_-]+$') then return end
+	if not repo or not repo:match('^[a-zA-Z0-9_-]+$') then return end
 
-	in_dir(powerpath'.', function()
+	in_dir(powerpath(), function()
 		local cmd = 'git --git-dir="'..powerpath('_git/'..repo)..'" pull'
 		local ret = os.execute(cmd)
-		debug('os.execute: '..cmd..' ['..tostring(ret)..']')
+		log('executed: '..cmd..' ['..tostring(ret)..']')
 	end)
+
+	for platform in glue.sortedpairs(servers) do
+		local lp = connect(platform)
+		if lp then
+			lp.restart()
+			log('restarted: '..platform)
+		end
+	end
 end
 
