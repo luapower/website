@@ -50,7 +50,7 @@ local servers = ffi.os ~= 'Linux' and {
 
 local lp
 local function connect()
-	local ip, port = unpack(servers.linux64)
+	local ip, port = unpack(servers.linux64 or servers.linux32)
 	lp = lp or luapower.connect(ip, port, _G.connect)
 end
 
