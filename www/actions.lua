@@ -8,7 +8,7 @@ local cjson = require'cjson'
 local ffi = require'ffi'
 local glue = require'glue'
 local luapower = require'luapower'
-local package_info = require'package_info'
+--local package_info = require'package_info'
 
 function render_main(name, data, env)
 	local lights = HEADERS.cookie
@@ -48,14 +48,16 @@ local servers = ffi.os ~= 'Linux' and {
 	osx32   = {'172.16.134.128'},
 	osx64   = {'172.16.134.128', '1993'},
 }
+servers.self = {'127.0.0.1'}
 
 local function connect(platform)
-	platform = platform or (servers.linux64 and 'linux64' or 'linux32')
+	platform = 'self'
+	--platform = platform or (servers.linux64 and 'linux64' or 'linux32')
 	local ip, port = unpack(servers[platform])
 	local lp, err = luapower.connect(ip, port, _G.connect)
 	--openresty doesn't error on connect, so we have to issue a no-op.
 	if lp then
-		local s, err1 = pcall(lp.exec, function() return true end)
+		local s, err1 = lp.exec(function() return true end)
 		if not s then lp, err = nil, err1 end
 	end
 	return lp, err
@@ -67,7 +69,7 @@ local function with_connect(platform, func, ...)
 		lp.close()
 		return ...
 	end
-	return pass(xpcall(func, debug.traceback, lp, ...))
+	return pass(glue.pcall(func, lp, ...))
 end
 
 local function in_dir(dir, func, ...)
@@ -78,7 +80,7 @@ local function in_dir(dir, func, ...)
 		assert(ok, ...)
 		return ...
 	end
-	return pass(xpcall(func, debug.traceback, ...))
+	return pass(glue.pcall(func, ...))
 end
 
 local function older(file1, file2)
@@ -149,11 +151,11 @@ local function platform_icons(platforms)
 	return t
 end
 
-local function package_icons(pkg, ptype, platforms)
+local function package_icons(ptype, platforms, small)
 	local t = {}
-	if ptype == 'Lua' then
+	if ptype == 'Lua' or ptype == 'Lua/C' then
 		table.insert(t, {
-			name = 'lua',
+			name = small and 'luas' or 'lua',
 			title = 'written in pure Lua',
 		})
 	elseif ptype == 'Lua+ffi' then
@@ -164,6 +166,15 @@ local function package_icons(pkg, ptype, platforms)
 		if next(platforms) then
 			glue.extend(t, platform_icons(platforms))
 		end
+	elseif ptype == 'C' then
+		table.insert(t, {
+			name = 'lua',
+			invisible = 'invisible',
+		})
+		glue.extend(t, platform_icons(platforms))
+	end
+	if ptype == 'Lua/C' then
+		glue.extend(t, platform_icons(platforms))
 	end
 	return t
 end
@@ -176,7 +187,7 @@ local function action_package(pkg)
 		if doc then
 			data.tagline = doc.tagline
 			data.doc_html = render_docfile(lp, powerpath(doc.file))
-			data.icons = package_icons(pkg, t.type, t.platforms)
+			data.icons = package_icons(t.type, t.platforms)
 		end
 		return data
 	end)
@@ -199,23 +210,31 @@ end
 local function action_home()
 	local data = with_connect(nil, function(lp)
 		local data = {}
-		local t = {}
-		for pkg in glue.sortedpairs(lp.installed_packages()) do
-			local dtags = lp.doc_tags(pkg, pkg) or {}
-			local ctags = lp.c_tags(pkg) or {}
-			local version = lp.git_version(pkg)
-			table.insert(t, {
-				type = lp.package_type(pkg),
-				name = pkg,
-				tagline = dtags.tagline,
-				version = version,
-				platform_icons = platform_icons(lp.platforms(pkg)),
-				license = ctags.license or 'PD',
-			})
-		end
-		data.packages = t
+		data.packages = lp.exec(function()
+			local lp = require'luapower'
+			local glue = require'glue'
+			local pp = require'pp'
+			local t = {}
+			for pkg in glue.sortedpairs(lp.installed_packages()) do
+				local dtags = lp.doc_tags(pkg, pkg) or {}
+				local ctags = lp.c_tags(pkg) or {}
+				local version = lp.git_version(pkg)
+				table.insert(t, {
+					type = lp.package_type(pkg),
+					name = pkg,
+					tagline = dtags.tagline,
+					version = version,
+					platforms = lp.platforms(pkg),
+					license = ctags.license or 'PD',
+				})
+			end
+			return t
+		end)
 		return data
 	end)
+	for _,pkg in ipairs(data.packages) do
+		pkg.icons = package_icons(pkg.type, pkg.platforms, true)
+	end
 	out(render_main('home.html', data))
 end
 

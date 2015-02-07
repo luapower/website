@@ -121,7 +121,7 @@ local function platform_info(handler)
 	thread_api.wait(table.unpack(threads))
 end
 
-local platform_count = glue.count(config.servers)
+--local platform_count = glue.count(config.servers)
 
 local package_info = memoize(function(package)
 	local t = {}

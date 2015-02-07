@@ -175,6 +175,16 @@ button {
 	padding-bottom: 30px;
 }
 
+table .home td {
+	padding: 3px;
+}
+
+table .home .icon {
+	font-size: 140%;
+}
+
+.invisible { visibility: hidden; }
+
 /* common colors ---------------------------------------------------------- */
 
 .topbar {
@@ -242,7 +252,6 @@ html { background-color: #333; }
 .type-bin { color: #080; }
 .type-csrc { color: #000; }
 .type-unknown { color: #888; }
-.disabled { color: #ccc; }
 
 /* back-to-top button ----------------------------------------------------- */
 

@@ -25,6 +25,8 @@ button:disabled {
 }
 button:hover:disabled { color: #666; }
 
+.disabled { color: #333; }
+
 .grep .result.active { border-color: #f00; }
 .grep pre { border-color: #333; }
 .grep .line { color: #888; border-color: #ccc; }
