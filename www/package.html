@@ -48,15 +48,20 @@
 					</ul>
 				{{/has_docs}}
 					<h3>Package Dependencies</h3>
+					<span class=smallnote>
+						Note: This is a combined list of packages required by all modules.
+						Some modules may not require all packages.<br>
+						Click on individual modules to see more specific dependencies.
+					</span>
 					<ul>
-					{{#package_deps}}
+						{{#package_deps}}
 						<li>
-							<span class="icon-{{icon}}"></span>
+							<span class="icon-{{icon}}" style="min-width: 1.5em; display: inline-block;"></span>
 							{{#packages}}
-							<a href="/{{.}}">{{.}}</a>
+								<a href="/{{.}}">{{.}}</a>
 							{{/packages}}
 						</li>
-					{{/package_deps}}
+						{{/package_deps}}
 					</ul>
 			{{/info}}
 			{{#log}} <pre>{{.}}</pre> <br>{{/log}}

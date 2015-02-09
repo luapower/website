@@ -262,6 +262,8 @@ local function package_info(pkg, ext)
 			end
 		end
 
+		--create specific platform icons to the modules that have
+		--load errors on supported platforms.
 		for mod, mt in pairs(t.modmap) do
 			platforms = {}
 			for platform, pt in pairs(pts) do
@@ -280,39 +282,60 @@ local function package_info(pkg, ext)
 			mt.icons = platform_icons(platforms, true)
 		end
 
-		local pn = 0
-		local ppn = {}
-		for platform, pt in pairs(pts) do
-			if not pt.connect_error then
-				pn = pn + 1
-				for pkg in pairs(pt.package_deps) do
-					ppn[pkg] = (ppn[pkg] or 0) + 1
+		--given {place1 = {item1 = true, ...}, ...}, extract items that are
+		--found in all places into the place indicated by all_key.
+		local function extract_all(maps, all_key)
+			--count occurences for each item
+			local maxn = glue.count(maps)
+			local nt = {} --{item = n}
+			for place, items in pairs(maps) do
+				for item in pairs(items) do
+					nt[item] = (nt[item] or 0) + 1
 				end
 			end
-		end
-		local all = {}
-		for pkg, n in pairs(ppn) do
-			if n == pn then
-				all[pkg] = true
+			--extract items found in all places
+			local all = {}
+			for item, n in pairs(nt) do
+				if n == maxn then
+					all[item] = true
+				end
 			end
-		end
-		local pdeps = {all = all}
-		for platform, pt in pairs(pts) do
-			if not pt.connect_error then
-				for pkg in pairs(pt.package_deps) do
-					if not all[pkg] then
-						glue.attr(pdeps, platform)[pkg] = true
+			--add items not found in all places, to their original places
+			local t = {[all_key] = all}
+			for place, items in pairs(maps) do
+				local pt = glue.attr(t, place)
+				for item in pairs(items) do
+					if not all[item] then
+						pt[item] = true
 					end
 				end
 			end
+			return t
 		end
+
+		local pmaps = {}
+		for platform, pt in pairs(pts) do
+			if not pt.connect_error then
+				pmaps[platform] = {}
+				for pkg in pairs(pt.package_deps) do
+					pmaps[platform][pkg] = true
+				end
+			end
+		end
+		local pdeps = extract_all(pmaps, 'all')
+		--local mingw_deps = extract_all({mingw32 = pdeps.mingw32, mingw64 = pdeps.mingw64}, 'mingw')
+		--local linux_deps = extract_all({linux32 = pdeps.linux32, linux64 = pdeps.linux64}, 'linux')
+		--local osx_deps   = extract_all({osx32 = pdeps.osx32, osx64 = pdeps.osx64}, 'osx')
+		--glue.update(pdeps, mingw_deps)
 
 		t.package_deps = {}
 		for platform, pdeps in glue.sortedpairs(pdeps) do
-			table.insert(t.package_deps, {
-				icon = platform,
-				packages = glue.keys(pdeps, true),
-			})
+			if next(pdeps) then
+				table.insert(t.package_deps, {
+					icon = platform,
+					packages = glue.keys(pdeps, true),
+				})
+			end
 		end
 
 		t.modules = {}

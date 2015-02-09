@@ -187,6 +187,11 @@ table .home .icon {
 .hidden { display: none; }
 .nowrap { white-space: nowrap; }
 
+.smallnote {
+	font-size: 80%;
+	font-style: italic;
+}
+
 /* common colors ---------------------------------------------------------- */
 
 .topbar {
@@ -205,6 +210,7 @@ html { background-color: #333; }
 
 .gray { color: #999; }
 .gray a, .gray a:visited { color: #ccc; }
+.smallnote { color: #999; }
 
 /* homepage --------------------------------------------------------------- */
 
