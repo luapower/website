@@ -8,7 +8,6 @@ local cjson = require'cjson'
 local ffi = require'ffi'
 local glue = require'glue'
 local luapower = require'luapower'
---local package_info = require'package_info'
 
 function render_main(name, data, env)
 	local lights = HEADERS.cookie
@@ -50,26 +49,20 @@ local servers = ffi.os ~= 'Linux' and {
 }
 servers.self = {'127.0.0.1'}
 
-local function connect(platform)
-	platform = 'self'
-	--platform = platform or (servers.linux64 and 'linux64' or 'linux32')
+local connect = glue.memoize(function(platform)
+	platform = platform or 'self'
 	local ip, port = unpack(servers[platform])
-	local lp, err = luapower.connect(ip, port, _G.connect)
+	local lp = assert(luapower.connect(ip, port, _G.connect))
 	--openresty doesn't error on connect, so we have to issue a no-op.
-	if lp then
-		local s, err1 = lp.exec(function() return true end)
-		if not s then lp, err = nil, err1 end
-	end
-	return lp, err
-end
+	lp.exec(function() return true end)
+	return lp
+end)
 
-local function with_connect(platform, func, ...)
-	local lp, err = assert(connect(platform))
-	local function pass(ok, ...)
-		lp.close()
-		return ...
-	end
-	return pass(glue.pcall(func, lp, ...))
+local try_connect_ = glue.memoize(function(platform)
+	return {glue.unprotect(glue.pcall(connect, platform))}
+end)
+local function try_connect(platform)
+	return unpack(try_connect_(platform), 1, 2)
 end
 
 local function in_dir(dir, func, ...)
@@ -91,7 +84,8 @@ local function older(file1, file2)
 	return mtime1 < mtime2
 end
 
-local function render_docfile(lp, infile)
+local function render_docfile(infile)
+	local lp = connect()
 	local outfile = wwwpath('docs/'..(infile:gsub('[/\\]', '-'))..'.html')
 	if older(outfile, infile) then
 		local s = glue.readfile(infile)
@@ -128,13 +122,15 @@ local platform_icon_titles = {
 	osx64   = 'works on 64bit OS X',
 }
 
-local function platform_icons(platforms)
+local function platform_icons(platforms, vis_only)
 	local t = {}
 	for i,p in ipairs(luapower.config.platforms) do
-		table.insert(t, {
-			name = p,
-			disabled = not platforms[p] and 'disabled' or nil,
-		})
+		if not vis_only or platforms[p] then
+			table.insert(t, {
+				name = p,
+				disabled = not platforms[p] and 'disabled' or nil,
+			})
+		end
 	end
 	--compress 32+64 icon pairs into simple icons
 	local i = 1
@@ -190,62 +186,185 @@ local function package_icons(ptype, platforms, small)
 	return t, ps
 end
 
-local function action_package(pkg)
-	local data = with_connect(nil, function(lp)
-		local t = lp.package_info(pkg)
-		local data = {name = pkg}
-		local doc = t.docs[pkg]
-		if doc then
-			data.tagline = doc.tagline
-			data.doc_html = render_docfile(lp, powerpath(doc.file))
-			data.icons, data.platform_string = package_icons(t.type, t.platforms)
+local function package_info(pkg, ext)
+	local lp = connect()
+	local t = lp.exec(function(pkg, ext)
+		local lp = require'luapower'
+		local glue = require'glue'
+
+		local t = {package = pkg}
+		t.type = lp.package_type(pkg)
+		t.platforms = lp.platforms(pkg)
+		t.docfile = lp.docs(pkg)[pkg]
+		local dtags = lp.doc_tags(pkg, pkg) or {}
+		t.tagline = dtags.tagline
+		local ctags = lp.c_tags(pkg) or {}
+		t.license = ctags.license or 'PD'
+		t.version = lp.git_version(pkg)
+
+		local origin_url = lp.git_origin_url(pkg)
+		t.github_url = origin_url:find'github.com' and origin_url
+		t.github_title = t.github_url:gsub('^%w+://', '')
+
+		if ext then
+			t.modmap = {}
+			for mod, file in pairs(lp.modules(pkg)) do
+				t.modmap[mod] = {module = mod, file = file}
+			end
 		end
-		return data
-	end)
-	out(render_main('package.html', data))
+		return t
+	end, pkg, ext)
+
+	if ext then
+		local pts = {}
+		for _, platform in ipairs(luapower.config.platforms) do
+			local server = servers[platform]
+			if server then
+				local lp, err = try_connect(platform)
+				if lp then
+					pts[platform] = lp.exec(function(pkg)
+						local lp = require'luapower'
+						local glue = require'glue'
+						local t = {}
+						t.package_deps = lp.package_requires_packages_all(pkg)
+						t.modmap = {}
+						for mod, file in pairs(lp.modules(pkg)) do
+							local mt = {}
+							mt.load_error = lp.module_load_error(mod, pkg)
+							mt.package_deps = lp.module_requires_packages_all(mod, pkg)
+							--[[
+							module_requires = module_requires,
+							module_load_error = module_load_error,
+							module_ffi_requires = module_ffi_requires,
+							module_ffi_requires_all = module_ffi_requires_all,
+							module_requires_by_loading = module_requires_by_loading,
+							module_requires_by_parsing = module_requires_by_parsing,
+							module_requires_runtime = module_requires_runtime,
+							module_autoloads = module_autoloads,
+							module_requires = module_requires,
+							module_requires_all = module_requires_all,
+							module_requires_tree = module_requires_tree,
+							module_requires_int = module_requires_int,
+							module_requires_ext = module_requires_ext,
+							module_requires_packages_for = module_requires_packages_for,
+							module_requires_packages_all = module_requires_packages_all,
+							module_requires_packages_ext = module_requires_packages_ext,
+							package_requires_packages_all = package_requires_packages_all,
+							package_requires_packages_ext = package_requires_packages_ext,
+							]]
+							t.modmap[mod] = mt
+						end
+						return t
+					end, pkg)
+				else
+					pts[platform] = {connect_error = err}
+				end
+			end
+		end
+
+		for mod, mt in pairs(t.modmap) do
+			platforms = {}
+			for platform, pt in pairs(pts) do
+				if not pt.connect_error then
+					local pmt = pt.modmap[mod]
+					if not pmt.load_error then
+						platforms[platform] = true
+					elseif t.platforms[platform] then
+						mt.load_errors = true
+					end
+				end
+			end
+			if not mt.load_errors then
+				platforms = {}
+			end
+			mt.icons = platform_icons(platforms, true)
+		end
+
+		local pn = 0
+		local ppn = {}
+		for platform, pt in pairs(pts) do
+			if not pt.connect_error then
+				pn = pn + 1
+				for pkg in pairs(pt.package_deps) do
+					ppn[pkg] = (ppn[pkg] or 0) + 1
+				end
+			end
+		end
+		local all = {}
+		for pkg, n in pairs(ppn) do
+			if n == pn then
+				all[pkg] = true
+			end
+		end
+		local pdeps = {all = all}
+		for platform, pt in pairs(pts) do
+			if not pt.connect_error then
+				for pkg in pairs(pt.package_deps) do
+					if not all[pkg] then
+						glue.attr(pdeps, platform)[pkg] = true
+					end
+				end
+			end
+		end
+
+		t.package_deps = {}
+		for platform, pdeps in glue.sortedpairs(pdeps) do
+			table.insert(t.package_deps, {
+				icon = platform,
+				packages = glue.keys(pdeps, true),
+			})
+		end
+
+		t.modules = {}
+		for mod, mt in glue.sortedpairs(t.modmap) do
+			table.insert(t.modules, mt)
+		end
+		t.has_modules = glue.count(t.modules)
+	end
+
+	t.icons, t.platform_string = package_icons(t.type, t.platforms)
+	return t
 end
 
-function action.grep(s)
-	local data = with_connect(nil, function(lp)
-		local results = lp.grep(s)
-		local data = {
-			title = 'grepping for '..(s or ''),
-			search = s,
-			results = results,
-		}
-		return data
-	end)
-	out(render_main('grep.html', data))
+local function action_package(pkg, info)
+	local t = package_info(pkg, info and true)
+	if info then
+		t.info = true
+	else
+		t.doc_html = t.docfile and render_docfile(powerpath(t.docfile))
+	end
+	out(render_main('package.html', t))
 end
 
 local function action_home()
-	local data = with_connect(nil, function(lp)
-		local data = {}
-		data.packages = lp.exec(function()
-			local lp = require'luapower'
-			local glue = require'glue'
-			local pp = require'pp'
-			local t = {}
-			for pkg in glue.sortedpairs(lp.installed_packages()) do
-				local dtags = lp.doc_tags(pkg, pkg) or {}
-				local ctags = lp.c_tags(pkg) or {}
-				local version = lp.git_version(pkg)
-				table.insert(t, {
-					type = lp.package_type(pkg),
-					name = pkg,
-					tagline = dtags.tagline,
-					version = version,
-					platforms = lp.platforms(pkg),
-					license = ctags.license or 'PD',
-				})
-			end
-			return t
-		end)
-		return data
+	local lp = connect()
+	local data = {}
+	data.packages = lp.exec(function()
+		local lp = require'luapower'
+		local glue = require'glue'
+		local pp = require'pp'
+		local t = {}
+		for pkg in glue.sortedpairs(lp.installed_packages()) do
+			local dtags = lp.doc_tags(pkg, pkg) or {}
+			local ctags = lp.c_tags(pkg) or {}
+			local version = lp.git_version(pkg)
+			table.insert(t, {
+				type = lp.package_type(pkg),
+				name = pkg,
+				tagline = dtags.tagline,
+				version = version,
+				platforms = lp.platforms(pkg),
+				license = ctags.license or 'PD',
+			})
+		end
+		return t
 	end)
 	for _,pkg in ipairs(data.packages) do
-		pkg.icons, pkg.platform_string = package_icons(pkg.type, pkg.platforms, true)
+		pkg.icons, pkg.platform_string =
+			package_icons(pkg.type, pkg.platforms, true)
 	end
+	data.github_title = 'github.com/luapower'
+	data.github_url = 'https://'..data.github_title
 	out(render_main('home.html', data))
 end
 
@@ -255,8 +374,10 @@ local function www_docfile(doc)
 	return docfile
 end
 
-local function action_docfile(lp, docfile)
-	data.doc_html = render_docfile(lp, docfile)
+local function action_docfile(docfile)
+	local lp = connect()
+	local data = {}
+	data.doc_html = render_docfile(docfile)
 	local dtags = luapower.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
@@ -264,10 +385,9 @@ local function action_docfile(lp, docfile)
 end
 
 function action_doc(doc)
-	with_connect(nil, function(lp)
-		local docfile = lp.docs()[doc]
-		action_docfile(lp, powerpath(docfile))
-	end)
+	local lp = connect()
+	local docfile = lp.docs()[doc]
+	return action_docfile(powerpath(docfile))
 end
 
 function action_browse()
@@ -284,22 +404,32 @@ function action_browse()
 end
 
 function action.default(s, ...)
+	local lp = connect()
 	if not s then
-		action_home()
+		return action_home()
 	elseif lp.installed_packages()[s] then
-		action_package(s)
+		return action_package(s, ...)
 	elseif lp.docs()[s] then
-		action_doc(s)
+		return action_doc(s, ...)
 	else
 		local docfile = www_docfile(s)
 		if docfile then
-			with_connect(nil, function(lp)
-				action_docfile(lp, docfile)
-			end)
+			return action_docfile(docfile, ...)
 		else
 			redirect'/'
 		end
 	end
+end
+
+function action.grep(s)
+	local lp = connect()
+	local results = lp.grep(s)
+	local data = {
+		title = 'grepping for '..(s or ''),
+		search = s,
+		results = results,
+	}
+	out(render_main('grep.html', data))
 end
 
 function action.status()

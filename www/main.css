@@ -185,6 +185,7 @@ table .home .icon {
 
 .invisible { visibility: hidden; }
 .hidden { display: none; }
+.nowrap { white-space: nowrap; }
 
 /* common colors ---------------------------------------------------------- */
 

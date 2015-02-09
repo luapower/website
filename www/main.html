@@ -36,7 +36,9 @@
 								<span class=lights_label>lights</span><i id=lights_icon class="fa fa-toggle-{{lights}}"></i></a>
 					</td>
 					<td valign=middle align=right>
-						<a id=github_label href="http://github.com/luapower">view on github<i id=github_icon class="fa fa-github"></i></a>
+						{{#github_url}}
+						<a id=github_label href="{{github_url}}">{{github_title}}<i id=github_icon class="fa fa-github"></i></a>
+						{{/github_url}}
 					</td>
 					<td width=20% valign=middle>
 						<input type=text value="{{{search}}}" placeholder="grep in sources" id="grep">

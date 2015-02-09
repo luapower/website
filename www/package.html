@@ -4,10 +4,15 @@
 			<table width=100%>
 				<tr>
 					<td valign=top>
-						<h1 class=tight>{{name}}</h1>
+						<h1 class=tight>{{package}}</h1>
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
-					<td valign=top align=right>
+					<td valign=top align=right width=1 class=nowrap style="padding-right: 20px">
+						{{type}} | {{version}}
+						<br>
+						<a href="/{{package}}/info">package info</a>
+					</td>
+					<td valign=top align=right width=1 class=nowrap>
 						<h1 class=tight>
 							{{#icons}}
 								<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
@@ -19,15 +24,17 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan=2>
-			<div>
-				<!--
+		<td colspan=3>
+			{{#info}}
 				{{#has_modules}}
 					<h3>Modules</h3>
 					<ul style="-webkit-column-width: 140px; column-width: 140px">
 					{{#modules}}
 						<li>
-							<a href="/{{package_name}}/{{name}}" module="{{name}}">{{name}}</a>
+							<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
+							{{#icons}}
+								<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+							{{/icons}}
 						</li>
 					{{/modules}}
 					</ul>
@@ -40,11 +47,24 @@
 					{{/docs}}
 					</ul>
 				{{/has_docs}}
-				-->
-				<div class=doc>
-					{{{doc_html}}}
-				</div>
+					<h3>Package Dependencies</h3>
+					<ul>
+					{{#package_deps}}
+						<li>
+							<span class="icon-{{icon}}"></span>
+							{{#packages}}
+							<a href="/{{.}}">{{.}}</a>
+							{{/packages}}
+						</li>
+					{{/package_deps}}
+					</ul>
+			{{/info}}
+			{{#log}} <pre>{{.}}</pre> <br>{{/log}}
+			{{^info}}
+			<div class=doc>
+				{{{doc_html}}}
 			</div>
+			{{/info}}
 		</td>
 	</tr>
 </table>
