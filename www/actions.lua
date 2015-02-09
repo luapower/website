@@ -301,40 +301,56 @@ local function package_info(pkg, ext)
 				end
 			end
 			--add items not found in all places, to their original places
-			local t = {[all_key] = all}
+			local t = {[all_key] = next(all) and all}
 			for place, items in pairs(maps) do
-				local pt = glue.attr(t, place)
 				for item in pairs(items) do
 					if not all[item] then
-						pt[item] = true
+						glue.attr(t, place)[item] = true
 					end
 				end
 			end
 			return t
 		end
 
+		--package dependency lists
 		local pmaps = {}
 		for platform, pt in pairs(pts) do
 			if not pt.connect_error then
-				pmaps[platform] = {}
 				for pkg in pairs(pt.package_deps) do
-					pmaps[platform][pkg] = true
+					glue.attr(pmaps, platform)[pkg] = true
 				end
 			end
 		end
 		local pdeps = extract_all(pmaps, 'all')
-		--local mingw_deps = extract_all({mingw32 = pdeps.mingw32, mingw64 = pdeps.mingw64}, 'mingw')
-		--local linux_deps = extract_all({linux32 = pdeps.linux32, linux64 = pdeps.linux64}, 'linux')
-		--local osx_deps   = extract_all({osx32 = pdeps.osx32, osx64 = pdeps.osx64}, 'osx')
-		--glue.update(pdeps, mingw_deps)
+		local mingw_deps = extract_all({mingw32 = pdeps.mingw32, mingw64 = pdeps.mingw64}, 'mingw')
+		local linux_deps = extract_all({linux32 = pdeps.linux32, linux64 = pdeps.linux64}, 'linux')
+		local osx_deps   = extract_all({osx32 = pdeps.osx32, osx64 = pdeps.osx64}, 'osx')
+		glue.update(pdeps, mingw_deps)
 
 		t.package_deps = {}
 		for platform, pdeps in glue.sortedpairs(pdeps) do
-			if next(pdeps) then
-				table.insert(t.package_deps, {
-					icon = platform,
-					packages = glue.keys(pdeps, true),
-				})
+			table.insert(t.package_deps, {
+				icon = platform ~= 'all' and platform,
+				packages = glue.keys(pdeps, true),
+			})
+		end
+
+		--package dependency matrix
+		t.depnames = {}
+		t.picons = {}
+		t.depmat = {}
+		for platform, pmap in glue.sortedpairs(pdeps) do
+			table.insert(t.picons, platform ~= 'all' and platform)
+			for pkg in pairs(pmap) do
+				t.depnames[pkg] = true
+			end
+		end
+		t.depnames = glue.keys(t.depnames, true)
+		for i, icon in ipairs(t.picons) do
+			t.depmat[i] = {pkg = {}, icon = icon}
+			for j, pkg in ipairs(t.depnames) do
+				local b = pdeps[icon or 'all'][pkg] or false
+				t.depmat[i].pkg[j] = b
 			end
 		end
 
