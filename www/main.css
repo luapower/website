@@ -1,7 +1,7 @@
 
 /* reset ------------------------------------------------------------------ */
 
-html, body, table, tr, td, div, img, hr, input, pre {
+html, body, table, tr, td, div, img, input, pre {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -54,14 +54,13 @@ a:hover {
 }
 
 hr {
-	border-top-width: 1px;
-	border-top-style: solid;
-	margin-top: 20px;
-	margin-bottom: 20px;
+	border: 1px solid;
 }
 
 pre {
-	line-height: 120%;
+	font-family: Inconsolata, monospace;
+	font-size: 13px;
+	line-height: 130%;
 	overflow-x: auto;
 	tab-size: 3;
 	white-space: pre-wrap;
@@ -89,6 +88,8 @@ input {
 [class^="icon-"], [class*=" icon-"], [class="icon"] {
 	font-family: Icons;
 	speak: none;
+	font-weight: normal;
+	font-style: normal;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -160,8 +161,6 @@ input {
 .invisible { visibility: hidden; }
 .hidden { display: none; }
 .nowrap { white-space: nowrap; }
-.abs { position: absolute; }
-.rel { position: relative; }
 
 .smallnote {
 	font-size: 80%;
@@ -362,40 +361,14 @@ html { background-color: #333; }
 
 /* document --------------------------------------------------------------- */
 
-.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
-.doc hr, .doc table, .doc pre, .doc blockquote,
-.doc dd, .doc dt,
-.doc embed, .doc object {
-	margin-top: 20px;
-	margin-bottom: 6px;
-}
-
-.doc h1, .doc h2 {
-	margin-top: 30px;
-}
-
-.doc p {
-	margin-top: 20px;
-	margin-bottom: 6px;
-}
-
-.doc h1, .doc h2, .doc h3 {
-	letter-spacing: -0.03em;
-}
-
 .doc dt {
 	font-style: italic;
 	font-weight: bold;
 }
 
-.doc ul {
-	margin: 0;
-}
-
 .doc ul li {
 	list-style: none;
 	list-style-position: outside;
-	padding-left: 1.5em;
 	overflow: visible;
    position: relative;
 }
@@ -403,38 +376,23 @@ html { background-color: #333; }
 .doc ul li:before {
 	content: "»";
 	position: absolute;
-	left: 0;
-}
-
-.doc ol li {
-	list-style: decimal;
-	margin-left: 2em;
-	padding-left: 0em;
-	overflow: visible;
-   position: relative;
-}
-
-.doc ol li:before {
-	content: none;
+	left: -1.5em;
 }
 
 .doc blockquote {
-	padding-left: 10px;
+	padding-left: 1em;
 	border-left: 1px dotted;
 }
 
 .doc pre {
-	padding: 10px;
+	padding: 1.5em;
 }
 
-/* don't highlight code in headers and tables */
 .doc h2 code,
 .doc h3 code,
 .doc h4 code,
 .doc pre code,
 .doc td code {
-	color: inherit;
-	background-color: inherit;
 	font-weight: normal;
 }
 

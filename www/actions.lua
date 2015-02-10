@@ -369,10 +369,10 @@ local function package_info(pkg, ext)
 		for mod, mt in glue.sortedpairs(t.modmap) do
 			table.insert(t.modules, mt)
 		end
-		t.has_modules = glue.count(t.modules)
+		t.has_modules = glue.count(t.modules) > 0
 
 		t.scripts = glue.keys(lp.scripts(pkg), true)
-		t.has_scripts = glue.count(t.scripts)
+		t.has_scripts = glue.count(t.scripts) > 0
 	end
 
 	t.icons, t.platform_string = package_icons(t.type, t.platforms)

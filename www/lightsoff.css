@@ -29,3 +29,30 @@ input:hover { border-color: #ccc; }
 	border-top-color: #333;
 	border-bottom-color: #333;
 }
+.doc pre { background-color: #000; }
+.doc blockquote { color: #999; }
+.doc th, .doc td strong { color: #999; }
+
+.doc .sourceCode { color: #fff; }
+/*  KeyWordTok */
+.doc .sourceCode .kw { color: #ff0; }
+/*  DataTypeTok */
+.doc .sourceCode .dt { color: #ffc; }
+/*  DecValTok (decimal value), BaseNTok, FloatTok */
+.doc .sourceCode .dv, .doc .sourceCode .bn, .doc .sourceCode .fl { color: #99f; }
+/*  CharTok */
+.doc .sourceCode .ch { color: #FF6666; }
+/*  StringTok */
+.doc .sourceCode .st { color: #FF6666; }
+/*  CommentTok */
+.doc .sourceCode .co { color: #99CC99; }
+/*  OtherTok */
+.doc .sourceCode .ot { color: #CCCCCC; }
+/*  AlertTok */
+.doc .sourceCode .al { color: #FF0000; }
+/*  FunctionTok */
+.doc .sourceCode .fu { color: #FFFFFF; }
+/*  RegionMarkerTok */
+.doc .sourceCode .re { }
+/*  ErrorTok */
+.doc .sourceCode .er { color: #FF0000; }
