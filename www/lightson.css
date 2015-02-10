@@ -17,8 +17,8 @@ input:hover { border-color: #999; }
 .platform_btn { background-color: #ddd; }
 .platform_btn .selected { background-color: #fff; }
 
-.download_link { color: #080 !important; }
-.download_link:visited { color: #080 !important; }
+.download_link { color: #0f0 !important; }
+.download_link:visited { color: #0f0 !important; }
 
 .infobar tr + tr { border-top-color: #ccc; }
 
