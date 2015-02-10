@@ -17,6 +17,9 @@ input:hover { border-color: #ccc; }
 .platform_btn { background-color: #666; }
 .platform_btn .selected { background-color: #000; }
 
+.download_link { color: #0f0 !important; }
+.download_link:visited { color: #0f0 !important; }
+
 .infobar tr + tr { border-top-color: #444; }
 
 .grep .result.active { border-color: #f00; }

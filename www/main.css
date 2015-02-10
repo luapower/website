@@ -263,9 +263,6 @@ html { background-color: #333; }
 
 /* package page ----------------------------------------------------------- */
 
-.download_link { color: #0f0 !important; }
-.download_link:visited { color: #0f0 !important; }
-
 #dep_matrix th {
 	font-size: 100%;
 	font-weight: normal;
