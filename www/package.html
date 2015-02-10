@@ -7,27 +7,28 @@
 						<h1 class=tight>{{package}}</h1>
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
-					<td valign=top align=right width=1 class=nowrap style="padding-right: 20px; font-size: 110%">
+					<td valign=top align=right style="font-size: 110%">
 						<a href="/{{package}}" class="fa fa-file-text-o"> documentation</a> &nbsp;
 						<a href="/{{package}}/info" class="fa fa-info-circle"> package info</a> &nbsp;
-						<a href="/{{package}}/download" class="fa fa-download"> download</a>
+						<a href="/{{package}}/download" class="fa fa-download download_link"> download</a>
 					</td>
 				</tr>
 			</table>
 			<br>
 
+			<!-- download =================================================== -->
 			{{#download}}
 			<table>
 				<tr>
-					<td style="padding-right: 20px" valign=top>
+					<td valign=top>
 						<h2>Download</h2>
 						<a class="fa fa-download button download"
 							href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-							download as tgz</a>
+							download tgz</a>
 						<br>
 						<a class="fa fa-download button download"
 							href="https://github.com/luapower/{{package}}/archive/master.zip">
-							download as zip</a>
+							download zip</a>
 					</td>
 					<td valign=top align=left>
 						<h2 style="display: inline-block;">Clone</h2> &nbsp;
@@ -50,8 +51,6 @@ git remote add origin https://github.com/luapower/{{package}}.git
 git fetch --all
 git branch --track master origin/master
 git checkout
-
-<a href="/luapower-git">luapower</a> clone winapi
 						</pre>
 						<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
 mkdir -p _git/{{package}}
@@ -63,15 +62,28 @@ git remote add origin https://github.com/luapower/{{package}}.git
 git fetch --all
 git branch --track master origin/master
 git checkout
-
-<a href="/luapower-git">./luapower.sh</a> clone winapi
 						</pre>
 					</td>
 				</tr>
 			</table>
+
+			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
+				<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
+	<a href="/luapower-git">luapower</a> clone winapi
+				</pre>
+				<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
+	<a href="/luapower-git">./luapower.sh</a> clone winapi
+				</pre>
+
+			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
+				<pre>
+	luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
+				</pre>
 			{{/download}}
 
+			<!-- info ======================================================= -->
 			{{#info}}
+
 			{{#has_modules}}
 			<h3>Modules</h3>
 			<ul style="-webkit-column-width: 140px; column-width: 140px">
@@ -85,6 +97,18 @@ git checkout
 			{{/modules}}
 			</ul>
 			{{/has_modules}}
+
+			{{#has_scripts}}
+			<h3>Scripts</h3>
+			<ul style="-webkit-column-width: 140px; column-width: 140px">
+			{{#scripts}}
+				<li>
+					<a href="/{{package}}/{{.}}">{{.}}</a>
+				</li>
+			{{/scripts}}
+			</ul>
+			{{/has_scripts}}
+
 			{{#has_docs}}
 			<h3>Docs</h3>
 			<ul>
@@ -93,6 +117,7 @@ git checkout
 			{{/docs}}
 			</ul>
 			{{/has_docs}}
+
 			<h3>Package Dependencies</h3>
 
 			{{#has_package_deps}}
@@ -154,6 +179,7 @@ git checkout
 
 			{{/info}}
 
+			<!-- documentation ============================================== -->
 			{{^info}}{{^download}}
 			<div class=doc>
 				{{{doc_html}}}
@@ -161,6 +187,7 @@ git checkout
 			{{/download}}{{/info}}
 
 		</td>
+		<td style="padding-left: 20px;"></td>
 		<td valign=top align=right width=150 class=nowrap>
 			<h1 class=tight style="margin-bottom: 10px">
 				{{#icons}}

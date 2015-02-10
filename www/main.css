@@ -264,6 +264,9 @@ html { background-color: #333; }
 
 /* package page ----------------------------------------------------------- */
 
+.download_link { color: #0f0 !important; }
+.download_link:visited { color: #0f0 !important; }
+
 #dep_matrix th {
 	font-size: 100%;
 	font-weight: normal;
@@ -291,9 +294,10 @@ html { background-color: #333; }
 .download {
 	font-size: 110% !important;
 	text-align: center;
-	width: 12em;
+	width: 11em;
 	padding: 0.5em;
 	margin-top: 4px;
+	margin-right: 30px;
 }
 
 .download { background-color: #080; color: #fff !important; }

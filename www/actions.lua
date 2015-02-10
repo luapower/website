@@ -210,6 +210,7 @@ local function package_info(pkg, ext)
 		t.github_title = t.github_url:gsub('^%w+://', '')
 
 		if ext then
+
 			t.modmap = {}
 			for mod, file in pairs(lp.modules(pkg)) do
 				t.modmap[mod] = {module = mod, file = file}
@@ -325,10 +326,16 @@ local function package_info(pkg, ext)
 			end
 		end
 		local pdeps = extract_all(pmaps, 'all')
-		local mingw_deps = extract_all({mingw32 = pdeps.mingw32, mingw64 = pdeps.mingw64}, 'mingw')
-		local linux_deps = extract_all({linux32 = pdeps.linux32, linux64 = pdeps.linux64}, 'linux')
-		local osx_deps   = extract_all({osx32 = pdeps.osx32, osx64 = pdeps.osx64}, 'osx')
-		glue.update(pdeps, mingw_deps)
+
+		--compress 32 and 64 bit lists
+		for _,p in ipairs{'mingw', 'linux', 'osx'} do
+			local t = {}
+			for _,n in ipairs{32, 64} do
+				t[p..n] = pdeps[p..n]
+				pdeps[p..n] = nil
+			end
+			glue.update(pdeps, extract_all(t, p))
+		end
 
 		t.package_deps = {}
 		for platform, pdeps in glue.sortedpairs(pdeps) do
@@ -353,7 +360,7 @@ local function package_info(pkg, ext)
 		for i, icon in ipairs(t.picons) do
 			t.depmat[i] = {pkg = {}, icon = icon}
 			for j, pkg in ipairs(t.depnames) do
-				local b = pdeps[icon or 'all'][pkg] or false
+				local b = pdeps.all[pkg] or pdeps[icon or 'all'][pkg] or false
 				t.depmat[i].pkg[j] = b
 			end
 		end
@@ -363,6 +370,9 @@ local function package_info(pkg, ext)
 			table.insert(t.modules, mt)
 		end
 		t.has_modules = glue.count(t.modules)
+
+		t.scripts = glue.keys(lp.scripts(pkg), true)
+		t.has_scripts = glue.count(t.scripts)
 	end
 
 	t.icons, t.platform_string = package_icons(t.type, t.platforms)
