@@ -1,118 +1,209 @@
 <table width=100%>
 	<tr>
-		<td colspan=2 valign=top>
+		<td valign=top>
 			<table width=100%>
 				<tr>
 					<td valign=top>
 						<h1 class=tight>{{package}}</h1>
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
-					<td valign=top align=right width=1 class=nowrap style="padding-right: 20px">
-						{{type}} | {{version}}
-						<br>
-						<a href="/{{package}}/info">package info</a>
-					</td>
-					<td valign=top align=right width=1 class=nowrap>
-						<h1 class=tight>
-							{{#icons}}
-								<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
-							{{/icons}}
-						</h1>
+					<td valign=top align=right width=1 class=nowrap style="padding-right: 20px; font-size: 110%">
+						<a href="/{{package}}" class="fa fa-file-text-o"> documentation</a> &nbsp;
+						<a href="/{{package}}/info" class="fa fa-info-circle"> package info</a> &nbsp;
+						<a href="/{{package}}/download" class="fa fa-download"> download</a>
 					</td>
 				</tr>
 			</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan=3>
+			<br>
+
+			{{#download}}
+			<table>
+				<tr>
+					<td style="padding-right: 20px" valign=top>
+						<h2>Download</h2>
+						<a class="fa fa-download button download"
+							href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+							download as tgz</a>
+						<br>
+						<a class="fa fa-download button download"
+							href="https://github.com/luapower/{{package}}/archive/master.zip">
+							download as zip</a>
+					</td>
+					<td valign=top align=left>
+						<h2 style="display: inline-block;">Clone</h2> &nbsp;
+						<div class=platform_btn>
+							<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
+								<div class="icon-mingw"></div>
+							</div>
+							<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
+								<div class="icon-linux"></div>
+								<div class="icon-osx"></div>
+							</div>
+						</div>
+						<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
+md _git\{{package}}
+set GIT_DIR=_git\{{package}}\.git
+git init
+git config --local core.worktree ../../..
+git config --local core.excludesfile {{package}}.exclude
+git remote add origin https://github.com/luapower/{{package}}.git
+git fetch --all
+git branch --track master origin/master
+git checkout
+
+<a href="/luapower-git">luapower</a> clone winapi
+						</pre>
+						<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
+mkdir -p _git/{{package}}
+export GIT_DIR=_git/{{package}}/.git
+git init
+git config --local core.worktree ../../..
+git config --local core.excludesfile {{package}}.exclude
+git remote add origin https://github.com/luapower/{{package}}.git
+git fetch --all
+git branch --track master origin/master
+git checkout
+
+<a href="/luapower-git">./luapower.sh</a> clone winapi
+						</pre>
+					</td>
+				</tr>
+			</table>
+			{{/download}}
+
 			{{#info}}
-				{{#has_modules}}
-					<h3>Modules</h3>
-					<ul style="-webkit-column-width: 140px; column-width: 140px">
-					{{#modules}}
-						<li>
-							<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
-							{{#icons}}
-								<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
-							{{/icons}}
-						</li>
-					{{/modules}}
-					</ul>
-				{{/has_modules}}
-				{{#has_docs}}
-					<h3>Docs</h3>
-					<ul>
-					{{#docs}}
-						<li>{{.}}</li>
-					{{/docs}}
-					</ul>
-				{{/has_docs}}
-					<h3>Package Dependencies</h3>
-					<span class=smallnote>
-						Note: This is a combined list of packages required by all modules.
-						Some modules may only require a subset of packages.<br>
-						Click on individual modules to see their specific dependencies.
-					</span>
+			{{#has_modules}}
+			<h3>Modules</h3>
+			<ul style="-webkit-column-width: 140px; column-width: 140px">
+			{{#modules}}
+				<li>
+					<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
+					{{#icons}}
+						<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+					{{/icons}}
+				</li>
+			{{/modules}}
+			</ul>
+			{{/has_modules}}
+			{{#has_docs}}
+			<h3>Docs</h3>
+			<ul>
+			{{#docs}}
+				<li>{{.}}</li>
+			{{/docs}}
+			</ul>
+			{{/has_docs}}
+			<h3>Package Dependencies</h3>
 
-					<table style="margin-top: 20px">
-						<tr>
-							<td valign=top width=40>
-								<i id=dep_btn class="fa fa-table"></i>
-							</td>
-							<td valign=top>
-								<table id=dep_lists>
-									{{#package_deps}}
-									<tr>
-										<td class=col1>
-											<span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span>
-										</td>
-										<td class=col2>
-											{{#packages}}
-											<a href="/{{.}}">{{.}}</a>
-											{{/packages}}
-										</td>
-									</tr>
-									{{/package_deps}}
-								</table>
+			{{#has_package_deps}}
 
-								<table id=dep_matrix class="doc hidden">
-									<thead>
-										<tr>
-											<th></th>
-											{{#depnames}}
-											<th><a href="/{{.}}">{{.}}</a></th>
-											{{/depnames}}
-										</tr>
-									</thead>
-									<tbody>
-										{{#depmat}}
-										<tr>
-											<td><span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span></td>
-											{{#pkg}}<td align=center>{{#.}}<i class="fa fa-check"></i>{{/.}}</td>{{/pkg}}
-										</tr>
-										{{/depmat}}
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</table>
+			<span class=smallnote>
+				Note: This is a combined list of packages required by all modules.
+				Some modules may only require a subset of packages.<br>
+				Click on individual modules to see their specific dependencies.
+			</span>
+
+			<table style="margin-top: 20px">
+				<tr>
+					<td valign=top width=40>
+						<i id=dep_btn class="fa fa-table"></i>
+					</td>
+					<td valign=top>
+						<table id=dep_lists>
+							{{#package_deps}}
+							<tr>
+								<td class=col1>
+									<span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span>
+								</td>
+								<td class=col2>
+									{{#packages}}
+									<a href="/{{.}}">{{.}}</a>
+									{{/packages}}
+								</td>
+							</tr>
+							{{/package_deps}}
+						</table>
+
+						<table id=dep_matrix class="doc hidden">
+							<thead>
+								<tr>
+									<th></th>
+									{{#depnames}}
+									<th><a href="/{{.}}">{{.}}</a></th>
+									{{/depnames}}
+								</tr>
+							</thead>
+							<tbody>
+								{{#depmat}}
+								<tr>
+									<td><span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span></td>
+									{{#pkg}}<td align=center>{{#.}}<i class="fa fa-check"></i>{{/.}}</td>{{/pkg}}
+								</tr>
+								{{/depmat}}
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			{{/has_package_deps}}
+
+			{{^has_package_deps}}
+				<span class=smallnote>No dependencies.</span>
+			{{/has_package_deps}}
 
 			{{/info}}
-			{{#log}} <pre>{{.}}</pre> <br>{{/log}}
-			{{^info}}
+
+			{{^info}}{{^download}}
 			<div class=doc>
 				{{{doc_html}}}
 			</div>
-			{{/info}}
+			{{/download}}{{/info}}
+
+		</td>
+		<td valign=top align=right width=150 class=nowrap>
+			<h1 class=tight style="margin-bottom: 10px">
+				{{#icons}}
+					<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+				{{/icons}}
+			</h1>
+			<br>
+			<table width=100% class=infobar>
+				<tr>
+					<td class="small gray">Type:</td><td class=small>{{type}}</td>
+				</tr>
+				<tr>
+					<td class="small gray">Version: </td><td class=small>{{version}}</td>
+				</tr>
+				<tr>
+					<td class="small gray">License: </td><td class=small>{{license}}</td>
+				</tr>
+			</table>
 		</td>
 	</tr>
 </table>
 <script>
 $(function() {
+
 	$('#dep_btn').click(function() {
 		$('#dep_lists').toggle()
 		$('#dep_matrix').toggle()
 		$(this).toggleClass('fa-list').toggleClass('fa-table')
 	})
+
+	$('#windows_clone_btn').click(function() {
+		$('pre.unix').hide()
+		$('pre.windows').show()
+		$(this).addClass('selected')
+		$('#unix_clone_btn').removeClass('selected')
+	})
+
+	$('#unix_clone_btn').click(function() {
+		$('pre.windows').hide()
+		$('pre.unix').show()
+		$(this).addClass('selected')
+		$('#windows_clone_btn').removeClass('selected')
+	})
+
 })
 </script>

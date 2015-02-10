@@ -1,7 +1,7 @@
 
 /* reset ------------------------------------------------------------------ */
 
-html, body, table, tr, td, div, img, hr, button, input, select, textarea {
+html, body, table, tr, td, div, img, hr, input, pre {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -62,7 +62,6 @@ hr {
 
 pre {
 	line-height: 120%;
-	font-size: 90%;
 	overflow-x: auto;
 	tab-size: 3;
 	white-space: pre-wrap;
@@ -73,18 +72,6 @@ input {
 	font-size: 90%;
 	height: 27px;
 	padding: .5em;
-}
-
-button {
-	cursor: pointer;
-	border-width: 1px;
-	border-style: solid;
-	font-weight: normal;
-	font-size: 14px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	padding-left: 1.5em;
-	padding-right: 1.5em;
 }
 
 .tight { margin: 0; }
@@ -102,11 +89,6 @@ button {
 [class^="icon-"], [class*=" icon-"], [class="icon"] {
 	font-family: Icons;
 	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -306,18 +288,43 @@ html { background-color: #333; }
 	padding-left: 0.5em;
 }
 
-/* packages --------------------------------------------------------------- */
+.download {
+	font-size: 110% !important;
+	text-align: center;
+	width: 12em;
+	padding: 0.5em;
+	margin-top: 4px;
+}
 
-.selected { background-color: #ff0; }
-.searched { background-color: #0f0; }
-.type-module { color: #00f; }
-.type-script { color: #f0f; }
-.type-doc { color: #080; }
-.type-bin { color: #080; }
-.type-csrc { color: #000; }
-.type-unknown { color: #888; }
+.download { background-color: #080; color: #fff !important; }
+.download:visited { color: #999 !important; }
+.download:hover { color: #ff0 !important; }
 
-/* back-to-top button ----------------------------------------------------- */
+.platform_btn {
+	display: inline-block;
+	position: relative;
+	top: 2px;
+	font-style: 60%;
+	border: 1px solid gray;
+	border-radius: 6px;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.platform_btn div {
+	display: inline-block;
+	text-align: center;
+}
+.platform_btn .icon-mingw { width: 30px; }
+.platform_btn .icon-linux { width: 20px; }
+.platform_btn .icon-osx   { width: 20px; text-align: left; }
+.platform_btn { background-color: #ddd; }
+.platform_btn .selected { background-color: #fff; }
+
+.infobar td { padding-top: 4px; padding-bottom: 4px; }
+.infobar tr + tr { border-top: 1px solid; }
+
+/* back-to-top link ------------------------------------------------------- */
 
 .top {
 	display: inline-block;
@@ -446,13 +453,13 @@ html { background-color: #333; }
 
 /* hack: use <strong> in a table means a header */
 .doc td strong {
-	font-size: 16px;
+	font-size: 120%;
 	margin-top: 6px;
 	display: inline-block;
 }
 
 .doc dt {
-	font-size: 14px;
+	font-size: 110%;
 	font-style: normal;
 	border-top: 1px solid;
 	padding-top: 20px;

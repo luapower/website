@@ -12,10 +12,13 @@ local luapower = require'luapower'
 function render_main(name, data, env)
 	local lights = HEADERS.cookie
 		and HEADERS.cookie:match'lights=(%a+)' or 'off'
+	local ua = HEADERS.user_agent
 	return render('main.html',
 		glue.merge({
 			lights = lights,
 			inverse_lights = lights == 'on' and 'off' or 'on',
+			on_windows = ua:find'Windows',
+			on_unix = not ua:find'Windows',
 		}, data),
 		glue.merge({
 			content = readfile(name),
@@ -334,6 +337,7 @@ local function package_info(pkg, ext)
 				packages = glue.keys(pdeps, true),
 			})
 		end
+		t.has_package_deps = #t.package_deps > 0
 
 		--package dependency matrix
 		t.depnames = {}
@@ -365,11 +369,13 @@ local function package_info(pkg, ext)
 	return t
 end
 
-local function action_package(pkg, info)
-	local t = package_info(pkg, info and true)
-	if info then
+local function action_package(pkg, what)
+	local t = package_info(pkg, what == 'info')
+	if what == 'info' then
 		t.info = true
-	else
+	elseif what == 'download' then
+		t.download = true
+	elseif not what then
 		t.doc_html = t.docfile and render_docfile(powerpath(t.docfile))
 	end
 	out(render_main('package.html', t))
