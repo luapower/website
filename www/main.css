@@ -108,6 +108,11 @@ input {
 
 /* main template ---------------------------------------------------------- */
 
+.screen_width {
+	width: 96%;
+	max-width: 1000px;
+}
+
 .topbar {
 	height: 33px;
 }
@@ -120,6 +125,8 @@ input {
 	text-decoration: none;
 	position: relative;
 	top: 1px;
+	margin-right: 3em;
+	white-space: nowrap;
 }
 
 #lights_label {
@@ -137,6 +144,7 @@ input {
 #github_label {
 	position: relative;
 	left: -20px;
+	white-space: nowrap;
 }
 
 #github_icon {
@@ -263,6 +271,10 @@ html { background-color: #333; }
 
 /* package page ----------------------------------------------------------- */
 
+.spacey_links a + a {
+	margin-left: 0.5em;
+}
+
 #dep_matrix th {
 	font-size: 100%;
 	font-weight: normal;
@@ -321,6 +333,7 @@ html { background-color: #333; }
 .platform_btn { background-color: #ddd; }
 .platform_btn .selected { background-color: #fff; }
 
+.infobar td { padding-right: 0.5em; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
 
@@ -331,7 +344,7 @@ html { background-color: #333; }
 	width: 40px;
 	height: 30px;
 	position: fixed;
-	left: 90%;
+	left: 92%;
 	bottom: 20px;
 	visibility: hidden;
 	opacity: 0;

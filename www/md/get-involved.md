@@ -3,8 +3,6 @@ title:    get involved
 tagline:  creating luapower packages
 ---
 
-> NOTE: This page is all about rules, so necessarily you will have issues with it.
-
 ## Anatomy of a package
 
 There are 5 types of luapower packages:
@@ -197,12 +195,19 @@ The way you add modules to luapower.com is:
 
   * first you make a git repo that resembles a luapower package
   * then you can either:
-	 * publish it on your server or github account (luapower users will clone from that url directly)
-	   * I will add your package to the package database
-		* I will periodically pull and update luapower.com
-	 * publish it _and manage it_ yourself on luapower.com
-	   * I will add you as an admin to the luapower github account (it's an organization account)
-		* you will update luapower.com yourself
+	 * publish it on github (or on your server)
+     * I add your package to the package list
+     * you set up a webhook on your package to `http://luapower.com/github`
+     * luapower users will clone from your url directly
+	 * publish it under the luapower github account
+	   * I add you as an admin to the luapower github account
+     * you add your package to the package list
+     * you set up a webhook on your package to `http://luapower.com/github`
+
+In the first scenario you retain full control over where you publish the
+sources and luapower.com can be kept up-to-date via a webhook.
+In the second case, you keep the sources on github and you add packages
+yourself to the base repo.
 
 #### What to add
 
@@ -211,55 +216,58 @@ Before publishing a luapower module, please consider:
   * what name you plan to use for your module
   * how your module relates to other modules
 
-Choosing a good name is important if you want people to find your module on luapower.com
-and understand (from the name alone) what it does. Likewise, it's a good idea to be sure that your module
-is doing something new or at least different (and hopefully better) than something already on luapower.com.
+Choosing a good name is important if you want people to find your module
+on luapower.com and understand (from the name alone) what it does. Likewise,
+it's a good idea to be sure that your module is doing something new or at
+least different (and hopefully better) than something already on luapower.com.
 
 Ideally, your module has:
 
   * __distinction__ - focused problem domain
   * __completeness__ - exhaustive of the problem domain
-  * __API documentation__ - so it can be integrated into luapower.com
+  * __API documentation__ - so it can be browsed on luapower.com
   * __test and/or demo__ - so it can be seen to work
   * __a non-viral license__ - so it doesn't impose restrictions on _other_ modules
 
-Of course, few modules (in any language) qualify on all fronts, so luapower.com is inevitably an ecclectic mix.
-In any case, if your module collection is too specialized to be added to luapower.com or you simply don't
-want to mix it in, here's where you can have your cake and eat it too.
+Of course, few modules (in any language) qualify on all fronts, so luapower.com
+is inevitably an ecclectic mix. In any case, if your module collection is too
+specialized to be added to luapower.com or you simply don't want to mix it in,
+here's where you can have your cake and eat it too.
 
 ### 2. Forking luapower.com
 
-Luapower can be easily forked and used as a personal website for publishing luapower modules.
+Luapower can be easily forked and used as a personal website for publishing
+Lua modules.
 
 Luapower is composed of:
 
-  * a [static website][luapower-website] generated with pandoc templating
-  * a [Lua script][luapower-command] for updating the package database, navigation tree, and dependency lists offline
+  * a [open-resty based website][luapower-website]
+  * a [Lua script][luapower-command] which acts as a database server for the website
   * a few [simple shell scripts][luapower-git-src] for working with git in a shared-work-tree environment
 
-Which means that with a few forks and a few tweaks you can have your own luapower clone with your own modules on it.
-The only dependency is [pandoc] for generating the website.
+Which means that with a few forks and a few tweaks you can have your own
+luapower clone with your own modules on it. The only dependency is [pandoc]
+for converting the website documentation from markdown to html.
 
 #### The `luapower` command
 
-This is a powerful command that extracts and aggregates data from the luapower environment and gives
-detailed information about packages, modules and documentation. It can give accurate information about dependencies
-between modules and packages because it actually loads the module and tracks `require` calls, and then it
-integrates that information with the information about packages.
+This is a powerful command that extracts and aggregates data from the luapower
+environment and gives detailed information about packages, modules and
+documentation. It can give accurate information about dependencies between
+modules and packages because it actually loads the module and tracks `require`
+calls, and then it integrates that information with the information about
+packages.
 
-It is also used for generating the package database on luapower.com, along with the the dependency lists
-you see on each module's page.
+In addition to the command line frontend, it is also exposed as a RPC server
+which servers cached package metadata to the luapower.com website.
 
-The `luapower` command is a Lua script that depends on [luajit], [lfs], [glue] and [tuple] so let's clone these first:
+The `luapower` command is a Lua script that depends on [luajit], [lfs],
+[glue] and [tuple] so let's clone these first:
 
 	> clone luajit
 	> clone lfs
 	> clone glue
 	> clone tuple
-
-For updating the website, we also need to clone its files in the `_site` sub-directory:
-
-	> git clone https://github.com/luapower/luapower.github.io _site
 
 The rest you can learn from the tool itself:
 
@@ -319,10 +327,9 @@ The rest you can learn from the tool itself:
 
 #### The luapower website
 
-Look into `_site/config.js` for what needs to be adjusted.
+To be continued...
 
-
-[luapower-website]:   https://github.com/luapower/luapower.github.io
+[luapower-website]:   https://github.com/luapower/website
 [luapower-command]:   https://github.com/luapower/luapower-git/blob/master/luapower.lua
 [luapower-git-src]:   https://github.com/luapower/luapower-git
 [pandoc]:             http://johnmacfarlane.net/pandoc/
