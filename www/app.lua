@@ -76,7 +76,11 @@ end
 
 --output API -----------------------------------------------------------------
 
-out = ngx.print
+local outbuf = {}
+
+function out(s)
+	outbuf[#outbuf+1] = tostring(s)
+end
 
 function print(...)
 	local n = select('#', ...)
@@ -117,9 +121,15 @@ end
 
 --filesystem API -------------------------------------------------------------
 
+function escape_filename(s)
+	return s:gsub('[/\\%?%%%*%:|"<> ]', '-')
+end
+
 function wwwpath(file) --file -> path (if exists)
+	local www = config'www_dir'
+	if not file then return www end
 	assert(not file:find('..', 1, true))
-	return config'www_dir' .. '/' .. file
+	return www..'/'..file
 end
 
 local st = {}
@@ -145,7 +155,7 @@ end
 
 function connect(ip, port)
 	local skt = ngx.socket.tcp()
-	skt:settimeout(1000)
+	skt:settimeout(2000)
 	skt:setkeepalive()
 	local ok, err = skt:connect(ip, port)
 	if not ok then return nil, err end
@@ -157,6 +167,11 @@ wait = ngx.thread.wait
 --action API -----------------------------------------------------------------
 
 action = {} --{name = handler}
+
+local function cachepath()
+	local uri = PATH .. (QUERY and '?' .. QUERY or '')
+	return wwwpath('cache/'..escape_filename(uri))
+end
 
 function run()
 	--init global and request contexts
@@ -175,6 +190,7 @@ function run()
 	--find and run the action
 	local handler = action[act]
 	handler(unpack(ARGS))
+	ngx.print(table.concat(outbuf))
 end
 
 return app

@@ -1,8 +1,8 @@
 
 body { background-color: #fff; color: #000; }
 
-a { color: #666; }
-a:visited { color: #999; }
+a { color: #444; }
+a:visited { color: #888; }
 a:hover { color: #000; }
 a[target=_blank] { color: #d00; }
 a[target=_blank]:visited { color: #f66; }
@@ -12,15 +12,18 @@ hr { border-top-color: #ccc; }
 input { border-color: #ccc; }
 input:hover { border-color: #999; }
 
-.disabled { color: #ccc; }
+.disabled { color: #aaa; }
 
-.platform_btn { background-color: #ddd; }
-.platform_btn .selected { background-color: #fff; }
+.platform_btn { background-color: #fff; color: #999; }
+.platform_btn .selected { background-color: #ddd; color: #000; }
 
 .download_link { color: #090 !important; }
 .download_link:visited { color: #090 !important; }
 
 .infobar tr + tr { border-top-color: #ccc; }
+
+.indirect { color: #bbb !important; }
+.error, .error a { background-color: #900 !important; color: #fff !important; }
 
 .grep .result.active { border-color: #f00; }
 .grep pre { border-color: #ccc; }

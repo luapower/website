@@ -21,3 +21,15 @@
 	</tr>
 	{{/statuses}}
 </table>
+
+<h2>Module load errors</h2>
+{{#statuses}}
+	<h3>{{platform}}</h3>
+	<table width=100%>
+		{{#load_errors}}
+		<tr>
+			<td><a href="/{{module}}">{{module}}</a></td><td>{{error}}</td>
+		</tr>
+		{{/load_errors}}
+	</table>
+{{/statuses}}

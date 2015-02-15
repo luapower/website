@@ -1,13 +1,36 @@
 <center>
 	<img src="/luapower.png">
 </center>
-<table width=100% id=package_table class=doc>
+
+<center>
+	<h1 id=home_tagline>luapower is the LuaJIT distribution for Windows, Linux and OS X</h1>
+</center>
+
+<table><tr><td>
+	<a id=table_list_switch class="fa fa-table" style="font-size: 140%"></a>
+</td></tr></table>
+
+<ul id=package_list class=multicol_name>
+	{{#cat}}
+		<li><h4 class=home_cat>{{cat}}</h4></li>
+		{{#packages}}
+		<li>
+			<a href="/{{name}}">{{name}}</a>
+			{{#hot}} <i class="fa fa-star hot" title="updated in the last 7 days"></i>{{/hot}}
+		</li>
+		{{/packages}}
+	{{/cat}}
+</ul>
+
+<table width=100% id=package_table class="doc hidden">
 	<thead>
 		<tr>
+			<th></th>
 			<th align=left title="Hold Shift to sort by multiple columns">Type</th>
 			<th align=left title="Hold Shift to sort by multiple columns">Package</th>
 			<th align=left title="Hold Shift to sort by multiple columns">What</th>
 			<th align=left title="Hold Shift to sort by multiple columns">Version</th>
+			<th align=left title="Hold Shift to sort by multiple columns">Updated</th>
 			<th align=left title="Hold Shift to sort by multiple columns">Platforms</th>
 			<th align=left title="Hold Shift to sort by multiple columns">License</th>
 		</tr>
@@ -15,11 +38,14 @@
 	<tbody>
 		{{#packages}}
 		<tr>
+			<td>&nbsp;</td>
 			<td>{{type}}</td>
 			<td><a href="/{{name}}">{{name}}</a></td>
 			<td>{{tagline}}</td>
 			<td>{{version}}</td>
-			<td nowrap><span class=hidden>{{platform_string}}</span>
+			<td><span class=hidden>{{mtime}}</span> {{mtime_ago}}</td>
+			<td nowrap>
+				<span class=hidden>{{platform_string}}</span>
 				{{#icons}}
 					<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>
 				{{/icons}}
@@ -29,4 +55,5 @@
 		{{/packages}}
 	</tbody>
 </table>
+
 <script src="/home.js"></script>

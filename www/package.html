@@ -8,9 +8,9 @@
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td valign=top align=right class=spacey_links>
-						<a href="/{{package}}" class="fa fa-file-text-o"> documentation</a>
-						<a href="/{{package}}/info" class="fa fa-info-circle"> package info</a>
-						<a href="/{{package}}/download" class="fa fa-download download_link"> download</a>
+						<a href="/{{package}}" class=nowrap><i class="fa fa-file-text-o"></i> documentation</a>
+						<a href="/{{package}}/info" class=nowrap><i class="fa fa-info-circle"></i> package info</a>
+						<a href="/{{package}}/download" class="nowrap download_link"><i class="fa fa-download"></i> download</a>
 					</td>
 				</tr>
 			</table>
@@ -42,6 +42,7 @@
 							</div>
 						</div>
 						<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
+cd luapower
 md _git\{{package}}
 set GIT_DIR=_git\{{package}}\.git
 git init
@@ -53,6 +54,7 @@ git branch --track master origin/master
 git checkout
 						</pre>
 						<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
+cd luapower
 mkdir -p _git/{{package}}
 export GIT_DIR=_git/{{package}}/.git
 git init
@@ -84,23 +86,124 @@ git checkout
 			<!-- info ======================================================= -->
 			{{#info}}
 
+			<h3>Package Dependencies &nbsp;
+				<a class="dep_switch package_dep_switch"><i class="fa fa-table"></i></a>
+				<a class="dep_switch package_dep_switch hidden"><i class="fa fa-list"></i></a>
+			</h3>
+			{{#has_package_deps}}
+			<p class=smallnote>
+				This is a combined list of packages required by all modules of this package on each supported platform.
+				<br>Grayed out names represent indirect dependencies.
+			</p>
+			<table id=dep_lists>
+				{{#package_deps}}
+				<tr>
+					<td class=col1 valign=top>
+						<span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span>
+					</td>
+					<td class=col2 valign=top>
+						{{#packages}}
+						<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+						{{/packages}}
+					</td>
+				</tr>
+				{{/package_deps}}
+			</table>
+			<div id=dep_matrix class="doc hidden">
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							{{#depnames}}
+							<th><a href="/{{.}}">{{.}}</a></th>
+							{{/depnames}}
+						</tr>
+					</thead>
+					<tbody>
+						{{#depmat}}
+						<tr>
+							<td><span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span></td>
+							{{#pkg}}<td align=center>{{#.}}<i class="fa fa-check"></i>{{/.}}</td>{{/pkg}}
+						</tr>
+						{{/depmat}}
+					</tbody>
+				</table>
+				</div>
+			{{/has_package_deps}}
+			{{^has_package_deps}}
+				<span class=smallnote>No dependencies.</span>
+			{{/has_package_deps}}
+
 			{{#has_modules}}
-			<h3>Modules</h3>
-			<ul style="-webkit-column-width: 140px; column-width: 140px">
-			{{#modules}}
-				<li>
-					<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
-					{{#icons}}
-						<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
-					{{/icons}}
-				</li>
-			{{/modules}}
-			</ul>
+			<h3>
+				Module Dependencies
+				&nbsp;
+				<a class="modpkg_switch" type=P title="show required modules">P</a>
+				<a class="modpkg_switch hidden" type=M title="show packages">M</a>
+			</h3>
+			<p class=smallnote>
+				Grayed out names represent indirect dependencies or internal dependencies.
+			</p>
+			<table>
+				{{#modules}}
+				<tr>
+					<td valign=top align=center width=30>
+						{{#icons}}
+							<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+						{{/icons}}
+					</td>
+					<td class="nowrap {{error_class}}" valign=top style="padding-right: 1em">
+						<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
+					</td>
+					<td valign=top class="{{error_class}}">
+						{{#load_errors}}
+							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#errors}} {{.}} {{/errors}}
+						{{/load_errors}}
+						<div class="package_list">
+						{{#package_deps}}
+							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#packages}}
+								<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+							{{/packages}}
+						{{/package_deps}}
+						</div>
+						<div class="module_list hidden">
+						{{#module_deps}}
+							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#modules}}
+								<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+							{{/modules}}
+						{{/module_deps}}
+					</td>
+				</tr>
+				{{/modules}}
+			</table>
+			{{#has_autoloads}}
+			<h3>Module Autoloads</h3>
+				{{#modules}}{{#has_autoloads}}
+					{{#autoloads}}
+					<h4 class=tight>
+						<span class="icon-{{icon}}" style="display: inline-block; width: 30px"></span>
+						<a href="/{{module}}">{{module}}</a>
+					</h4>
+					<table>
+					{{#autoloads}}
+						<tr>
+							<td style="padding-left: 60px; padding-right: 1em">{{key}}</td>
+							<td><a href="/{{module}}">{{module}}</a></td>
+						</tr>
+					{{/autoloads}}
+					</table>
+					{{/autoloads}}
+				{{/has_autoloads}}{{/modules}}
+			{{/has_autoloads}}
+
 			{{/has_modules}}
 
 			{{#has_scripts}}
 			<h3>Scripts</h3>
-			<ul style="-webkit-column-width: 140px; column-width: 140px">
+			<ul class=multicol_name>
 			{{#scripts}}
 				<li>
 					<a href="/{{package}}/{{.}}">{{.}}</a>
@@ -117,65 +220,6 @@ git checkout
 			{{/docs}}
 			</ul>
 			{{/has_docs}}
-
-			<h3>Package Dependencies</h3>
-
-			{{#has_package_deps}}
-
-			<span class=smallnote>
-				Note: This is a combined list of packages required by all modules.
-				Some modules may only require a subset of packages.<br>
-				Click on individual modules to see their specific dependencies.
-			</span>
-
-			<table style="margin-top: 20px">
-				<tr>
-					<td valign=top width=40>
-						<i id=dep_btn class="fa fa-table"></i>
-					</td>
-					<td valign=top>
-						<table id=dep_lists>
-							{{#package_deps}}
-							<tr>
-								<td class=col1>
-									<span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span>
-								</td>
-								<td class=col2>
-									{{#packages}}
-									<a href="/{{.}}">{{.}}</a>
-									{{/packages}}
-								</td>
-							</tr>
-							{{/package_deps}}
-						</table>
-
-						<table id=dep_matrix class="doc hidden">
-							<thead>
-								<tr>
-									<th></th>
-									{{#depnames}}
-									<th><a href="/{{.}}">{{.}}</a></th>
-									{{/depnames}}
-								</tr>
-							</thead>
-							<tbody>
-								{{#depmat}}
-								<tr>
-									<td><span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span></td>
-									{{#pkg}}<td align=center>{{#.}}<i class="fa fa-check"></i>{{/.}}</td>{{/pkg}}
-								</tr>
-								{{/depmat}}
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</table>
-
-			{{/has_package_deps}}
-
-			{{^has_package_deps}}
-				<span class=smallnote>No dependencies.</span>
-			{{/has_package_deps}}
 
 			{{/info}}
 
@@ -202,6 +246,9 @@ git checkout
 					<td class="small gray">Version: </td><td class=small>{{version}}</td>
 				</tr>
 				<tr>
+					<td class="small gray">Last commit: </td><td class=small>{{mtime_ago}}</td>
+				</tr>
+				<tr>
 					<td class="small gray">License: </td><td class=small>{{license}}</td>
 				</tr>
 			</table>
@@ -211,10 +258,24 @@ git checkout
 <script>
 $(function() {
 
-	$('#dep_btn').click(function() {
+	$('.package_dep_switch').click(function() {
 		$('#dep_lists').toggle()
 		$('#dep_matrix').toggle()
-		$(this).toggleClass('fa-list').toggleClass('fa-table')
+		$('.package_dep_switch').toggle()
+	}).mousedown(function(e) {
+		// prevent selection of subsequent text on double-click.
+		e.preventDefault()
+	})
+
+
+	$('.modpkg_switch').click(function() {
+		var pkg = $(this).attr('type') == 'P'
+		$('.package_list').toggle()
+		$('.module_list').toggle()
+		$('.modpkg_switch').toggle()
+	}).mousedown(function(e) {
+		// prevent selection of subsequent text on double-click.
+		e.preventDefault()
 	})
 
 	$('#windows_clone_btn').click(function() {

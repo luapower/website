@@ -145,5 +145,5 @@ The generated binaries are compatible down to OSX 10.6 for both 32bit and 64bit.
 
 [mingw-w64-win64]:    http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/4.8.1/64-bit/threads-posix/seh/x64-4.8.1-release-posix-seh-rev5.7z
 [mingw-w64-win32]:    http://heanet.dl.sourceforge.net/project/mingwbuilds/host-windows/releases/4.8.1/32-bit/threads-posix/sjlj/
-[Core-5.2.iso]:       http://distro.ibiblio.org/tinycorelinux/5.x/x86/release/Core-5.2.iso
-[CorePure64-5.2.iso]: http://distro.ibiblio.org/tinycorelinux/5.x/x86_64/release/CorePure64-5.2.iso
+[Core-5.2.iso]:       http://distro.ibiblio.org/tinycorelinux/5.x/x86/archive/5.2/Core-5.2.iso
+[CorePure64-5.2.iso]: http://distro.ibiblio.org/tinycorelinux/5.x/x86_64/archive/5.2/CorePure64-5.2.iso

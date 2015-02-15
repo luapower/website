@@ -41,30 +41,31 @@ and it makes it possible to extract package information and build the package da
 In order to appear on the website, docs should start with a yaml header:
 
 	---
-	project: cairo
 	tagline: cairo graphics engine
 	---
 
-  * the `project` field should match the git project's name - this makes the "view on github" and download buttons appear.
-  * `platforms: platform1, ...` should be added for Lua packages that are platform-specific
-  but don't have a C component (eg. [winapi]; for packages with a C component, adding the build scripts is enough
-  to figure out the supported platforms).
-  * a good, short tagline is important for figuring out what the module does when browsing the module list
+  * `platforms: platform1, ...` should only be added for Lua packages that are
+  platform-specific but don't have a C component (eg. [winapi]; for packages
+  with a C component, adding the build scripts is enough to figure out the
+  supported platforms).
+  * a good, short tagline is important for figuring out what the module does
+  when browsing the module list.
 
-You don't have to make a doc for each submodule if you don't have much to document for it, a single doc
-matching the package name would suffice.
+You don't have to make a doc for each submodule if you don't have much to
+document for it, a single doc matching the package name would suffice.
 
 ### The `WHAT` file
 
-The WHAT file is used for packages that have a C component (Lua+ffi, Lua/C or C packages),
-and it's used to describe that C component. Pure Lua packages don't need a WHAT file.
+The WHAT file is used for packages that have a C component (i.e. Lua+ffi,
+Lua/C and C packages), and it's used to describe that C component. Pure Lua
+packages don't need a WHAT file.
 
 	cairo 1.12.16 from http://cairographics.org/releases/ (LGPL license)
 	requires: pixman, freetype, zlib, libpng
 
   * the first line should read `<name> <version> from <browse-url> (<license>)`
-  * the second line should read `requires: package1, package2, ...` and it is only needed if the package has
-  any binary dependencies.
+  * the second line should read `requires: package1, package2, ...` and
+  should only list the binary dependencies, if any.
   * after the first two lines and an empty line, you can type in additional notes, whatever, they aren't parsed.
 
 The WHAT file can also be used to describe Lua modules that are developed outside of luapower (eg. [lexer]).
