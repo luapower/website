@@ -731,18 +731,16 @@ function action.github(...)
 	--log(pp.format(POST, '  '))
 	local repo = POST.repository.name
 	if not repo or not repo:match('^[a-zA-Z0-9_-]+$') then return end
-
-	in_dir(powerpath(), function()
-		local cmd = 'git --git-dir="'..powerpath('_git/'..repo)..'" pull'
-		local ret = os.execute(cmd)
-		log('executed: '..cmd..' ['..tostring(ret)..']')
-	end)
+	local lp = connect()
+	lp.git(repo, 'pull')
 
 	for platform in glue.sortedpairs(servers) do
-		local lp = connect(platform)
+		local lp, err = try_connect(platform)
 		if lp then
 			lp.restart()
 			log('restarted: '..platform)
+		else
+			log('error: ', err)
 		end
 	end
 end
