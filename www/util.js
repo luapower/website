@@ -173,16 +173,16 @@ $(function() {
 	if(!doc.length || !nav.length) return
 
 	// wrap content sections (heading + everything till next heading) into divs
-	doc.find('h1,h2,h3').each(function() {
-		$(this).nextUntil('h1,h2,h3,enddoc').andSelf().wrapAll('<div></div>')
+	doc.find('h1,h2,h3').filter(':not(:has(code))').each(function() {
+		$(this).nextUntil('h1:not(:has(code)),h2:not(:has(code)),h3:not(:has(code)),enddoc')
+			.andSelf().wrapAll('<div></div>')
 	})
 
 	// build the doc nav
 	var t = []
 	var i = 0
-	doc.find('h1,h2,h3').each(function() {
+	doc.find('h1,h2,h3').filter(':not(:has(code))').each(function() {
 		var s = $(this).html().trim()
-		if (s.indexOf('<code>') >= 0) return
 		var level = parseInt($(this).prop('tagName').match(/\d/))
 		t.push('<div style="padding-left: '+((level-2)*1.5+.5)+'em" idx='+i+'><a>'+s+'</a></div>')
 		$(this).parent().attr('idx', i)

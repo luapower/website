@@ -33,7 +33,7 @@ input:hover { border-color: #999; }
 .grep .hl { background-color: #ff0; }
 
 .doc th { border-bottom-color: #666; }
-.doc tr + tr {
+.doc tr {
 	border-top-color: #ccc;
 	border-bottom-color: #ccc;
 }

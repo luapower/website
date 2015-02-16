@@ -54,7 +54,8 @@ a:hover {
 }
 
 hr {
-	border: 1px solid;
+	border: 0;
+	border-top: 1px solid;
 }
 
 pre {
@@ -236,6 +237,10 @@ html { background-color: #333; }
 
 #package_list .hot {
 	font-size: 80%;
+}
+
+#package_table tr:first-child {
+	border-top: 0;
 }
 
 #package_table td {
@@ -484,7 +489,7 @@ html { background-color: #333; }
 	padding-top: 8px;
 }
 
-.doc tr + tr {
+.doc tr {
 	border-top: 1px solid;
 	border-bottom: 1px solid;
 }

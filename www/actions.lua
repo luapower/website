@@ -54,13 +54,15 @@ local servers = ffi.os ~= 'Linux' and {
 
 local local_server = {'127.0.0.1'}
 
+local connections = {} --{platform = lp}
+
 local connect = glue.memoize(function(platform)
 	local ip, port = unpack(platform and servers[platform] or local_server)
 	local lp = assert(luapower.connect(ip, port, _G.connect))
 	--openresty doesn't error on connect, so we have to issue a no-op.
 	lp.exec(function() return true end)
 	return lp
-end)
+end, connections)
 
 local try_connect_ = glue.memoize(function(platform)
 	return {glue.unprotect(glue.pcall(connect, platform))}
@@ -738,6 +740,7 @@ function action.github(...)
 		local lp, err = try_connect(platform)
 		if lp then
 			lp.restart()
+			connections[platform] = nil
 			log('restarted: '..platform)
 		else
 			log('error: ', err)
