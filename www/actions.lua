@@ -13,7 +13,7 @@ local tuple = require'tuple'
 function render_main(name, data, env)
 	local lights = HEADERS.cookie
 		and HEADERS.cookie:match'lights=(%a+)' or 'off'
-	local ua = HEADERS.user_agent
+	local ua = HEADERS.user_agent or ''
 	return render('main.html',
 		glue.merge({
 			lights = lights,
