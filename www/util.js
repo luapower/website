@@ -225,4 +225,9 @@ $(function() {
 			nav.css('position', 'absolute').css('top', '')
 		}
 	})
+
+	$(window).resize(function() {
+		$(this).width()
+	})
+
 })

@@ -332,7 +332,7 @@ local function rel_time(s)
 	elseif s > 1.5 * 24 * 3600 then
 		return ('%d days'):format(math.floor(s / (24 * 3600)))
 	elseif s > 2 * 3600 then
-		return S('%d hours'):format(math.floor(s / 3600))
+		return ('%d hours'):format(math.floor(s / 3600))
 	elseif s > 2 * 60 then
 		return ('%d minutes'):format(math.floor(s / 60))
 	else
