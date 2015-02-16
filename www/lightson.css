@@ -1,9 +1,9 @@
 
 body { background-color: #fff; color: #000; }
 
-a { color: #444; }
-a:visited { color: #888; }
-a:hover { color: #000; }
+a { color: #669; }
+a:visited { color: #99c; }
+a:hover { color: #003; }
 a[target=_blank] { color: #d00; }
 a[target=_blank]:visited { color: #f66; }
 
@@ -21,6 +21,8 @@ input:hover { border-color: #999; }
 .download_link:visited { color: #090 !important; }
 
 .infobar tr + tr { border-top-color: #ccc; }
+
+#docnav .selected a { color: #000 !important; }
 
 #module_table .indirect { color: #bbb !important; }
 #module_table .error { background-color: #900 !important; color: #fff !important; }

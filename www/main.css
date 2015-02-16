@@ -355,24 +355,17 @@ html { background-color: #333; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
 
-#nav {
+#docnav {
 	text-align: left;
-	position: fixed;
+	position: absolute;
 }
 
-#nav ul {
-	list-style-type: none;
-	padding: 0;
-	padding-left: 1em;
+#docnav div {
+	border-left: 2px solid rgba(0,0,0,0);
 }
 
-#nav li {
-	padding-left: 4px;
-	border-left: 1px solid rgba(0,0,0,0);
-}
-
-#nav .selected {
-	border-left: 1px dotted gray;
+#docnav .selected {
+	border-left: 2px solid gray;
 	color: #999;
 }
 

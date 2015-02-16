@@ -168,49 +168,61 @@ $(function() {
 // spyscroll navbar ----------------------------------------------------------
 
 $(function() {
-	if(!$('#nav').length) return
+	var doc = $('#doc')
+	var nav = $('#docnav')
+	if(!doc.length || !nav.length) return
 
+	// wrap content sections (heading + everything till next heading) into divs
+	doc.find('h1,h2,h3').each(function() {
+		$(this).nextUntil('h1,h2,h3,enddoc').andSelf().wrapAll('<div></div>')
+	})
+
+	// build the doc nav
 	var t = []
-	var lastlevel = 0
 	var i = 0
-	$('#doc').find('h1,h2,h3,h4,h5').each(function() {
+	doc.find('h1,h2,h3').each(function() {
 		var s = $(this).html().trim()
 		if (s.indexOf('<code>') >= 0) return
 		var level = parseInt($(this).prop('tagName').match(/\d/))
-		console.log(level, s, lastlevel)
-		if (level > lastlevel)
-			t.push('<ul>')
-		if (level < lastlevel)
-			t.push('</ul>')
-		t.push('<li idx='+i+'><a>')
-		t.push(s)
-		t.push('</a></li>')
-		$(this).attr('idx', i)
+		t.push('<div style="padding-left: '+((level-2)*1.5+.5)+'em" idx='+i+'><a>'+s+'</a></div>')
+		$(this).parent().attr('idx', i)
 		lastlevel = level
 		i++
 	})
-	$('#nav').html(t.join(''))
+	nav.html(t.join(''))
 
-	$('#nav li a').click(function(e) {
+	// activate doc nav links
+	nav.on('click', 'a', function(e) {
 		e.preventDefault()
 		var i = $(this).parent().attr('idx')
 		$('html, body').animate({
-			scrollTop: $('#doc [idx='+i+']').offset().top - 10
+			scrollTop: doc.find('[idx='+i+']').offset().top - 10
 		}, 700, 'easeOutQuint')
 	})
 
-	$('#doc').find('h1,h2,h3')
+	// scroll spy on the section divs
+	doc.find('div[idx]')
 		.on('scrollSpy:enter',
 			function() {
 				var i = $(this).attr('idx')
-				var li = $('#nav li[idx='+i+']')
-				li.addClass('selected')
+				var d = nav.find('[idx='+i+']')
+				d.addClass('selected')
 			})
 		.on('scrollSpy:exit',
 			function() {
 				var i = $(this).attr('idx')
-				var li = $('#nav li[idx='+i+']')
-				li.removeClass('selected')
+				var d = nav.find('[idx='+i+']')
+				d.removeClass('selected')
 			})
 		.scrollSpy()
+
+	// make doc nav follow scroll
+	var top0 = nav.offset().top
+	$(window).scroll(function() {
+		if (top0 - $(window).scrollTop() < 10) {
+			nav.css('position', 'fixed').css('top', 10)
+		} else {
+			nav.css('position', 'absolute').css('top', '')
+		}
+	})
 })

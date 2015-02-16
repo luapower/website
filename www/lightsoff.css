@@ -22,6 +22,8 @@ input:hover { border-color: #ccc; }
 
 .infobar tr + tr { border-top-color: #444; }
 
+#docnav .selected a { color: #fff !important; }
+
 #module_table .indirect { color: #666 !important; }
 #module_table .error { background-color: #900 !important; color: #fff !important; }
 
