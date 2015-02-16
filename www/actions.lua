@@ -48,14 +48,14 @@ local servers = ffi.os ~= 'Linux' and {
 	linux64 = {'127.0.0.1'},
 	mingw32 = {'172.16.134.131'},
 	mingw64 = {'172.16.134.133'},
-	osx32   = {'172.16.134.128', '1993'},
+	osx32   = {'172.16.134.128', '19993'},
 	osx64   = {'172.16.134.128'},
 }
-servers.self = {'127.0.0.1'}
+
+local local_server = {'127.0.0.1'}
 
 local connect = glue.memoize(function(platform)
-	platform = platform or 'self'
-	local ip, port = unpack(servers[platform])
+	local ip, port = unpack(platform and servers[platform] or local_server)
 	local lp = assert(luapower.connect(ip, port, _G.connect))
 	--openresty doesn't error on connect, so we have to issue a no-op.
 	lp.exec(function() return true end)
