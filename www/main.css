@@ -176,6 +176,11 @@ input {
 	line-height: 150%;
 }
 
+warn {
+	font-size: 120%;
+	color: #f33;
+}
+
 .no_selection {
     -webkit-user-select: none; /* webkit (safari, chrome) browsers */
     -moz-user-select: none; /* mozilla browsers */
@@ -270,6 +275,10 @@ html { background-color: #333; }
 	margin-left: 0.5em;
 }
 
+.spacey_links a:hover i {
+	text-decoration: underline !important;
+}
+
 .multicol_name {
 	list-style: none;
 	-webkit-column-width: 140px;
@@ -345,6 +354,27 @@ html { background-color: #333; }
 .infobar td { padding-right: 0.5em; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
+
+#nav {
+	text-align: left;
+	position: fixed;
+}
+
+#nav ul {
+	list-style-type: none;
+	padding: 0;
+	padding-left: 1em;
+}
+
+#nav li {
+	padding-left: 4px;
+	border-left: 1px solid rgba(0,0,0,0);
+}
+
+#nav .selected {
+	border-left: 1px dotted gray;
+	color: #999;
+}
 
 /* grep page -------------------------------------------------------------- */
 

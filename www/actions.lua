@@ -358,12 +358,15 @@ local function package_info(pkg, ext)
 		if t.docfile then
 			local dtags = lp.doc_tags(pkg, pkg) or {}
 			t.tagline = dtags.tagline
-			t.category = lp.doc_category_path(pkg) or 'Other'
+			t.category = lp.doc_category_path(pkg)
 		end
 		local ctags = lp.c_tags(pkg) or {}
 		t.license = ctags.license or 'Public Domain'
 		t.version = lp.git_version(pkg)
 		t.mtime = lp.git_mtime(pkg)
+		t.cname = ctags.realname
+		t.cversion = ctags.version
+		t.curl = ctags.url
 
 		local origin_url = lp.git_origin_url(pkg)
 		t.github_url = origin_url:find'github.com' and origin_url
@@ -596,8 +599,8 @@ local function action_home()
 			t.version = lp.git_version(pkg)
 			t.platforms = lp.platforms(pkg)
 			t.mtime = lp.git_mtime(pkg)
-			local ctags = lp.c_tags(pkg)
-			t.license = ctags and ctags.license or 'PD'
+			local ctags = lp.c_tags(pkg) or {}
+			t.license = ctags.license or 'PD'
 			table.insert(pt, t)
 		end
 		return pt
@@ -611,13 +614,24 @@ local function action_home()
 	data.github_title = 'github.com/luapower'
 	data.github_url = 'https://'..data.github_title
 
+	local catlist = {}
+	luapower.walk_tree(lp.toc_file(), function(node, level, parent)
+		if level == 0 then
+			table.insert(catlist, node.name)
+		end
+	end)
+
 	local cat = {}
 	for _,pkg in ipairs(data.packages) do
 		table.insert(glue.attr(cat, pkg.category), pkg)
 	end
+
 	data.cat = {}
-	for cat, packages in glue.sortedpairs(cat) do
-		table.insert(data.cat, {cat = cat, packages = packages})
+	for i, category in ipairs(catlist) do
+		local packages = cat[category]
+		if packages then
+			table.insert(data.cat, {cat = category, packages = packages})
+		end
 	end
 
 	out(render_main('home.html', data))

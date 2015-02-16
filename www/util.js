@@ -165,3 +165,52 @@ $(function() {
 	})
 })
 
+// spyscroll navbar ----------------------------------------------------------
+
+$(function() {
+	if(!$('#nav').length) return
+
+	var t = []
+	var lastlevel = 0
+	var i = 0
+	$('#doc').find('h1,h2,h3,h4,h5').each(function() {
+		var s = $(this).html().trim()
+		if (s.indexOf('<code>') >= 0) return
+		var level = parseInt($(this).prop('tagName').match(/\d/))
+		console.log(level, s, lastlevel)
+		if (level > lastlevel)
+			t.push('<ul>')
+		if (level < lastlevel)
+			t.push('</ul>')
+		t.push('<li idx='+i+'><a>')
+		t.push(s)
+		t.push('</a></li>')
+		$(this).attr('idx', i)
+		lastlevel = level
+		i++
+	})
+	$('#nav').html(t.join(''))
+
+	$('#nav li a').click(function(e) {
+		e.preventDefault()
+		var i = $(this).parent().attr('idx')
+		$('html, body').animate({
+			scrollTop: $('#doc [idx='+i+']').offset().top - 10
+		}, 700, 'easeOutQuint')
+	})
+
+	$('#doc').find('h1,h2,h3')
+		.on('scrollSpy:enter',
+			function() {
+				var i = $(this).attr('idx')
+				var li = $('#nav li[idx='+i+']')
+				li.addClass('selected')
+			})
+		.on('scrollSpy:exit',
+			function() {
+				var i = $(this).attr('idx')
+				var li = $('#nav li[idx='+i+']')
+				li.removeClass('selected')
+			})
+		.scrollSpy()
+})
