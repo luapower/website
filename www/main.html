@@ -25,23 +25,23 @@
 		<td align=center valign=top class=topbar>
 			<table class="topbar_content screen_width">
 				<tr>
-					<td valign=middle width=130>
+					<td align=left valign=middle width=130>
 						<h3 class=tight>
 							<a href="/">luapower.com</a>
 						</h3>
 					</td>
-					<td valign=middle>
+					<td align=left valign=middle>
 						<a id=lights_btn
 							inverse_lights="{{inverse_lights}}"
 							title="lights {{inverse_lights}}">
 								<span class=lights_label>lights</span><i id=lights_icon class="fa fa-toggle-{{lights}}"></i></a>
 					</td>
-					<td valign=middle align=right>
+					<td align=right valign=middle>
 						{{#github_url}}
 						<a id=github_label href="{{github_url}}">{{github_title}}<i id=github_icon class="fa fa-github"></i></a>
 						{{/github_url}}
 					</td>
-					<td width=20% valign=middle>
+					<td align=left valign=middle width=20%>
 						<input type=text value="{{{search}}}" placeholder="grep in sources" id="grep">
 					</td>
 				</tr>
