@@ -148,6 +148,7 @@ input {
 	position: relative;
 	top: 1px;
 	left: 4px;
+	text-decoration: none !important;
 }
 
 #github_label {
