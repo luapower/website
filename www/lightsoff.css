@@ -21,7 +21,7 @@ input:hover { border-color: #ccc; }
 .platform_btn { background-color: #000; color: #999; }
 .platform_btn .selected { background-color: #666; color: #fff; }
 
-.download_link { color: #0f0 !important; text-decoration: none; }
+.download_link { color: #0f0 !important; text-decoration: none !important; }
 .download_link:visited { color: #0f0 !important; }
 
 .infobar tr + tr { border-top-color: #444; }
