@@ -290,7 +290,7 @@ html { background-color: #333; }
 	margin-left: 0.5em;
 }
 
-.spacey_links a:hover i, .download a:hover i {
+.spacey_links a:hover i, .download:hover i {
 	text-decoration: underline !important;
 }
 
