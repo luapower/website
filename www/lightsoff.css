@@ -1,5 +1,5 @@
 
-body { background: #151515 url("hack_bg.png") 0 0; color: #eee; }
+body { background: #151515 url("hack_bg.png") 0 0; color: #eee; font-weight: 300; }
 strong { font-weight: 400; }
 
 a { color: #aaa; }
@@ -36,7 +36,6 @@ input:hover { border-color: #ccc; }
 .grep .line { color: #888; border-color: #ccc; }
 .grep .hl { background-color: #660; }
 
-.doc { font-weight: 300; }
 .doc th { border-bottom-color: #666; }
 .doc tr {
 	border-top-color: #333;

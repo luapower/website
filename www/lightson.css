@@ -1,6 +1,6 @@
 
-body { background-color: #fff; color: #000; }
-strong { font-weight: 600; } /* note: doesn't work on Chrome/OSX */
+body { background-color: #fff; color: #000; font-weight: 400; }
+strong { font-weight: 600; }
 
 a { color: #666; text-decoration: underline; }
 a:visited { color: #999; }
@@ -36,7 +36,6 @@ input:hover { border-color: #999; }
 .grep .line { color: #888; border-color: #ccc; }
 .grep .hl { background-color: #ff0; }
 
-.doc { font-weight: 400; }
 .doc th { border-bottom-color: #666; }
 .doc tr {
 	border-top-color: #ccc;
