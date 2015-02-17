@@ -57,7 +57,7 @@ input:hover { border-color: #999; }
 /*  StringTok */
 .doc .sourceCode .st { color: #006; }
 /*  CommentTok */
-.doc .sourceCode .co { color: #0c0; }
+.doc .sourceCode .co { color: #090; }
 /*  OtherTok */
 .doc .sourceCode .ot { color: #333; }
 /*  AlertTok */
