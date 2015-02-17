@@ -159,7 +159,7 @@ input {
 #github_icon {
 	font-size: 140%;
 	vertical-align: middle;
-	text-decoration: none;
+	text-decoration: none !important;
 	position: relative;
 	left: 4px;
 }
