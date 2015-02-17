@@ -1,5 +1,5 @@
 
-html, body { background-color: #fff; color: #000; }
+body { background-color: #fff; color: #000; }
 strong { font-weight: 600; } /* note: doesn't work on Chrome/OSX */
 
 a { color: #666; text-decoration: underline; }
