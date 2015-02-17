@@ -226,8 +226,11 @@ $(function() {
 		}
 	})
 
-	$(window).resize(function() {
-		$(this).width()
-	})
+	function check_size() {
+		var w = $(window).width()
+		$('#rightside').toggle(w > 745)
+	}
+
+	$(window).resize(check_size)
 
 })

@@ -1,7 +1,7 @@
 $(function() {
 	$('#package_table').tablesorter({
 		cancelSelection: true,
-		sortList: [[1,0]], //initial sort by name
+		sortList: [[1,0]], //initially sort by name
 	})
 
 	$('#table_list_switch').click(function(e) {

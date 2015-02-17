@@ -40,8 +40,16 @@ html {
 
 body {
 	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
 	font-size: 13px;
-	line-height: 150%;
+	line-height: 20px;
+}
+
+strong { font-weight: 400; }
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 120%;
 }
 
 a {
@@ -221,18 +229,17 @@ html { background-color: #333; }
 	display: block;
 }
 
-#package_list {
+#package_list ul {
 	padding-left: 0;
+	list-style: none;
 }
 
-.home_cat {
-	color: #0c0;
-	margin-bottom: 0;
-	margin-top: 0.6em;
+#package_list .package_cat_name {
+	margin: 0;
 }
 
-#package_list li:first-child .home_cat {
-	margin-top: 0;
+#package_list .package_cat {
+	margin-bottom: 1.2em;
 }
 
 #package_list .hot {
@@ -324,10 +331,10 @@ html { background-color: #333; }
 }
 
 .download {
-	font-size: 110% !important;
+	display: block;
 	text-align: center;
-	width: 11em;
-	padding: 0.5em;
+	width: 12em;
+	padding: 4px;
 	margin-top: 4px;
 	margin-right: 30px;
 }
@@ -337,10 +344,7 @@ html { background-color: #333; }
 .download:hover { color: #ff0 !important; }
 
 .platform_btn {
-	display: inline-block;
 	position: relative;
-	top: 2px;
-	font-style: 60%;
 	border: 1px solid gray;
 	border-radius: 6px;
 	cursor: pointer;
@@ -462,6 +466,7 @@ html { background-color: #333; }
 	content: "»";
 	position: absolute;
 	left: -1.5em;
+	color: #999;
 }
 
 .doc blockquote {

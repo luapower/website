@@ -1,11 +1,13 @@
 
-body { background-color: #fff; color: #000; }
+html, body { background-color: #fff; color: #000; }
+strong { font-weight: 600; } /* note: doesn't work on Chrome/OSX */
 
-a { color: #669; }
-a:visited { color: #99c; }
-a:hover { color: #003; }
+a { color: #666; text-decoration: underline; }
+a:visited { color: #999; }
+a:hover { color: #000; }
 a[target=_blank] { color: #d00; }
 a[target=_blank]:visited { color: #f66; }
+a[target=_blank]:hover { color: #f00; }
 
 hr { border-top-color: #ccc; }
 
@@ -13,6 +15,8 @@ input { border-color: #ccc; }
 input:hover { border-color: #999; }
 
 .disabled { color: #aaa; }
+
+#package_list .package_cat_name { color: #0a0; }
 
 .platform_btn { background-color: #fff; color: #999; }
 .platform_btn .selected { background-color: #ddd; color: #000; }
@@ -32,6 +36,7 @@ input:hover { border-color: #999; }
 .grep .line { color: #888; border-color: #ccc; }
 .grep .hl { background-color: #ff0; }
 
+.doc { font-weight: 400; }
 .doc th { border-bottom-color: #666; }
 .doc tr {
 	border-top-color: #ccc;

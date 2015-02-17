@@ -22,25 +22,31 @@
 				<tr>
 					<td valign=top>
 						<h2>Download</h2>
-						<a class="fa fa-download button download"
-							href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-							download tgz</a>
-						<br>
-						<a class="fa fa-download button download"
-							href="https://github.com/luapower/{{package}}/archive/master.zip">
-							download zip</a>
+						<a class=download href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+							<i class="fa fa-download"></i> download tgz</a>
+						<a class=download href="https://github.com/luapower/{{package}}/archive/master.zip">
+							<i class="fa fa-download"></i> download zip</a>
 					</td>
 					<td valign=top align=left>
-						<h2 style="display: inline-block;">Clone</h2> &nbsp;
-						<div class=platform_btn>
-							<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
-								<div class="icon-mingw"></div>
-							</div>
-							<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
-								<div class="icon-linux"></div>
-								<div class="icon-osx"></div>
-							</div>
-						</div>
+						<table>
+							<tr>
+								<td>
+									<h2>Clone</h2>
+								</td>
+								<td width=10></td>
+								<td>
+									<div class=platform_btn>
+										<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
+											<div class="icon-mingw"></div>
+										</div>
+										<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
+											<div class="icon-linux"></div>
+											<div class="icon-osx"></div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
 						<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
 cd luapower
 md _git\{{package}}

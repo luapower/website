@@ -10,22 +10,28 @@
 	<a id=table_list_switch class="fa fa-table" style="font-size: 140%"></a>
 </td></tr></table>
 
-<ul id=package_list class=multicol_name>
-	{{#cat}}
-		<li><h4 class=home_cat>{{cat}}</h4></li>
-		{{#packages}}
-		<li>
-			<a href="/{{name}}">{{name}}</a>
-			{{#hot}} <i class="fa fa-star hot" title="updated in the last 7 days"></i>{{/hot}}
-		</li>
-		{{/packages}}
-	{{/cat}}
-</ul>
+<div id=package_list>
+	<ul class=multicol_name>
+		{{#cat}}
+			<li class=package_cat>
+				<h4 class=package_cat_name>{{cat}}</h4>
+				<ul>
+					{{#packages}}
+					<li>
+						<a href="/{{name}}">{{name}}</a>
+						{{#hot}} <i class="fa fa-star hot" title="updated in the last 7 days"></i>{{/hot}}
+					</li>
+					{{/packages}}
+				</ul>
+			</li>
+		{{/cat}}
+	</ul>
+	<span class=smallnote><i class="fa fa-star hot"></i> updated in the last 7 days</span>
+</div>
 
 <table width=100% id=package_table class="doc hidden">
 	<thead>
 		<tr>
-			<th></th>
 			<th align=left title="Hold Shift to sort by multiple columns">Type</th>
 			<th align=left title="Hold Shift to sort by multiple columns">Package</th>
 			<th align=left title="Hold Shift to sort by multiple columns">What</th>
@@ -38,13 +44,12 @@
 	<tbody>
 		{{#packages}}
 		<tr>
-			<td>&nbsp;</td>
 			<td>{{type}}</td>
 			<td><a href="/{{name}}">{{name}}</a></td>
 			<td>{{tagline}}</td>
 			<td>{{version}}</td>
 			<td><span class=hidden>{{mtime}}</span> {{mtime_ago}}</td>
-			<td nowrap>
+			<td class=nowrap>
 				<span class=hidden>{{platform_string}}</span>
 				{{#icons}}
 					<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>
