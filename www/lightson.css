@@ -2,7 +2,7 @@
 body { background-color: #fff; color: #000; font-weight: 400; }
 strong { font-weight: 600; }
 
-a { color: #666; text-decoration: underline; } a i:before { text-decoration: none !important; }
+a { color: #666; text-decoration: underline; } a i:before { display:inline-block; text-decoration: none !important; }
 a:visited { color: #999; }
 a:hover { color: #000; }
 a[target=_blank] { color: #d00; }
