@@ -200,11 +200,6 @@ warn {
 
 /* common colors ---------------------------------------------------------- */
 
-@media screen and (min-width:0\0) {
-	.topbar {
-		box-shadow: 0px 2px 2px #000;
-	}
-}
 .topbar {
 	background-color: #333;
 	box-shadow: 0px 2px 2px #000;
