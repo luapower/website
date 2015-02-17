@@ -182,6 +182,7 @@ input {
 
 .smallnote {
 	font-size: 90%;
+	font-weight: 600;
 	font-style: italic;
 	line-height: 150%;
 }
