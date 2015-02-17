@@ -1,6 +1,6 @@
 
-body { background: #151515 url("hack_bg.png") 0 0; color: #eee; font-weight: 300; }
-strong { font-weight: 400; }
+body { background: #151515 url("hack_bg.png") 0 0; color: #eee; font-weight: 400; }
+strong { font-weight: 600; }
 
 a { color: #aaa; }
 a:visited { color: #999; }
