@@ -464,7 +464,7 @@ html { background-color: #333; }
 }
 
 .doc ul li:before {
-	content: "»";
+	content: "\00bb";
 	position: absolute;
 	left: -1.5em;
 	color: #999;
