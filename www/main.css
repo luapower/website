@@ -249,10 +249,6 @@ html { background-color: #333; }
 	font-size: 80%;
 }
 
-#package_table tr:first-child {
-	border-top: 0;
-}
-
 #package_table td {
 	padding: 3px;
 }
@@ -497,7 +493,7 @@ html { background-color: #333; }
 	padding-top: 8px;
 }
 
-.doc tr {
+.doc tbody tr {
 	border-top: 1px solid;
 	border-bottom: 1px solid;
 }

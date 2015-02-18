@@ -212,7 +212,7 @@ end
 
 --given {platform1 = {item1 = true, ...}, ...}, extract items that are
 --common to the same OS and common to all platforms to OS keys and 'all' key.
-local function platform_maps(maps)
+local function platform_maps(maps, all_key)
 	--combine 32 and 64 bit lists
 	for _,p in ipairs{'mingw', 'linux', 'osx'} do
 		local t = {}
@@ -222,8 +222,8 @@ local function platform_maps(maps)
 		t = extract_common_keys(t, p)
 		glue.update(maps, t)
 	end
-	--extract common items to key 'all'
-	return extract_common_keys(maps, 'all')
+	--extract common items across all places, if all_key given
+	return all_key and extract_common_keys(maps, all_key) or maps, maps
 end
 
 local function package_icons(ptype, platforms, small)
@@ -360,7 +360,6 @@ local function package_info(pkg, ext)
 		if t.docfile then
 			local dtags = lp.doc_tags(pkg, pkg) or {}
 			t.tagline = dtags.tagline
-			t.category = lp.doc_category_path(pkg)
 		end
 		local ctags = lp.c_tags(pkg) or {}
 		t.license = ctags.license or 'Public Domain'
@@ -372,7 +371,7 @@ local function package_info(pkg, ext)
 
 		local origin_url = lp.git_origin_url(pkg)
 		t.github_url = origin_url:find'github.com' and origin_url
-		t.github_title = t.github_url:gsub('^%w+://', '')
+		t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
 
 		if ext then
 			t.modmap = {}
@@ -438,11 +437,11 @@ local function package_info(pkg, ext)
 				glue.attr(pdeps, platform)[pkg] = ext
 			end
 		end
-		pdeps = platform_maps(pdeps)
+		local pdeps, pdeps_pl = platform_maps(pdeps, 'common')
 		t.package_deps = {}
 		for platform, pdeps in glue.sortedpairs(pdeps) do
 			table.insert(t.package_deps, {
-				icon = platform ~= 'all' and platform,
+				icon = platform ~= 'common' and platform,
 				packages = dep_list(pdeps),
 			})
 		end
@@ -452,8 +451,8 @@ local function package_info(pkg, ext)
 		t.depnames = {}
 		t.picons = {}
 		t.depmat = {}
-		for platform, pmap in glue.sortedpairs(pdeps) do
-			table.insert(t.picons, platform ~= 'all' and platform)
+		for platform, pmap in glue.sortedpairs(pdeps_pl) do
+			table.insert(t.picons, platform)
 			for pkg in pairs(pmap) do
 				t.depnames[pkg] = true
 			end
@@ -462,8 +461,8 @@ local function package_info(pkg, ext)
 		for i, icon in ipairs(t.picons) do
 			t.depmat[i] = {pkg = {}, icon = icon}
 			for j, pkg in ipairs(t.depnames) do
-				local b = (pdeps.all and pdeps.all[pkg]) or pdeps[icon or 'all'][pkg] or false
-				t.depmat[i].pkg[j] = b
+				local b = pdeps_pl[icon][pkg]
+				t.depmat[i].pkg[j] = b ~= nil
 			end
 		end
 
@@ -515,7 +514,7 @@ local function package_info(pkg, ext)
 			mt.autoloads = {}
 			local function autoload_list(auto)
 				local t = {}
-				local function cmp(k1, k2)
+				local function cmp(k1, k2) --sort by (module_name, key)
 					local k1, mod1 = k1()
 					local k2, mod2 = k2()
 					if mod1 == mod2 then return k1 < k2 end

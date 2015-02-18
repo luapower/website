@@ -104,8 +104,9 @@ git checkout
 			<table id=dep_lists>
 				{{#package_deps}}
 				<tr>
-					<td class=col1 valign=top>
-						<span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span>
+					<td class=col1 valign=top align=right>
+						{{#icon}}+ <span class="icon-{{icon}}"></span>{{/icon}}
+						{{^icon}}<i>common</i>{{/icon}}
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
@@ -145,7 +146,7 @@ git checkout
 				Module Dependencies
 				&nbsp;
 				<a class="modpkg_switch" type=P title="show required modules">P</a>
-				<a class="modpkg_switch hidden" type=M title="show packages">M</a>
+				<a class="modpkg_switch hidden" type=M title="show required packages">M</a>
 			</h3>
 			<p class=smallnote>
 				Grayed out names represent indirect dependencies or internal dependencies.
@@ -189,6 +190,11 @@ git checkout
 			</table>
 			{{#has_autoloads}}
 			<h3>Module Autoloads</h3>
+				<p class=smallnote>
+					Below are additional modules that are required automatically
+					at runtime when accessing certain module fields.<br>
+					See <a href="/glue#autoload">glue.autoload</a> for details.
+				</p>
 				{{#modules}}{{#has_autoloads}}
 					{{#autoloads}}
 					<h4 class=tight>
