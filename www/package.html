@@ -121,16 +121,22 @@ git checkout
 					<thead>
 						<tr>
 							<th></th>
-							{{#depnames}}
+							{{#depmat_names}}
 							<th><a href="/{{.}}">{{.}}</a></th>
-							{{/depnames}}
+							{{/depmat_names}}
 						</tr>
 					</thead>
 					<tbody>
 						{{#depmat}}
 						<tr>
-							<td><span class="icon-{{icon}}">{{^icon}}<i>all</i>{{/icon}}</span></td>
-							{{#pkg}}<td align=center>{{#.}}<i class="fa fa-check"></i>{{/.}}</td>{{/pkg}}
+							<td><span class="icon-{{icon}}"></span></td>
+							{{#pkg}}
+							<td align=center>
+								{{#.}}
+									{{#checked}}<i class="fa fa-check {{indirect}}"></i>{{/checked}}
+								{{/.}}
+							</td>
+							{{/pkg}}
 						</tr>
 						{{/depmat}}
 					</tbody>
@@ -189,7 +195,7 @@ git checkout
 				{{/modules}}
 			</table>
 			{{#has_autoloads}}
-			<h3>Module Autoloads</h3>
+			<h3>Runtime Dependencies - Autoloads</h3>
 				<p class=smallnote>
 					Below are additional modules that are required automatically
 					at runtime when accessing certain module fields.<br>

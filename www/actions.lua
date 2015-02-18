@@ -182,7 +182,6 @@ end
 local function extract_common_keys(maps, all_key)
 	--count occurences for each item
 	local maxn = glue.count(maps)
-	if maxn < 2 then return maps end
 	local nt = {} --{item = n}
 	local tt = {} --{item = val}
 	for place, items in pairs(maps) do
@@ -448,21 +447,24 @@ local function package_info(pkg, ext)
 		t.has_package_deps = #t.package_deps > 0
 
 		--package dependency matrix
-		t.depnames = {}
-		t.picons = {}
+		local names = {}
+		local icons = {}
 		t.depmat = {}
 		for platform, pmap in glue.sortedpairs(pdeps_pl) do
-			table.insert(t.picons, platform)
+			table.insert(icons, platform)
 			for pkg in pairs(pmap) do
-				t.depnames[pkg] = true
+				names[pkg] = true
 			end
 		end
-		t.depnames = glue.keys(t.depnames, true)
-		for i, icon in ipairs(t.picons) do
+		t.depmat_names = glue.keys(names, true)
+		for i, icon in ipairs(icons) do
 			t.depmat[i] = {pkg = {}, icon = icon}
-			for j, pkg in ipairs(t.depnames) do
+			for j, pkg in ipairs(t.depmat_names) do
 				local b = pdeps_pl[icon][pkg]
-				t.depmat[i].pkg[j] = b ~= nil
+				t.depmat[i].pkg[j] = {
+					checked = b ~= nil,
+					indirect = b == false and 'indirect',
+				}
 			end
 		end
 
@@ -480,8 +482,8 @@ local function package_info(pkg, ext)
 				pdeps[platform] = pmt.package_deps
 				mdeps[platform] = pmt.module_deps
 			end
-			pdeps = platform_maps(pdeps)
-			mdeps = platform_maps(mdeps)
+			pdeps = platform_maps(pdeps, 'all')
+			mdeps = platform_maps(mdeps, 'all')
 
 			mt.package_deps = {}
 			for platform, pdeps in glue.sortedpairs(pdeps) do
@@ -510,7 +512,7 @@ local function package_info(pkg, ext)
 					end
 				end
 			end
-			auto = platform_maps(auto)
+			auto = platform_maps(auto, 'all')
 			mt.autoloads = {}
 			local function autoload_list(auto)
 				local t = {}
@@ -532,7 +534,6 @@ local function package_info(pkg, ext)
 					autoloads = autoload_list(auto),
 				})
 			end
-
 			mt.has_autoloads = #mt.autoloads > 0
 			has_autoloads = has_autoloads or mt.has_autoloads
 
