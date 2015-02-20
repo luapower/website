@@ -232,6 +232,10 @@ html { background-color: #333; }
 	display: block;
 }
 
+#package_list {
+	line-height: 140%;
+}
+
 #package_list ul {
 	padding-left: 0;
 	list-style: none;
