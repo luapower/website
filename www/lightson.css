@@ -28,7 +28,8 @@ input:hover { border-color: #999; }
 
 #docnav .selected a { color: #000 !important; }
 
-.indirect { color: #bbb !important; }
+.indirect { color: #aaa !important; }
+.internal { color: #ccc !important; }
 #module_table .error { background-color: #900 !important; color: #fff !important; }
 
 .grep .result.active { border-color: #f00; }

@@ -273,11 +273,12 @@ local function platform_package_info(platform, pkg)
 		t.package_deps = {}
 		local pkgext = lp.package_requires_packages_ext(pkg)
 		for pkg in pairs(lp.package_requires_packages_all(pkg)) do
-			t.package_deps[pkg] = pkgext[pkg] or false
+			t.package_deps[pkg] = pkgext[pkg] and 'external' or 'indirect'
 		end
 
 		t.modmap = {}
-		for mod, file in pairs(lp.modules(pkg)) do
+		local modules = lp.modules(pkg)
+		for mod, file in pairs(modules) do
 			local mt = {}
 
 			mt.load_error = lp.module_load_error(mod, pkg)
@@ -288,12 +289,14 @@ local function platform_package_info(platform, pkg)
 
 				local pkgext = lp.module_requires_packages_ext(mod, pkg)
 				for pkg in pairs(lp.module_requires_packages_all(mod, pkg)) do
-					mt.package_deps[pkg] = pkgext[pkg] or false
+					mt.package_deps[pkg] = pkgext[pkg] and 'external' or 'indirect'
 				end
 
 				local modext = lp.module_requires_ext(mod, pkg)
+				local modrun = lp.module_requires_runtime(mod, pkg)
 				for mod in pairs(lp.module_requires_all(mod, pkg)) do
-					mt.module_deps[mod] = modext[mod] or false
+					mt.module_deps[mod] = modext[mod] and 'external'
+						or modules[mod] and 'internal' or 'indirect'
 				end
 
 			end
@@ -409,31 +412,26 @@ local function package_info(pkg, ext)
 		--dependency lists, sorted by direct/indirect flag and name.
 		local function dep_list(pdeps)
 			local packages = {}
-			local names = {}
-			for k,v in pairs(pdeps) do
-				if v then table.insert(names, k) end
-			end
-			table.sort(names)
-			local names2 = {}
-			for k,v in pairs(pdeps) do
-				if not v then table.insert(names2, k) end
-			end
-			table.sort(names2)
-			glue.extend(names, names2)
+			local names = glue.keys(pdeps, function(name1, name2)
+				local kind1 = pdeps[name1]
+				local kind2 = pdeps[name2]
+				if kind1 == kind2 then return name1 < name2 end
+				return kind1 < kind2
+			end)
 			for _,pkg in ipairs(names) do
 				table.insert(packages, {
 					package = pkg,
-					indirect = not pdeps[pkg] and 'indirect' or nil,
+					kind = pdeps[pkg],
 				})
 			end
 			return packages
 		end
 
-		--package dependency maps
+		--package dependency lists
 		local pdeps = {}
 		for platform, pt in pairs(pts) do
-			for pkg, ext in pairs(pt.package_deps) do
-				glue.attr(pdeps, platform)[pkg] = ext
+			for pkg, kind in pairs(pt.package_deps) do
+				glue.attr(pdeps, platform)[pkg] = kind
 			end
 		end
 		local pdeps, pdeps_pl = platform_maps(pdeps, 'common')
@@ -460,10 +458,10 @@ local function package_info(pkg, ext)
 		for i, icon in ipairs(icons) do
 			t.depmat[i] = {pkg = {}, icon = icon}
 			for j, pkg in ipairs(t.depmat_names) do
-				local b = pdeps_pl[icon][pkg]
+				local kind = pdeps_pl[icon][pkg]
 				t.depmat[i].pkg[j] = {
-					checked = b ~= nil,
-					indirect = b == false and 'indirect',
+					checked = kind ~= nil,
+					kind = kind,
 				}
 			end
 		end
@@ -484,7 +482,6 @@ local function package_info(pkg, ext)
 			end
 			pdeps = platform_maps(pdeps, 'all')
 			mdeps = platform_maps(mdeps, 'all')
-
 			mt.package_deps = {}
 			for platform, pdeps in glue.sortedpairs(pdeps) do
 				table.insert(mt.package_deps, {
@@ -493,6 +490,7 @@ local function package_info(pkg, ext)
 				})
 			end
 
+			--module deps
 			mt.module_deps = {}
 			for platform, mdeps in glue.sortedpairs(mdeps) do
 				table.insert(mt.module_deps, {
@@ -514,7 +512,7 @@ local function package_info(pkg, ext)
 			end
 			auto = platform_maps(auto, 'all')
 			mt.autoloads = {}
-			local function autoload_list(auto)
+			local function autoload_list(platform, auto)
 				local t = {}
 				local function cmp(k1, k2) --sort by (module_name, key)
 					local k1, mod1 = k1()
@@ -524,18 +522,19 @@ local function package_info(pkg, ext)
 				end
 				for k in glue.sortedpairs(auto, cmp) do
 					local k, mod = k()
-					table.insert(t, {key = k, module = mod})
+					table.insert(t, {
+						platform ~= 'all' and platform,
+						key = k,
+						impl_module = mod,
+					})
 				end
 				return t
 			end
 			for platform, auto in glue.sortedpairs(auto) do
-				table.insert(mt.autoloads, {
-					icon = platform ~= 'all' and platform,
-					autoloads = autoload_list(auto),
-				})
+				glue.extend(mt.autoloads, autoload_list(platform, auto))
 			end
-			mt.has_autoloads = #mt.autoloads > 0
-			has_autoloads = has_autoloads or mt.has_autoloads
+			mt.module_has_autoloads = #mt.autoloads > 0
+			has_autoloads = has_autoloads or mt.module_has_autoloads
 
 			--load errors
 			local err = {}

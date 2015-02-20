@@ -99,7 +99,7 @@ git checkout
 			{{#has_package_deps}}
 			<p class=smallnote>
 				This is a combined list of packages required by all modules of this package on each supported platform.
-				<br>Grayed out names represent indirect dependencies.
+				<br>Darker names, if any, represent indirect dependencies.
 			</p>
 			<table id=dep_lists>
 				{{#package_deps}}
@@ -110,7 +110,7 @@ git checkout
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
-						<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+						<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
 						{{/packages}}
 					</td>
 				</tr>
@@ -133,7 +133,7 @@ git checkout
 							{{#pkg}}
 							<td align=center>
 								{{#.}}
-									{{#checked}}<i class="fa fa-check {{indirect}}"></i>{{/checked}}
+									{{#checked}}<i class="fa fa-check {{kind}}"></i>{{/checked}}
 								{{/.}}
 							</td>
 							{{/pkg}}
@@ -155,9 +155,19 @@ git checkout
 				<a class="modpkg_switch hidden" type=M title="show required packages">M</a>
 			</h3>
 			<p class=smallnote>
-				Grayed out names represent indirect dependencies or internal dependencies.
+				Darker names, if any, represent indirect dependencies.
+				<span class="module_list hidden">Even darker names are internal dependencies.</span>
 			</p>
 			<table id=module_table>
+				<tr>
+					<th></th>
+					<th align=left style="border-bottom: 1px solid gray">module</th>
+					<th align=left style="border-bottom: 1px solid #888">
+						<span class="package_list">package</span>
+						<span class="module_list hidden">module</span>
+						dependencies
+					</th>
+				</tr>
 				{{#modules}}
 				<tr>
 					<td valign=top align=center width=30>
@@ -179,7 +189,7 @@ git checkout
 						{{#package_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+								<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</div>
@@ -187,7 +197,7 @@ git checkout
 						{{#module_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#modules}}
-								<a href="/{{package}}" class="{{indirect}}">{{package}}</a>&nbsp;
+								<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
 							{{/modules}}
 						{{/module_deps}}
 					</td>
@@ -197,27 +207,64 @@ git checkout
 			{{#has_autoloads}}
 			<h3>Runtime Dependencies - Autoloads</h3>
 				<p class=smallnote>
-					Below are additional modules that are required automatically
-					at runtime when accessing certain module fields.<br>
-					See <a href="/glue#autoload">glue.autoload</a> for details.
+					Some modules implement parts of their API in separate sub-modules.
+					These "implementation" modules are loaded automatically at runtime
+					only if and when accessing those APIs
+					(see <a href="/glue#autoload">glue.autoload</a> for how this works).
 				</p>
-				{{#modules}}{{#has_autoloads}}
+				{{#modules}}{{#module_has_autoloads}}
+				<table>
+					<tr>
+						<th></th>
+						<th align=left style="border-bottom: 1px solid gray">module.field</th>
+						<th align=left style="border-bottom: 1px solid gray">implementation module</th>
+					</tr>
 					{{#autoloads}}
-					<h4 class=tight>
-						<span class="icon-{{icon}}" style="display: inline-block; width: 30px"></span>
-						<a href="/{{module}}">{{module}}</a>
-					</h4>
-					<table>
-					{{#autoloads}}
-						<tr>
-							<td style="padding-left: 60px; padding-right: 1em">{{key}}</td>
-							<td><a href="/{{module}}">{{module}}</a></td>
-						</tr>
+					<tr>
+						<td valign=top align=center width=30>
+							<span class="icon-{{icon}}"></span>
+						</td>
+						<td style="padding-right: 1em">
+							<a href="/{{module}}#{{key}}">{{module}}.{{key}}</a>
+						</td>
+						<td>
+							<a href="/{{impl_module}}">{{impl_module}}</a>
+						</td>
+					</tr>
 					{{/autoloads}}
-					</table>
-					{{/autoloads}}
-				{{/has_autoloads}}{{/modules}}
+				</table>
+				{{/module_has_autoloads}}{{/modules}}
 			{{/has_autoloads}}
+
+			{{#has_runtime_deps}}
+			<h3>Runtime Dependencies - Other</h3>
+				<p class=smallnote>
+					These are additional modules that are required automatically
+					at runtime in specific circumstances (see source code).
+				</p>
+				{{#modules}}{{#module_has_runtime_deps}}
+				<table>
+					<tr>
+						<th></th>
+						<th align=left style="border-bottom: 1px solid gray">module</th>
+						<th align=left style="border-bottom: 1px solid gray">runtime dependencies</th>
+					</tr>
+					{{#runtime_deps}}
+					<tr>
+						<td valign=top align=center width=30>
+							<span class="icon-{{icon}}"></span>
+						</td>
+						<td style="padding-right: 1em">
+							<a href="/{{module}}#{{key}}">{{module}}.{{key}}</a>
+						</td>
+						<td>
+							<a href="/{{impl_module}}">{{impl_module}}</a>
+						</td>
+					</tr>
+					{{/runtime_deps}}
+				</table>
+				{{/module_has_runtime_deps}}{{/modules}}
+			{{/has_runtime_deps}}
 
 			{{/has_modules}}
 
@@ -279,13 +326,8 @@ git checkout
 					<td align=left class="small gray">Clib version: </td><td align=left class=small><a href="{{curl}}">{{cversion}}</a></td>
 				</tr>
 				{{/cversion}}
-				{{#cname}}
 				<tr>
-					<td align=left class="small gray">Clib license: </td><td align=left class=small>{{license}}</td>
-				</tr>
-				{{/cname}}
-				<tr>
-					<td align=left class="small gray">Binding lic.: </td><td align=left class=small>Public Domain</td>
+					<td align=left class="small gray">License: </td><td align=left class=small>{{license}}</td>
 				</tr>
 			</table>
 			<br>
