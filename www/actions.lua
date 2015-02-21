@@ -213,6 +213,7 @@ end
 --common to the same OS and common to all platforms to OS keys and 'all' key.
 local function platform_maps(maps, all_key)
 	--combine 32 and 64 bit lists
+	maps = glue.update({}, maps)
 	for _,p in ipairs{'mingw', 'linux', 'osx'} do
 		local t = {}
 		for _,n in ipairs{32, 64} do
@@ -291,7 +292,7 @@ local function platform_package_info_live(platform, pkg)
 				end
 				local modext = lp.module_requires_loadtime_ext(mod, pkg)
 				local modrun = lp.module_requires_runtime(mod, pkg)
-				for mod in pairs(lp.module_requires_all(mod, pkg)) do
+				for mod in pairs(lp.module_requires_loadtime_all(mod, pkg)) do
 					mt.module_deps[mod] = modext[mod] and 'external'
 						or modules[mod] and 'internal' or 'indirect'
 				end
@@ -471,18 +472,18 @@ local function package_info(pkg, ext)
 	t.has_package_deps = #t.package_deps > 0
 
 	--package reverse dependency lists
-	local pdeps = {}
+	local rpdeps = {}
 	for platform, pt in pairs(pts) do
 		for pkg in pairs(pt.package_rdeps) do
 			glue.attr(pdeps, platform)[pkg] = true
 		end
 	end
-	local pdeps, pdeps_pl = platform_maps(pdeps, 'common')
+	local rpdeps, rpdeps_pl = platform_maps(rpdeps, 'common')
 	t.package_rdeps = {}
-	for platform, pdeps in glue.sortedpairs(pdeps) do
+	for platform, rpdeps in glue.sortedpairs(rpdeps) do
 		table.insert(t.package_rdeps, {
 			icon = platform ~= 'common' and platform,
-			packages = glue.keys(pdeps, true),
+			packages = glue.keys(rpdeps, true),
 		})
 	end
 	t.has_package_rdeps = #t.package_rdeps > 0

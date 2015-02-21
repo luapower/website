@@ -1,8 +1,8 @@
 
-body { background-color: #fff; color: #000; font-weight: 400; }
+body { background-color: #fff; color: #000; }
 strong { font-weight: 800; }
 
-a { color: #666; text-decoration: underline; } a i { text-decoration: underline; }
+a { color: #666; }
 a:visited { color: #999; }
 a:hover { color: #000; }
 a[target=_blank] { color: #d00; }
@@ -15,6 +15,11 @@ input { border-color: #ccc; }
 input:hover { border-color: #999; }
 
 .disabled { color: #aaa; }
+
+.tooltipsy { color: #000; border-color: #999; background-color: #eee; }
+
+#search_input { background-color: #fff; color: #000; border-color: #333; }
+#search_icon { color: #999; }
 
 #package_list .package_cat_name { color: #0a0; }
 

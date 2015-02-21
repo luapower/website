@@ -1,5 +1,5 @@
 
-body { background: #151515 url("hack_bg.png") 0 0; color: #eee; font-weight: 400; }
+body { background: #151515 url("hack_bg.png") 0 0; color: #eee; }
 strong { font-weight: 600; }
 
 a { color: #aaa; }
@@ -15,6 +15,11 @@ input { border-color: #666; }
 input:hover { border-color: #ccc; }
 
 .disabled { color: #666; }
+
+.tooltipsy { border-color: #666; background-color: #000; }
+
+#search_input { background-color: #fff; color: #000; border-color: #333; }
+#search_icon { color: #999; }
 
 #package_list .package_cat_name { color: #0c0; }
 

@@ -42,15 +42,36 @@ body {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400;
 	font-size: 13px;
-	line-height: 22px;
+	line-height: 20px;
 }
 
 strong { font-weight: 600; }
 
 h1, h2, h3, h4, h5, h6 {
-	font-weight: 400;
+	font-weight: 300;
 	line-height: 120%;
 }
+
+h2 { font-size: 180%; }
+h3 { font-size: 140%; }
+
+h1 {
+	margin-top: 40px;
+	margin-bottom: 10px;
+}
+
+h2 {
+	margin-top: 36px;
+	margin-bottom: 10px;
+}
+
+h3 {
+	margin-top: 32px;
+	margin-bottom: 10px;
+}
+
+h2 + ul, h2 + p, h2 + pre { margin-top: 10px; }
+h3 + ul, h3 + p, h3 + pre { margin-top: 10px; }
 
 a {
 	cursor: pointer;
@@ -78,7 +99,7 @@ pre {
 input {
 	border: 1px solid;
 	font-size: 90%;
-	height: 27px;
+	height: 25px;
 	padding: .5em;
 }
 
@@ -127,7 +148,12 @@ input {
 }
 
 .topbar_content {
-	margin-top: 4px;
+	margin-top: 5px;
+}
+
+.topbar_content h3 {
+	font-size: 16px;
+	font-weight: 400;
 }
 
 #lights_btn {
@@ -153,7 +179,7 @@ input {
 
 #github_label {
 	position: relative;
-	left: -20px;
+	padding-right: 20px;
 	white-space: nowrap;
 }
 
@@ -162,7 +188,16 @@ input {
 	vertical-align: middle;
 	text-decoration: none !important;
 	position: relative;
-	left: 4px;
+	padding-left: 5px;
+}
+
+#search_icon {
+	font-size: 110%;
+	float: right;
+	margin-right: 9px;
+	margin-top: -19px;
+	position: relative;
+	z-index: 2;
 }
 
 .main {
@@ -198,6 +233,25 @@ warn {
     -moz-user-select: none; /* mozilla browsers */
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none; /* IE10+ */
+}
+
+.infotip { display: none; }
+
+.tooltipsy {
+	border: 1px solid #666;
+	border-radius: 10px;
+	padding: 1em;
+	background-color: #000;
+}
+
+.tooltipsy:after {
+    content: '';
+    position: absolute;
+    border: 10px solid transparent;
+    border-left-color: #000;
+    bottom: -10px;
+    left: 50%;
+    z-index: -1;
 }
 
 /* common colors ---------------------------------------------------------- */

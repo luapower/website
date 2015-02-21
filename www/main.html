@@ -7,7 +7,7 @@
 		{{^title}}luapower - The LuaJIT distribution for Windows, Linux and OS X{{/title}}
 	</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,400' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:200,300,600,400' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="/main.css">
 	<link rel="stylesheet" type="text/css" href="/lights{{lights}}.css">
@@ -17,6 +17,7 @@
 	<script src="/jquery.scrollintoview.js"></script>
 	<script src="/jquery.tablesorter.js"></script>
 	<script src="/jquery.scrollspy.js"></script>
+	<script src="/tooltipsy.js"></script>
 	<script src="/util.js"></script>
 </head>
 <body>
@@ -28,7 +29,7 @@
 				<tr>
 					<td align=left valign=middle width=130>
 						<h3 class=tight>
-							<a href="/">luapower.com</a>
+							<a href="/" style="margin-right: 1em">luapower.com</a>
 						</h3>
 					</td>
 					<td align=left valign=middle>
@@ -43,7 +44,8 @@
 						{{/github_url}}
 					</td>
 					<td align=left valign=middle width=20%>
-						<input type=text value="{{{search}}}" placeholder="grep in sources" id="grep">
+						<input id=search_input type=text value="{{{search}}}" placeholder="grep in sources" id="grep">
+						<div id=search_icon class="fa fa-search"></div>
 					</td>
 				</tr>
 			</table>
@@ -68,15 +70,17 @@
 				<tr>
 					<td align=left><a href="/luapower-git">Luapower with Git</a></td>
 					<td align=left><a href="/get-involved">Getting Involved</a></td>
-					<td align=left><a href="/cosmin">About the Author</a></td>
+					<td align=left></td>
+					<td align=left></td>
 				</tr>
 				<tr>
 					<td align=left><a href="/building">Building Binaries</a></td>
 					<td align=left><a href="/problem-solution">Luapower Philosophy</a></td>
 					<td align=left></td>
+					<td align=left></td>
 				</tr>
 				<tr>
-					<td align=left colspan=3 class="small gray" valign=bottom height=60>
+					<td align=left colspan=4 class="small gray" valign=bottom height=100>
 					Made with
 						<a href="http://lua.org/">Sugar</a>,
 						<a href="http://luajit.org/">Spice</a> and
@@ -117,6 +121,18 @@ $(function() {
 		if (e.which == 13)
 			location = '/grep/'+encodeURIComponent($(this).val())
 	})
+
+	$('.infotip').each(function() {
+		var s = $(this).html()
+		var a = $('<a class="hastip"><i class="fa fa-question-circle"></i></a>')
+		a.attr('title', s)
+		$(this).replaceWith(a)
+	})
+
+	$('.hastip').tooltipsy({
+	    delay: 0,
+	})
+
 })
 </script>
 <script>

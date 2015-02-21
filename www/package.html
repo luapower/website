@@ -92,15 +92,17 @@ git checkout
 			<!-- info ======================================================= -->
 			{{#info}}
 
-			<h3>Package Dependencies &nbsp;
-				<a class="dep_switch package_dep_switch"><i class="fa fa-table"></i></a>
-				<a class="dep_switch package_dep_switch hidden"><i class="fa fa-list"></i></a>
+			<h3>Package Dependencies
+				&nbsp;
+				<a class=infotip>
+					This is a combined list of packages required by all modules of this package on each supported platform.
+					<br>Darker names, if present, represent indirect dependencies.
+				</a>
+				&nbsp;
+				<a class="hastip dep_switch package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
+				<a class="hastip dep_switch package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
 			</h3>
 			{{#has_package_deps}}
-			<p class=smallnote>
-				This is a combined list of packages required by all modules of this package on each supported platform.
-				<br>Darker names, if any, represent indirect dependencies.
-			</p>
 			<table id=dep_lists>
 				{{#package_deps}}
 				<tr>
@@ -110,7 +112,7 @@ git checkout
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
-						<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+						<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 						{{/packages}}
 					</td>
 				</tr>
@@ -151,17 +153,25 @@ git checkout
 			<h3>
 				Module Dependencies
 				&nbsp;
-				<a class="modpkg_switch" type=P title="show required modules">P</a>
-				<a class="modpkg_switch hidden" type=M title="show required packages">M</a>
+				<a class=infotip>
+					<span class=package_list>
+						These are the lists of packages required by each module of this package.
+						<br>Darker names, if present, represent indirect dependencies.
+					</span>
+					<span class="module_list hidden">
+						These are the lists of modules required by each module of this package.
+						<br>Darker names, if present, represent indirect dependencies.
+						<br>Even darker names are internal dependencies.
+					</span>
+				</a>
+				&nbsp;
+				<a class="hastip modpkg_switch" type=P title="show required modules">P</a>
+				<a class="hastip modpkg_switch hidden" type=M title="show required packages">M</a>
 			</h3>
-			<p class=smallnote>
-				Darker names, if any, represent indirect dependencies.
-				<span class="module_list hidden">Even darker names are internal dependencies.</span>
-			</p>
 			<table id=module_table>
 				<tr>
 					<th></th>
-					<th align=left style="border-bottom: 1px solid gray">module</th>
+					<th align=left style="border-bottom: 1px solid gray">module &nbsp;</th>
 					<th align=left style="border-bottom: 1px solid #888">
 						<span class="package_list">package</span>
 						<span class="module_list hidden">module</span>
@@ -189,7 +199,7 @@ git checkout
 						{{#package_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</div>
@@ -336,10 +346,11 @@ git checkout
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
 								{{#external}}
-									<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+									<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 								{{/external}}
 							{{/packages}}
 						{{/package_deps}}
+						{{^package_deps}}<span class=smallnote>none</span>{{/package_deps}}
 					</td>
 				</tr>
 				<tr>
@@ -351,7 +362,9 @@ git checkout
 								<a href="/{{.}}">{{.}}</a>&nbsp;
 							{{/packages}}
 						{{/package_rdeps}}
+						{{^package_rdeps}}<span class=smallnote>none</span>{{/package_rdeps}}
 					</td>
+				</tr>
 			</table>
 			<br>
 			<div id=docnav></div>
