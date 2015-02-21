@@ -241,16 +241,22 @@ $(function() {
 
 	$('.infotip').each(function() {
 		var s = $(this).html()
-		var a = $('<a class="hastip"><i class="fa fa-question-circle"></i></a>')
+		var a = $('<a class="infotip"><i class="fa fa-question-circle"></i></a>')
 		a.attr('title', s)
 		$(this).replaceWith(a)
 	})
 
-	$('.hastip').mousedown(function(e) {
+	$('.infotip').mousedown(function(e) {
 		e.preventDefault() // prevent selecting as text
 		$(this).data('tooltipsy').show() // for touch...
-	}).tooltipsy({
-	    delay: 200,
+	})
+
+	$('.infotip').tooltipsy({
+		delay: 200,
+	}).show()
+
+	$('.hastip').tooltipsy({
+	    delay: 1000,
 	})
 
 })

@@ -22,31 +22,32 @@
 </head>
 <body>
 
-<div id=body>
+<div class=body_wrapper>
+
 <table width=100%>
 	<tr>
 		<td align=center valign=top class=topbar>
 			<table class="topbar_content screen_width">
 				<tr>
 					<td align=left valign=middle width=130>
-						<h3 class=tight>
-							<a href="/" style="margin-right: 1em">luapower.com</a>
+						<h3 class="topbar_logo tight">
+							<a href="/">luapower.com</a>
 						</h3>
 					</td>
 					<td align=left valign=middle>
-						<a id=lights_btn
+						<a class=lights_btn
 							inverse_lights="{{inverse_lights}}"
 							title="lights {{inverse_lights}}">
-								<span class=lights_label>lights</span><i id=lights_icon class="fa fa-toggle-{{lights}}"></i></a>
+								<span class=lights_label>lights</span><i class="lights_icon fa fa-toggle-{{lights}}"></i></a>
 					</td>
 					<td align=right valign=middle>
 						{{#github_url}}
-						<a id=github_label href="{{github_url}}">{{github_title}}<i id=github_icon class="fa fa-github"></i></a>
+						<a class=github_label href="{{github_url}}">{{github_title}}<i class="github_icon fa fa-github"></i></a>
 						{{/github_url}}
 					</td>
 					<td align=left valign=middle width=20%>
-						<input id=search_input type=text value="{{{search}}}" placeholder="grep in sources">
-						<div id=search_icon class="fa fa-search"></div>
+						<input class=search_input type=text value="{{{search}}}" placeholder="grep in sources">
+						<div class="fa fa-search search_icon"></div>
 					</td>
 				</tr>
 			</table>
@@ -101,9 +102,9 @@
 	</table>
 </div>
 
-</div>
-
 <a class=top>Top</a>
+
+</div>
 
 <script>
 $(function() {
@@ -114,7 +115,7 @@ $(function() {
 			$(this).attr('target', '_blank')
 	})
 
-	$('#lights_btn').click(function(e) {
+	$('.lights_btn').click(function(e) {
 		e.preventDefault()
 		document.cookie =
 			'lights=' + $(this).attr('inverse_lights') +
@@ -122,7 +123,7 @@ $(function() {
 		location.reload()
 	})
 
-	$('#search_input').keydown(function(e) {
+	$('.search_input').keydown(function(e) {
 		if (e.which == 13)
 			location = '/grep/'+encodeURIComponent($(this).val())
 	})

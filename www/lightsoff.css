@@ -20,10 +20,7 @@ input:hover { border-color: #ccc; }
 
 .tooltipsy { border-color: #666; background-color: #000; }
 
-#search_input { background-color: #fff; color: #000; border-color: #333; }
-#search_icon { color: #999; }
-
-#package_list .package_cat_name { color: #0c0; }
+.package_cat_name { color: #0c0; }
 
 .platform_btn { background-color: #000; color: #999; }
 .platform_btn .selected { background-color: #666; color: #fff; }

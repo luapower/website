@@ -1,5 +1,13 @@
 
-/* reset ------------------------------------------------------------------ */
+/* defaults --------------------------------------------------------------- */
+
+html {
+	overflow-y: scroll; /* fixate page width */
+}
+
+html, body {
+	height: 100%;       /* needed so that the footer stays on the bottom */
+}
 
 html, body, table, tr, td, div, img, input, pre {
 	margin: 0;
@@ -7,19 +15,18 @@ html, body, table, tr, td, div, img, input, pre {
 	border: 0;
 }
 
-h1 {
-	padding-top: 0.1em;
-	padding-bottom: 0.1em;
-}
-
 input {
-	box-sizing: border-box;
-	width: 100%;
+	box-sizing: border-box; /* width and height include border and padding */
+	width: 100%;            /* expand to container */
+	border: 1px solid;
+	font-size: 90%;
+	height: 25px;
+	padding: .5em;
 }
 
 img {
-	display: inline-block;
-	max-width: 100%;
+	display: inline-block;  /* inline with fixed width and height */
+	max-width: 100%;        /* auto-shrink to container size */
 }
 
 table {
@@ -27,20 +34,30 @@ table {
    border-collapse: collapse;
 }
 
-tbody, tr, th, td {
-	border: inherit;
-	padding: inherit;
+a {
+	cursor: pointer;
+	text-decoration: none;
 }
 
-/* metrics ---------------------------------------------------------------- */
-
-html, body {
-	height: 100%;
+a:hover {
+	text-decoration: underline;
 }
 
-html {
-	overflow-y: scroll; /* fixate page width */
+hr {
+	border: 0;
+	border-top: 1px solid;
 }
+
+.tight { margin: 0; }
+.invisible { visibility: hidden; }
+.hidden { display: none; }
+.nowrap { white-space: nowrap; }
+
+.gray { color: #999; }
+.gray a, .gray a:visited { color: #ccc; }
+.smallnote { color: #999; }
+
+/* fonts and line spacings ------------------------------------------------ */
 
 body {
 	font-family: 'Open Sans', sans-serif;
@@ -77,20 +94,6 @@ h3 {
 h2 + ul, h2 + p, h2 + pre { margin-top: 10px; }
 h3 + ul, h3 + p, h3 + pre { margin-top: 10px; }
 
-a {
-	cursor: pointer;
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-hr {
-	border: 0;
-	border-top: 1px solid;
-}
-
 pre {
 	font-family: Inconsolata, monospace;
 	font-size: 13px;
@@ -100,17 +103,21 @@ pre {
 	white-space: pre-wrap;
 }
 
-input {
-	border: 1px solid;
-	font-size: 90%;
-	height: 25px;
-	padding: .5em;
-}
-
-.tight { margin: 0; }
 .small { font-size: 80%; }
 
-/* icons ------------------------------------------------------------------ */
+.smallnote {
+	font-size: 90%;
+	font-weight: 600;
+	font-style: italic;
+	line-height: 150%;
+}
+
+warn {
+	font-size: 120%;
+	color: #f33;
+}
+
+/* custom icons ----------------------------------------------------------- */
 
 @font-face {
 	font-family: Icons;
@@ -149,18 +156,25 @@ input {
 
 .topbar {
 	height: 33px;
+	background-color: #282828;
+	box-shadow: 0px 2px 2px #000;
 }
+
+.topbar a { color: #999; }
+.topbar a:visited { color: #ccc; }
+.topbar a:hover, .topbar a:visited:hover { color: #ddd; }
 
 .topbar_content {
 	margin-top: 5px;
 }
 
-.topbar_content h3 {
+.topbar_logo {
 	font-size: 16px;
 	font-weight: 400;
+	margin-right: 1em;
 }
 
-#lights_btn {
+.lights_btn {
 	text-decoration: none;
 	position: relative;
 	top: 1px;
@@ -168,43 +182,47 @@ input {
 	white-space: nowrap;
 }
 
-#lights_label {
-	font-size: 90%;
-}
-
-#lights_icon {
-	font-size: 120%;
+.lights_icon {
+	font-size: 120% !important;
+	text-decoration: none !important;
 	display: inline-block;
 	position: relative;
 	top: 1px;
 	left: 4px;
-	text-decoration: none !important;
 }
 
-#github_label {
+.github_label {
 	position: relative;
 	padding-right: 20px;
 	white-space: nowrap;
 }
 
-#github_icon {
-	font-size: 140%;
-	vertical-align: middle;
+.github_icon {
+	font-size: 140% !important;
 	text-decoration: none !important;
+	vertical-align: middle;
 	position: relative;
 	padding-left: 5px;
 }
 
-#search_icon {
+.search_input {
+	background-color: #fff;
+	color: #000;
+	border-color: #333;
+}
+
+.search_icon {
 	font-size: 110%;
 	float: right;
 	margin-right: 9px;
 	margin-top: -19px;
 	position: relative;
 	z-index: 2;
+	color: #999;
 }
 
-#body {
+/* need to make the footer stay on the bottom */
+.body_wrapper {
 	min-height: 100%;
 	position: relative;
 }
@@ -221,38 +239,23 @@ input {
 	left: 0;
 	padding-top: 30px;
 	padding-bottom: 20px;
+	background-color: #000;
+	color: #fff;
 }
 
 .footer_logo {
 	width: 270px;
 	opacity: 0.5;
 	background: url('/luapower-new.png') no-repeat;
-	background-position: -5px 100%;
+	background-position: -5px 0;
 	background-size: 250px 44px;
 }
 
-.invisible { visibility: hidden; }
-.hidden { display: none; }
-.nowrap { white-space: nowrap; }
+.footer a { color: #aaa; }
+.footer a:visited { color: #aaa; }
+.footer a:hover, .footer a:visited:hover { color: #ddd; }
 
-.smallnote {
-	font-size: 90%;
-	font-weight: 600;
-	font-style: italic;
-	line-height: 150%;
-}
-
-warn {
-	font-size: 120%;
-	color: #f33;
-}
-
-.no_selection {
-    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
-}
+/* tooltips --------------------------------------------------------------- */
 
 .infotip { display: none; }
 
@@ -273,75 +276,46 @@ warn {
     z-index: -1;
 }
 
-/* common colors ---------------------------------------------------------- */
-
-.topbar {
-	background-color: #282828;
-	box-shadow: 0px 2px 2px #000;
-}
-.topbar a { color: #999; }
-.topbar a:visited { color: #ccc; }
-.topbar a:hover, .topbar a:visited:hover { color: #ddd; }
-.main { border-bottom-color: #000; }
-.footer { background-color: #000; color: #fff; }; html { background-color: #000; }
-.footer a { color: #aaa; }
-.footer a:visited { color: #aaa; }
-.footer a:hover, .footer a:visited:hover { color: #ddd; }
-
-.gray { color: #999; }
-.gray a, .gray a:visited { color: #ccc; }
-.smallnote { color: #999; }
-
 /* homepage --------------------------------------------------------------- */
 
-#home_tagline {
+.home_tagline {
 	color: #777;
-	font-weight: 300 !important;
 }
 
-#table_list_switch {
-	cursor: pointer;
-	display: block;
-}
-
-#package_list {
+.package_list {
 	line-height: 140%;
 }
 
-#package_list ul {
+.package_list ul {
 	padding-left: 0;
 	list-style: none;
 }
 
-#package_list .package_cat_name {
-	margin: 0;
-}
-
-#package_list .package_cat {
+.package_list .package_cat {
 	margin-bottom: 1.2em;
 }
 
-#package_list .hot {
+.package_list .hot {
 	font-size: 80%;
 }
 
-#package_table td {
+.package_table td {
 	padding: 3px;
 }
 
-#package_table .icon {
+.package_table .icon {
 	font-size: 140%;
 	width: 22px;
 	display: inline-block;
 }
 
-#package_table th {
+.package_table th {
 	cursor: pointer;
 	position: relative;
 }
 
-#package_table th.tablesorter-headerAsc:after,
-#package_table th.tablesorter-headerDesc:after {
+.package_table th.tablesorter-headerAsc:after,
+.package_table th.tablesorter-headerDesc:after {
 	font-family: FontAwesome;
 	position: absolute;
 	top: 10px;
@@ -349,10 +323,10 @@ warn {
 	display: block;
 }
 
-#package_table th.tablesorter-headerAsc:after { content: '\f077'; }
-#package_table th.tablesorter-headerDesc:after { content: '\f078'; }
+.package_table th.tablesorter-headerAsc:after { content: '\f077'; }
+.package_table th.tablesorter-headerDesc:after { content: '\f078'; }
 
-#package_table th:hover {
+.package_table th:hover {
 	text-decoration: underline;
 }
 
@@ -377,7 +351,7 @@ warn {
 	cursor: pointer;
 }
 
-.modpkg_switch {
+.switch {
 	cursor: pointer;
 }
 
@@ -419,6 +393,8 @@ warn {
 .download:hover { color: #ff0 !important; }
 
 .platform_btn {
+	font-size: 120%;
+	padding: 0;
 	position: relative;
 	border: 1px solid gray;
 	border-radius: 6px;
