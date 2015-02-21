@@ -44,7 +44,7 @@
 						{{/github_url}}
 					</td>
 					<td align=left valign=middle width=20%>
-						<input id=search_input type=text value="{{{search}}}" placeholder="grep in sources" id="grep">
+						<input id=search_input type=text value="{{{search}}}" placeholder="grep in sources">
 						<div id=search_icon class="fa fa-search"></div>
 					</td>
 				</tr>
@@ -117,7 +117,7 @@ $(function() {
 		location.reload()
 	})
 
-	$('#grep').keydown(function(e) {
+	$('#search_input').keydown(function(e) {
 		if (e.which == 13)
 			location = '/grep/'+encodeURIComponent($(this).val())
 	})
