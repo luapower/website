@@ -207,12 +207,11 @@ input {
 #body {
 	min-height: 100%;
 	position: relative;
-	padding-bottom: 180px; /* footer height */
 }
 
 .main {
 	padding-top: 30px;
-	padding-bottom: 30px;
+	padding-bottom: 210px; /* padding + footer height */
 }
 
 .footer {
