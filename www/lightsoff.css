@@ -1,5 +1,8 @@
 
-body { background: #151515; color: #eee; } #body { background-image: url("hack_bg.png"); }
+body { background: #151515; color: #eee; }
+html { background-color: #000; } /* footer color */
+#body { background-image: url("hack_bg.png"); }
+
 strong { font-weight: 600; }
 
 a { color: #aaa; }
