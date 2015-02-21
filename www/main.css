@@ -272,8 +272,7 @@ warn {
 .topbar a:visited { color: #ccc; }
 .topbar a:hover, .topbar a:visited:hover { color: #ddd; }
 .main { border-bottom-color: #000; }
-html { background-color: #333; }
-.footer { background-color: #000; color: #fff;}
+.footer { background-color: #000; color: #fff; }; html { background-color: #000; }
 .footer a { color: #aaa; }
 .footer a:visited { color: #aaa; }
 .footer a:hover, .footer a:visited:hover { color: #ddd; }
