@@ -161,7 +161,7 @@ $(function() {
 	})
 	btn.on('click', function(event) {
 		event.preventDefault()
-		$('body,html').animate({ scrollTop: 0, }, 700, 'easeOutQuint')
+		$('html, body').stop().animate({ scrollTop: 0, }, 700, 'easeOutQuint')
 	})
 })
 
@@ -195,7 +195,7 @@ $(function() {
 	nav.on('click', 'a', function(e) {
 		e.preventDefault()
 		var i = $(this).parent().attr('idx')
-		$('html, body').animate({
+		$('html, body').stop().animate({
 			scrollTop: doc.find('[idx='+i+']').offset().top - 10
 		}, 700, 'easeOutQuint')
 	})
@@ -232,5 +232,25 @@ $(function() {
 	}
 
 	$(window).resize(check_size)
+
+})
+
+// infotips ------------------------------------------------------------------
+
+$(function() {
+
+	$('.infotip').each(function() {
+		var s = $(this).html()
+		var a = $('<a class="hastip"><i class="fa fa-question-circle"></i></a>')
+		a.attr('title', s)
+		$(this).replaceWith(a)
+	})
+
+	$('.hastip').mousedown(function(e) {
+		e.preventDefault() // prevent selecting as text
+		$(this).data('tooltipsy').show() // for touch...
+	}).tooltipsy({
+	    delay: 200,
+	})
 
 })

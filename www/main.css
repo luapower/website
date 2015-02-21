@@ -104,7 +104,7 @@ input {
 }
 
 .tight { margin: 0; }
-.small { font-size: 90%; }
+.small { font-size: 80%; }
 
 /* icons ------------------------------------------------------------------ */
 
@@ -209,7 +209,15 @@ input {
 
 .footer {
 	padding-top: 30px;
-	padding-bottom: 30px;
+	padding-bottom: 20px;
+}
+
+.footer_logo {
+	width: 270px;
+	opacity: 0.5;
+	background: url('/luapower-new.png') no-repeat;
+	background-position: -5px 100%;
+	background-size: 250px 44px;
 }
 
 .invisible { visibility: hidden; }
@@ -257,7 +265,7 @@ warn {
 /* common colors ---------------------------------------------------------- */
 
 .topbar {
-	background-color: #333;
+	background-color: #282828;
 	box-shadow: 0px 2px 2px #000;
 }
 .topbar a { color: #999; }
@@ -265,7 +273,7 @@ warn {
 .topbar a:hover, .topbar a:visited:hover { color: #ddd; }
 .main { border-bottom-color: #000; }
 html { background-color: #333; }
-.footer { background-color: #333; color: #fff;}
+.footer { background-color: #000; color: #fff;}
 .footer a { color: #aaa; }
 .footer a:visited { color: #aaa; }
 .footer a:hover, .footer a:visited:hover { color: #ddd; }

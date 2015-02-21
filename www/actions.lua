@@ -296,7 +296,6 @@ local function platform_package_info_live(platform, pkg)
 					mt.module_deps[mod] = modext[mod] and 'external'
 						or modules[mod] and 'internal' or 'indirect'
 				end
-
 			end
 
 			mt.autoloads = lp.module_autoloads(mod)

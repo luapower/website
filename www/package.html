@@ -171,8 +171,8 @@ git checkout
 			<table id=module_table>
 				<tr>
 					<th></th>
-					<th align=left style="border-bottom: 1px solid gray">module &nbsp;</th>
-					<th align=left style="border-bottom: 1px solid #888">
+					<th align=left>module &nbsp;</th>
+					<th align=left>
 						<span class="package_list">package</span>
 						<span class="module_list hidden">module</span>
 						dependencies
@@ -215,43 +215,47 @@ git checkout
 				{{/modules}}
 			</table>
 			{{#has_autoloads}}
-			<h3>Runtime Dependencies - Autoloads</h3>
-				<p class=smallnote>
+			<h3>Runtime Dependencies - Autoloads
+				&nbsp;
+				<div class=infotip>
 					Some modules implement parts of their API in separate sub-modules.
-					These "implementation" modules are loaded automatically at runtime
-					only if and when accessing those APIs
-					(see <a href="/glue#autoload">glue.autoload</a> for how this works).
-				</p>
-				{{#modules}}{{#module_has_autoloads}}
-				<table>
-					<tr>
-						<th></th>
-						<th align=left style="border-bottom: 1px solid gray">module.field</th>
-						<th align=left style="border-bottom: 1px solid gray">implementation module</th>
-					</tr>
-					{{#autoloads}}
-					<tr>
-						<td valign=top align=center width=30>
-							<span class="icon-{{icon}}"></span>
-						</td>
-						<td style="padding-right: 1em">
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
-						</td>
-						<td>
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
-						</td>
-					</tr>
-					{{/autoloads}}
-				</table>
-				{{/module_has_autoloads}}{{/modules}}
+					<br>These <i>implementation</i> modules are loaded automatically at runtime
+					<br>only if and when accessing those APIs.
+					<br>See <a href="/glue#autoload">glue.autoload</a> for how this works.
+				</div>
+			</h3>
+			{{#modules}}{{#module_has_autoloads}}
+			<table>
+				<tr>
+					<th></th>
+					<th align=left>module.field</th>
+					<th align=left>implementation module</th>
+				</tr>
+				{{#autoloads}}
+				<tr>
+					<td valign=top align=center width=30>
+						<span class="icon-{{icon}}"></span>
+					</td>
+					<td style="padding-right: 1em">
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
+					</td>
+					<td>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
+					</td>
+				</tr>
+				{{/autoloads}}
+			</table>
+			{{/module_has_autoloads}}{{/modules}}
 			{{/has_autoloads}}
 
 			{{#has_runtime_deps}}
 			<h3>Runtime Dependencies - Other</h3>
-				<p class=smallnote>
+				&nbsp;
+				<a class=infotip>
 					These are additional modules that are required automatically
-					at runtime in specific circumstances (see source code).
-				</p>
+					<br>at runtime in specific circumstances.
+					<br>Check the module's documentation or source code for when.
+				</a>
 				{{#modules}}{{#module_has_runtime_deps}}
 				<table>
 					<tr>

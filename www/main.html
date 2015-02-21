@@ -63,7 +63,6 @@
 				</tr>
 			</table>
 		</td>
-	</tr>
 	<tr>
 		<td align=center class=footer>
 			<table class=screen_width>
@@ -80,17 +79,20 @@
 					<td align=left></td>
 				</tr>
 				<tr>
-					<td align=left colspan=4 class="small gray" valign=bottom height=100>
-					Made with
-						<a href="http://lua.org/">Sugar</a>,
-						<a href="http://luajit.org/">Spice</a> and
-						<a href="http://openresty.org/">Everything nice</a> by
-						<a href="/cosmin">Cosmin Apreutesei</a>.
-					Published as
-						<a href="http://unlicense.org/">Public Domain</a>.
-					<br>
-					The website is developed on
-						<a href="http://github.com/luapower/website">github</a>.
+					<td colspan=4><br><br><hr style="border-top-color: #333"></td>
+				</tr>
+				<tr>
+					<td align=left class=footer_logo valign=bottom>
+					</td>
+					<td colspan=2 valign=bottom class="small gray">
+						Made with
+							<a href="http://lua.org/">sugar</a>,
+							<a href="http://luajit.org/">spice</a> and
+							<a href="http://openresty.org/">everything nice</a> by
+							<a href="/cosmin">Cosmin Apreutesei</a>.
+						<br>
+						Published as <a href="http://unlicense.org/">Public Domain</a>.
+						Developed on <a href="http://github.com/luapower/website">github</a>.
 					</td>
 				</tr>
 			</table>
@@ -120,17 +122,6 @@ $(function() {
 	$('#search_input').keydown(function(e) {
 		if (e.which == 13)
 			location = '/grep/'+encodeURIComponent($(this).val())
-	})
-
-	$('.infotip').each(function() {
-		var s = $(this).html()
-		var a = $('<a class="hastip"><i class="fa fa-question-circle"></i></a>')
-		a.attr('title', s)
-		$(this).replaceWith(a)
-	})
-
-	$('.hastip').tooltipsy({
-	    delay: 0,
 	})
 
 })
