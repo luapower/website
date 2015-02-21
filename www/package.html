@@ -110,7 +110,7 @@ git checkout
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
-						<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
+						<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
 						{{/packages}}
 					</td>
 				</tr>
@@ -176,7 +176,7 @@ git checkout
 						{{/icons}}
 					</td>
 					<td class="nowrap" valign=top style="padding-right: 1em">
-						<a href="/{{package}}/{{module}}" module="{{module}}">{{module}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}" module="{{module}}">{{module}}</a>
 					</td>
 					<td valign=top>
 						<span class="{{error_class}}">
@@ -189,7 +189,7 @@ git checkout
 						{{#package_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
+								<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</div>
@@ -197,7 +197,7 @@ git checkout
 						{{#module_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#modules}}
-								<a href="/{{package}}" class="{{kind}}">{{package}}</a>&nbsp;
+								<a href="https://github.com/luapower/{{dep_package}}/blob/master/{{dep_file}}" class="{{kind}}">{{dep_module}}</a>&nbsp;
 							{{/modules}}
 						{{/module_deps}}
 					</td>
@@ -225,10 +225,10 @@ git checkout
 							<span class="icon-{{icon}}"></span>
 						</td>
 						<td style="padding-right: 1em">
-							<a href="/{{module}}#{{key}}">{{module}}.{{key}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
 						</td>
 						<td>
-							<a href="/{{impl_module}}">{{impl_module}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
 						</td>
 					</tr>
 					{{/autoloads}}
@@ -255,10 +255,10 @@ git checkout
 							<span class="icon-{{icon}}"></span>
 						</td>
 						<td style="padding-right: 1em">
-							<a href="/{{module}}#{{key}}">{{module}}.{{key}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
 						</td>
 						<td>
-							<a href="/{{impl_module}}">{{impl_module}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
 						</td>
 					</tr>
 					{{/runtime_deps}}
@@ -329,6 +329,29 @@ git checkout
 				<tr>
 					<td align=left class="small gray">License: </td><td align=left class=small>{{license}}</td>
 				</tr>
+				<tr>
+					<td align=left valign=top class="small gray">Requires: </td>
+					<td align=left class=small style="white-space: normal">
+						{{#package_deps}}
+							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#packages}}
+								{{#external}}
+									<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								{{/external}}
+							{{/packages}}
+						{{/package_deps}}
+					</td>
+				</tr>
+				<tr>
+					<td align=left valign=top class="small gray">Required by: </td>
+					<td align=left class=small style="white-space: normal">
+						{{#package_rdeps}}
+							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#packages}}
+								<a href="/{{.}}">{{.}}</a>&nbsp;
+							{{/packages}}
+						{{/package_rdeps}}
+					</td>
 			</table>
 			<br>
 			<div id=docnav></div>
