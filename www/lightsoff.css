@@ -1,5 +1,5 @@
 
-body { background: #151515 url("hack_bg.png") 0 0; color: #eee; }
+body { background: #151515; color: #eee; } #body { background-image: url("hack_bg.png"); }
 strong { font-weight: 600; }
 
 a { color: #aaa; }
