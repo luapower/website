@@ -211,7 +211,7 @@ input {
 
 .main {
 	padding-top: 30px;
-	padding-bottom: 210px; /* padding + footer height */
+	padding-bottom: 240px; /* padding + footer height */
 }
 
 .footer {
