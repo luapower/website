@@ -313,7 +313,7 @@ git checkout
 			{{/download}}{{/info}}
 
 		</td>
-		<td id=rightside valign=top align=right width=180 class=nowrap style="padding-left: 20px">
+		<td valign=top align=right class="rightside nowrap">
 			<h1 class=tight style="margin-bottom: 10px">
 				{{#icons}}
 					<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
@@ -344,8 +344,9 @@ git checkout
 					<td align=left class="small gray">License: </td><td align=left class=small>{{license}}</td>
 				</tr>
 				<tr>
-					<td align=left valign=top class="small gray">Requires: </td>
-					<td align=left class=small style="white-space: normal">
+					<td align=left valign=top colspan=2>
+						<span class="small gray requires_label">Requires:</span>
+						<span class="small" style="white-space: normal">
 						{{#package_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
@@ -354,7 +355,10 @@ git checkout
 								{{/external}}
 							{{/packages}}
 						{{/package_deps}}
-						{{^package_deps}}<span class=smallnote>none</span>{{/package_deps}}
+						</span>
+						{{^package_deps}}
+						<span class=smallnote>none</span>
+						{{/package_deps}}
 					</td>
 				</tr>
 				<tr>

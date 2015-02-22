@@ -173,19 +173,34 @@ $(function() {
 	if(!doc.length || !nav.length) return
 
 	// wrap content sections (heading + everything till next heading) into divs
-	doc.find('h1,h2,h3').filter(':not(:has(code))').each(function() {
-		$(this).nextUntil('h1:not(:has(code)),h2:not(:has(code)),h3:not(:has(code)),enddoc')
-			.andSelf().wrapAll('<div></div>')
+	doc.find('h3').each(function() {
+		$(this).nextUntil('h3,h2,h1,enddoc').andSelf().wrapAll('<div></div>')
+	})
+	doc.find('h2').each(function() {
+		$(this).nextUntil('h2,h1,enddoc').andSelf().wrapAll('<div></div>')
+	})
+	doc.find('h1').each(function() {
+		$(this).nextUntil('h1,enddoc').andSelf().wrapAll('<div></div>')
 	})
 
 	// build the doc nav
 	var t = []
 	var i = 0
-	doc.find('h1,h2,h3').filter(':not(:has(code))').each(function() {
-		var s = $(this).html().trim()
-		var level = parseInt($(this).prop('tagName').match(/\d/))
-		t.push('<div style="padding-left: '+((level-2)*1.5+.5)+'em" idx='+i+'><a>'+s+'</a></div>')
-		$(this).parent().attr('idx', i)
+
+	var h = doc.find('h1,h2,h3')
+	if (h.length > 30) // too many entries. cut the h3s
+		h = doc.find('h1,h2')
+
+	h.each(function() {
+		var h = $(this)
+		var s = h.html().trim()
+		var level = parseInt(h.prop('tagName').match(/\d/))
+		if (h.has('code').length)
+			s = h.find('code').html().trim().replace(/\(.*/, '')
+		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
+			' style="padding-left: '+((level-2)*1.5+.5)+
+			'em" idx='+i+'><a>'+s+'</a></div>')
+		h.parent().attr('idx', i)
 		lastlevel = level
 		i++
 	})
@@ -218,17 +233,23 @@ $(function() {
 
 	// make doc nav follow scroll
 	var top0 = nav.offset().top
-	$(window).scroll(function() {
-		if (top0 - $(window).scrollTop() < 10) {
-			nav.css('position', 'fixed').css('top', 10)
-		} else {
-			nav.css('position', 'absolute').css('top', '')
-		}
-	})
+	if (nav.height() + 10 < $(window).height()) // fits the window completely
+		$(window).scroll(function() {
+			if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
+				// reached footer
+				nav.css('position', 'absolute').css('top', '').css('bottom', 200)
+			} else if (top0 - $(window).scrollTop() < 10) {
+				// follow scroll
+				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
+			} else {
+				// stay in original position
+				nav.css('position', 'absolute').css('top', '').css('bottom', '')
+			}
+		})
 
 	function check_size() {
 		var w = $(window).width()
-		$('#rightside').toggle(w > 745)
+		$('.rightside').toggle(w > 745)
 	}
 
 	$(window).resize(check_size)

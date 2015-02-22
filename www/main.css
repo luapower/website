@@ -92,7 +92,9 @@ h3 {
 }
 
 h2 + ul, h2 + p, h2 + pre { margin-top: 10px; }
-h3 + ul, h3 + p, h3 + pre { margin-top: 10px; }
+h3 + ul, h3 + p, h3 + pre, h3 + div h4 { margin-top: 10px; }
+h2 + div h3 { margin-top: 20px; }
+h2 + table { margin-top: 30px; }
 
 pre {
 	font-family: Inconsolata, monospace;
@@ -340,6 +342,16 @@ warn {
 	text-decoration: underline !important;
 }
 
+.rightside {
+	width: 190px;
+	padding-left: 20px;
+}
+
+.requires_label {
+	display: inline-block;
+	min-width: 84px;
+}
+
 .multicol_name {
 	list-style: none;
 	-webkit-column-width: 140px;
@@ -418,6 +430,7 @@ warn {
 #docnav {
 	text-align: left;
 	position: absolute;
+	z-index: 100;
 }
 
 #docnav div {
