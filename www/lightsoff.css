@@ -1,6 +1,6 @@
 
 body { background: #151515; color: #eee; }
-.body_container { background-image: url("hack_bg.png"); }
+.body_wrapper { background-image: url("hack_bg.png"); }
 
 strong { font-weight: 600; }
 
