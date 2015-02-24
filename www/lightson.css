@@ -1,6 +1,6 @@
 
 body { background-color: #fff; color: #000; }
-#body {}
+.body_wrapper {}
 
 strong { font-weight: 800; }
 
@@ -50,26 +50,17 @@ input:hover { border-color: #999; }
 .doc blockquote { color: #666; }
 .doc th, .doc td strong { color: #666; }
 
-.doc .sourceCode { color: #000; }
-/*  KeyWordTok */
-.doc .sourceCode .kw { color: #909; }
-/*  DataTypeTok */
-.doc .sourceCode .dt { color: #003; }
-/*  DecValTok (decimal value), BaseNTok, FloatTok */
-.doc .sourceCode .dv, .doc .sourceCode .bn, .doc .sourceCode .fl { color: #00f; }
-/*  CharTok */
-.doc .sourceCode .ch { color: #006; }
-/*  StringTok */
-.doc .sourceCode .st { color: #006; }
-/*  CommentTok */
-.doc .sourceCode .co { color: #090; }
-/*  OtherTok */
-.doc .sourceCode .ot { color: #333; }
-/*  AlertTok */
-.doc .sourceCode .al { color: #f00; }
-/*  FunctionTok */
-.doc .sourceCode .fu { color: #000; }
-/*  RegionMarkerTok */
-.doc .sourceCode .re { }
-/*  ErrorTok */
-.doc .sourceCode .er { color: #f00; }
+.doc .sourceCode     { color: #000; }
+.doc .sourceCode .kw { color: #909; } /*  KeyWordTok */
+.doc .sourceCode .dt { color: #003; } /*  DataTypeTok */
+.doc .sourceCode .dv { color: #00f; } /*  DecValTok */
+.doc .sourceCode .bn { color: #00f; } /*  BaseNTok */
+.doc .sourceCode .fl { color: #00f; } /*  FloatTok */
+.doc .sourceCode .ch { color: #006; } /*  CharTok */
+.doc .sourceCode .st { color: #006; } /*  StringTok */
+.doc .sourceCode .co { color: #090; } /*  CommentTok */
+.doc .sourceCode .ot { color: #333; } /*  OtherTok */
+.doc .sourceCode .al { color: #f00; } /*  AlertTok */
+.doc .sourceCode .fu { color: #000; } /*  FunctionTok */
+.doc .sourceCode .re { }              /*  RegionMarkerTok */
+.doc .sourceCode .er { color: #f00; } /*  ErrorTok */

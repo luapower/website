@@ -7,7 +7,7 @@
 						<h1 class=tight>{{package}}</h1>
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
-					<td valign=top align=right class=spacey_links>
+					<td valign=top align=right class=action_links>
 						<a href="/{{package}}" class=nowrap><i class="fa fa-file-text-o"></i> documentation</a>
 						<a href="/{{package}}/info" class=nowrap><i class="fa fa-info-circle"></i> package info</a>
 						<a href="/{{package}}/download" class="nowrap download_link"><i class="fa fa-download"></i> download</a>
@@ -99,8 +99,8 @@ git checkout
 					<br>Darker names, if present, represent indirect dependencies.
 				</a>
 				&nbsp;
-				<a class="hastip dep_switch package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
-				<a class="hastip dep_switch package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
+				<a class="hastip switch package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
+				<a class="hastip switch package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
 			</h3>
 			{{#has_package_deps}}
 			<table id=dep_lists>
@@ -165,8 +165,8 @@ git checkout
 					</span>
 				</a>
 				&nbsp;
-				<a class="hastip modpkg_switch" type=P title="show required modules">P</a>
-				<a class="hastip modpkg_switch hidden" type=M title="show required packages">M</a>
+				<a class="hastip switch modpkg_switch" type=P title="show required modules">P</a>
+				<a class="hastip switch modpkg_switch hidden" type=M title="show required packages">M</a>
 			</h3>
 			<table id=module_table>
 				<tr>
@@ -322,31 +322,31 @@ git checkout
 			<br>
 			<table width=100% class=infobar>
 				<tr>
-					<td align=left class="small gray">Pkg type:</td><td align=left class=small>{{type}}</td>
+					<td align=left class="gray">Pkg type:</td><td align=left>{{type}}</td>
 				</tr>
 				<tr>
-					<td align=left class="small gray">Version: </td><td align=left class=small>{{version}}</td>
+					<td align=left class="gray">Version: </td><td align=left>{{version}}</td>
 				</tr>
 				<tr>
-					<td align=left class="small gray">Last commit: </td><td align=left class=small><a href="https://github.com/luapower/{{package}}/commits/master">{{mtime_ago}}</a></td>
+					<td align=left class="gray">Last commit: </td><td align=left><a href="https://github.com/luapower/{{package}}/commits/master">{{mtime_ago}}</a></td>
 				</tr>
 				{{#cname}}
 				<tr>
-					<td align=left class="small gray">C library: </td><td align=left class=small>{{cname}}</td>
+					<td align=left class="gray">C library: </td><td align=left>{{cname}}</td>
 				</tr>
 				{{/cname}}
 				{{#cversion}}
 				<tr>
-					<td align=left class="small gray">Clib version: </td><td align=left class=small><a href="{{curl}}">{{cversion}}</a></td>
+					<td align=left class="gray">Clib version: </td><td align=left><a href="{{curl}}">{{cversion}}</a></td>
 				</tr>
 				{{/cversion}}
 				<tr>
-					<td align=left class="small gray">License: </td><td align=left class=small>{{license}}</td>
+					<td align=left class="gray">License: </td><td align=left>{{license}}</td>
 				</tr>
 				<tr>
 					<td align=left valign=top colspan=2>
-						<span class="small gray requires_label">Requires:</span>
-						<span class="small" style="white-space: normal">
+						<span class="gray requires_label">Requires:</span>
+						<span style="white-space: normal">
 						{{#package_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
@@ -362,8 +362,8 @@ git checkout
 					</td>
 				</tr>
 				<tr>
-					<td align=left valign=top class="small gray">Required by: </td>
-					<td align=left class=small style="white-space: normal">
+					<td align=left valign=top class="gray">Required by: </td>
+					<td align=left style="white-space: normal">
 						{{#package_rdeps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}

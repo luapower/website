@@ -29,6 +29,7 @@ end
 
 local luapower_dir = config'luapower_dir'
 luapower.config.luapower_dir = luapower_dir
+luapower.toc_file_path = wwwpath'md/toc.md'
 
 local function powerpath(file)
 	if not file then return luapower_dir end
@@ -639,8 +640,7 @@ local function action_home()
 			t.type = lp.package_type(pkg)
 			local dtags = lp.doc_tags(pkg, pkg)
 			t.tagline = dtags and dtags.tagline
-			local path = lp.doc_category_path(pkg)
-			t.category = table.concat(path, ' > ')
+			t.cat = lp.package_cat(pkg)
 			t.version = lp.git_version(pkg)
 			t.platforms = lp.platforms(pkg)
 			t.mtime = lp.git_mtime(pkg)
@@ -659,24 +659,18 @@ local function action_home()
 	data.github_title = 'github.com/luapower'
 	data.github_url = 'https://'..data.github_title
 
-	local catlist = {}
-	luapower.walk_tree(lp.toc_file(), function(node, level, parent)
-		if level == 0 then
-			table.insert(catlist, node.name)
-		end
-	end)
-
-	local cat = {}
+	local pkgmap = {}
 	for _,pkg in ipairs(data.packages) do
-		table.insert(glue.attr(cat, pkg.category), pkg)
+		pkgmap[pkg.name] = pkg
 	end
-
-	data.cat = {}
-	for i, category in ipairs(catlist) do
-		local packages = cat[category]
-		if packages then
-			table.insert(data.cat, {cat = category, packages = packages})
+	data.cats = {}
+	for i, cat in ipairs(lp.cats()) do
+		local t = {}
+		for i, pkg in ipairs(cat.packages) do
+			local pt = pkgmap[pkg]
+			table.insert(t, {name = pkg, hot = pt.hot})
 		end
+		table.insert(data.cats, {cat = cat.name, packages = t})
 	end
 
 	out(render_main('home.html', data))

@@ -119,6 +119,13 @@ warn {
 	color: #f33;
 }
 
+.multicol_name {
+	list-style: none;
+	-webkit-column-width: 140px;
+	column-width: 140px;
+	-moz-column-width: 140px;
+}
+
 /* custom icons ----------------------------------------------------------- */
 
 @font-face {
@@ -334,33 +341,17 @@ warn {
 
 /* package page ----------------------------------------------------------- */
 
-.spacey_links a + a {
+.action_links a + a {
 	margin-left: 0.5em;
 }
 
-.spacey_links a:hover i, .download:hover i {
+.action_links a:hover i, .download:hover i {
 	text-decoration: underline !important;
 }
 
 .rightside {
 	width: 190px;
 	padding-left: 20px;
-}
-
-.requires_label {
-	display: inline-block;
-	min-width: 84px;
-}
-
-.multicol_name {
-	list-style: none;
-	-webkit-column-width: 140px;
-	column-width: 140px;
-	-moz-column-width: 140px;
-}
-
-#dep_btn {
-	cursor: pointer;
 }
 
 .switch {
@@ -423,9 +414,15 @@ warn {
 .platform_btn { background-color: #ddd; }
 .platform_btn .selected { background-color: #fff; }
 
+.infobar { font-size: 90%; }
 .infobar td { padding-right: 0.5em; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
+
+.requires_label {
+	display: inline-block;
+	min-width: 86px;
+}
 
 #docnav {
 	text-align: left;

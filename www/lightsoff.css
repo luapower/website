@@ -50,26 +50,17 @@ input:hover { border-color: #ccc; }
 .doc blockquote { color: #999; }
 .doc th, .doc td strong { color: #999; }
 
-.doc .sourceCode { color: #fff; }
-/*  KeyWordTok */
-.doc .sourceCode .kw { color: #ff0; }
-/*  DataTypeTok */
-.doc .sourceCode .dt { color: #ffc; }
-/*  DecValTok (decimal value), BaseNTok, FloatTok */
-.doc .sourceCode .dv, .doc .sourceCode .bn, .doc .sourceCode .fl { color: #99f; }
-/*  CharTok */
-.doc .sourceCode .ch { color: #FF6666; }
-/*  StringTok */
-.doc .sourceCode .st { color: #FF6666; }
-/*  CommentTok */
-.doc .sourceCode .co { color: #99CC99; }
-/*  OtherTok */
-.doc .sourceCode .ot { color: #CCCCCC; }
-/*  AlertTok */
-.doc .sourceCode .al { color: #FF0000; }
-/*  FunctionTok */
-.doc .sourceCode .fu { color: #FFFFFF; }
-/*  RegionMarkerTok */
-.doc .sourceCode .re { }
-/*  ErrorTok */
-.doc .sourceCode .er { color: #FF0000; }
+.doc .sourceCode     { color: #fff; }
+.doc .sourceCode .kw { color: #ff0; }    /*  KeyWordTok */
+.doc .sourceCode .dt { color: #ffc; }    /*  DataTypeTok */
+.doc .sourceCode .dv { color: #99f; }    /*  DecValTok */
+.doc .sourceCode .bn { color: #99f; }    /*  BaseNTok */
+.doc .sourceCode .fl { color: #99f; }    /*  FloatTok */
+.doc .sourceCode .ch { color: #FF6666; } /*  CharTok */
+.doc .sourceCode .st { color: #FF6666; } /*  StringTok */
+.doc .sourceCode .co { color: #99CC99; } /*  CommentTok */
+.doc .sourceCode .ot { color: #CCCCCC; } /*  OtherTok */
+.doc .sourceCode .al { color: #FF0000; } /*  AlertTok */
+.doc .sourceCode .fu { color: #FFFFFF; } /*  FunctionTok */
+.doc .sourceCode .re { }                 /*  RegionMarkerTok */
+.doc .sourceCode .er { color: #FF0000; } /*  ErrorTok */

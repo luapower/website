@@ -7,13 +7,13 @@
 </center>
 
 <table><tr><td>
-	<a class="switch hastip package_table" title="view full package table" style="font-size: 140%"><i class="fa fa-table"></i></a>
-	<a class="switch hastip package_list hidden" title="view condensed package list" style="font-size: 140%"><i class="fa fa-list"></i></a>
+	<a class="switch package_table_switch hastip package_table" title="view full package table" style="font-size: 140%"><i class="fa fa-table"></i></a>
+	<a class="switch package_table_switch hastip package_list hidden" title="view condensed package list" style="font-size: 140%"><i class="fa fa-list"></i></a>
 </td></tr></table>
 
 <div class=package_list>
 	<ul class=multicol_name>
-		{{#cat}}
+		{{#cats}}
 			<li class=package_cat>
 				<h4 class="package_cat_name tight">{{cat}}</h4>
 				<ul>
@@ -25,7 +25,7 @@
 					{{/packages}}
 				</ul>
 			</li>
-		{{/cat}}
+		{{/cats}}
 	</ul>
 	<i class="fa fa-star hot"></i> <span class=smallnote>updated in the last 7 days</span>
 </div>
@@ -62,4 +62,24 @@
 	</tbody>
 </table>
 
-<script src="/home.js"></script>
+<script>
+
+$(function() {
+
+	$('.package_table').tablesorter({
+		cancelSelection: true,
+		sortList: [[1,0]], //initially sort by name
+	})
+
+	$('.package_table_switch').click(function(e) {
+		e.preventDefault()
+		$('.package_list').toggle()
+		$('.package_table').toggle()
+	}).mousedown(function(e) {
+		// prevent selection of subsequent text on double-click.
+		e.preventDefault()
+	})
+
+})
+
+</script>

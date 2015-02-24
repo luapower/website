@@ -188,7 +188,7 @@ $(function() {
 	var i = 0
 
 	var h = doc.find('h1,h2,h3')
-	if (h.length > 30) // too many entries. cut the h3s
+	if (h.length > 60) // too many entries. cut the h3s
 		h = doc.find('h1,h2')
 
 	h.each(function() {
