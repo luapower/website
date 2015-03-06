@@ -1,10 +1,25 @@
 <table width=100%>
 	<tr>
+		<td valign=top width=110 style="padding-right: 20px;">
+			{{#docs}}
+				{{#selected}}{{name}}{{/selected}}
+				{{^selected}}<a href="/{{name}}">{{name}}</a>{{/selected}}
+				<br>
+			{{/docs}}
+			<br>
+			{{#cat}}
+			<h4 class="package_cat_name tight">{{name}}</h4>
+			{{#packages}}
+				<a href="/{{.}}">{{.}}</a>
+				<br>
+			{{/packages}}
+			{{/cat}}
+		</td>
 		<td valign=top>
 			<table width=100%>
 				<tr>
 					<td valign=top>
-						<h1 class=tight>{{package}}</h1>
+						<h1 class=tight>{{title}}</h1>
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td valign=top align=right class=action_links>

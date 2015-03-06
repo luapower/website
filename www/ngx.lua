@@ -9,7 +9,7 @@ package.cpath = os.getenv'LUA_CPATH'
 local function try_call(func, ...)
 	local function pass(ok, ...)
 		if ok then return ... end
-		local err = ...
+		local err = tostring(...)
 		ngx.log(ngx.ERR, err)
 		ngx.status = 500
 		ngx.header.content_type = 'text/plain'
@@ -18,6 +18,9 @@ local function try_call(func, ...)
 	end
 	return pass(xpcall(func, debug.traceback, ...))
 end
+
+package.loaded.app = nil
+package.loaded.actions = nil
 
 local app = try_call(require, 'app')
 try_call(app.run)

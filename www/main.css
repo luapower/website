@@ -562,6 +562,7 @@ warn {
 
 .doc td {
 	padding: 4px;
+	vertical-align: top;
 }
 
 /* hack: use <strong> in a table means a header */

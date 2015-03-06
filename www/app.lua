@@ -132,12 +132,8 @@ function wwwpath(file) --file -> path (if exists)
 	return www..'/'..file
 end
 
-local st = {}
 function readfile(name)
-	if not st[name] then
-		st[name] = assert(glue.readfile(wwwpath(name)))
-	end
-	return st[name]
+	return assert(glue.readfile(wwwpath(name)))
 end
 
 --template API ---------------------------------------------------------------
@@ -179,7 +175,8 @@ function run()
 	__index._G.print = print --replace print for pp
 	__index._G.coroutine = require'coroutine' --nginx for windows doesn't include it
 	init_request()
-	require'actions' --loaded at runtime because it loads this module back.
+	--these are loaded at runtime because they load the 'app' module back.
+	require'actions'
 	--decide on the action: unknown actions go to the default action.
 	local act = ARGS[1]
 	if not act or not action[act] or act == 'default' then
