@@ -466,12 +466,12 @@ function action_home()
 	data.packages = pt
 	for pkg in glue.sortedpairs(lp.installed_packages()) do
 		local t = {name = pkg}
-		t.type = 'n/a' --lp.package_type(pkg)
+		t.type = lp.package_type(pkg)
 		local dtags = lp.doc_tags(pkg, pkg)
 		t.tagline = dtags and dtags.tagline
 		t.cat = lp.package_cat(pkg)
 		t.cat = t.cat and t.cat.name
-		t.version = 'n/a'--lp.git_version(pkg)
+		t.version = lp.git_version(pkg)
 		t.platforms = lp.platforms(pkg)
 		t.mtime = lp.git_mtime(pkg)
 		local ctags = lp.c_tags(pkg) or {}

@@ -1,6 +1,4 @@
 
---actions file.
-
 setfenv(1, require'app')
 
 package.loaded.luapower = nil
