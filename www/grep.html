@@ -16,11 +16,17 @@
 		</td>
 
 		<td valign=top style="padding-left: 20px">
+			<div style="text-align: right; width: 100%">
+			<span class=gray>Lua modules searched: </span>{{modules_searched}},
+			<span class=gray>Docs searched: </span>{{docs_searched}},
+			<span class=gray>Matching files: </span>{{file_matchcount}}
+			<span class=gray>Matches: </span>{{matchcount}}{{#matchcount_limited}}&#43;{{/matchcount_limited}}
+			</div>
 		{{#results}}
 			<div class=result file="{{file}}">
 			<table width=100%>
 				<tr>
-					<td><h3><a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{file}}</a></h3></td>
+					<td><h3><a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3">{{file}}</a></h3></td>
 					<td align=right valign=bottom>{{matchcount}}{{#limited}}&#43;{{/limited}} matches</td>
 				</tr>
 				<tr>

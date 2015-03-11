@@ -106,6 +106,7 @@ function setmime(ext)
 end
 
 redirect = ngx.redirect
+sleep = ngx.sleep
 
 --json API -------------------------------------------------------------------
 
@@ -139,6 +140,7 @@ end
 --template API ---------------------------------------------------------------
 
 function render(name, data, env)
+	lustache.renderer:clear_cache()
 	local function get_partial(_, name)
 		return readfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
 	end
@@ -164,16 +166,13 @@ wait = ngx.thread.wait
 
 action = {} --{name = handler}
 
-local function cachepath()
-	local uri = PATH .. (QUERY and '?' .. QUERY or '')
-	return wwwpath('cache/'..escape_filename(uri))
-end
-
 function run()
 	--init global and request contexts
+	local oldindex = __index
 	__index = __index._G -- _G is replaced on each request
-	__index._G.print = print --replace print for pp
-	__index._G.coroutine = require'coroutine' --nginx for windows doesn't include it
+	__index.print = print --replace print for pp
+	setfenv(pp.pp, __index) --replace _G for pp.pp
+	__index.coroutine = require'coroutine' --nginx for windows doesn't include it
 	init_request()
 	--these are loaded at runtime because they load the 'app' module back.
 	require'actions'

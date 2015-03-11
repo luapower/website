@@ -91,11 +91,12 @@ git checkout
 			</table>
 
 			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
+				<p>From the luapower root dir, type:</p>
 				<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
-	<a href="/luapower-git">luapower</a> clone winapi
+	<a href="/luapower-git">git</a> clone winapi
 				</pre>
 				<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
-	<a href="/luapower-git">./luapower.sh</a> clone winapi
+	<a href="/luapower-git">./git</a> clone winapi
 				</pre>
 
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
@@ -122,12 +123,12 @@ git checkout
 				{{#package_deps}}
 				<tr>
 					<td class=col1 valign=top align=right>
-						{{#icon}}+ <span class="icon-{{icon}}"></span>{{/icon}}
+						{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
 						{{^icon}}<i>common</i>{{/icon}}
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
-						<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+						{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 						{{/packages}}
 					</td>
 				</tr>
@@ -201,7 +202,7 @@ git checkout
 						{{/icons}}
 					</td>
 					<td class="nowrap" valign=top style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}" module="{{module}}">{{module}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3" module="{{module}}">{{module}}</a>
 					</td>
 					<td valign=top>
 						<span class="{{error_class}}">
@@ -222,7 +223,7 @@ git checkout
 						{{#module_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#modules}}
-								<a href="https://github.com/luapower/{{dep_package}}/blob/master/{{dep_file}}" class="{{kind}}">{{dep_module}}</a>&nbsp;
+								<a href="https://github.com/luapower/{{dep_package}}/blob/master/{{dep_file}}?ts=3" class="{{kind}}">{{dep_module}}</a>&nbsp;
 							{{/modules}}
 						{{/module_deps}}
 					</td>
@@ -252,10 +253,10 @@ git checkout
 						<span class="icon-{{icon}}"></span>
 					</td>
 					<td style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3">{{module}}.{{key}}</a>
 					</td>
 					<td>
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}?ts=3">{{impl_module}}</a>
 					</td>
 				</tr>
 				{{/autoloads}}
@@ -284,10 +285,10 @@ git checkout
 							<span class="icon-{{icon}}"></span>
 						</td>
 						<td style="padding-right: 1em">
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}">{{module}}.{{key}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3">{{module}}.{{key}}</a>
 						</td>
 						<td>
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}">{{impl_module}}</a>
+							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}?ts=3">{{impl_module}}</a>
 						</td>
 					</tr>
 					{{/runtime_deps}}
@@ -363,10 +364,10 @@ git checkout
 						<span class="gray requires_label">Requires:</span>
 						<span style="white-space: normal">
 						{{#package_deps}}
-							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#icon}}<span class="gray icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
 								{{#external}}
-									<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+									{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 								{{/external}}
 							{{/packages}}
 						{{/package_deps}}
@@ -377,15 +378,19 @@ git checkout
 					</td>
 				</tr>
 				<tr>
-					<td align=left valign=top class="gray">Required by: </td>
-					<td align=left style="white-space: normal">
+					<td align=left valign=top colspan=2>
+						<span class="gray requires_label">Required by: </span>
+						<span style="white-space: normal">
 						{{#package_rdeps}}
-							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#icon}}<span class="gray icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								<a href="/{{.}}">{{.}}</a>&nbsp;
+								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{.}}">{{.}}</a>&nbsp;
 							{{/packages}}
 						{{/package_rdeps}}
-						{{^package_rdeps}}<span class=smallnote>none</span>{{/package_rdeps}}
+						</span>
+						{{^package_rdeps}}
+						<span class=smallnote>none</span>
+						{{/package_rdeps}}
 					</td>
 				</tr>
 			</table>
