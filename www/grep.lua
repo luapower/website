@@ -10,7 +10,7 @@ local function filelines(file)
 	return t
 end
 
-local function grepfile(s0, file)
+local function grepfile(s0, file, maxmatches)
 	local lines = filelines(file)
 
 	--record matches
@@ -19,7 +19,7 @@ local function grepfile(s0, file)
 	for line, s in ipairs(lines) do
 		local col0 = 1
 		while true do
-			if #matches >= 10 then
+			if #matches >= maxmatches then
 				limited = true
 				break
 			end
@@ -79,14 +79,14 @@ local function grepfile(s0, file)
 	return {matchcount = #matches, limited = limited, chunks = chunks}
 end
 
-local function grep(s0)
+local function grep(s0, maxmatches)
 	local t = {}
 	local dn, mn, fn, n = 0, 0, 0, 0
 	local limited
 	if s0 and s0 ~= '' then
 		for pkg in pairs(lp.installed_packages()) do
 			for doc, file in pairs(lp.docs(pkg)) do
-				local res = grepfile(s0, file)
+				local res = grepfile(s0, file, maxmatches)
 				dn = dn + 1
 				n = n + res.matchcount
 				if res.matchcount > 0 then
@@ -101,7 +101,7 @@ local function grep(s0)
 			for mod, file in pairs(lp.modules(pkg)) do
 				--exclude built-in modules and binary files
 				if file ~= true and lp.module_tags(pkg, mod).lang ~= 'C' then
-					local res = grepfile(s0, file)
+					local res = grepfile(s0, file, maxmatches)
 					mn = mn + 1
 					n = n + res.matchcount
 					if res.matchcount > 0 then

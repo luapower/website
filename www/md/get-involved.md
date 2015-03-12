@@ -17,44 +17,45 @@ There are 5 types of luapower packages:
 ### Directory layout
 
   * main module: `foo.lua`
-  * submodule: `foo_bar.lua` but `foo/bar.lua` is fine too
-  * ffi cdef module: `foo_h.lua`
-  * test program: `foo_test.lua`
-  * demo: `foo_demo.lua`
-  * documentation: `foo.md`, `foo_bar.md` (pandoc markdown)
+  * submodule: `foo_bar.lua` for small packages, `foo/bar.lua` for large packages
+  * ffi cdef module: `foo_h.lua` (only ffi.cdef, no ffi.load in there)
+  * test program: `foo_test.lua` (only tests that can be automated)
+  * demo: `foo_demo.lua` (anything goes)
+  * documentation: `foo.md`, `foo_bar.md` (pandoc markdown format)
   * C libs & Lua/C libs:
     * sources: `csrc/foo/*`
     * build scripts: `csrc/foo/build-<platform>.sh`
-		* platforms are named mingw32, mingw64, linux32, linux64, osx32, osx64.
+		* currently supported platforms are: mingw32, mingw64, linux32, linux64, osx32, osx64.
     * binaries (resulted from building):
-	   * C libraries: `bin/mingw32/foo.dll`, `bin/linux32/libfoo.so`
+	   * C libraries: `bin/mingwXX/foo.dll`, `bin/linuxXX/libfoo.so`, `bin/osxXX/libfoo.dylib`
 	   * Lua/C libraries: `bin/<platform>/clib/foo[.dll|.so]`
 	 * description: `csrc/foo/WHAT` (see below)
   * exclude file: `foo.exclude` (see below)
-  * LuaJIT executable: `bin/<platform>/luajit[.exe]`
 
-> These conventions allow packages to be safely unzipped over a common directory and the result look sane,
-and it makes it possible to extract package information and build the package database.
+These conventions allow packages to be safely unzipped over a common
+directory and the result look sane, and it makes it possible to extract
+package information and build the package database and this website.
 
 ### The docs
 
 In order to appear on the website, docs should start with a yaml header:
 
 	---
-	tagline: cairo graphics engine
+	tagline: win32 windows and controls
+	platforms: mingw32, mingw64
 	---
 
-  * `platforms: platform1, ...` should only be added for Lua packages that are
-  platform-specific but don't have a C component (eg. [winapi]; for packages
-  with a C component, adding the build scripts is enough to figure out the
-  supported platforms).
-  * a good, short tagline is important for figuring out what the module does
-  when browsing the module list.
+A good, short tagline is important for figuring out what the module does
+when browsing the module list.
+
+The `platforms` line is only needed for Lua packages that are
+platform-specific but do not have a C component; for packages with a C
+component, the platforms are inferred from the names of the build scripts.
 
 You don't have to make a doc for each submodule if you don't have much to
 document for it, a single doc matching the package name would suffice.
 
-### The `WHAT` file
+### The WHAT file
 
 The WHAT file is used for packages that have a C component (i.e. Lua+ffi,
 Lua/C and C packages), and it's used to describe that C component. Pure Lua
@@ -63,20 +64,21 @@ packages don't need a WHAT file.
 	cairo 1.12.16 from http://cairographics.org/releases/ (LGPL license)
 	requires: pixman, freetype, zlib, libpng
 
-  * the first line should read `<name> <version> from <browse-url> (<license>)`
-  * the second line should read `requires: package1, package2, ...` and
-  should only list the binary dependencies, if any.
-  * after the first two lines and an empty line, you can type in additional notes, whatever, they aren't parsed.
+The first line should contain "`<name> <version> from <browse-url>
+(<license>)`". The second line should contain "`requires: package1, package2,
+...`" and should only list the binary dependencies of the library, if there
+are any. After the first two lines and an empty line, you can type in
+additional notes, whatever, they aren't parsed.
 
-The WHAT file can also be used to describe Lua modules that are developed outside of luapower (eg. [lexer]).
+The WHAT file can also be used to describe Lua modules that are developed
+outside of luapower (eg. [lexer]).
 
-> Extracting dependencies from the dll itself and figuring it out from there is a project for another day.
+### The exclude file
 
-### The `exclude` file
-
-This is the .gitignore file used for excluding files between packages so that files in one packages don't show
-as untracked files in other package. Another way to think of it is the file used for reserving name-space in the
-luapower directory layout.
+This is the .gitignore file used for excluding files between packages so that
+files in one packages don't show as untracked files in other package. Another
+way to think of it is the file used for reserving name-space in the luapower
+directory layout.
 
 Example:
 
@@ -85,35 +87,29 @@ Example:
 	!/foo/               ; include the directory in root named `foo`
 	!/foo/**             ; include the contents of the directory named `foo`, recursively
 
-> NOTE: Double-asterisk patterns are Git 1.8.2+.
-
 ### The code
 
-  * adding at least a small comment on the first line of every Lua file with
-  a short tagline (what the module does), author and license can be a huge
+  * add at least a small comment on the first line of every Lua file with
+  a short tagline (what the module does), author and license. It can be a huge
   barrier-remover towards approaching your code (adding a full screen of legal
   crap on the other hand is just bad taste - IMHO).
-  * adding a comment on top of the `foo_h.lua` file describing the origin
-  (which files? which version?) and process (cpp? by hand?) used for
-  generating the file adds confidence that the C API is complete and updated.
-  * calling `ffi.load()` without paths, custom names or version numbers keeps
+  * add a comment on top of the `foo_h.lua` file describing the origin (which
+  files? which version?) and process (cpp? by hand?) used for generating the
+  file. This adds confidence that the C API is complete and up-to-date.
+  * call `ffi.load()` without paths, custom names or version numbers to keep
   the module away from any decision regarding how and where the library is
-  to be found, which in turn this allows for more freedom on how to deploy
-  libraries.
-  * the reason for putting cdefs in a separate file is because they may
-  contain types that other packages might need.   If this is an unlikely
-  scenario and the API is small, you can embed the cdefs in the main module
-  file directly.
-  * (subjective) I don't use `module()` to keep _G clean. For big modules
-  with a shared namespace I make a "namespace" module and use
-  `setfenv(1, require'foo.ns')` as the first line of every submodule
-  (see [winapi]).
-  * (subjective) my code is indented with tabs, and alignment inside the line
-  is done with spaces, because I think that a fixed tabsize should not be
-  enforced on people (plus very few editors can jump through space
-  indentation).
-  * (subjective) I use Lua's naming conventions `foo_bar` and `foobar`
-  instead of FooBar or fooBar.
+  to be found. This allows for more freedom on how to deploy libraries.
+  * put cdefs in a separate "header" file because it may contain types that
+  other packages might need. If this is an unlikely scenario and the API is
+  small, embed the cdefs in the main module file directly.
+  * don't use `module()`, keep Mr. _G clean. For big modules with a shared
+  namespace, make a "namespace" module and use `setfenv(1, require'foo.ns')`
+  as the first line of every submodule (see [winapi]).
+  * indent your code with tabs, and use spaces inside the line, don't force
+  your tabsize on people (also, very few editors can jump through space
+  indents).
+  * use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or
+  fooBar.
 
 
 ### The build scripts
@@ -163,11 +159,12 @@ Here's a quick gcc cheat list:
   * `-mmacosx-version-min=10.6`  : for C++ modules on OSX: link to libstdc++.6 instead of the newer libc++.1
   * `-install_name @loader_path/<libname>.dylib` : for OSX, for libs that are binary dependencies to other libs
 
+> __IMPORTANT__: always place the `-L` and `-l` switches ___after___ the
+input files!
+
 #### Static linking with ar:
 
 	ar rcs ../../bin/<platform>/static/<libname>.a *.o
-
-> __IMPORTANT__: place the `-L` and `-l` switches ___after___ the input files!
 
 #### Example: compile and link lpeg 0.10 for linux32:
 
@@ -188,29 +185,25 @@ In some cases it's going to be more complicated than that.
   * if the package has a clean and simple makefile that doesn't add more
   dependencies to the toolchain, use that.
 
-## Publishing
-
-### 1. Publishing on luapower.com
+## Publishing packages on luapower.com
 
 The way you add modules to luapower.com is:
 
-  * first you make a git repo that resembles a luapower package
-  * then you can either:
-	 * publish it on github (or on your server)
-     * I add your package to the package list
-     * you set up a webhook on your package to `http://luapower.com/github`
-     * luapower users will clone from your url directly
-	 * publish it under the luapower github account
-	   * I add you as an admin to the luapower github account
-     * you add your package to the package list
-     * you set up a webhook on your package to `http://luapower.com/github`
+  * first you [create](/luapower-git#creating-a-new-package) a package with
+  your files; you can test the package with the [luapower] command.
+  * you then make a pull request with your changes to
+  [luapower-git][luapower-git-src] so I can add your package to the website.
+  * lastly, you set up a webhook on your package to notify the url
+  `http://luapower.com/github` of changes to your repo.
 
-In the first scenario you retain full control over where you publish the
-sources and luapower.com can be kept up-to-date via a webhook.
-In the second case, you keep the sources on github and you add packages
-yourself to the base repo.
+This way you retain full control over where you keep the code and
+luapower.com will be kept up-to-date via the webhook.
 
-#### What to add
+Alternatively, you are welcome to ask me to add you as an admin to the
+luapower account (is's an organization account) and you can add your packages
+there directly. The steps are the same either way.
+
+### What to add
 
 Before publishing a luapower module, please consider:
 
@@ -218,119 +211,42 @@ Before publishing a luapower module, please consider:
   * how your module relates to other modules
 
 Choosing a good name is important if you want people to find your module
-on luapower.com and understand (from the name alone) what it does. Likewise,
-it's a good idea to be sure that your module is doing something new or at
-least different (and hopefully better) than something already on luapower.com.
+and understand (from the name alone) what it does. Likewise, it's a good idea
+to be sure that your module is doing something new or at least different
+(and hopefully better) than something already on luapower.com.
 
 Ideally, your module has:
 
   * __distinction__ - focused problem domain
   * __completeness__ - exhaustive of the problem domain
-  * __API documentation__ - so it can be browsed on luapower.com
+  * __API documentation__ - that can be browsed online
   * __test and/or demo__ - so it can be seen to work
   * __a non-viral license__ - so it doesn't impose restrictions on _other_ modules
 
-Of course, few modules (in any language) qualify on all fronts, so luapower.com
-is inevitably an ecclectic mix. In any case, if your module collection is too
-specialized to be added to luapower.com or you simply don't want to mix it in,
-here's where you can have your cake and eat it too.
+Of course, few modules (in any language) qualify on all fronts, so
+luapower.com is necessarily an ecclectic mix. In any case, if your module
+collection is too specialized to be added to luapower.com or you simply don't
+want to mix it in with the others, then keep reading...
 
-### 2. Forking luapower.com
+## Forking luapower.com
 
-Luapower can be easily forked and used as a personal website for publishing
-Lua modules.
+The luapower website is composed of:
 
-Luapower is composed of:
+  * a meta [git repo][luapower-git-src] which contains the list of packages
+  and a git wrapper for cloning them.
+  * a [Lua module][luapower] for collecting package metadata, which also acts
+  as an in-memory database for that metadata.
+  * a dynamic [website][luapower-website] based on [open-resty], with
+  very simple css, lustache-based templates and table-based layout.
+  * a bunch of Windows, Linux and OSX machines set up to collect package
+  dependency information and run automated tests.
+  * [pandoc], for converting the docs to html.
 
-  * a [open-resty based website][luapower-website]
-  * a [Lua script][luapower-command] which acts as a database server for the website
-  * a few [simple shell scripts][luapower-git-src] for working with git in a shared-work-tree environment
+Email me if you want to put this together and you get stuck in the
+details.
 
-Which means that with a few forks and a few tweaks you can have your own
-luapower clone with your own modules on it. The only dependency is [pandoc]
-for converting the website documentation from markdown to html.
-
-#### The `luapower` command
-
-This is a powerful command that extracts and aggregates data from the luapower
-environment and gives detailed information about packages, modules and
-documentation. It can give accurate information about dependencies between
-modules and packages because it actually loads the module and tracks `require`
-calls, and then it integrates that information with the information about
-packages.
-
-In addition to the command line frontend, it is also exposed as a RPC server
-which servers cached package metadata to the luapower.com website.
-
-The `luapower` command is a Lua script that depends on [luajit], [lfs],
-[glue] and [tuple] so let's clone these first:
-
-	> clone luajit
-	> clone lfs
-	> clone glue
-	> clone tuple
-
-The rest you can learn from the tool itself:
-
-	> luapower
-
-	USAGE: luapower <command> ...
-
-	HELP
-
-		help                           this screen
-
-	PACKAGES
-
-		packages                       list installed packages
-		known                          list all known package
-		left                           list not yet installed packages
-
-	PACKAGE INFO
-
-		describe <package>             describe a package
-		type [package]                 package type
-		ver [package]                  current git version
-		tags [package]                 git tags
-		tag [package]                  current git tag
-		files [package]                tracked files
-		docs [package]                 docs
-		modules [package]              modules
-		scripts [package]              scripts
-		mtree [package]                module tree
-		mtags [package [module]]       module info
-		platforms [package]            supported platforms
-		ctags [package]                C package info
-
-	CHECKS
-
-		check [package]                consistency checks
-		trackable                      trackable files
-		multitracked                   files tracked by multiple packages
-		untracked                      files not tracked by any package
-
-	DEPENDENCIES
-
-		requires <module>              direct module requires
-		rall <module>                  direct and indirect module requires
-		rtree <module>                 module require log tree
-		rext <module>                  direct-external module requires
-		pall <module>                  direct and indirect package dependencies
-		pext <module>                  direct-external package dependencies
-		ppall [package]                direct and indirect package dependencies
-		ppext [package]                direct-external package dependencies
-		cdeps [package]                direct and indirect C dependencies
-		rrev <module>                  all modules that require a module
-
-	The `package` arg defaults to the env var PROJECT, as set by the `proj` command,
-	and if that is not set, it defaults to `--all`, meaning all packages.
-
-
-#### The luapower website
-
-To be continued...
 
 [luapower-website]:   https://github.com/luapower/website
-[luapower-command]:   https://github.com/luapower/luapower-git/blob/master/luapower.lua
+[open-resty]:         http://openresty.org
 [luapower-git-src]:   https://github.com/luapower/luapower-git
 [pandoc]:             http://johnmacfarlane.net/pandoc/

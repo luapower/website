@@ -5,20 +5,25 @@ tagline:  how to build binaries
 
 ## What you need to know first
 
- * Building is based on one-liner shell scripts that invoke gcc directly (no makefiles).
- * Each supported package/platform/arch has a separate build script `csrc/<package>/build-<platf><arch>.sh`.
- * Not all platform/arch combinations are supported for all packages (sort packages by platform to check).
+ * Building is based on one-liner shell scripts that invoke gcc directly
+ (no makefiles).
+ * Each supported package/platform/arch has a separate build script
+ `csrc/<package>/build-<platf><arch>.sh`.
+ * Not all platform/arch combinations are supported for all packages.
  * C sources are included so you can start right away.
  * Dependent packages are listed in `csrc/<package>/WHAT`. Build those first.
  * For building Lua/C modules you need [lua-headers].
- * For building Lua/C modules for Windows you need [luajit] (for linking to lua51.dll).
- * You will get stripped binaries, with libgcc and libstdc++ statically linked, except on OSX (see below).
- * Windows binaries are linked to msvcrt.dll and Lua/C modules are linked to lua51.dll.
+ * For building Lua/C modules for Windows you need [luajit]
+ (they need to link to lua51.dll).
+ * You will get stripped binaries, with libgcc and libstdc++ statically
+ linked, except on OSX (see below).
+ * Binaries on Windows are linked to msvcrt.dll.
+ * Lua/C modules on Windows are linked to lua51.dll.
  * Windows builds are compatible down to Windows 2000/XP (32bit and 64bit)
  * OSX builds are compatible down to OSX 10.6 (x86 only, 32bit and 64bit)
 
 
-## Building on Windows 32bit for Windows 32bit
+## Building on Win32 for Win32
 
 Use `build-mingw32.sh` (that is `sh build-mingw32.sh` from the command line).
 These scripts assume that both MSys and MinGW bin dirs (in this order) are in your PATH.
@@ -58,7 +63,7 @@ Additional tools needed by a few special packages (use them for building for 64b
 [cmake 2.8.12.2 (only for libjpeg-turbo)](http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip)
 ----
 
-## Building on Windows 64bit for Windows 64bit
+## Building on Win64 for Win64
 
 Use `sh build-mingw64.sh`.
 These scripts assume that both MSys and MinGW-w64 bin dirs (in this order) are in your PATH.
@@ -69,37 +74,35 @@ Here's the exact MinGW-w64 package used to build the current luapower stack:
 ----
 
 
-## Building on Windows 32bit for Windows 64bit
+## Building on Win32 for Win64
 
-MinGW-w64 can be used to cross-compile C libraries for x86_64 from a 32bit Windows machine. But MinGW-w64 cannot
-be used to cross-compile LuaJIT this way because LuaJIT requires SEH for the x86_64 target, and there's no
+MinGW-w64 can be used to cross-compile C libraries for x86_64 from a 32bit
+Windows machine. But MinGW-w64 cannot be used to cross-compile LuaJIT this
+way because LuaJIT requires SEH for the x86_64 target, and there's no
 MinGW-w64 32bit binaries for that.
 
 > Note that in MinGW-w64 terminology, host means target and target means host.
 
-Because of that limitation, this is not a supported host/target cross-compling combination.
-
-If you still want to do it, you can download the [latest toolchain][mingw-w64-win32] from mingwbuilds,
-add mingw32/bin in your PATH and build using `build-mingw64-from-win32.sh` where available.
-
-> NOTE: This will build libraries with the SJLJ exception model,
-unlike current luapower binaries which use SEH.
+Because of that limitation, this is not a supported host/target
+cross-compling combination.
 
 
-## Building on Linux for Linux (x86 native)
+## Building on Linux for Linux (native)
 
 Use `build-linux32.sh` on a 32bit host and `build-linux64.sh` on a 64bit host.
-Careful not to mix them up, or you'll get 32bit binaries in the 64bit directory or viceversa.
+Careful not to mix them up, or you'll get 32bit binaries in the 64bit
+directory and viceversa.
 
 You need a recent gcc toolchain, which you probably already have.
 
 The current luapower stack is built with gcc 4.7.2 from tinycore 5.2 (see below).
 
 
-## Building on Windows or OSX for Linux (x86 32bit and 64bit)
+## Building from Windows or OSX for Linux (native)
 
-If you are on Windows or OSX and you want to compile for Linux and don't want to mess with a cross-compiler,
-here is a quick method to build Linux binaries from a Windows or OSX (or even Linux) environment.
+If you are on Windows or OSX and you want to compile for Linux and don't want
+to mess with a cross-compiler, here is a quick method to build Linux binaries
+from a Windows or OSX (or even other Linux) environment.
 
 * Grab VirtualBox
 * Grab TinyCore
@@ -118,32 +121,28 @@ here is a quick method to build Linux binaries from a Windows or OSX (or even Li
 * Get luapower
 	* `$ git clone https://github.com/luapower/luapower-git luapower`
 	* `$ cd luapower`
-* Get all luapower packages
-	* `$ ./clone.sh --all`
-* Build all luapower packages (it will only build for your platform, either 32bit or 64bit)
-	* `$ cd csrc`
-	* `$ ./build.sh --all`
-* Or, get and compile packages individually
-	* `$ ./clone.sh --list`
-	* `$ ./clone.sh foobar`
-	* `$ cd csrc/foobar`
+* Get and compile luapower packages
+	* `$ ./git clone foo`
+	* `$ cd csrc/foo`
 	* `$ ./build-linux32.sh` or `./build-linux64.sh`, depending on what ISO you used
 
 
 ## Building on OSX for OSX (x86 32bit and 64bit)
 
-Use `build-osx32.sh` to make 32bit x86 binaries and `build-osx64.sh` to make 64bit x86 binaries.
-Clang is a cross-compiler, so you can build for 32bit on a 64bit OSX and viceversa.
+Use `build-osx32.sh` to make 32bit x86 binaries and `build-osx64.sh` to make
+64bit x86 binaries. Clang is a cross-compiler, so you can build for 32bit
+on a 64bit OSX and viceversa.
 
 Current OSX builds are based on clang 5.0 (clang-500.2.279) which comes with
 Xcode 5.0.2, and are done on a 64bit OSX 10.9.
 
-The generated binaries are compatible down to OSX 10.6 for both 32bit and 64bit.
+The generated binaries are compatible down to OSX 10.6 for both 32bit
+and 64bit.
 
-> NOTE: Clang/OSX doesn't (and will not) support static binding of the standard C++ library nor of libgcc.
+> NOTE: Clang/OSX doesn't (and will not) support static binding of the
+standard C++ library nor of libgcc.
 
 
 [mingw-w64-win64]:    http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/4.8.1/64-bit/threads-posix/seh/x64-4.8.1-release-posix-seh-rev5.7z
-[mingw-w64-win32]:    http://heanet.dl.sourceforge.net/project/mingwbuilds/host-windows/releases/4.8.1/32-bit/threads-posix/sjlj/
 [Core-5.2.iso]:       http://distro.ibiblio.org/tinycorelinux/5.x/x86/archive/5.2/Core-5.2.iso
 [CorePure64-5.2.iso]: http://distro.ibiblio.org/tinycorelinux/5.x/x86_64/archive/5.2/CorePure64-5.2.iso

@@ -252,12 +252,8 @@ warn {
 	color: #fff;
 }
 
-.footer_logo {
-	width: 270px;
+.footer_footer {
 	opacity: 0.5;
-	background: url('/luapower-new.png') no-repeat;
-	background-position: -5px 0;
-	background-size: 250px 44px;
 }
 
 .footer a { color: #aaa; }
@@ -287,8 +283,16 @@ warn {
 
 /* homepage --------------------------------------------------------------- */
 
+.home_logo {
+	margin-top: 30px;
+	margin-bottom: 0px;
+	margin-left: -60px;
+}
+
 .home_tagline {
 	color: #777;
+	margin-left: -60px;
+	margin-bottom: 30px;
 }
 
 .package_list {
@@ -316,6 +320,7 @@ warn {
 	font-size: 140%;
 	width: 22px;
 	display: inline-block;
+	text-align: right;
 }
 
 .package_table th {
@@ -531,6 +536,7 @@ warn {
 }
 
 .doc blockquote {
+	margin-left: 0;
 	padding-left: 1em;
 	border-left: 1px dotted;
 }

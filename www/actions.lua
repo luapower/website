@@ -95,7 +95,7 @@ end
 local function action_docfile(docfile)
 	local data = {}
 	data.doc_html = render_docfile(docfile)
-	local dtags = luapower.docfile_tags(docfile)
+	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
 	out(render_main('doc.html', data))
@@ -617,7 +617,13 @@ function action.default(s, ...)
 		return action_package(s, nil, ...)
 	elseif lp.docs()[s] then
 		local pkg = lp.doc_package(s)
-		return action_package(pkg, s, ...)
+		if pkg then
+			return action_package(pkg, s, ...)
+		else
+			--doc with no package
+			local docfile = lp.powerpath(lp.docs()[s])
+			return action_docfile(docfile, ...)
+		end
 	elseif lp.modules()[s] then
 		local pkg = lp.module_package(s)
 		return action_package(pkg, nil, s, ...)
@@ -662,13 +668,19 @@ end
 
 --grepping through the source code and documentation -------------------------
 
+local disallow = glue.index{'{}', '()', '))', '}}', '==', '[[', ']]', '--'}
 function action.grep(s)
-	sleep(1) --sorry about this
-	local results = grep(s)
-	glue.update(results, {
-		title = 'grepping for '..(s or ''),
-		search = s,
-	})
+	local results = {search = s}
+	if not s or #glue.trim(s) < 2 or disallow[s] then
+		results.message = 'Type two or more non-space characters and not '..
+			table.concat(glue.keys(disallow), ', ')..'.'
+	else
+		sleep(1) --sorry about this
+		glue.update(results, grep(s, 10))
+		results.title = 'grepping for '..(s or '')
+		results.message = #results.results > 0 and '' or 'Nothing found.'
+		results.searched = true
+	end
 	out(render_main('grep.html', results))
 end
 

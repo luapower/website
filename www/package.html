@@ -187,8 +187,8 @@ git checkout
 			<table id=module_table>
 				<tr>
 					<th></th>
-					<th align=left>module &nbsp;</th>
-					<th align=left>
+					<th align=left valign=top>module &nbsp;</th>
+					<th align=left valign=top>
 						<span class="package_list">package</span>
 						<span class="module_list hidden">module</span>
 						dependencies
@@ -384,7 +384,7 @@ git checkout
 						{{#package_rdeps}}
 							{{#icon}}<span class="gray icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{.}}">{{.}}</a>&nbsp;
+								<a href="/{{.}}">{{.}}</a>&nbsp;
 							{{/packages}}
 						{{/package_rdeps}}
 						</span>
