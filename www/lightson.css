@@ -46,9 +46,8 @@ input:hover { border-color: #999; }
 	border-top-color: #ccc;
 	border-bottom-color: #ccc;
 }
+.doc code { background-color: #eee; }
 .doc pre { background-color: #eee; }
-.doc blockquote { color: #666; }
-.doc blockquote a { color: #999; }
 .doc th, .doc td strong { color: #666; }
 
 .doc .sourceCode     { color: #000; }

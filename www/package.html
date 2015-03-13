@@ -66,13 +66,13 @@
 cd luapower
 md _git\{{package}}
 set GIT_DIR=_git\{{package}}\.git
-git init
-git config --local core.worktree ../../..
-git config --local core.excludesfile {{package}}.exclude
-git remote add origin https://github.com/luapower/{{package}}.git
-git fetch --all
-git branch --track master origin/master
-git checkout
+git.exe init
+git.exe config --local core.worktree ../../..
+git.exe config --local core.excludesfile {{package}}.exclude
+git.exe remote add origin https://github.com/luapower/{{package}}.git
+git.exe fetch --all
+git.exe branch --track master origin/master
+git.exe checkout
 						</pre>
 						<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
 cd luapower

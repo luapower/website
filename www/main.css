@@ -43,6 +43,11 @@ a:hover {
 	text-decoration: underline;
 }
 
+pre code {
+	color: inherit;
+	background-color: inherit;
+}
+
 hr {
 	border: 0;
 	border-top: 1px solid;
@@ -539,10 +544,16 @@ warn {
 	margin-left: 0;
 	padding-left: 1em;
 	border-left: 1px dotted;
+	opacity: 0.6;
 }
 
 .doc pre {
 	padding: 1.5em;
+}
+
+.doc code {
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .doc h2 code,
