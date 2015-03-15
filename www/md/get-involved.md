@@ -191,10 +191,11 @@ The way you add modules to luapower.com is:
 
   * first you [create](/luapower-git#creating-a-new-package) a package with
   your files; you can test the package with the [luapower] command.
-  * you then make a pull request with your changes to
-  [luapower-git][luapower-git-src] so I can add your package to the website.
-  * lastly, you set up a webhook on your package to notify the url
-  `http://luapower.com/github` of changes to your repo.
+  * you then make a [pull request](http://git-scm.com/docs/git-request-pull)
+  with your additions to [luapower-git][luapower-git-src] so I can add your
+  package to the website.
+  * lastly, and assuming your repo is on github, you set up a webhook on
+  the repo with the url `http://luapower.com/github`.
 
 This way you retain full control over where you keep the code and
 luapower.com will be kept up-to-date via the webhook.
@@ -224,7 +225,7 @@ Ideally, your module has:
   * __a non-viral license__ - so it doesn't impose restrictions on _other_ modules
 
 Of course, few modules (in any language) qualify on all fronts, so
-luapower.com is necessarily an ecclectic mix. In any case, if your module
+luapower.com is necessarily an eclectic mix. In any case, if your module
 collection is too specialized to be added to luapower.com or you simply don't
 want to mix it in with the others, then keep reading...
 
@@ -232,21 +233,19 @@ want to mix it in with the others, then keep reading...
 
 The luapower website is composed of:
 
-  * a meta [git repo][luapower-git-src] which contains the list of packages
-  and a git wrapper for cloning them.
-  * a [Lua module][luapower] for collecting package metadata, which also acts
-  as an in-memory database for that metadata.
-  * a dynamic [website][luapower-website] based on [open-resty], with
+  * [luapower-git], a meta repository which contains the
+  list of packages and a git wrapper for cloning them.
+  * [luapower], a Lua module for collecting package metadata.
+  * [website][website-src], a web app based on [open-resty], with
   very simple css, lustache-based templates and table-based layout.
+  * [pandoc], for converting the docs to html.
   * a bunch of Windows, Linux and OSX machines set up to collect package
   dependency information and run automated tests.
-  * [pandoc], for converting the docs to html.
 
 Email me if you want to put this together and you get stuck in the
 details.
 
 
-[luapower-website]:   https://github.com/luapower/website
+[website-src]:        https://github.com/luapower/website
 [open-resty]:         http://openresty.org
-[luapower-git-src]:   https://github.com/luapower/luapower-git
 [pandoc]:             http://johnmacfarlane.net/pandoc/

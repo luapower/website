@@ -153,7 +153,7 @@ end
 
 function connect(ip, port)
 	local skt = ngx.socket.tcp()
-	skt:settimeout(2000)
+	skt:settimeout(5000)
 	skt:setkeepalive()
 	local ok, err = skt:connect(ip, port)
 	if not ok then return nil, err end

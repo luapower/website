@@ -63,6 +63,11 @@
 						</div>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<div id="discourse-comments"></div>
+					</td>
+				</tr>
 			</table>
 		</td>
 	</tr>
@@ -132,7 +137,20 @@ $(function() {
 	})
 
 })
+
 </script>
+
+<script>
+// embed discourse comments
+var discourseUrl = 'https://luapower.org/'
+var discourseEmbedUrl = location.href
+$(function() {
+	var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true
+	d.src = discourseUrl + 'javascripts/embed.js'
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d)
+})
+</script>
+
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -141,5 +159,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-10841867-16', 'auto');
 ga('send', 'pageview');
 </script>
+
 </body>
 </html>

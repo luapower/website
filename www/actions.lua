@@ -233,25 +233,6 @@ local function package_icons(ptype, platforms, small)
 	return t, ps
 end
 
-local function platforms_package_info(pkg, platforms)
-	local pts, pterr = {}, {}
-	if not next(platforms) then
-		platforms = lp.config'platforms'
-	end
-	for platform in pairs(platforms) do
-		local server = servers[platform]
-		if server then
-			local t, err = platform_package_info(platform, pkg)
-			if t then
-				pts[platform] = t
-			else
-				pterr[platform] = err
-			end
-		end
-	end
-	return pts, pterr
-end
-
 local function rel_time(s)
 	if s > 2 * 365 * 24 * 3600 then
 		return ('%d years'):format(math.floor(s / (365 * 24 * 3600)))
@@ -641,23 +622,21 @@ end
 
 function action.status()
 	local statuses = {}
-	for platform, server in glue.sortedpairs(servers) do
+	for platform, server in glue.sortedpairs(lp.config'servers') do
 		local ip, port = unpack(server)
 		local t = {platform = platform, ip = ip, port = port}
-		local lp, err = try_connect(platform)
-		t.status = lp and 'up' or 'down'
+		local rlp, err = lp.connect(platform, nil, connect)
+		t.status = rlp and 'up' or 'down'
 		t.error = err and err:match'^.-:.-: ([^\n]+)'
-		if lp then
-			t.installed_package_count = glue.count(lp.installed_packages())
-			t.known_package_count = glue.count(lp.known_packages())
+		if rlp then
+			t.installed_package_count = glue.count(rlp.installed_packages())
+			t.known_package_count = glue.count(rlp.known_packages())
 			t.load_errors = {}
-			for mod, err in glue.sortedpairs(lp.package_load_errors()) do
-				if not err:find'platform not ' then
-					table.insert(t.load_errors, {
-						module = mod,
-						error = err,
-					})
-				end
+			for mod, err in glue.sortedpairs(lp.load_errors(nil, platform)) do
+				table.insert(t.load_errors, {
+					module = mod,
+					error = err,
+				})
 			end
 			t.load_error_count = #t.load_errors
 		end
