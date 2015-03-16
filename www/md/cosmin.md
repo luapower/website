@@ -3,14 +3,16 @@ title:    about me
 tagline:  Cosmin Apreutesei
 ---
 
-![](/md/cosmin.jpg)
-<br>
-<b>Cosmin Apreutesei</b>
+<div style="float: right; margin-left: 20px; margin-bottom: 20px; text-align: left">
+<div style="width: 300px;"><img src="/md/cosmin.jpg">
 <br>
 <a href="mailto:cosmin.apreutesei@gmail.com">cosmin.apreutesei@gmail.com</a>
 <br>
 Bucharest, RO
+</div>
+</div>
 
+<div style="text-align: justify">
 I learned to program in 5^th^ grade on a Z80, and later on on a 486 and
 never stopped since. I got my first paying job at 17 when I wrote an online
 shop in php.
@@ -38,6 +40,6 @@ animal welfare and I owe my current education to Ayn Rand, Stefan Molyneux,
 Ludwig Von Mises, Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander,
 Douglas Engelbart, and others.
 
-
-Cosmin,\
+----
 December 8, 2014
+</div>

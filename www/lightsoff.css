@@ -20,6 +20,8 @@ input:hover { border-color: #ccc; }
 
 .tooltipsy { border-color: #666; background-color: #000; }
 
+.featherlight .featherlight-content { background: #000; }
+
 .package_cat_name { color: #0c0; }
 
 .platform_btn { background-color: #000; color: #999; }

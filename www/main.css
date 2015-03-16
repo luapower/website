@@ -169,7 +169,7 @@ warn {
 }
 
 .topbar {
-	height: 33px;
+	height: 40px;
 	background-color: #282828;
 	box-shadow: 0px 2px 2px #000;
 }
@@ -179,7 +179,7 @@ warn {
 .topbar a:hover, .topbar a:visited:hover { color: #ddd; }
 
 .topbar_content {
-	margin-top: 5px;
+	margin-top: 8px;
 }
 
 .topbar_logo {
