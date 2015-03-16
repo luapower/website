@@ -7,9 +7,9 @@ strong { font-weight: 600; }
 a { color: #aaa; }
 a:visited { color: #999; }
 a:hover { color: #ddd; }
-a[target=_blank] { color: #d00; }
-a[target=_blank]:visited { color: #f66; }
-a[target=_blank]:hover { color: #f99; }
+a.external_link { color: #d00; }
+a.external_link:visited { color: #f66; }
+a.external_link:hover { color: #f99; }
 
 hr { border-top-color: #666; }
 

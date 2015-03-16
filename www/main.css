@@ -67,8 +67,8 @@ hr {
 body {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400;
-	font-size: 13px;
-	line-height: 20px;
+	font-size: 14px;
+	line-height: 22px;
 }
 
 strong { font-weight: 600; }
@@ -192,7 +192,6 @@ warn {
 	text-decoration: none;
 	position: relative;
 	top: 1px;
-	margin-right: 3em;
 	white-space: nowrap;
 }
 

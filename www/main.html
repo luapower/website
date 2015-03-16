@@ -40,16 +40,16 @@
 							<a href="/">luapower.com</a>
 						</h3>
 					</td>
-					<td align=left valign=middle width=100>
+					<td align=left valign=middle width=80>
 						<a class=lights_btn
 							inverse_lights="{{inverse_lights}}"
 							title="lights {{inverse_lights}}">
 								<span class=lights_label>lights</span><i class="lights_icon fa fa-toggle-{{lights}}"></i></a>
 					</td>
-					<td width=50 align=left valign=middle>
+					<td width=50 align=center valign=middle class=faq_btn>
 						<a href="/faq">FAQ</a>
 					</td>
-					<td width=50 align=left valign=middle>
+					<td width=50 align=center valign=middle>
 						<a href="https://luapower.org">Forum</a>
 					</td>
 					<td align=right valign=middle>
@@ -96,7 +96,7 @@
 		<tr>
 			<td align=left></td>
 			<td align=left><a href="/building">Building Binaries</a></td>
-			<td align=left><a href="/problem-solution">Luapower Philosophy</a></td>
+			<td align=left><a href="/philosophy">Luapower Philosophy</a></td>
 		</tr>
 		<tr>
 			<td colspan=4>
@@ -130,12 +130,14 @@
 <script>
 $(function() {
 
+	// mark all external links
 	$('a[href]').each(function() {
 		var url = $(this).attr('href')
 		if (url.match(/\w+:\/\//))
-			$(this).attr('target', '_blank')
+			$(this).addClass('external_link')
 	})
 
+	// switch lights on/off
 	$('.lights_btn').click(function(e) {
 		e.preventDefault()
 		document.cookie =
@@ -149,11 +151,19 @@ $(function() {
 			location = '/grep/'+encodeURIComponent($(this).val())
 	})
 
+	// make all images zoomable
 	$.featherlight.defaults.closeOnClick = 'anywhere'
-	$('img:not([href])').each(function() {
-		var target = $(this).clone().css('cursor', 'pointer')
-		$(this).css('cursor', 'pointer').featherlight(target)
+	$('img').each(function() {
+		if (!$(this).closest('a').length) {
+			var target = $(this).clone().css('cursor', 'pointer')
+			$(this).css('cursor', 'pointer').featherlight(target)
+		}
 	})
+
+	// make faq button red when on faq page
+	if (location.pathname == '/faq')
+		$('.faq_btn').css({'background-color': '#c00'}).find('a').css('color', '#fff')
+
 })
 
 </script>

@@ -7,9 +7,9 @@ strong { font-weight: 800; }
 a { color: #666; }
 a:visited { color: #999; }
 a:hover { color: #000; }
-a[target=_blank] { color: #d00; }
-a[target=_blank]:visited { color: #f66; }
-a[target=_blank]:hover { color: #f00; }
+a.external_link { color: #d00; }
+a.external_link:visited { color: #f66; }
+a.external_link:hover { color: #f00; }
 
 hr { border-top-color: #ccc; }
 
@@ -19,6 +19,8 @@ input:hover { border-color: #999; }
 .disabled { color: #aaa; }
 
 .tooltipsy { border-color: #999; background-color: #eee; }
+
+.featherlight .featherlight-content { background: #fff; }
 
 .package_cat_name { color: #0a0; }
 

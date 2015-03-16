@@ -187,24 +187,8 @@ In some cases it's going to be more complicated than that.
 
 ## Publishing packages on luapower.com
 
-The way you add modules to luapower.com is:
-
-  * first you [create](/luapower-git#creating-a-new-package) a package with
-  your files; you can test the package with the [luapower] command.
-  * you then make a [pull request](http://git-scm.com/docs/git-request-pull)
-  with your additions to [luapower-git][luapower-git-src] so I can add your
-  package to the website.
-  * lastly, and assuming your repo is on github, you set up a webhook on
-  the repo with the url `http://luapower.com/github`.
-
-This way you retain full control over where you keep the code and
-luapower.com will be kept up-to-date via the webhook.
-
-Alternatively, you are welcome to ask me to add you as an admin to the
-luapower account (is's an organization account) and you can add your packages
-there directly. The steps are the same either way.
-
-### What to add
+The way you add new packages to luapower.com is using the [luapower-git]
+command and it's described in detail there.
 
 Before publishing a luapower module, please consider:
 
@@ -227,7 +211,9 @@ Ideally, your module has:
 Of course, few modules (in any language) qualify on all fronts, so
 luapower.com is necessarily an eclectic mix. In any case, if your module
 collection is too specialized to be added to luapower.com or you simply don't
-want to mix it in with the others, then keep reading...
+want to mix it in with the others, remember that you can always fork
+[luapower-git] and make your own module collections. And ultimately, you
+can fork the website too.
 
 ## Forking luapower.com
 
@@ -242,8 +228,9 @@ The luapower website is composed of:
   * a bunch of Windows, Linux and OSX machines set up to collect package
   dependency information and run automated tests.
 
-Email me if you want to put this together and you get stuck in the
-details.
+If you want to put this together but get stuck on the details,
+ask away on the [forum](https://luapower.org), we'll help you
+seeing it through.
 
 
 [website-src]:        https://github.com/luapower/website
