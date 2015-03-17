@@ -26,7 +26,7 @@ and then I move on.
 In the past I did a lot of Delphi in smokey apartment-sized companies full
 of smart people, and then more Delphi in mall-sized corporations full of
 marketing droids and a one-hour commute. I even worked in a php farm for one
-month. My last punching-card job was at [sellerengine](http://sellerengine.com/)
+month. My last punching-card job was at [SellerEngine](http://sellerengine.com/)
 where I developed products for large amazon sellers.
 
 I currently live in Bucharest, and work as a freelancer.

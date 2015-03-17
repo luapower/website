@@ -24,7 +24,8 @@ With luapower there's no installation step. The development tree
 _is_ the deployment tree, and it's the same tree for all platforms.
 Modules don't need to be "installed" out of version control in order to
 create a proper runtime. You can code directly on your deployments,
-and you can push/pull changes between deployments.
+and you can push/pull changes between deployments just like you do with
+your own apps.
 
 ## How do I install it?
 

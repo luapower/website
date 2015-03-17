@@ -237,7 +237,7 @@ $(function() {
 		$(window).scroll(function() {
 			if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
 				// reached footer
-				nav.css('position', 'absolute').css('top', '').css('bottom', 200)
+				nav.css('position', 'absolute').css('top', '').css('bottom', 220)
 			} else if (top0 - $(window).scrollTop() < 10) {
 				// follow scroll
 				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
@@ -281,3 +281,44 @@ $(function() {
 	})
 
 })
+
+// misc ----------------------------------------------------------------------
+
+$(function() {
+
+	// mark all external links
+	$('a[href]').each(function() {
+		var url = $(this).attr('href')
+		if (url.match(/\w+:\/\//))
+			$(this).addClass('external_link')
+	})
+
+	// switch lights on/off
+	$('.lights_btn').click(function(e) {
+		e.preventDefault()
+		document.cookie =
+			'lights=' + $(this).attr('inverse_lights') +
+			'; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/'
+		location.reload()
+	})
+
+	$('.search_input').keydown(function(e) {
+		if (e.which == 13)
+			location = '/grep/'+encodeURIComponent($(this).val())
+	})
+
+	// make all images zoomable
+	$.featherlight.defaults.closeOnClick = 'anywhere'
+	$('img').each(function() {
+		if (!$(this).closest('a').length) {
+			var target = $(this).clone().css('cursor', 'pointer')
+			$(this).css('cursor', 'pointer').featherlight(target)
+		}
+	})
+
+	// make faq button red when on faq page
+	if (location.pathname == '/faq')
+		$('.faq_btn').css({'background-color': '#c00'}).find('a').css('color', '#fff')
+
+})
+
