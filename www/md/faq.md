@@ -146,11 +146,6 @@ which incidentally, is also the place where you can share your plans for
 world domination. Any discussion is welcome here, there's no such thing
 as a stupid question.
 
-> If I may allow myself a small rant here (ah, what the heck, I brought the
-domain), there were enough moments with Discourse when I thought:
-"hell, this would be easier to code than to figure out how to configure".
-
-
 ## How can I help?
 
 Two ways: 1. go on the [forum](http://luapower.org) _now_ and tell us your

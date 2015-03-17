@@ -436,7 +436,6 @@ warn {
 #docnav {
 	text-align: left;
 	position: absolute;
-	z-index: 100;
 }
 
 #docnav div {
