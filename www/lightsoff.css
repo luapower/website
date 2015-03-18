@@ -1,12 +1,12 @@
 
-body { background: #151515; color: #eee; }
+body { background: #151515; color: #bbb; }
 .body_wrapper { background-image: url("hack_bg.png"); }
 
 strong { font-weight: 600; }
 
-a { color: #aaa; }
-a:visited { color: #999; }
-a:hover { color: #ddd; }
+a, h1, h2, h3 { color: #fff; } #docnav a { color: #bbb; }
+a:visited { color: #eee; }
+a:hover { color: #fff; }
 a.external_link { color: #d00; }
 a.external_link:visited { color: #f66; }
 a.external_link:hover { color: #f99; }
@@ -22,6 +22,7 @@ input:hover { border-color: #ccc; }
 
 .featherlight .featherlight-content { background: #000; }
 
+.package_list a, .package_list a:visited { color: #ccc; }
 .package_cat_name { color: #0c0; }
 
 .platform_btn { background-color: #000; color: #999; }
@@ -48,7 +49,7 @@ input:hover { border-color: #ccc; }
 	border-top-color: #333;
 	border-bottom-color: #333;
 }
-.doc code { color: #ff8; }
+.doc code { color: #ff8; } .doc h2 code, .doc h3 code { color: inherit; }
 .doc pre { background-color: #000; }
 .doc th, .doc td strong { color: #999; }
 

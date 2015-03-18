@@ -37,6 +37,7 @@ table {
 a {
 	cursor: pointer;
 	text-decoration: none;
+	font-weight: 400;
 }
 
 a:hover {
@@ -66,7 +67,7 @@ hr {
 
 body {
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 400;
+	font-weight: 300;
 	font-size: 14px;
 	line-height: 22px;
 }
@@ -101,9 +102,8 @@ h3 + ul, h3 + p, h3 + pre, h3 + div h4 { margin-top: 10px; }
 h2 + div h3 { margin-top: 20px; }
 h2 + table { margin-top: 30px; }
 
-pre {
-	font-family: Inconsolata, monospace;
-	font-size: 13px;
+pre, code {
+	font-family: 'Inconsolata', monospace;
 	line-height: 130%;
 	overflow-x: auto;
 	tab-size: 3;
@@ -206,7 +206,7 @@ warn {
 
 .github_label {
 	position: relative;
-	padding-right: 20px;
+	margin-right: 20px;
 	white-space: nowrap;
 }
 
@@ -300,7 +300,8 @@ warn {
 }
 
 .package_list {
-	line-height: 140%;
+	line-height: 160%;
+	font-size: 90%;
 }
 
 .package_list ul {
@@ -358,9 +359,13 @@ warn {
 	text-decoration: underline !important;
 }
 
+.download_link {
+	margin-right: 20px;
+}
+
+
 .rightside {
 	width: 190px;
-	padding-left: 20px;
 }
 
 .switch {
@@ -519,6 +524,10 @@ warn {
 
 /* document --------------------------------------------------------------- */
 
+.doc {
+	padding-right: 40px;
+}
+
 .doc dt {
 	font-style: italic;
 	font-weight: bold;
@@ -546,7 +555,7 @@ warn {
 }
 
 .doc pre {
-	padding: 1.5em;
+	padding: 1em;
 }
 
 .doc code {

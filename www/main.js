@@ -168,7 +168,7 @@ $(function() {
 // spyscroll navbar ----------------------------------------------------------
 
 $(function() {
-	var doc = $('#doc')
+	var doc = $('.doc')
 	var nav = $('#docnav')
 	if(!doc.length || !nav.length) return
 

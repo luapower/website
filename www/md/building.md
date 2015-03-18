@@ -65,9 +65,9 @@ Additional tools needed by a few special packages (use them for building for 64b
 
 ## Building on Win64 for Win64
 
-Use `sh build-mingw64.sh`.
-These scripts assume that both MSys and MinGW-w64 bin dirs (in this order) are in your PATH.
-Here's the exact MinGW-w64 package used to build the current luapower stack:
+Use `sh build-mingw64.sh`. These scripts assume that both MSys and MinGW-w64
+bin dirs (in this order) are in your PATH. Here's the exact MinGW-w64
+package used to build the current luapower stack:
 
 ----
 [mingw-w64 4.8.1 (64bit, posix threads, SEH exception model)][mingw-w64-win64]
@@ -87,7 +87,7 @@ Because of that limitation, this is not a supported host/target
 cross-compling combination.
 
 
-## Building on Linux for Linux (native)
+## Building on Linux for Linux
 
 Use `build-linux32.sh` on a 32bit host and `build-linux64.sh` on a 64bit host.
 Careful not to mix them up, or you'll get 32bit binaries in the 64bit
@@ -98,7 +98,7 @@ You need a recent gcc toolchain, which you probably already have.
 The current luapower stack is built with gcc 4.7.2 from tinycore 5.2 (see below).
 
 
-## Building from Windows or OSX for Linux (native)
+## Building from Windows or OSX for Linux
 
 If you are on Windows or OSX and you want to compile for Linux and don't want
 to mess with a cross-compiler, here is a quick method to build Linux binaries
@@ -113,8 +113,10 @@ from a Windows or OSX (or even other Linux) environment.
 	* add a network card with Internet access
 	* a disk is not necessary, tinycore runs entirely from RAM, if you have enough
 	* enable PAE under System -> Processor
-	* enable VT-x and Nested Paging under System -> Acceleration (if your CPU supports it)
-		* if you are on a 32bit Windows and you want to run a 64bit Linux, your CPU _must_ have hardware acceleration
+	* enable VT-x and Nested Paging under System -> Acceleration (if your CPU
+	supports it)
+		* if you are on a 32bit Windows and you want to run a 64bit Linux,
+		your CPU _must_ have hardware acceleration
 * Boot it up
 * Get gear (git and toolchain)
 	* `$ tce-load -wi git compiletc`
@@ -127,7 +129,7 @@ from a Windows or OSX (or even other Linux) environment.
 	* `$ ./build-linux32.sh` or `./build-linux64.sh`, depending on what ISO you used
 
 
-## Building on OSX for OSX (x86 32bit and 64bit)
+## Building on OSX for OSX
 
 Use `build-osx32.sh` to make 32bit x86 binaries and `build-osx64.sh` to make
 64bit x86 binaries. Clang is a cross-compiler, so you can build for 32bit

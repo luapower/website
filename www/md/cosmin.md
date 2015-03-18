@@ -4,7 +4,7 @@ tagline:  Cosmin Apreutesei
 ---
 
 <div style="float: right; margin-left: 20px; margin-bottom: 20px; text-align: left">
-<div style="width: 300px;"><img src="/md/cosmin.jpg">
+<div style="width: 320px;"><img src="/md/cosmin.jpg">
 <br>
 <a href="mailto:cosmin.apreutesei@gmail.com">cosmin.apreutesei@gmail.com</a>
 <br>
@@ -15,7 +15,8 @@ Bucharest, RO
 <div style="text-align: justify">
 I learned to program in 5^th^ grade on a Z80, and later on on a 486 and
 never stopped since. I got my first paying job at 17 when I wrote an online
-shop in php.
+shop in php. In the '90s, we didn't know web programming was supposed
+to be hard, so we just did it.
 
 I write my code in Lua when I can, and in Python and Javascript when I can't.
 I will also program in Java, C++, C# and ObjC under some types of threats

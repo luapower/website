@@ -427,6 +427,7 @@ local function package_info(pkg, doc)
 		for platform in pairs(platforms) do
 			local pext = lp.module_requires_packages_for('module_requires_loadtime_ext', mod, pkg, platform, true)
 			local pall = lp.module_requires_packages_for('module_requires_loadtime_all', mod, pkg, platform, true)
+			--pp(mod, pkg, platform, pall)
 			local pt = {}
 			for p in pairs(pall) do
 				pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
