@@ -228,10 +228,9 @@ warn {
 }
 
 .search_icon {
-	font-size: 110%;
 	float: right;
 	margin-right: 9px;
-	margin-top: -19px;
+	margin-top: -18px;
 	position: relative;
 	z-index: 2;
 	color: #999;
