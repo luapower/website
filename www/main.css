@@ -177,7 +177,7 @@ warn {
 	box-shadow: 0px 2px 2px #000;
 }
 
-.topbar a { color: #ccc; }
+.topbar a { color: #ccc; font-weight: 600; }
 .topbar a:visited { color: #ccc; }
 .topbar a:hover, .topbar a:visited:hover { color: #eee; }
 
