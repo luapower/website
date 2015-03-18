@@ -101,7 +101,7 @@ h2 + table { margin-top: 30px; }
 
 code {
 	font-family: 'Inconsolata', monospace;
-	font-size: 14px;
+	font-size: 15px;
 }
 
 pre {
@@ -109,6 +109,10 @@ pre {
 	overflow-x: auto;
 	tab-size: 3;
 	white-space: pre-wrap;
+}
+
+pre code {
+	font-size: 14px;
 }
 
 h2 code, h3 code, h4 code { font-size: inherit; }
