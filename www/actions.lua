@@ -675,3 +675,40 @@ function action.github(...)
 	luapower.update_db(repo) --TODO: this is blocking the server!!!
 end
 
+--creating rockspecs ---------------------------------------------------------
+
+function action.rockspec(pkg)
+	pkg = pkg:gsub('%.rockspec$', '')
+	local dtags = lp.doc_tags(pkg, pkg)
+	local tagline = dtags and dtags.tagline or pkg
+	local homepage = 'http://luapower.com/'..pkg
+	local ctags = lp.c_tags(pkg)
+	local license = ctags and ctags.license or 'Public Domain'
+	local pext = lp.package_requires_packages_for('module_requires_loadtime_ext', pkg, platform, true)
+	local deps = {}
+	for pkg in glue.sortedpairs(pext) do
+		table.insert(deps, 'luapower/'..pkg)
+	end
+	local t = {
+		package = 'luapower/'..pkg,
+		version = 'scm', --lp.git_version(pkg),
+		source = {
+			url = lp.git_origin_url(pkg),
+			homepage = homepage,
+		},
+		description = {
+			summary = tagline,
+			homepage = homepage,
+			license = license,
+		},
+		dependencies = deps,
+		build = {
+			--
+			modules = lp.modules(pkg),
+		},
+		--copy_directories = {},
+	}
+	setmime'txt'
+	out(pp.format(t, '   '))
+end
+

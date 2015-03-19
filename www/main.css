@@ -104,7 +104,7 @@ h3 + ul, h3 + p, h3 + pre, h3 + div h4 { margin-top: 10px; }
 h2 + div h3 { margin-top: 20px; }
 h2 + table { margin-top: 30px; }
 
-code {
+pre, code {
 	font-family: 'Inconsolata', monospace;
 	font-size: 15px;
 }
@@ -370,10 +370,14 @@ warn {
 	text-decoration: underline !important;
 }
 
+.selected_link {
+	border-top: 2px solid #d00;
+	padding-top: 2px;
+}
+
 .download_link {
 	margin-right: 20px;
 }
-
 
 .rightside {
 	width: 190px;
@@ -476,7 +480,7 @@ warn {
 }
 
 .grep .more {
-	max-height: 80px;
+	max-height: 120px;
 	overflow-y: hidden;
 }
 

@@ -23,9 +23,9 @@
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td valign=top align=right class=action_links>
-						<a href="/{{package}}" class=nowrap><i class="fa fa-file-text-o"></i> documentation</a>
-						<a href="/{{package}}/info" class=nowrap><i class="fa fa-info-circle"></i> package info</a>
-						<a href="/{{package}}/download" class="nowrap download_link"><i class="fa fa-download"></i> download</a>
+						<a href="/{{package}}" class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}"><i class="fa fa-file-text-o"></i> documentation</a>
+						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}"><i class="fa fa-info-circle"></i> package info</a>
+						<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
 					</td>
 				</tr>
 			</table>
@@ -33,36 +33,41 @@
 
 			<!-- download =================================================== -->
 			{{#download}}
+			<h2>Download</h2>
+			<a class=download href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+				<i class="fa fa-download"></i> download tgz</a>
+			<a class=download href="https://github.com/luapower/{{package}}/archive/master.zip">
+				<i class="fa fa-download"></i> download zip</a>
+
+			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
+			<p>From the luapower directory, type:</p>
+			<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
+	<a href="/luapower-git">git</a> clone {{package}}
+			</pre>
+			<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
+	<a href="/luapower-git">./git</a> clone {{package}}
+			</pre>
+
 			<table>
 				<tr>
-					<td valign=top>
-						<h2>Download</h2>
-						<a class=download href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-							<i class="fa fa-download"></i> download tgz</a>
-						<a class=download href="https://github.com/luapower/{{package}}/archive/master.zip">
-							<i class="fa fa-download"></i> download zip</a>
+					<td>
+						<h2>Clone manually</h2>
 					</td>
-					<td valign=top align=left>
-						<table>
-							<tr>
-								<td>
-									<h2>Clone</h2>
-								</td>
-								<td width=10></td>
-								<td>
-									<h2 class=platform_btn>
-										<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
-											<div class="icon-mingw"></div>
-										</div>
-										<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
-											<div class="icon-linux"></div>
-											<div class="icon-osx"></div>
-										</div>
-									</h2>
-								</td>
-							</tr>
-						</table>
-						<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
+					<td width=10></td>
+					<td>
+						<h2 class=platform_btn>
+							<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
+								<div class="icon-mingw"></div>
+							</div>
+							<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
+								<div class="icon-linux"></div>
+								<div class="icon-osx"></div>
+							</div>
+						</h2>
+					</td>
+				</tr>
+			</table>
+			<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
 cd luapower
 md _git\{{package}}
 set GIT_DIR=_git\{{package}}\.git
@@ -73,8 +78,8 @@ git.exe remote add origin https://github.com/luapower/{{package}}.git
 git.exe fetch --all
 git.exe branch --track master origin/master
 git.exe checkout
-						</pre>
-						<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
+			</pre>
+			<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
 cd luapower
 mkdir -p _git/{{package}}
 export GIT_DIR=_git/{{package}}/.git
@@ -85,24 +90,12 @@ git remote add origin https://github.com/luapower/{{package}}.git
 git fetch --all
 git branch --track master origin/master
 git checkout
-						</pre>
-					</td>
-				</tr>
-			</table>
-
-			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
-				<p>From the luapower root dir, type:</p>
-				<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
-	<a href="/luapower-git">git</a> clone winapi
-				</pre>
-				<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
-	<a href="/luapower-git">./git</a> clone winapi
-				</pre>
+			</pre>
 
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
-				<pre>
-	luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
-				</pre>
+			<pre>
+luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
+			</pre>
 			{{/download}}
 
 			<!-- info ======================================================= -->

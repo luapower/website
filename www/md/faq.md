@@ -29,13 +29,13 @@ your own apps.
 
 ## How do I install it?
 
-Getting [luajit] and the modules that you need and unzipping them over a
-common directory is enough to create a runnable LuaJIT installation that
-is self-contained and portable, meaning it will run the included luajit
-command from any directory and on any platform, and furthermore, modules
-and binary dependencies will be looked for in the installation directory
-first, effectively isolating the installation from other libraries or Lua
-installations that might be present in the host system.
+[Getting luajit](/luajit/download) and the modules that you need and
+unzipping them over a common directory is enough to create a runnable
+LuaJIT installation that is self-contained and portable, meaning it will
+run the included luajit command from any directory and on any platform,
+and furthermore, modules and binary dependencies will be looked for in the
+installation directory first, effectively isolating the installation from
+other libraries or Lua installations that might be present in the host system.
 
 Another, more powerful way to get the files into a common directory is with
 [luapower-git], which keeps everything under source control at all times,
