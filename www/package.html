@@ -108,8 +108,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<br>Darker names, if present, represent indirect dependencies.
 				</a>
 				&nbsp;
-				<a class="hastip switch package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
-				<a class="hastip switch package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
+				<a class="hastip package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
+				<a class="hastip package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
 			</h3>
 			{{#has_package_deps}}
 			<table id=dep_lists>
@@ -174,8 +174,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					</span>
 				</a>
 				&nbsp;
-				<a class="hastip switch modpkg_switch" type=P title="show required modules">P</a>
-				<a class="hastip switch modpkg_switch hidden" type=M title="show required packages">M</a>
+				<a class="hastip modpkg_switch" type=P title="show required modules">P</a>
+				<a class="hastip modpkg_switch hidden" type=M title="show required packages">M</a>
 			</h3>
 			<table id=module_table>
 				<tr>

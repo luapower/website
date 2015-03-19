@@ -3,12 +3,81 @@
 	<h1 class=home_tagline>the LuaJIT distribution for Windows, Linux and OS X</h1>
 </center>
 
-<table><tr><td>
-	<a class="switch package_table_switch hastip package_table" title="view full package table" style="font-size: 140%"><i class="fa fa-table"></i></a>
-	<a class="switch package_table_switch hastip package_list hidden" title="view condensed package list" style="font-size: 140%"><i class="fa fa-list"></i></a>
-</td></tr></table>
+<table class=quick_faq>
+	<tr>
+		<td>
+			<h3>What is Lua?</h3>
+			<a href="http://lua.org/about.html">Lua</a>
+			is a powerful, fast, lightweight, embeddable scripting language.
+			It has been used in
+			<a href="https://sites.google.com/site/marbux/home/where-lua-is-used">many popular applications</a>
+			since its inception
+			<a href="http://www.lua.org/doc/hopl.pdf">in 1993</a>.
+			It has an active
+			<a href="http://lua-users.org/lists/lua-l/">community</a>.
 
-<div class=package_list>
+			<h3>Why is it special?</h3>
+			Lua has a <a href="http://www.lua.org/pil/1.html">clean syntax</a>,
+			only
+			<a href="http://www.lua.org/pil/2.html">8 basic types</a>
+			(with LuaJIT adding a ninth),
+			<a href="http://www.lua.org/pil/2.6.html">first class functions</a>
+			with
+			<a href="http://www.lua.org/pil/5.1.html">multiple return values</a> and
+			<a href="http://www.lua.org/pil/5.2.html">varargs</a>,
+			<a href="http://www.lua.org/pil/11.html">a versatile data structuring type</a>,
+			<a href="http://www.lua.org/pil/4.2.html">full lexical scoping</a>,
+			<a href="http://www.lua.org/pil/9.html">light threads</a>,
+			<a href="http://www.lua.org/pil/4.3.5.html">iterators</a>,
+			<a href="http://www.lua.org/pil/16.html">inheritance</a>,
+			<a href="http://www.lua.org/pil/8.3.html">exceptions</a>,
+			<a href="http://www.lua.org/pil/14.3.html">function environments</a>,
+			<a href="http://www.lua.org/pil/20.1.html">built-in pattern matching</a>,
+			<a href="http://www.lua.org/pil/6.3.html">tail calls</a>, and a
+			<a href="http://www.lua.org/pil/8.1.html">one-function module system</a>.
+
+			<h3>Is it free?</h3>
+			Yes. Lua, LuaJIT and luapower are all Open Source Software and can
+			be used in both open source and commercial applications for free
+			without any paperwork.
+		</td>
+		<td>
+			<h3>What is LuaJIT?</h3>
+			<a href="http://luajit.org/luajit.html">LuaJIT</a> is the
+			Just-In-Time Compiler for Lua.
+			It's widely considered to be one of the fastest dynamic
+			language JITs around, and it supports a variety of platforms,
+			from Windows, Linux and OS X to Android, iOS, PS3, PS4 and XBox 360.
+			<br>
+			<br>
+			LuaJIT is fully compatible with the 5.1 version of Lua, and includes
+			some features from Lua 5.2.
+			<br>
+			<br>
+			LuaJIT extends Lua with a powerful
+			<a href="http://luajit.org/ext_ffi.html">ffi interface</a>
+			that allows calling C function directly, without the need to write
+			glue code.
+
+			<h3>Why do I need the links below?</h3>
+			...
+		</td>
+	</tr>
+</table>
+<br>
+<br>
+
+<table>
+	<tr>
+		<td class=home_switches>
+			<a class="hastip pswitch disabled" switch_for=".package_list" title="view condensed package list"><i class="fa fa-align-justify"></i></a>
+			<a class="hastip pswitch disabled" switch_for=".package_table" title="view full package table"><i class="fa fa-table"></i></a>
+			<a class="hastip pswitch disabled" switch_for=".package_cards" title="view info cards"><i class="fa fa-th"></i></a>
+		</td>
+	</tr>
+</table>
+
+<div class="pswitch_target package_list hidden">
 	<ul class=multicol_name>
 		{{#cats}}
 			<li class=package_cat>
@@ -27,7 +96,7 @@
 	<i class="fa fa-star hot"></i> <span class=smallnote>updated in the last 7 days</span>
 </div>
 
-<table width=100% class="package_table doc hidden">
+<table width=100% class="pswitch_target package_table doc hidden">
 	<thead>
 		<tr>
 			<th align=left title="Hold Shift to sort by multiple columns">Type</th>
@@ -57,23 +126,71 @@
 	</tbody>
 </table>
 
+<table width=100% class="pswitch_target package_cards">
+	{{#cats}}
+	<tr>
+		<td>
+			<h3 class="package_cat_name">{{cat}}</h3>
+			{{#packages}}
+			<div class=package_card>
+				<table width=100% height=100%>
+					<tr>
+						<td valign=top>
+							<h3 class="tight">
+								<a href="/{{name}}">{{name}}</a>
+								{{#hot}} <i class="fa fa-star hot" title="updated in the last 7 days"></i>{{/hot}}
+							</h3>
+							{{tagline}}
+						</td>
+					</tr>
+					<tr>
+						<td valign=bottom class="small gray">
+							Version: {{version}}<br>
+							Updated: {{mtime_ago}}<br>
+							Type: {{type}} &nbsp;
+							{{#icons}}
+								<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>
+							{{/icons}}
+							<br>
+							License: {{license}}
+						</td>
+					</tr>
+				</table>
+			</div>
+			{{/packages}}
+		</td>
+	</tr>
+	{{/cats}}
+</table>
+
 <script>
 
 $(function() {
+
+	// pswitch = package-list display-mode switch
+	$('.pswitch').click(function(e) {
+		e.preventDefault()
+		$('.pswitch').addClass('disabled')
+		$(this).removeClass('disabled')
+		$('.pswitch_target').hide()
+		var target = $(this).attr('switch_for')
+		$(target).show()
+		setcookie('pswitch_target', target)
+	}).mousedown(function(e) {
+		// prevent selection of subsequent text on double-click.
+		e.preventDefault()
+	})
+
+	// init pswitch using
+	var pswitch_target = getcookie('pswitch_target') || '.package_list'
+	$('.pswitch[switch_for="'+pswitch_target+'"]').click()
 
 	$('.package_table').tablesorter({
 		cancelSelection: true,
 		sortList: [[1,0]], //initially sort by name
 	})
 
-	$('.package_table_switch').click(function(e) {
-		e.preventDefault()
-		$('.package_list').toggle()
-		$('.package_table').toggle()
-	}).mousedown(function(e) {
-		// prevent selection of subsequent text on double-click.
-		e.preventDefault()
-	})
+
 
 })
 

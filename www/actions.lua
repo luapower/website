@@ -16,13 +16,9 @@ lp.config('servers').linux64 = nil
 --helpers --------------------------------------------------------------------
 
 function render_main(name, data, env)
-	local lights = HEADERS.cookie
-		and HEADERS.cookie:match'lights=(%a+)' or 'off'
 	local ua = HEADERS.user_agent or ''
 	return render('main.html',
 		glue.merge({
-			lights = lights,
-			inverse_lights = lights == 'on' and 'off' or 'on',
 			on_windows = ua:find'Windows',
 			on_unix = not ua:find'Windows',
 		}, data),
@@ -577,7 +573,7 @@ function action_home()
 		local t = {}
 		for i, pkg in ipairs(cat.packages) do
 			local pt = pkgmap[pkg]
-			table.insert(t, {name = pkg, hot = pt.hot})
+			table.insert(t, pt)
 		end
 		table.insert(data.cats, {cat = cat.name, packages = t})
 	end
@@ -678,7 +674,7 @@ end
 --creating rockspecs ---------------------------------------------------------
 
 function action.rockspec(pkg)
-	pkg = pkg:gsub('%.rockspec$', '')
+	pkg = pkg:match'^luapower%-([%w_]+)'
 	local dtags = lp.doc_tags(pkg, pkg)
 	local tagline = dtags and dtags.tagline or pkg
 	local homepage = 'http://luapower.com/'..pkg
@@ -687,14 +683,41 @@ function action.rockspec(pkg)
 	local pext = lp.package_requires_packages_for('module_requires_loadtime_ext', pkg, platform, true)
 	local deps = {}
 	for pkg in glue.sortedpairs(pext) do
-		table.insert(deps, 'luapower/'..pkg)
+		table.insert(deps, 'luapower-'..pkg)
+	end
+	local plat = {}
+	local plats = {
+		mingw32 = 'windows', mingw64 = 'windows',
+		linux32 = 'linux', linux64 = 'linux',
+		osx32 = 'macosx', osx64 = 'macosx',
+	}
+	for pl in pairs(lp.platforms(pkg)) do
+		plat[plats[pl]] = true
+	end
+	plat = next(plat) and glue.keys(plat, true) or nil
+	local ver = lp.git_version(pkg)
+	local maj, min = ver:match('^([^%-]+)%-([^%-]+)')
+	if maj then
+		maj = maj:gsub('[^%d]', '')
+		min = min:gsub('[^%d]', '')
+		ver = '0.'..maj..'-'..min
+	end
+	local lua_modules = {}
+	local luac_modules = {}
+	for mod, path in pairs(lp.modules(pkg)) do
+		local mtags = lp.module_tags(pkg, mod)
+		if mtags.lang == 'C' then
+			luac_modules[mod] = path
+		elseif mtags.lang == 'Lua' or mtags.lang == 'Lua/ASM' then
+			lua_modules[mod] = path
+		end
 	end
 	local t = {
-		package = 'luapower/'..pkg,
-		version = 'scm', --lp.git_version(pkg),
+		package = 'luapower-'..pkg,
+		supported_platforms = plat,
+		version = ver,
 		source = {
 			url = lp.git_origin_url(pkg),
-			homepage = homepage,
 		},
 		description = {
 			summary = tagline,
@@ -703,12 +726,20 @@ function action.rockspec(pkg)
 		},
 		dependencies = deps,
 		build = {
-			--
-			modules = lp.modules(pkg),
+			type = 'none',
+			install = {
+				lua = lua_modules,
+				lib = luac_modules,
+			},
 		},
 		--copy_directories = {},
 	}
 	setmime'txt'
-	out(pp.format(t, '   '))
+	for k,v in glue.sortedpairs(t) do
+		out(k)
+		out' = '
+		out(pp.format(v, '   '))
+		out'\n'
+	end
 end
 

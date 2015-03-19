@@ -22,8 +22,9 @@ input:hover { border-color: #ccc; }
 
 .featherlight .featherlight-content { background: #000; }
 
-.package_list a, .package_list a:visited { color: #ccc; }
+.package_list a, .package_list a:visited { color: #999; } .package_list a:hover { color: #ccc; }
 .package_cat_name { color: #0c0; }
+.package_card { border-color: #333; }
 
 .platform_btn { background-color: #000; color: #999; }
 .platform_btn .selected { background-color: #666; color: #fff; }

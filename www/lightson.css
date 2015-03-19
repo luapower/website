@@ -4,8 +4,8 @@ body { background-color: #fff; color: #000; }
 
 strong { font-weight: 800; }
 
-a { color: #666; }
-a:visited { color: #999; }
+a { color: #339; }
+a:visited { color: #939; }
 a:hover { color: #000; }
 a.external_link { color: #d00; }
 a.external_link:visited { color: #f66; }
@@ -22,8 +22,9 @@ input:hover { border-color: #999; }
 
 .featherlight .featherlight-content { background: #fff; }
 
-.package_list a, .package_list a:visited {}
+.package_list a, .package_list a:visited { color: #444; }
 .package_cat_name { color: #0a0; }
+.package_card { border-color: #ddd; }
 
 .platform_btn { background-color: #fff; color: #999; }
 .platform_btn .selected { background-color: #ddd; color: #000; }

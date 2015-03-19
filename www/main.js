@@ -24,13 +24,13 @@ if (typeof String.prototype.trim !== 'function') {
 
 // persistence ---------------------------------------------------------------
 
-function store(key, value) {
-	Storage.setItem(key, JSON.stringify(value))
+function setcookie(k, v) {
+	jQuery.removeCookie(k, {path: '/'})
+	jQuery.cookie(k, v, {path: '/'})
 }
 
-function getback(key) {
-	var value = Storage.getItem(key)
-	return value && JSON.parse(value)
+function getcookie(k) {
+	return jQuery.cookie(k)
 }
 
 // ajax requests -------------------------------------------------------------
@@ -282,6 +282,36 @@ $(function() {
 
 })
 
+// lights --------------------------------------------------------------------
+
+function get_lights_state() { return getcookie('lights') == 'on' }
+function set_lights_state(on) { setcookie('lights', on ? 'on' : 'off') }
+
+function set_lights_button_text(on) {
+	jQuery('.lights_icon').removeClass('fa-toggle-on fa-toggle-off')
+	jQuery('.lights_icon').addClass('fa-toggle-' + (on ? 'on' : 'off'))
+}
+
+function set_lights_button() {
+	// there was no button to set when the lights was set so we set it now
+	set_lights_button_text(get_lights_state())
+	$('.lights_btn').mousedown(function(e) {
+		e.preventDefault() // prevent selecting as text
+		set_lights(!get_lights_state())
+	})
+}
+
+function set_lights(on) {
+	if (on !== true && on !== false)
+		on = get_lights_state()
+
+	jQuery('#lights_css').attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
+	set_lights_state(on)
+	set_lights_button_text(on)
+}
+
+$(set_lights_button)
+
 // misc ----------------------------------------------------------------------
 
 $(function() {
@@ -291,15 +321,6 @@ $(function() {
 		var url = $(this).attr('href')
 		if (url.match(/\w+:\/\//))
 			$(this).addClass('external_link')
-	})
-
-	// switch lights on/off
-	$('.lights_btn').click(function(e) {
-		e.preventDefault()
-		document.cookie =
-			'lights=' + $(this).attr('inverse_lights') +
-			'; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/'
-		location.reload()
 	})
 
 	$('.search_input').keydown(function(e) {

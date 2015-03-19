@@ -310,6 +310,19 @@ warn {
 	margin-bottom: 30px;
 }
 
+.home_switches {
+	font-size: 140%;
+}
+
+.quick_faq {
+	width: 100%;
+}
+.quick_faq td {
+	vertical-align: top;
+	padding-right: 30px;
+	width: 50%;
+}
+
 .package_list {
 	line-height: 160%;
 	font-size: 90%;
@@ -322,6 +335,10 @@ warn {
 
 .package_list .package_cat {
 	margin-bottom: 1.2em;
+}
+
+.package_cat_name {
+	font-weight: 400;
 }
 
 .package_list .hot {
@@ -360,6 +377,21 @@ warn {
 	text-decoration: underline;
 }
 
+.package_card {
+	display: inline-block;
+	border: 1px solid;
+	width: 204px;
+	height: 204px;
+	padding: 10px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.package_card .hot {
+	opacity: 0.3;
+}
+
 /* package page ----------------------------------------------------------- */
 
 .action_links a + a {
@@ -370,8 +402,11 @@ warn {
 	text-decoration: underline !important;
 }
 
+.action_links a:not(.selected_link):not(.download_link) { opacity: 0.5; }
+.action_links a:not(.selected_link):hover { opacity: inherit; }
+
 .selected_link {
-	border-top: 2px solid #d00;
+	border-top: 1px dotted #999;
 	padding-top: 2px;
 }
 
@@ -381,10 +416,6 @@ warn {
 
 .rightside {
 	width: 190px;
-}
-
-.switch {
-	cursor: pointer;
 }
 
 #dep_matrix th {

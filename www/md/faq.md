@@ -134,7 +134,7 @@ the reverse. There was no hammer that was good at both ends.
 And then I found Lua, and I fell in love. I knew there was a lot of
 code to write, or at least to assemble, to turn it into something useful, but
 there was no turning back. I was hooked. Lua had a good escape-hatch to C,
-for the moments where I would find myself loosing the bet with the CPU,
+for the moments where I would find myself losing the bet with the CPU,
 so I wasn't worried about speed much. And then came LuaJIT, and later on,
 LuaJIT2 and the ffi, and I started [playing around][winapi] with it one
 night, and from there, things got out of hand, and now I can't stop :)
