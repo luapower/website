@@ -20,6 +20,11 @@ describe your packages, you don't have to declare dependencies (except in a
 few rare cases), you don't have to learn a new build system, or perform any
 packaging steps, or even move code out of version control, ever.
 
+Modules don't need to be "installed" out of version control in order to
+create a proper runtime. You can code directly on your deployments,
+and you can push/pull changes between deployments and even create pull
+requests to upstream without any extra steps.
+
 ## Just the facts please
 
 Luapower is a dead simple idea: it puts [luajit] and a bunch
@@ -30,17 +35,11 @@ with a little [help][luapower-git]).
 The files in the repos are [laid out][get-involved] such that when
 cloned overlaid like that, the result is a self-contained, runnable
 luajit installation. Binaries for all platforms are included directly
-into the master branch, and a luajit wrapper script selects the
-right luajit executable for your platform at runtime, and sets up the
-environment so that modules and other dependencies are looked for in the
-luapower directory first.
-
-This means that the development tree _is_ the deployment tree,
-and it's the same tree for all platforms.
-Modules don't need to be "installed" out of version control in order to
-create a proper runtime. You can code directly on your deployments,
-and you can push/pull changes between deployments just like you do with
-your own apps.
+into the repo's master branch, and `luajit` is a shell script which
+selects the right luajit executable for your platform at runtime,
+and sets up the environment so that modules and other dependencies
+are looked for in the luapower directory first, effectively isolating the
+installation from other libraries that might be present in the host system.
 
 ## How do I install it?
 
