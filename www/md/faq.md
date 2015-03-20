@@ -20,8 +20,23 @@ describe your packages, you don't have to declare dependencies (except in a
 few rare cases), you don't have to learn a new build system, or perform any
 packaging steps, or even move code out of version control, ever.
 
-With luapower there's no installation step. The development tree
-_is_ the deployment tree, and it's the same tree for all platforms.
+## Just the facts please
+
+Luapower is a dead simple idea: it puts [luajit] and a bunch
+of modules in separate repositories on [github](https://github.com/luapower),
+and it allows you to clone them back _over the same directory_
+([git can do that](http://git-scm.com/blog/2010/04/11/environment.html)
+with a little [help][luapower-git]).
+The files in the repos are [laid out][get-involved] such that when
+cloned overlaid like that, the result is a self-contained, runnable
+luajit installation. Binaries for all platforms are included directly
+into the master branch, and a luajit wrapper script selects the
+right luajit executable for your platform at runtime, and sets up the
+environment so that modules and other dependencies are looked for in the
+luapower directory first.
+
+This means that the development tree _is_ the deployment tree,
+and it's the same tree for all platforms.
 Modules don't need to be "installed" out of version control in order to
 create a proper runtime. You can code directly on your deployments,
 and you can push/pull changes between deployments just like you do with
@@ -29,6 +44,12 @@ your own apps.
 
 ## How do I install it?
 
+The best way to get to a runnable installation it is with [luapower-git],
+which keeps everything under version control at all times, making it easy
+to add and remove packages, stay up-to-date, make pull requests,
+and even make deployments.
+
+Alternatively, you can just download the packages from the website directly.
 [Getting luajit](/luajit/download) and the modules that you need and
 unzipping them over a common directory is enough to create a runnable
 LuaJIT installation that is self-contained and portable, meaning it will
@@ -36,11 +57,6 @@ run the included luajit command from any directory and on any platform,
 and furthermore, modules and binary dependencies will be looked for in the
 installation directory first, effectively isolating the installation from
 other libraries or Lua installations that might be present in the host system.
-
-Another, more powerful way to get the files into a common directory is with
-[luapower-git], which keeps everything under source control at all times,
-making it easy to add and remove packages, stay up-to-date, make pull
-requests, and even make deployments.
 
 ## What platforms does it run on?
 
@@ -56,7 +72,8 @@ in the host system, because all dependencies are available as luapower
 packages as well. The build scripts are in the `csrc` directory for each
 package. The C sources are also included, so you can start right away.
 Just make sure you have a compatible [build toolchain][building] installed,
-and that you build the dependencies first, as listed in the WHAT files.
+and that you build the dependencies first, as listed on the website (or
+in the WHAT files).
 
 ## Can I make single-exe apps with it?
 
