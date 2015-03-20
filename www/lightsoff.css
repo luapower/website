@@ -7,9 +7,9 @@ strong { font-weight: 600; }
 a, h1, h2, h3 { color: #fff; } #docnav a { color: #bbb; }
 a:visited { color: #eee; }
 a:hover { color: #fff; }
-a.external_link { color: #d00; }
-a.external_link:visited { color: #f66; }
-a.external_link:hover { color: #f99; }
+a.external_link { color: #d66; }
+a.external_link:visited { color: #f99; }
+a.external_link:hover { color: #fff; }
 
 hr { border-top-color: #666; }
 
