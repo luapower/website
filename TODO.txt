@@ -1,12 +1,28 @@
 HIGH-PRIORITY
 ==============================================================================
 
+- website cleanup / bugs / design day
+	- package info page
+		-
+	- add mtime to all doc pages!
+	- discuss button
+	- issues button
+	- test git on windows again
+	- click on headings
+
+- the problem of blocking actions
+	- upgrade to a process queue system?
+	- use shm/clear cache stack?
+
 - bugfixing day
 	- fix c++ builds
 	- fix Lua code
 		- on windows
 		- on osx
 		- on linux
+	- libgit2 crash on windows
+	- libgit2 crash on linux
+	- fix glue.memoize
 
 - unit testing day
 	- make all tests automatable
@@ -15,6 +31,12 @@ HIGH-PRIORITY
 		- gambiarra
 		- luaunit
 		- shake even?
+	- run tests and record the status and errors in luapower_db
+	- install OSX 10.6
+
+- documentation cleanup day
+	- use of headings
+	- screenshots
 
 - luapower TODO: modules() <- Lua/C module paths are platform-specific.
 
@@ -29,28 +51,37 @@ HIGH-PRIORITY
 	- git clone-only pkg
 
 - discourse forum
+	- install the piece of shit
+		- fix docker/routing
+			- set up smtp
+			- set up oauth
+			- set up logo & colors
+			- set up nginx / ssl
+			- make auto-backups work
 	- bootstrap topics
-		- wishlist
-		- feedback
-		- ...
+		- hate mail
+		- who are you and what's your plan for world domination?
+		- what modules would you like to see in luapower? poll?
 
-- package info page
-	-
 
 - nightly builds
-	- rebuild script
+	- part of ./git?
 	- cron job
-	- download buttons for each platform
-		- big button for current platform
+
+- left sidebar
+	- other modules in category
+	- other categories
 
 
 LOW-PRIORITY
 ==============================================================================
 - homepage stars: white and gray (7 days, 30 days)
-- readline for luapower command
 - module long description parsing from source (main module)
+- fuck nfs/samba and use git pulls
 
-- left sidebar?
+- rockspec generator
+	- how to register origins of dependencies
+	-
 
 - infer binary dependencies
 	- on windows: how?
@@ -59,36 +90,14 @@ LOW-PRIORITY
 
 - user column on news (must be github user - clickable)
 
-- create symlink/junction-based distros in ./luapower-<platform>/{luajit,lua,lib,clib,media}
+- code browser
+	- navigation on require"<module>"
+	- parse definitions and make a in-memory database
+	- navigate to symbols from other modules
+	- editable online
+	- literate-style view
 
-- libgit2 crash on windows
-- libgit2 crash on linux
+- comment system on all pages
+	- source code annotation and comments
+		- how to keep annotations in sync with changes in the code?
 
-
-
-- continuous integration:
-
-- build scripts
-- test scripts
-
-- make a big diagram of how the modules fit together?
-
-http://marvl.infotech.monash.edu/webcola/examples/smallnonoverlappinggraph.html
-
-- check https://github.com/LuaDist/Repository/wiki for
-
-- wording on features
-- wiki doc structure
-
-- code browser with navigation on require"<module>"
-
-- source code annotation
-
-- in separate file or inline?
-- if separate, how to keep it in sync?
-- editable online
-
-- AST -> extract modules, functions, etc. and use them for navigation
-
-- navigating symbols from other modules would be awesome
-- that would be a killer codeedit feature too

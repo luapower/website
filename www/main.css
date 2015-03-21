@@ -346,8 +346,8 @@ warn {
 }
 
 .downloads_home .download_btn {
-	font-size: 80%;
 	min-width: 120px;
+	vertical-align: baseline;
 }
 
 .package_list {
@@ -474,6 +474,7 @@ warn {
 }
 .download_btn {
 	display: inline-block;
+	font-size: 80%;
 	text-align: center;
 	white-space: nowrap;
 	padding: 3px;

@@ -4,10 +4,25 @@
 		&nbsp;
 		</td>
 		<td>
-			<h1 class=tight>{{title}}</h1>
-			<h4 class=tight>{{tagline}}</h4>
+			<table width=100%>
+				<tr>
+					<td>
+						<h1 class=tight>{{title}}</h1>
+						<h4 class=tight>{{tagline}}</h4>
+					</td>
+					<td align=right valign=top>
+						<div class="small gray doc" style="float: right">updated: <b>{{mtime_ago}}</b></div>
+					</td>
+				</tr>
+			</table>
 			<div class=doc>
 				{{{doc_html}}}
+				<br>
+				<p class="small gray" style="float: right">
+					{{#mtime_ago}}updated: <b>{{mtime_ago}}</b>{{/mtime_ago}}
+				</p>
+				<!--enddoc is needed for spyscroll docnav-->
+				<enddoc></enddoc>
 			</div>
 		</td>
 		<td class=rightside valign=top align=right width=180 class=nowrap>

@@ -25,6 +25,27 @@ function render_main(name, data, env)
 	)
 end
 
+local function rel_time(s)
+	if s > 2 * 365 * 24 * 3600 then
+		return ('%d years'):format(math.floor(s / (365 * 24 * 3600)))
+	elseif s > 2 * 30.5 * 24 * 3600 then
+		return ('%d months'):format(math.floor(s / (30.5 * 24 * 3600)))
+	elseif s > 1.5 * 24 * 3600 then
+		return ('%d days'):format(math.floor(s / (24 * 3600)))
+	elseif s > 2 * 3600 then
+		return ('%d hours'):format(math.floor(s / 3600))
+	elseif s > 2 * 60 then
+		return ('%d minutes'):format(math.floor(s / 60))
+	else
+		return 'a minute'
+	end
+end
+
+local function timeago(time)
+	local s = os.difftime(os.time(), time)
+	return string.format(s > 0 and '%s ago' or 'in %s', rel_time(math.abs(s)))
+end
+
 --actions --------------------------------------------------------------------
 
 --doc rendering
@@ -91,6 +112,8 @@ local function action_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
+	data.mtime = lfs.attributes(docfile, 'mtime')
+	data.mtime_ago = timeago(data.mtime)
 	out(render_main('doc.html', data))
 end
 
@@ -226,27 +249,6 @@ local function package_icons(ptype, platforms, small)
 	return t, ps
 end
 
-local function rel_time(s)
-	if s > 2 * 365 * 24 * 3600 then
-		return ('%d years'):format(math.floor(s / (365 * 24 * 3600)))
-	elseif s > 2 * 30.5 * 24 * 3600 then
-		return ('%d months'):format(math.floor(s / (30.5 * 24 * 3600)))
-	elseif s > 1.5 * 24 * 3600 then
-		return ('%d days'):format(math.floor(s / (24 * 3600)))
-	elseif s > 2 * 3600 then
-		return ('%d hours'):format(math.floor(s / 3600))
-	elseif s > 2 * 60 then
-		return ('%d minutes'):format(math.floor(s / 60))
-	else
-		return 'a minute'
-	end
-end
-
-local function timeago(time)
-	local s = os.difftime(os.time(), time)
-	return string.format(s > 0 and '%s ago' or 'in %s', rel_time(math.abs(s)))
-end
-
 local function package_info(pkg, doc)
 	local lp = require'luapower'
 	local glue = require'glue'
@@ -286,6 +288,7 @@ local function package_info(pkg, doc)
 	local origin_url = lp.git_origin_url(pkg)
 	t.github_url = origin_url:find'github.com' and origin_url
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
+	t.meta_package = pkg == 'luapower-git'
 
 	local modmap = {}
 	for mod, file in pairs(lp.modules(pkg)) do
@@ -538,7 +541,12 @@ function action_package(pkg, doc, what)
 		t.download = true
 	elseif not what then
 		local docfile = doc and lp.docs(pkg)[doc] or t.docfile
-		t.doc_html = docfile and render_docfile(lp.powerpath(docfile))
+		if docfile then
+			docfile = lp.powerpath(docfile)
+			t.doc_html = render_docfile(docfile)
+			t.doc_mtime = lfs.attributes(docfile, 'mtime')
+			t.doc_mtime_ago = timeago(t.doc_mtime)
+		end
 	end
 	out(render_main('package.html', t))
 end
@@ -605,13 +613,7 @@ function action.default(s, ...)
 		return action_package(s, nil, ...)
 	elseif lp.docs()[s] then
 		local pkg = lp.doc_package(s)
-		if pkg then
-			return action_package(pkg, s, ...)
-		else
-			--doc with no package
-			local docfile = lp.powerpath(lp.docs()[s])
-			return action_docfile(docfile, ...)
-		end
+		return action_package(pkg, s, ...)
 	elseif lp.modules()[s] then
 		local pkg = lp.module_package(s)
 		return action_package(pkg, nil, s, ...)
