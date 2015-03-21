@@ -290,6 +290,10 @@ local function package_info(pkg, doc)
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
 	t.meta_package = pkg == 'luapower-git'
 
+	if t.meta_package then
+		return t
+	end
+
 	local modmap = {}
 	for mod, file in pairs(lp.modules(pkg)) do
 		modmap[mod] = {module = mod, file = file}
@@ -542,10 +546,10 @@ function action_package(pkg, doc, what)
 	elseif not what then
 		local docfile = doc and lp.docs(pkg)[doc] or t.docfile
 		if docfile then
-			docfile = lp.powerpath(docfile)
-			t.doc_html = render_docfile(docfile)
-			t.doc_mtime = lfs.attributes(docfile, 'mtime')
-			t.doc_mtime_ago = timeago(t.doc_mtime)
+			local docpath = lp.powerpath(docfile)
+			t.doc_html = render_docfile(docpath)
+			t.doc_mtime = lp.git_mtime(pkg, docfile)
+			t.doc_mtime_ago = t.doc_mtime and timeago(t.doc_mtime)
 		end
 	end
 	out(render_main('package.html', t))
