@@ -7,10 +7,10 @@ files() {
 	(platform="$1"
 	luapower/git ls-cloned | while read pkg; do
 		luapower/git $pkg ls-files | while read f; do
-			[ "$f" == "${f%.exclude}" ] && \
-			[ "$f" == "${f%.a}" ] && \
-			[ "$f" == "${f#csrc/}" ] && \
-			[ "${f#bin/*/}" == "${f#bin/$platform/}" ] && \
+			[ "$f" = "${f%.exclude}" ] && \
+			[ "$f" = "${f%.a}" ] && \
+			[ "$f" = "${f#csrc/}" ] && \
+			[ "${f#bin/*/}" = "${f#bin/$platform/}" ] && \
 				echo "luapower/$f"
 		done
 	done)
