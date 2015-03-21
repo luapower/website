@@ -1,4 +1,5 @@
 #!/bin/sh
+# make daily bundles for each platform, for downloading from the homepage.
 
 outdir="$(dirname "$0")"; cd "$outdir" || exit 1; outdir="$PWD/www"
 cd ../.. && [ -d luapower ] || exit 1

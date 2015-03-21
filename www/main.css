@@ -636,6 +636,9 @@ warn {
 	padding-bottom: 2px;
 }
 
+/* make headings appear clickable */
+.doc h1, .doc h2, .doc h3 { cursor: pointer; }
+
 .doc h2 code,
 .doc h3 code,
 .doc h4 code,

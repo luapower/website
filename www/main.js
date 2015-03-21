@@ -349,6 +349,13 @@ $(function() {
 			$(this).addClass('external_link')
 	})
 
+	// make headings clickable
+	$('.doc').find('h1,h2,h3').click(function() {
+		location = location.pathname +
+			(location.search ? '?' + location.search : '') +
+				'#' + $(this).attr('id')
+	})
+
 	// bind enter key for the search input
 	$('.search_input').keydown(function(e) {
 		if (e.which == 13)

@@ -1,14 +1,20 @@
 HIGH-PRIORITY
 ==============================================================================
 
+- nightly builds
+	- part of ./git?
+	- cron job
+
 - website cleanup / bugs / design day
 	- package info page
 		-
-	- add mtime to all doc pages!
 	- discuss button
 	- issues button
-	- test git on windows again
-	- click on headings
+	- left sidebar
+		- other modules in category
+		- other categories
+		- invert highlighting (selected doc)
+		- remove selection when on download or package info pages
 
 - the problem of blocking actions
 	- upgrade to a process queue system?
@@ -23,6 +29,7 @@ HIGH-PRIORITY
 	- libgit2 crash on windows
 	- libgit2 crash on linux
 	- fix glue.memoize
+	- test ./git on windows again
 
 - unit testing day
 	- make all tests automatable
@@ -63,14 +70,6 @@ HIGH-PRIORITY
 		- who are you and what's your plan for world domination?
 		- what modules would you like to see in luapower? poll?
 
-
-- nightly builds
-	- part of ./git?
-	- cron job
-
-- left sidebar
-	- other modules in category
-	- other categories
 
 
 LOW-PRIORITY
