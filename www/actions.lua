@@ -6,6 +6,7 @@ local lp = require'luapower'
 local pp = require'pp'
 local lfs = require'lfs'
 local tuple = require'tuple'
+local zip = require'minizip'
 local luapower_dir = config'luapower_dir'
 package.loaded.grep = nil
 local grep = require'grep'
@@ -16,12 +17,8 @@ lp.config('servers').linux64 = nil
 --helpers --------------------------------------------------------------------
 
 function render_main(name, data, env)
-	local ua = HEADERS.user_agent or ''
 	return render('main.html',
-		glue.merge({
-			on_windows = ua:find'Windows',
-			on_unix = not ua:find'Windows',
-		}, data),
+		data,
 		glue.merge({
 			content = readfile(name),
 		}, env)
@@ -446,8 +443,14 @@ local function package_info(pkg, doc)
 			local mall = lp.module_requires_loadtime_all(mod, pkg, platform)
 			local mt = {}
 			for m in pairs(mall) do
-				mt[m] = {kind = mext[m] and 'external' or modmap[m]
-					and 'internal' or 'indirect'}
+				local pkg = lp.module_package(m)
+				local path = lp.modules(pkg)[m]
+				mt[m] = {
+					kind = mext[m] and 'external' or modmap[m]
+					and 'internal' or 'indirect',
+					dep_package = pkg,
+					dep_file = path,
+				}
 			end
 			mdeps[platform] = mt
 		end
@@ -578,14 +581,21 @@ function action_home()
 		table.insert(data.cats, {cat = cat.name, packages = t})
 	end
 
-	out(render_main('home.html', data))
-end
+	local t = {}
+	data.download_buttons = t
+	for _,pl in ipairs{'mingw32', 'linux32', 'osx32', 'mingw64', 'linux64', 'osx64'} do
+		local file = 'luapower-'..pl..'.zip'
+		local size = lfs.attributes(wwwpath(file), 'size')
+		if size then
+			table.insert(t, {
+				platform = pl,
+				file = file,
+				size = string.format('%d MB', size / 1024 / 1024),
+			})
+		end
+	end
 
-function action.update_db(package)
-	lp.clear_cache(package)
-	lp.update_db(package)
-	lp.save_db()
-	print'ok'
+	out(render_main('home.html', data))
 end
 
 function action.default(s, ...)
@@ -671,6 +681,26 @@ function action.github(...)
 	luapower.update_db(repo) --TODO: this is blocking the server!!!
 end
 
+--dependency lister for git clone --------------------------------------------
+
+function action.deps(pkg)
+	setmime'txt'
+	local deps = lp.package_requires_packages_for(
+		'module_requires_loadtime_all', pkg, nil, true)
+	for k in glue.sortedpairs(deps) do
+		print(k)
+	end
+end
+
+--updating the deps db -------------------------------------------------------
+
+function action.update_db(package)
+	lp.clear_cache(package)
+	lp.update_db(package)
+	lp.save_db()
+	print'ok'
+end
+
 --creating rockspecs ---------------------------------------------------------
 
 function action.rockspec(pkg)
@@ -680,7 +710,8 @@ function action.rockspec(pkg)
 	local homepage = 'http://luapower.com/'..pkg
 	local ctags = lp.c_tags(pkg)
 	local license = ctags and ctags.license or 'Public Domain'
-	local pext = lp.package_requires_packages_for('module_requires_loadtime_ext', pkg, platform, true)
+	local pext = lp.package_requires_packages_for(
+		'module_requires_loadtime_ext', pkg, platform, true)
 	local deps = {}
 	for pkg in glue.sortedpairs(pext) do
 		table.insert(deps, 'luapower-'..pkg)

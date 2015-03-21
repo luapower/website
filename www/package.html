@@ -34,41 +34,30 @@
 			<!-- download =================================================== -->
 			{{#download}}
 			<h2>Download</h2>
-			<a class=download href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-				<i class="fa fa-download"></i> download tgz</a>
-			<a class=download href="https://github.com/luapower/{{package}}/archive/master.zip">
-				<i class="fa fa-download"></i> download zip</a>
+			<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+				<i class="fa fa-download"></i>
+				<span>{{package}}-master.tar.gz</span>
+			</a>
+			<br>
+			<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.zip">
+				<i class="fa fa-download"></i>
+				<span>{{package}}-master.zip</span>
+			</a>
 
 			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
 			<p>From the luapower directory, type:</p>
-			<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
-	<a href="/luapower-git">git</a> clone {{package}}
-			</pre>
-			<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
-	<a href="/luapower-git">./git</a> clone {{package}}
-			</pre>
+			<div class="shell_btn"></div>
+			<div class=doc>
+			<pre class=windows_shell><code><a href="/luapower-git">git</a> clone {{package}}
+</code></pre>
+			<pre class=unix_shell><code><a href="/luapower-git">./git</a> clone {{package}}
+</code></pre>
+			</div>
 
-			<table>
-				<tr>
-					<td>
-						<h2>Clone manually</h2>
-					</td>
-					<td width=10></td>
-					<td>
-						<h2 class=platform_btn>
-							<div id=windows_clone_btn class="{{#on_windows}}selected{{/on_windows}}">
-								<div class="icon-mingw"></div>
-							</div>
-							<div id=unix_clone_btn class="{{^on_windows}}selected{{/on_windows}}">
-								<div class="icon-linux"></div>
-								<div class="icon-osx"></div>
-							</div>
-						</h2>
-					</td>
-				</tr>
-			</table>
-			<pre class="windows {{^on_windows}}hidden{{/on_windows}}">
-cd luapower
+			<h2>Clone manually</h2>
+			<div class="shell_btn"></div>
+			<div class=doc>
+			<pre class=windows_shell><code>cd luapower
 md _git\{{package}}
 set GIT_DIR=_git\{{package}}\.git
 git.exe init
@@ -78,9 +67,8 @@ git.exe remote add origin https://github.com/luapower/{{package}}.git
 git.exe fetch --all
 git.exe branch --track master origin/master
 git.exe checkout
-			</pre>
-			<pre class="unix {{^on_unix}}hidden{{/on_unix}}">
-cd luapower
+</code></pre>
+			<pre class=unix_shell><code>cd luapower
 mkdir -p _git/{{package}}
 export GIT_DIR=_git/{{package}}/.git
 git init
@@ -90,12 +78,14 @@ git remote add origin https://github.com/luapower/{{package}}.git
 git fetch --all
 git branch --track master origin/master
 git checkout
-			</pre>
+</code></pre>
 
+			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
 			<pre>
 luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			</pre>
+			-->
 			{{/download}}
 
 			<!-- info ======================================================= -->
@@ -359,9 +349,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#package_deps}}
 							{{#icon}}<span class="gray icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								{{#external}}
-									{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
-								{{/external}}
+								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</span>
@@ -404,7 +392,6 @@ $(function() {
 		e.preventDefault()
 	})
 
-
 	$('.modpkg_switch').click(function() {
 		var pkg = $(this).attr('type') == 'P'
 		$('.package_list').toggle()
@@ -413,20 +400,6 @@ $(function() {
 	}).mousedown(function(e) {
 		// prevent selection of subsequent text on double-click.
 		e.preventDefault()
-	})
-
-	$('#windows_clone_btn').click(function() {
-		$('pre.unix').hide()
-		$('pre.windows').show()
-		$(this).addClass('selected')
-		$('#unix_clone_btn').removeClass('selected')
-	})
-
-	$('#unix_clone_btn').click(function() {
-		$('pre.windows').hide()
-		$('pre.unix').show()
-		$(this).addClass('selected')
-		$('#windows_clone_btn').removeClass('selected')
 	})
 
 })

@@ -7,8 +7,8 @@ strong { font-weight: 600; }
 a, h1, h2, h3 { color: #fff; } #docnav a { color: #bbb; }
 a:visited { color: #eee; }
 a:hover { color: #fff; }
-a.external_link { color: #d66; }
-a.external_link:visited { color: #f99; }
+a.external_link { color: #f33; }
+a.external_link:visited { color: #f66; }
 a.external_link:hover { color: #fff; }
 
 hr { border-top-color: #666; }
@@ -26,9 +26,6 @@ input:hover { border-color: #ccc; }
 .package_cat_name { color: #0c0; }
 .package_card { border-color: #333; }
 
-.platform_btn { background-color: #000; color: #999; }
-.platform_btn .selected { background-color: #666; color: #fff; }
-
 .download_link { color: #0f0 !important; }
 .download_link:visited { color: #0f0 !important; }
 
@@ -36,8 +33,8 @@ input:hover { border-color: #ccc; }
 
 #docnav .selected a { color: #fff !important; }
 
-.indirect { color: #666 !important; }
-.internal { color: #444 !important; }
+.indirect { color: #888 !important; }
+.internal { color: #666 !important; }
 #module_table .error { background-color: #900 !important; color: #fff !important; }
 
 .grep .result.active { border-color: #f00; }

@@ -1,6 +1,6 @@
 ---
 title: FAQ
-tagline: Questions & Answers
+tagline: questions & answers
 ---
 
 ## What is luapower?
@@ -21,15 +21,15 @@ few rare cases), you don't have to learn a new build system, or perform any
 packaging steps, or even move code out of version control, ever.
 
 Modules don't need to be "installed" out of version control in order to
-create a proper runtime. You can code directly on your deployments,
+create a proper runtime. You can make changes directly on your deployments,
 and you can push/pull changes between deployments and even create pull
 requests to upstream without any extra steps.
 
 ## Just the facts please
 
 Luapower is a dead simple idea: it puts [luajit] and a bunch
-of modules in separate repositories on [github](https://github.com/luapower),
-and it allows you to clone them back _over the same directory_
+of modules in separate repositories [on github](https://github.com/luapower),
+and it allows you to clone them back together _over the same directory_
 ([git can do that](http://git-scm.com/blog/2010/04/11/environment.html)
 with a little [help][luapower-git]).
 The files in the repos are [laid out][get-involved] such that when
@@ -43,7 +43,7 @@ installation from other libraries that might be present in the host system.
 
 ## How do I install it?
 
-The best way to get to a runnable installation it is with [luapower-git],
+The best way to get to a runnable installation is with [luapower-git],
 which keeps everything under version control at all times, making it easy
 to add and remove packages, stay up-to-date, make pull requests,
 and even make deployments.
@@ -52,10 +52,7 @@ Alternatively, you can just download the packages from the website directly.
 [Getting luajit](/luajit/download) and the modules that you need and
 unzipping them over a common directory is enough to create a runnable
 LuaJIT installation that is self-contained and portable, meaning it will
-run the included luajit command from any directory and on any platform,
-and furthermore, modules and binary dependencies will be looked for in the
-installation directory first, effectively isolating the installation from
-other libraries or Lua installations that might be present in the host system.
+run the included luajit command from any directory and on any platform.
 
 ## What platforms does it run on?
 
@@ -80,15 +77,34 @@ Yes. Static libraries are included for all C packages, and can be
 [bundled][bundle] together with Lua modules and other static resources
 to create self-contained single-exe apps on any platform.
 
+## Can I use it in commercial apps?
+
+Yes. Almost all packages have a non-viral, open-source license, and many
+are in public domain. If in doubt, check the package table on the homepage.
+
+## Can I use it with plain Lua?
+
+Partially. All Lua and Lua/C modules should work with Lua 5.1 just fine,
+and some of them might even work with Lua 5.2 out-of-the-box. You can also
+compile stock Lua, bundle it as a luapower package and use that as your
+runtime instead of luajit.
+
 ## How do I make new packages?
 
 Refer to [get-involved] for what a package should contain.<br>
 Refer to [luapower-git] for the actual procedure.
 
-## Can I use it in commercial apps?
+## How do I see a package's files?
 
-Yes. Almost all packages have a non-viral, open-source license, and many
-are in public domain. If in doubt, check the package table on the homepage.
+Type `./git <package> ls-files`
+
+## But can I browse them too?
+
+Yes! Create hard links with `./git --all make-hardlinks` which makes
+hard links in the `_git` directory for all the packages. Now they're separate
+and you can list them and check their size, and even edit them and commit
+the changes. Remember to run that command again if you add or delete
+files though.
 
 ## How is it different from LuaRocks?
 
@@ -122,12 +138,17 @@ library for package analysis.
 
 ## How are the libraries chosen?
 
-The included libraries are chosen for speed, portability, API stability
-and a free license.
+The included libraries are chosen for a free license, portability, speed
+and popularity, usually in that order.
+
+## Where's the package database?
+
+There is none. Package information is computed on-the-fly
+using the [luapower] module.
 
 ## Why the Public Domain license?
 
-Because you should [set your code free](http://unlicense.org).
+Because I want to [set my code free](http://unlicense.org).
 I don't support the copyright law, and you probably
 [shouldn't either][against ip].
 

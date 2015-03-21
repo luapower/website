@@ -7,9 +7,9 @@ strong { font-weight: 800; }
 a { color: #339; }
 a:visited { color: #939; }
 a:hover { color: #000; }
-a.external_link { color: #d00; }
-a.external_link:visited { color: #f66; }
-a.external_link:hover { color: #f00; }
+a.external_link { color: #900; }
+a.external_link:visited { color: #c00; }
+a.external_link:hover { color: #f66; }
 
 hr { border-top-color: #ccc; }
 
@@ -25,9 +25,6 @@ input:hover { border-color: #999; }
 .package_list a, .package_list a:visited { color: #444; }
 .package_cat_name { color: #0a0; }
 .package_card { border-color: #ddd; }
-
-.platform_btn { background-color: #fff; color: #999; }
-.platform_btn .selected { background-color: #ddd; color: #000; }
 
 .download_link { color: #090 !important; }
 .download_link:visited { color: #090 !important; }

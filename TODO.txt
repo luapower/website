@@ -1,0 +1,94 @@
+HIGH-PRIORITY
+==============================================================================
+
+- bugfixing day
+	- fix c++ builds
+	- fix Lua code
+		- on windows
+		- on osx
+		- on linux
+
+- unit testing day
+	- make all tests automatable
+	- replace 'unit' with a proper unit testing library
+		- busted
+		- gambiarra
+		- luaunit
+		- shake even?
+
+- luapower TODO: modules() <- Lua/C module paths are platform-specific.
+
+- generalize icon switches that show/hide stuff
+	- fade animation
+	- persist state
+	- use local storage instead of cookies
+
+- git clone <package>
+	- _git/<origin>.depurl <- http://luapower.com/deps/
+	- `wget http://luapower.com/deps/<package>`
+	- git clone-only pkg
+
+- discourse forum
+	- bootstrap topics
+		- wishlist
+		- feedback
+		- ...
+
+- package info page
+	-
+
+- nightly builds
+	- rebuild script
+	- cron job
+	- download buttons for each platform
+		- big button for current platform
+
+
+LOW-PRIORITY
+==============================================================================
+- homepage stars: white and gray (7 days, 30 days)
+- readline for luapower command
+- module long description parsing from source (main module)
+
+- left sidebar?
+
+- infer binary dependencies
+	- on windows: how?
+	- on linux: how?
+	- on osx: how?
+
+- user column on news (must be github user - clickable)
+
+- create symlink/junction-based distros in ./luapower-<platform>/{luajit,lua,lib,clib,media}
+
+- libgit2 crash on windows
+- libgit2 crash on linux
+
+
+
+- continuous integration:
+
+- build scripts
+- test scripts
+
+- make a big diagram of how the modules fit together?
+
+http://marvl.infotech.monash.edu/webcola/examples/smallnonoverlappinggraph.html
+
+- check https://github.com/LuaDist/Repository/wiki for
+
+- wording on features
+- wiki doc structure
+
+- code browser with navigation on require"<module>"
+
+- source code annotation
+
+- in separate file or inline?
+- if separate, how to keep it in sync?
+- editable online
+
+- AST -> extract modules, functions, etc. and use them for navigation
+
+- navigating symbols from other modules would be awesome
+- that would be a killer codeedit feature too

@@ -99,9 +99,8 @@ major reasons for directory hierarchies is structuring information for humans
 to consume in the learning phase. In the case of a module distribution, the
 structure of a package is the same for all packages. Thus the juxtaposition
 of files from many modules doesn't make things less organized. If you feel
-uneasy about a long flat list of files, try downloading them into separate
-directories first and use that for a while, then move them into a single
-directory, one by one, slowly. :)
+uneasy about a long flat list of files, try `./git -all make-hardlinks`
+and inspect the contents of packages from the `_git` directory.
 
 Philosophy aside, having all the modules in the same directory is the way
 `require()` works by default, which means there's no need to add a custom

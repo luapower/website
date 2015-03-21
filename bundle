@@ -1,0 +1,24 @@
+#!/bin/sh
+
+outdir="$(dirname "$0")"; cd "$outdir" || exit 1; outdir="$PWD/www"
+cd ../.. && [ -d luapower ] || exit 1
+
+files() {
+	(platform="$1"
+	luapower/git ls-cloned | while read pkg; do
+		luapower/git $pkg ls-files | while read f; do
+			[ "$f" == "${f%.exclude}" ] && \
+			[ "$f" == "${f%.a}" ] && \
+			[ "$f" == "${f#csrc/}" ] && \
+			[ "${f#bin/*/}" == "${f#bin/$platform/}" ] && \
+				echo "luapower/$f"
+		done
+	done)
+}
+
+for p in mingw32 mingw64 linux32 linux64 osx32 osx64; do
+	echo "packing $p..."
+	outfile="$outdir/luapower-$p.zip"
+	tmpfile="$outfile.$$"
+	files $p | zip -@ "$tmpfile" && mv "$tmpfile" "$outfile" || rm "$tmpfile"
+done

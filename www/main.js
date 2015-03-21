@@ -312,6 +312,32 @@ function set_lights(on) {
 
 $(set_lights_button)
 
+// shell switch buttons ------------------------------------------------------
+
+$(function() {
+	var win = navigator.userAgent.indexOf('Windows') >= 0
+
+	$('.shell_btn').html(
+		'<a switch_for=".windows_shell" class="shell_switch' + (!win ? ' disabled"' : '"') + '>' +
+			'<span class="icon-mingw"></span>' +
+		'</a>' +
+		'<a switch_for=".unix_shell" class="shell_switch' + (!win ? '"' : ' disabled"') + '>' +
+			'<span class="icon-linux"></span>' +
+			'<span class="icon-osx"></span>' +
+		'</a>')
+
+	$('.shell_btn .shell_switch').click(function() {
+		$('.shell_btn .shell_switch').addClass('disabled')
+		$('.unix_shell, .windows_shell').hide()
+		var switch_for = $(this).attr('switch_for')
+		$(switch_for).show()
+		$('.shell_btn .shell_switch[switch_for="'+switch_for+'"]').removeClass('disabled')
+	})
+
+	$('.shell_btn .shell_switch[switch_for=".'+(win ? 'windows' : 'unix')+'_shell"]').click()
+
+})
+
 // misc ----------------------------------------------------------------------
 
 $(function() {
@@ -323,6 +349,7 @@ $(function() {
 			$(this).addClass('external_link')
 	})
 
+	// bind enter key for the search input
 	$('.search_input').keydown(function(e) {
 		if (e.which == 13)
 			location = '/grep/'+encodeURIComponent($(this).val())
