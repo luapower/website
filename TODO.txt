@@ -1,8 +1,7 @@
 HIGH-PRIORITY
 ==============================================================================
 22.03 - bundle as tar.gz for linux, zip for the rest
-
-- start logging everything again -- css is a time sink
+		- Lua references column on the homepage made smaller
 
 - website cleanup / bugs / design day
 	- homepage
