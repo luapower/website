@@ -11,7 +11,9 @@
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td align=right valign=top>
-						<div class="small gray doc" style="float: right">updated: <b>{{mtime_ago}}</b></div>
+						<p class="small gray" style="float: right">
+							{{#doc_mtime_ago}}updated: <b>{{doc_mtime_ago}}</b>{{/doc_mtime_ago}}
+						</p>
 					</td>
 				</tr>
 			</table>
@@ -19,7 +21,7 @@
 				{{{doc_html}}}
 				<br>
 				<p class="small gray" style="float: right">
-					{{#mtime_ago}}updated: <b>{{mtime_ago}}</b>{{/mtime_ago}}
+					{{#doc_mtime_ago}}updated: <b>{{doc_mtime_ago}}</b>{{/doc_mtime_ago}}
 				</p>
 				<!--enddoc is needed for spyscroll docnav-->
 				<enddoc></enddoc>

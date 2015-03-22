@@ -347,7 +347,11 @@ warn {
 
 .downloads_home .download_btn {
 	min-width: 120px;
-	vertical-align: baseline;
+}
+
+.downloads_home .download_btn i {
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 .package_list {
@@ -488,7 +492,8 @@ warn {
 	display: inline-block;
 	padding-top: inherit;
 	padding-bottom: inherit;
-	float: left;
+	position: relative;
+	left: 0;
 	margin-right: 0.5em;
 }
 .download_btn span, .download_btn i {
@@ -521,6 +526,14 @@ warn {
 #docnav .selected {
 	border-left: 2px solid gray;
 	color: #999;
+}
+
+/* selected link in the left navbar showing the available docs */
+.selected_doc { position: relative; }
+.selected_doc:before {
+	position: absolute;
+	content: '\00bb';
+	left: -1em;
 }
 
 /* grep page -------------------------------------------------------------- */

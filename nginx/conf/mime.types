@@ -12,4 +12,5 @@ types {
     image/svg+xml                         svg svgz;
     application/pdf                       pdf;
     application/zip                       zip;
+    application/x-gzip                    gz;
 }

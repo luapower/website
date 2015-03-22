@@ -9,17 +9,22 @@ files() {
 	luapower/git ls-cloned | while read pkg; do
 		luapower/git $pkg ls-files | while read f; do
 			[ "$f" = "${f%.exclude}" ] && \
-			[ "$f" = "${f%.a}" ] && \
-			[ "$f" = "${f#csrc/}" ] && \
 			[ "${f#bin/*/}" = "${f#bin/$platform/}" ] && \
 				echo "luapower/$f"
 		done
 	done)
 }
 
-for p in mingw32 mingw64 linux32 linux64 osx32 osx64; do
+for p in mingw32 mingw64 osx32 osx64; do
 	echo "packing $p..."
 	outfile="$outdir/luapower-$p.zip"
 	tmpfile="$outfile.$$"
 	files $p | zip -@ "$tmpfile" && mv "$tmpfile" "$outfile" || rm "$tmpfile"
+done
+
+for p in linux32 linux64; do
+	echo "packing $p..."
+	outfile="$outdir/luapower-$p.tar.gz"
+	tmpfile="$outfile.$$"
+	files $p | tar cvzf "$tmpfile" -T - && mv "$tmpfile" "$outfile" || rm "$tmpfile"
 done

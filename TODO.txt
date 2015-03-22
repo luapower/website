@@ -1,27 +1,26 @@
 HIGH-PRIORITY
 ==============================================================================
+22.03 - bundle as tar.gz for linux, zip for the rest
 
-- nightly builds
-	- part of ./git?
-	- cron job
+- start logging everything again -- css is a time sink
 
 - website cleanup / bugs / design day
+	- homepage
+		- sorting of platform icons
 	- package info page
-		-
+		- missing information...
+		- add links for built-in modules
+		- don't make links for the rest of the built-in modules
+		- which platform to go to for platform-dependent Lua modules? (package luajit)
 	- discuss button
 	- issues button
 	- left sidebar
 		- other modules in category
 		- other categories
-		- invert highlighting (selected doc)
-		- remove selection when on download or package info pages
-
-- the problem of blocking actions
-	- upgrade to a process queue system?
-	- use shm/clear cache stack?
 
 - bugfixing day
 	- fix c++ builds
+	- rebuild linux binaries statically
 	- fix Lua code
 		- on windows
 		- on osx
@@ -30,6 +29,8 @@ HIGH-PRIORITY
 	- libgit2 crash on linux
 	- fix glue.memoize
 	- test ./git on windows again
+	- test website on firefox
+	- test website on IE
 
 - unit testing day
 	- make all tests automatable
@@ -43,9 +44,7 @@ HIGH-PRIORITY
 
 - documentation cleanup day
 	- use of headings
-	- screenshots
-
-- luapower TODO: modules() <- Lua/C module paths are platform-specific.
+	- move screenshots to media
 
 - generalize icon switches that show/hide stuff
 	- fade animation
@@ -70,6 +69,10 @@ HIGH-PRIORITY
 		- who are you and what's your plan for world domination?
 		- what modules would you like to see in luapower? poll?
 
+- the problem of blocking actions
+	- git pull sucks the most
+	- upgrade to a process queue system?
+	- use shm/clear cache stack?
 
 
 LOW-PRIORITY
@@ -80,7 +83,7 @@ LOW-PRIORITY
 
 - rockspec generator
 	- how to register origins of dependencies
-	-
+	- Lua/C module paths must be for the right platform
 
 - infer binary dependencies
 	- on windows: how?

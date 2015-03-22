@@ -138,8 +138,8 @@ library for package analysis.
 
 ## How are the libraries chosen?
 
-The included libraries are chosen for a free license, portability, speed
-and popularity, usually in that order.
+The included libraries are chosen based on license, portability, speed,
+and maturity, usually in that order.
 
 ## Where's the package database?
 
@@ -163,18 +163,20 @@ I'm [Cosmin Apreutesei][cosmin], a programmer from Bucharest.
 This is my platform for world domination and I want to share it with you.
 
 Many years ago I hit a plateau with the technologies I was using, mainly
-Delphi and C++. I had many ideas for some great apps, but the tools I was
-using were holding me back. So I started the search for my next great
-programming language. I knew that hi-level languages were friendly to my
-brain but unfriendly to my computer, and that low-level language were
-the reverse. There was no hammer that was good at both ends.
-And then I found Lua, and I fell in love. I knew there was a lot of
-code to write, or at least to assemble, to turn it into something useful, but
-there was no turning back. I was hooked. Lua had a good escape-hatch to C,
+Delphi and C++. I had many ideas for some [great apps], but the tools I was
+using were holding me back. So I started the search for my next programming
+language. I knew that hi-level languages were friendly to my brain but
+unfriendly to my computer, and yet the low-level ones where just the reverse.
+There was no hammer that was good at both ends.
+And then I found Lua, and was hooked. I knew there was a lot of code
+to assemble, and a lot more to write, to turn it into something
+useful, but there was no turning back. Lua had a good escape-hatch to C,
 for the moments where I would find myself losing the bet with the CPU,
-so I wasn't worried about speed much. And then came LuaJIT, and later on,
+so I wasn't that worried about speed. And then came LuaJIT, and later on,
 LuaJIT2 and the ffi, and I started [playing around][winapi] with it one
-night, and from there, things got out of hand, and now I can't stop :)
+night, and from there, things got out of hand.
+
+[great apps]: http://www.youtube.com/watch?v=yJDv-zdhzMY
 
 ## How can I get help?
 

@@ -306,6 +306,7 @@ function set_lights(on) {
 		on = get_lights_state()
 
 	jQuery('#lights_css').attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
+	jQuery('#force_repaint').html(' ')
 	set_lights_state(on)
 	set_lights_button_text(on)
 }

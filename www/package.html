@@ -1,11 +1,13 @@
 <table width=100%>
 	<tr>
 		<td valign=top width=110 style="padding-right: 20px;">
+			{{^info}}{{^download}}
 			{{#docs}}
-				{{#selected}}{{name}}{{/selected}}
+				{{#selected}}<span class=selected_doc>{{name}}</span>{{/selected}}
 				{{^selected}}<a href="/{{name}}">{{name}}</a>{{/selected}}
 				<br>
 			{{/docs}}
+			{{/download}}{{/info}}
 			<br>
 			{{#cat}}
 			<h4 class="package_cat_name tight">{{name}}</h4>
@@ -36,14 +38,14 @@
 			<!-- download =================================================== -->
 			{{#download}}
 			<h2>Download</h2>
-			<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-				<i class="fa fa-download"></i>
-				<span>{{package}}-master.tar.gz</span>
-			</a>
-			<br>
 			<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.zip">
 				<i class="fa fa-download"></i>
-				<span>{{package}}-master.zip</span>
+				<span>{{package}}-master.zip</span>&nbsp;&nbsp;&nbsp;
+			</a>
+			<br>
+			<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+				<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+				<span>{{package}}-master.tar.gz</span>
 			</a>
 
 			{{#meta_package}}
@@ -63,7 +65,7 @@ git.exe config core.excludesfile luapower-git.exclude
 
 			{{^meta_package}}
 			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
-			<p>From the luapower directory, type:</p>
+			<p>From the <a href="/luapower-git">luapower-git</a> directory, type:</p>
 			<div class="shell_btn"></div>
 			<div class=doc>
 				<pre class=windows_shell><code><a href="/luapower-git">git</a> clone {{package}}
@@ -105,6 +107,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			</pre>
 			-->
 			{{/meta_package}}
+			<br>
+			<br>
 			{{/download}}
 
 			<!-- info ======================================================= -->
@@ -326,6 +330,9 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			{{^info}}{{^download}}
 			<div id=doc class=doc>
 				{{{doc_html}}}
+				{{^doc_html}}
+				<span class="small gray">No documentation found.</span>
+				{{/doc_html}}
 				<br>
 				<p class="small gray" style="float: right">
 					{{#doc_mtime_ago}}Last updated: <b>{{doc_mtime_ago}}</b>{{/doc_mtime_ago}}
