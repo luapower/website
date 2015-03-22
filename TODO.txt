@@ -20,7 +20,7 @@ HIGH-PRIORITY
 
 - bugfixing day
 	- fix c++ builds
-	- rebuild linux binaries statically
+	- learn how to bundle linux binaries for portability
 	- fix Lua code
 		- on windows
 		- on osx
