@@ -122,7 +122,10 @@ pre code {
 
 h2 code, h3 code, h4 code { font-size: inherit; }
 
-.small { font-size: 80%; }
+.small {
+	font-size: 80%;
+	line-height: 160%;
+}
 
 .smallnote {
 	font-size: 90%;
@@ -343,6 +346,10 @@ warn {
 	vertical-align: top;
 	padding-right: 30px;
 	width: 50%;
+}
+.quick_faq2 {
+	font-size: 80%;
+	line-height: 160%;
 }
 
 .downloads_home .download_btn {
