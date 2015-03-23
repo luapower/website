@@ -17,7 +17,12 @@ HIGH-PRIORITY
 		- other modules in category
 		- other categories
 
-- bugfixing day
+- building day
+	- linux
+		- build luajit with -rpath=$ORIGIN
+		- get rid of LD_LIBRARY_PATH in the wrapper script
+		- build against oldest libc, libm, pthreads
+		- ship a new libstdc++ separately?
 	- fix c++ builds
 	- learn how to bundle linux binaries for portability
 	- fix Lua code
@@ -72,6 +77,11 @@ HIGH-PRIORITY
 	- git pull sucks the most
 	- upgrade to a process queue system?
 	- use shm/clear cache stack?
+
+- anouncement day
+	- put more pure-Lua libs on the lua wiki
+	- put more Lua+ffi libs on the luajit wiki
+	- ann the new version / changelog
 
 
 LOW-PRIORITY

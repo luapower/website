@@ -80,14 +80,25 @@ to create self-contained single-exe apps on any platform.
 ## Can I use it in commercial apps?
 
 Yes. Almost all packages have a non-viral, open-source license, and many
-are in public domain. If in doubt, check the package table on the homepage.
+are in public domain. If in doubt, check the package table on the homepage
+(click on the license column to sort by license).
+
+Luapower itself is in Public Domain.
 
 ## Can I use it with plain Lua?
 
-Partially. All Lua and Lua/C modules should work with Lua 5.1 just fine,
-and some of them might even work with Lua 5.2 out-of-the-box. You can also
-compile stock Lua, bundle it as a luapower package and use that as your
-runtime instead of luajit.
+Partially, yes. All Lua modules should work with Lua 5.1 just fine,
+and some of them might even work with Lua 5.2 out-of-the-box.
+Lua/C modules should work with Lua 5.1 (on Windows, the Lua dll must be
+(re)named `lua51.dll`).
+
+You can also compile stock Lua, bundle it as a luapower package
+and use that as your runtime instead of luajit.
+
+## What about luaffi?
+
+Some Lua+ffi modules _might_ work with luaffi but you are on your own
+on that one.
 
 ## How do I make new packages?
 
@@ -100,7 +111,8 @@ Type `./git <package> ls-files`
 
 ## But can I browse them too?
 
-Yes! Create hard links with `./git --all make-hardlinks` which makes
+Yes (but not in Windows).
+Create hard links with `./git --all make-hardlinks` which makes
 hard links in the `_git` directory for all the packages. Now they're separate
 and you can list them and check their size, and even edit them and commit
 the changes. Remember to run that command again if you add or delete
@@ -108,26 +120,38 @@ files though.
 
 ## How is it different from LuaRocks?
 
+> __FIXME__: What follows is only the luapower author's biased opinion
+of LuaRocks. Someone else should write this, ideally an user of both systems.
+Feedback welcome.
+
 LuaRocks is probably the most popular package manager for Lua. It is quite
 different than luapower in scope (Lua-focus vs. LuaJIT-focus), philosophy
 (manifest-based vs. convention-based, install vs. portable-tree) and
-implementation (full-fledged package manager vs git wrapper +
-reflection library), and with a large module collection. LuaRocks
-requires declaring all package dependencies. Because LuaRocks does not enforce
-a standard directory layout on packages, having installed packages under
-version control is not possible. LuaRocks doesn't know how to find the
-include dir and lib dir of dependencies all by itself, for the same reason,
-making out-of-the-box compilation of packages with dependencies a hit-or-miss
-experience. It doesn't specify a required build toolchain for Windows either,
-so you might need to have multiple versions of Visual Studio and MinGW before
+implementation (full-fledged package manager vs simple git wrapper +
+reflection library), and with a large module collection.
+LuaRocks requires declaring all package dependencies, while luapower requires
+declaring only binary-only/build-only dependencies. Because LuaRocks does not
+enforce a standard directory layout on packages, having installed packages
+under version control is not possible. Luapower includes and compiles
+all external libraries, while that is out of the scope of LuaRocks. For this
+same reason, LuaRocks does not know how to find the include dir and lib dir
+of external dependencies all by itself, making out-of-the-box compilation of
+packages with dependencies a hit-or-miss experience.
+LuaRocks doesn't specify a required build toolchain for Windows, so you might
+need to have multiple versions of Visual Studio and MinGW before
 you get a decent number of packages built. This also affects binary rocks,
-which may come in linked against various versions of the msvcrt.
+which may come in linked against various versions of msvcrt.
 
 ## How is it different from LuaDist?
 
+> __FIXME__: What follows is only the luapower author's biased opinion
+of LuaDist. Someone else should write this, ideally an user of both systems.
+Feedback welcome.
+
 LuaDist is a git-based binaries-included distro with some similarities
-to luapower and a large module collection. LuaDist requires declaring
-all package dependencies. Building LuaDist binaries requires knowledge of
+to luapower and a large module collection. LuaDist supports more platforms
+and more compilers than luapower. LuaDist requires declaring all package
+dependencies. Building LuaDist binaries requires knowledge of
 cmake and LuaDist's own custom macros. Because LuaDist binaries are in
 separate branches, portable installations under version control are not
 possible (a deployment step is necessary to get to a running system). LuaDist
@@ -143,10 +167,11 @@ and maturity, usually in that order.
 
 ## Where's the package database?
 
-There is none. Package information is computed on-the-fly
-using the [luapower] module.
+There isn't one. Package information is computed on-the-fly
+using the [luapower] module (which also has a command-line interface,
+so check it out).
 
-## Why the Public Domain license?
+## Why put code on Public Domain?
 
 Because I want to [set my code free](http://unlicense.org).
 I don't support the copyright law, and you probably
@@ -154,13 +179,26 @@ I don't support the copyright law, and you probably
 
 [against ip]:  http://www.stephankinsella.com/publications/#againstip
 
+## Where can I get more help?
+
+Go to the [luapower forum](http://luapower.org),
+which incidentally, is also the place where you can share your plans for
+world domination. Any discussion is welcome here, there's no such thing
+as a stupid question.
+
+## How can I help?
+
+Go on the [forum](http://luapower.org) and tell us your luapower love/hate
+story. Your feedback will help make it better. Another way
+to help is to make a luapower package and share it with the world.
+
 ## Who are you?
 
 I'm [Cosmin Apreutesei][cosmin], a programmer from Bucharest.
 
 ## Why are you doing this?
 
-This is my platform for world domination and I want to share it with you.
+This is my platform for world domination and I want to share it.
 
 Many years ago I hit a plateau with the technologies I was using, mainly
 Delphi and C++. I had many ideas for some [great apps], but the tools I was
@@ -174,19 +212,18 @@ useful, but there was no turning back. Lua had a good escape-hatch to C,
 for the moments where I would find myself losing the bet with the CPU,
 so I wasn't that worried about speed. And then came LuaJIT, and later on,
 LuaJIT2 and the ffi, and I started [playing around][winapi] with it one
-night, and from there, things got out of hand.
+night, and from there, things got out of hand, and after 2 years of
+on-and-off module writing, luapower was born.
 
 [great apps]: http://www.youtube.com/watch?v=yJDv-zdhzMY
 
-## How can I get help?
+## Where are you going with this?
 
-The best way to get help is to go to the [luapower forum](http://luapower.org),
-which incidentally, is also the place where you can share your plans for
-world domination. Any discussion is welcome here, there's no such thing
-as a stupid question.
+My goal is to create a cross-platform environment for creating
+the next generation of desktop apps that run closest-to-identically
+on every platform, with pixel-perfect vector-graphics including
+text shaping and rendering, complex interactivity beyond standard
+widget systems, peer-to-peer communication, full usage of processes
+and threads, live self-updating, and access to webcams and microphones
+and at the minimum.
 
-## How can I help?
-
-Two ways: 1. go on the [forum](http://luapower.org) _now_ and tell us your
-luapower love/hate story, and 2. make a luapower package and share it with
-the world.
