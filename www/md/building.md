@@ -9,19 +9,23 @@ tagline:  how to build binaries
  (no makefiles).
  * Each supported package/platform/arch has a separate build script
  `csrc/<package>/build-<platf><arch>.sh`.
- * Not all platform/arch combinations are supported for all packages.
+ * Not all platform/arch combinations are supported for all packages (use table on homepage to check).
  * C sources are included so you can start right away.
  * Dependent packages are listed in `csrc/<package>/WHAT`. Build those first.
  * For building Lua/C modules you need [lua-headers].
- * For building Lua/C modules for Windows you need [luajit]
+ * For building Lua/C modules for Windows you also need [luajit]
  (they need to link to lua51.dll).
  * You will get stripped binaries, with libgcc and libstdc++ statically
  linked, except on OSX (see below).
+ * You will also get static libraries, needed for bundling to a fat exe.
  * Binaries on Windows are linked to msvcrt.dll.
  * Lua/C modules on Windows are linked to lua51.dll.
  * Windows builds are compatible down to Windows 2000/XP (32bit and 64bit)
  * OSX builds are compatible down to OSX 10.6 (x86 only, 32bit and 64bit)
-
+ * Linux builds are compatible down to glibc 2.7 (use csrc/check-glibc-symver.sh to check)
+ * OSX libs set their install_name to `@rpath/<libname>.dylib` and the luajit exe
+ sets @rpath to `@loader_path` so that libraries are looked for in the directory of the exe
+ * the luajit Linux exe sets rpath=$ORIGIN so that libraries are looked for in the directory of the exe
 
 ## Building on Win32 for Win32
 
