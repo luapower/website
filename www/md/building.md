@@ -31,34 +31,10 @@ tagline:  how to build binaries
 	sh build-mingw32.sh
 
 These scripts assume that both MSys and MinGW bin dirs (in this order)
-are in your PATH. Below is the exact list of MinGW packages used to build
+are in your PATH. Here's the MinGW-w64 package used to build
 the current luapower stack:
 
-----
-[binutils-2.23.1-1-mingw32-bin](http://sourceforge.net/projects/mingw/files/MinGW/Base/binutils/binutils-2.23.1/binutils-2.23.1-1-mingw32-bin.tar.lzma)
-[mingwrt-3.20-2-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/mingw-rt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dev.tar.lzma)
-[mingwrt-3.20-2-mingw32-dll](http://sourceforge.net/projects/mingw/files/MinGW/Base/mingw-rt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dll.tar.lzma)
-[w32api-3.17-2-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/w32api/w32api-3.17/w32api-3.17-2-mingw32-dev.tar.lzma)
-[mpc-0.8.1-1-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/mpc/mpc-0.8.1-1/mpc-0.8.1-1-mingw32-dev.tar.lzma)
-[libmpc-0.8.1-1-mingw32-dll-2](http://sourceforge.net/projects/mingw/files/MinGW/Base/mpc/mpc-0.8.1-1/libmpc-0.8.1-1-mingw32-dll-2.tar.lzma)
-[mpfr-2.4.1-1-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/mpfr/mpfr-2.4.1-1/mpfr-2.4.1-1-mingw32-dev.tar.lzma)
-[libmpfr-2.4.1-1-mingw32-dll-1](http://sourceforge.net/projects/mingw/files/MinGW/Base/mpfr/mpfr-2.4.1-1/libmpfr-2.4.1-1-mingw32-dll-1.tar.lzma)
-[gmp-5.0.1-1-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/gmp/gmp-5.0.1-1/gmp-5.0.1-1-mingw32-dev.tar.lzma)
-[libgmp-5.0.1-1-mingw32-dll-10](http://sourceforge.net/projects/mingw/files/MinGW/Base/gmp/gmp-5.0.1-1/libgmp-5.0.1-1-mingw32-dll-10.tar.lzma)
-[pthreads-w32-2.9.0-mingw32-pre-20110507-2-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/pthreads-w32/pthreads-w32-2.9.0-pre-20110507-2/pthreads-w32-2.9.0-mingw32-pre-20110507-2-dev.tar.lzma)
-[libpthreadgc-2.9.0-mingw32-pre-20110507-2-dll-2](http://sourceforge.net/projects/mingw/files/MinGW/Base/pthreads-w32/pthreads-w32-2.9.0-pre-20110507-2/libpthreadgc-2.9.0-mingw32-pre-20110507-2-dll-2.tar.lzma)
-[libiconv-1.14-2-mingw32-dev](http://sourceforge.net/projects/mingw/files/MinGW/Base/libiconv/libiconv-1.14-2/libiconv-1.14-2-mingw32-dev.tar.lzma)
-[libiconv-1.14-2-mingw32-dll-2](http://sourceforge.net/projects/mingw/files/MinGW/Base/libiconv/libiconv-1.14-2/libiconv-1.14-2-mingw32-dll-2.tar.lzma)
-[libintl-0.18.1.1-2-mingw32-dll-8](http://sourceforge.net/projects/mingw/files/MinGW/Base/gettext/gettext-0.18.1.1-2/libintl-0.18.1.1-2-mingw32-dll-8.tar.lzma)
-[libgomp-4.7.2-1-mingw32-dll-1](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/libgomp-4.7.2-1-mingw32-dll-1.tar.lzma)
-[libssp-4.7.2-1-mingw32-dll-0](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/libssp-4.7.2-1-mingw32-dll-0.tar.lzma)
-[libquadmath-4.7.2-1-mingw32-dll-0](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/libquadmath-4.7.2-1-mingw32-dll-0.tar.lzma)
-[gcc-core-4.7.2-1-mingw32-bin](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/gcc-core-4.7.2-1-mingw32-bin.tar.lzma)
-[libgcc-4.7.2-1-mingw32-dll-1](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/libgcc-4.7.2-1-mingw32-dll-1.tar.lzma)
-[gcc-c++-4.7.2-1-mingw32-bin](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/gcc-c%2B%2B-4.7.2-1-mingw32-bin.tar.lzma)
-[libstdc++-4.7.2-1-mingw32-dll-6](http://sourceforge.net/projects/mingw/files/MinGW/Base/gcc/Version4/gcc-4.7.2-1/libstdc%2B%2B-4.7.2-1-mingw32-dll-6.tar.lzma)
-[make-3.82-5-mingw32-bin](http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma)
-----
+[mingw-w64 4.9.2 (32bit, posix threads, DWARF exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/dwarf/i686-4.9.2-release-posix-dwarf-rt_v4-rev2.7z)
 
 Additional tools needed by a few special packages (use them for building for 64bit too):
 
@@ -74,23 +50,11 @@ Additional tools needed by a few special packages (use them for building for 64b
 	sh build-mingw64.sh
 
 These scripts assume that both MSys and MinGW-w64 bin dirs (in this order)
-are in your PATH. Here's the exact MinGW-w64 package used to build
+are in your PATH. Here's the MinGW-w64 package used to build
 the current luapower stack:
 
-----
-[mingw-w64 4.8.1 (64bit, posix threads, SEH exception model)][mingw-w64-win64]
-----
+[mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
 
-
-## Building on Win32 for Win64
-
-This is unsupported.
-
-> __Explanation__: MinGW-w64 can be used to cross-compile C libraries
-for x86_64 from a 32bit Windows machine. But MinGW-w64 cannot be used
-to cross-compile LuaJIT this way because LuaJIT requires SEH
-for the x86_64 target, and there's no MinGW-w64 32bit binaries for that.
-Note that in MinGW-w64 terminology, host means target and target means host.
 
 ## Building on Linux (x86 native)
 
@@ -108,13 +72,15 @@ On x64:
 directory.
 
 In general, to get binaries that will work on older Linuxes, you want to
-build on the _oldest_ Linux that you want to support, but use
-the _newest_ gcc that you can install on that.
+build on the _oldest_ Linux that you care to support, but use
+the _newest_ gcc that you can install on that system. In particular,
+if you link against glibc 2.14+ your binary will not be backwards compatible
+with an older glibc (google "memcpy glibc 2.14" for the horror show).
 
 Here's a fast and easy way to build binaries that are compatible
 down to glibc 2.7:
 
-  * install an Ubuntu 10.04 on a VM
+  * install an Ubuntu 10.04 in a VM
   * add the "test toolchain" PPA to aptitude
   * install the newest gcc and g++ from it
 
@@ -130,6 +96,15 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 The current luapower stack is built this way and it's the only supported way
 to build it.
 
+Note that shipping libstdc++ (and its dependency libgcc) with your app
+on Linux is a bad idea if you're using external C libraries that happen to
+dlopen libstdc++ themselves and expect a certain version of it
+(their version, not yours). Such is the case for instance of OpenGL
+with Radeon drivers (google "steam libstdc++" to see the drama). In that
+case it's better to either a) link libstdc++ statically, b) rename libstdc++
+and link to that instead, or c) or not link it at all, and load the host's
+one and hope it's similar to the one that you tested your app against.
+
 
 ## Building on OSX for OSX
 
@@ -141,15 +116,11 @@ Clang is a cross-compiler, so you can build for 32bit on a 64bit OSX
 and viceversa.
 
 Current OSX builds are based on clang 5.0 (clang-500.2.279) which comes with
-Xcode 5.0.2, and are done on a 64bit OSX 10.9.
+Xcode 5.0.2, and are done on an OSX 10.9.
 
 The generated binaries are compatible down to OSX 10.6 for both 32bit
 and 64bit.
 
 > NOTE: Clang on OSX doesn't (and will not) support static linking of
-stdc++ or libgcc.
+libstdc++ or libgcc.
 
-
-[mingw-w64-win64]:    http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/4.8.1/64-bit/threads-posix/seh/x64-4.8.1-release-posix-seh-rev5.7z
-[Core-5.2.iso]:       http://distro.ibiblio.org/tinycorelinux/5.x/x86/archive/5.2/Core-5.2.iso
-[CorePure64-5.2.iso]: http://distro.ibiblio.org/tinycorelinux/5.x/x86_64/archive/5.2/CorePure64-5.2.iso
