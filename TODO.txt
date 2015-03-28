@@ -3,6 +3,12 @@ HIGH-PRIORITY
 22.03 - bundle as tar.gz for linux, zip for the rest
 		- Lua references column on the homepage made smaller
 
+- building day
+	- fix c++ on windows
+		- libstdc++ for Winodws (32bit and 64bit)
+		- fix the c++ builds
+	- host all build chain packages
+
 - website cleanup / bugs / design day
 	- homepage
 		- sorting of platform icons
@@ -17,14 +23,10 @@ HIGH-PRIORITY
 		- other modules in category
 		- other categories
 
-- building day
-	- linux
-		- build luajit with -rpath=$ORIGIN
-		- get rid of LD_LIBRARY_PATH in the wrapper script
-		- build against oldest libc, libm, pthreads
-		- ship a new libstdc++ separately?
-	- fix c++ builds
-	- learn how to bundle linux binaries for portability
+- pinning dependencies: git --all version > .versions; git clone-versions < .versions
+- faq entry: why no semantic versioning?
+
+- bugfixing day
 	- fix Lua code
 		- on windows
 		- on osx
@@ -88,7 +90,7 @@ LOW-PRIORITY
 ==============================================================================
 - homepage stars: white and gray (7 days, 30 days)
 - module long description parsing from source (main module)
-- fuck nfs/samba and use git pulls
+- busybox style exe/symlinking (a topic for bundle)
 
 - rockspec generator
 	- how to register origins of dependencies

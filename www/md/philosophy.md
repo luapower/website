@@ -113,12 +113,12 @@ play around with the library before I even decide if I want to incorporate it
 in my project or not. Also, I shouldn't need to have a build toolchain on
 my deployment targets.
 
-## C SOURCES & BUILD SCRIPTS
+## BUILD SYSTEM
 
 I know people love their build systems, but I deeply hate build systems
 and I think for the most part that they are unnecessary. For me, the
 success rate for going from `make` to `dll` on the first shot has always been
-pretty pathetic. Building with one-liner gcc scripts is much more transparent,
+pretty pathetic. Building with simple gcc scripts is much more transparent,
 which directly affects my ability and motivation to fix problems (which in
 turn affects the number of packages built). It compiles much faster too.
 
@@ -129,6 +129,14 @@ that you will ever build.
 
 This also allows me to apply a set of decisions consistently across the
 entire distribution, like, if libgcc should be statically built or not.
+
+## BUILD TOOLCHAINS
+
+When it comes to building binaries, package managers usually strive for
+flexibility, allowing wide variability in the process and the tools
+used for compilation. With luapower it's exactly the opposite:
+there's only one supported way to build binaries for each platform.
+The good news is that you _will_ get binaries on the first try.
 
 ## PACKAGE DATABASE
 

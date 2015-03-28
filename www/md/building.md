@@ -5,33 +5,34 @@ tagline:  how to build binaries
 
 ## What you need to know first
 
- * Building is based on one-liner shell scripts that invoke gcc directly
+ * Building is based on trivial shell scripts that invoke gcc directly
  (no makefiles).
- * Each supported package/platform/arch has a separate build script
- `csrc/<package>/build-<platf><arch>.sh`.
- * Not all platform/arch combinations are supported for all packages (use table on homepage to check).
+ * Each supported package/platform/arch combination has a separate build
+ script in `csrc/<package>/build-<platf><arch>.sh`.
  * C sources are included so you can start right away.
  * Dependent packages are listed in `csrc/<package>/WHAT`. Build those first.
+ * The only sure way to get a binary on the first try is to use the exact
+ toolchain as described here for each platform.
+ The good news is that you _will_ get a binary.
  * For building Lua/C modules you need [lua-headers].
- * For building Lua/C modules for Windows you also need [luajit]
- (they need to link to lua51.dll).
- * You will get stripped binaries, with libgcc and libstdc++ statically
- linked, except on OSX (see below).
- * You will also get static libraries, needed for bundling to a fat exe.
+ * For building Lua/C modules on Windows you also need [luajit].
+ * You will get both dynamic libraries and static libraries (stripped).
+ * For C libs, libgcc will be statically linked.
+ * For C++ libs, libgcc and libstdc++ will be dynamically linked.
  * Binaries on Windows are linked to msvcrt.dll.
- * Lua/C modules on Windows are linked to lua51.dll.
- * Windows builds are compatible down to Windows 2000/XP (32bit and 64bit)
- * OSX builds are compatible down to OSX 10.6 (x86 only, 32bit and 64bit)
- * Linux builds are compatible down to glibc 2.7 (use csrc/check-glibc-symver.sh to check)
- * OSX libs set their install_name to `@rpath/<libname>.dylib` and the luajit exe
- sets @rpath to `@loader_path` so that libraries are looked for in the directory of the exe
- * the luajit Linux exe sets rpath=$ORIGIN so that libraries are looked for in the directory of the exe
+ * Lua/C modules on Windows are linked to lua51.dll (which is why you need luajit).
+ * OSX libs set their install_name to `@rpath/<libname>.dylib`
+ * the luajit exe on OSX sets `@rpath` to `@loader_path`
+ * the luajit exe on Linux sets `rpath` to `$ORIGIN`
 
 ## Building on Win32 for Win32
 
-Use `build-mingw32.sh` (that is `sh build-mingw32.sh` from the command line).
-These scripts assume that both MSys and MinGW bin dirs (in this order) are in your PATH.
-Below is the exact list of MinGW packages used to build the current luapower stack:
+	cd csrc/<package>
+	sh build-mingw32.sh
+
+These scripts assume that both MSys and MinGW bin dirs (in this order)
+are in your PATH. Below is the exact list of MinGW packages used to build
+the current luapower stack:
 
 ----
 [binutils-2.23.1-1-mingw32-bin](http://sourceforge.net/projects/mingw/files/MinGW/Base/binutils/binutils-2.23.1/binutils-2.23.1-1-mingw32-bin.tar.lzma)
@@ -69,9 +70,12 @@ Additional tools needed by a few special packages (use them for building for 64b
 
 ## Building on Win64 for Win64
 
-Use `sh build-mingw64.sh`. These scripts assume that both MSys and MinGW-w64
-bin dirs (in this order) are in your PATH. Here's the exact MinGW-w64
-package used to build the current luapower stack:
+	cd csrc/<package>
+	sh build-mingw64.sh
+
+These scripts assume that both MSys and MinGW-w64 bin dirs (in this order)
+are in your PATH. Here's the exact MinGW-w64 package used to build
+the current luapower stack:
 
 ----
 [mingw-w64 4.8.1 (64bit, posix threads, SEH exception model)][mingw-w64-win64]
@@ -80,64 +84,61 @@ package used to build the current luapower stack:
 
 ## Building on Win32 for Win64
 
-MinGW-w64 can be used to cross-compile C libraries for x86_64 from a 32bit
-Windows machine. But MinGW-w64 cannot be used to cross-compile LuaJIT this
-way because LuaJIT requires SEH for the x86_64 target, and there's no
-MinGW-w64 32bit binaries for that.
+This is unsupported.
 
-> Note that in MinGW-w64 terminology, host means target and target means host.
+> __Explanation__: MinGW-w64 can be used to cross-compile C libraries
+for x86_64 from a 32bit Windows machine. But MinGW-w64 cannot be used
+to cross-compile LuaJIT this way because LuaJIT requires SEH
+for the x86_64 target, and there's no MinGW-w64 32bit binaries for that.
+Note that in MinGW-w64 terminology, host means target and target means host.
 
-Because of that limitation, this is not a supported host/target
-cross-compling combination.
+## Building on Linux (x86 native)
 
+On x86:
 
-## Building on Linux for Linux
+	cd csrc/<package>
+	build-linux32.sh
 
-Use `build-linux32.sh` on a 32bit host and `build-linux64.sh` on a 64bit host.
-Careful not to mix them up, or you'll get 32bit binaries in the 64bit
-directory and viceversa.
+On x64:
 
-You need a recent gcc toolchain, which you probably already have.
+	cd csrc/<package>
+	build-linux64.sh
 
-The current luapower stack is built with gcc 4.7.2 from tinycore 5.2 (see below).
+> Careful not to mix them up, or you'll get the wrong binaries in the wrong
+directory.
 
+In general, to get binaries that will work on older Linuxes, you want to
+build on the _oldest_ Linux that you want to support, but use
+the _newest_ gcc that you can install on that.
 
-## Building from Windows or OSX for Linux
+Here's a fast and easy way to build binaries that are compatible
+down to glibc 2.7:
 
-If you are on Windows or OSX and you want to compile for Linux and don't want
-to mess with a cross-compiler, here is a quick method to build Linux binaries
-from a Windows or OSX (or even other Linux) environment.
+  * install an Ubuntu 10.04 on a VM
+  * add the "test toolchain" PPA to aptitude
+  * install the newest gcc and g++ from it
 
-* Grab VirtualBox
-* Grab TinyCore
-	* 32bit: [Core-5.2.iso] (10 MB!)
-	* 64bit: [CorePure64-5.2.iso] (10 MB!)
-* Make a VM, set up like this:
-	* give it 512M RAM or more
-	* add a network card with Internet access
-	* a disk is not necessary, tinycore runs entirely from RAM, if you have enough
-	* enable PAE under System -> Processor
-	* enable VT-x and Nested Paging under System -> Acceleration (if your CPU
-	supports it)
-		* if you are on a 32bit Windows and you want to run a 64bit Linux,
-		your CPU _must_ have hardware acceleration
-* Boot it up
-* Get gear (git and toolchain)
-	* `$ tce-load -wi git compiletc`
-* Get luapower
-	* `$ git clone https://github.com/luapower/luapower-git luapower`
-	* `$ cd luapower`
-* Get and compile luapower packages
-	* `$ ./git clone foo`
-	* `$ cd csrc/foo`
-	* `$ ./build-linux32.sh` or `./build-linux64.sh`, depending on what ISO you used
+Here's the complete procedure on a fresh Ubuntu 10.04:
+
+	sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+	sudo apt-get update
+	sudo apt-get install gcc-4.8 g++-4.8
+	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+	gcc --version
+
+The current luapower stack is built this way and it's the only supported way
+to build it.
 
 
 ## Building on OSX for OSX
 
-Use `build-osx32.sh` to make 32bit x86 binaries and `build-osx64.sh` to make
-64bit x86 binaries. Clang is a cross-compiler, so you can build for 32bit
-on a 64bit OSX and viceversa.
+	cd csrc/<package>
+	build-osx32.sh
+	build-osx64.sh
+
+Clang is a cross-compiler, so you can build for 32bit on a 64bit OSX
+and viceversa.
 
 Current OSX builds are based on clang 5.0 (clang-500.2.279) which comes with
 Xcode 5.0.2, and are done on a 64bit OSX 10.9.
@@ -145,8 +146,8 @@ Xcode 5.0.2, and are done on a 64bit OSX 10.9.
 The generated binaries are compatible down to OSX 10.6 for both 32bit
 and 64bit.
 
-> NOTE: Clang/OSX doesn't (and will not) support static binding of the
-standard C++ library nor of libgcc.
+> NOTE: Clang on OSX doesn't (and will not) support static linking of
+stdc++ or libgcc.
 
 
 [mingw-w64-win64]:    http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/4.8.1/64-bit/threads-posix/seh/x64-4.8.1-release-posix-seh-rev5.7z

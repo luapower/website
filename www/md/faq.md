@@ -57,8 +57,8 @@ run the included luajit command from any directory and on any platform.
 ## What platforms does it run on?
 
   * Windows XP/2000+, 32bit and 64bit
-  * Linux on x86, 32bit and 64bit
-  * OSX 10.6+ on x86, 32bit and 64bit
+  * Linux on x86, 32bit and 64bit, GLIBC 2.7+ (Debian 5+, Ubuntu 8.04+, etc.)
+  * OSX 10.6+ on x86, 32bit and 64bit ([objc] needs OSX 10.7+)
 
 ## How do I compile the binaries?
 
