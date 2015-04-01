@@ -25,31 +25,35 @@ tagline:  how to build binaries
  * the luajit exe on OSX sets `@rpath` to `@loader_path`
  * the luajit exe on Linux sets `rpath` to `$ORIGIN`
 
+
 ## Building on Win32 for Win32
 
 	cd csrc/<package>
 	sh build-mingw32.sh
 
-These scripts assume that both MSys and MinGW bin dirs (in this order)
+These scripts assume that both MSYS and MinGW bin dirs (in this order)
 are in your PATH. Here's the MinGW-w64 package used to build
 the current luapower stack:
 
-[mingw-w64 4.9.2 (32bit, posix threads, DWARF exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/dwarf/i686-4.9.2-release-posix-dwarf-rt_v4-rev2.7z)
+[mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
 
-Additional tools needed by a few special packages (use them for building for 64bit too):
+Additional tools needed by a few special packages. 
+The build scripts assume these are in your PATH too.
+Use them on 64bit Windows too.
 
 ----
-[ragel 6.8 (only for harfbuzz)](http://www.jgoettgens.de/Meine_Bilder_und_Dateien/ragel-vs2012.7z)
 [nasm 2.11 (only for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
 [cmake 2.8.12.2 (only for libjpeg-turbo)](http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip)
+[ragel 6.8 (only for harfbuzz)](http://www.jgoettgens.de/Meine_Bilder_und_Dateien/ragel-vs2012.7z)
 ----
+
 
 ## Building on Win64 for Win64
 
 	cd csrc/<package>
 	sh build-mingw64.sh
 
-These scripts assume that both MSys and MinGW-w64 bin dirs (in this order)
+These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order)
 are in your PATH. Here's the MinGW-w64 package used to build
 the current luapower stack:
 
@@ -91,19 +95,22 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 	sudo apt-get install gcc-4.8 g++-4.8
 	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
 	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
-	gcc --version
-
+	sudo apt-get install nasm cmake ragel
+	
 The current luapower stack is built this way and it's the only supported way
 to build it.
 
 Note that shipping libstdc++ (and its dependency libgcc) with your app
-on Linux is a bad idea if you're using external C libraries that happen to
-dlopen libstdc++ themselves and expect a certain version of it
-(their version, not yours). Such is the case for instance of OpenGL
-with Radeon drivers (google "steam libstdc++" to see the drama). In that
-case it's better to either a) link libstdc++ statically, b) rename libstdc++
-and link to that instead, or c) or not link it at all, and load the host's
-one and hope it's similar to the one that you tested your app against.
+on Linux can bring you tears if you're also using other external libraries 
+that happen to dlopen libstdc++ themselves and expect to get a different 
+version of it than the one that you just loaded. Such is the case with 
+OpenGL with Radeon drivers (google "steam libstdc++" to see the drama). 
+In that case it's better to either 
+a) link libstdc++ statically to each C++ library (the luapower way), or 
+b) link it dynamically, but check at runtime which libstdc++ is newer 
+(the one that you ship or the one on the host), and then ffi.load 
+the newer one _before_  loading that external C library so that _it_ 
+doesn't load the older one.
 
 
 ## Building on OSX for OSX
@@ -124,3 +131,21 @@ and 64bit.
 > NOTE: Clang on OSX doesn't (and will not) support static linking of
 libstdc++ or libgcc.
 
+
+## Building packages in order
+
+You can use [luapower] so that for any package or list of packages 
+(or for all installed packages) you will get the full list of packages 
+that need to be compiled _in the right order_, including 
+all the dependencies:
+
+	./luapower build-order pkg1,...|--all [platform]
+
+[luapower-git] contains a build script that leverages that to actually
+build all those packages:
+
+	csrc/build.sh pkg1,...|--all [platform]
+
+To build all installed packages on the current platform, run:
+
+	csrc/build.sh --all

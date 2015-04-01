@@ -140,6 +140,8 @@ Here's a quick gcc cheat list:
   * `-arch x86_64`        : OSX: create 64bit x86 binaries
   * `-include _memcpy.h`  : Linux on x64: fix the memcpy@GLIBC_2.14 disaster
   (copy _memcpy.h from other packages)
+  * `-D_XOPEN_SOURCE=700` : Linux: for libs that use pthreads if they report 
+  undeclared symbols
 
 #### Dynamic linking with gcc:
 
@@ -149,7 +151,7 @@ Here's a quick gcc cheat list:
   * `-s`                  : strip debug symbols (not for OSX)
   * `-o <output-file>`    : output file path (eg. `-o ../../bin/mingw32/z.dll`)
   * `-L<dir>`             : search path for library dependencies (eg. `-L../../bin/mingw32`)
-  * `-l<libname>`         : library dependency (eg. `-lz` looks for`z.dll`, `libz.so` or `libz.dylib`
+  * `-l<libname>`         : library dependency (eg. `-lz` looks for `z.dll`, `libz.so` or `libz.dylib`
   depending on platform)
   * `-static-libstdc++`   : static linking of the C++ standard library (for g++; not for OSX)
   * `-static-libgcc`      : static linking of the GCC library (for gcc and g++; not for OSX)
