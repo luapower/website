@@ -646,6 +646,7 @@ function action.status()
 		t.status = rlp and 'up' or 'down'
 		t.error = err and err:match'^.-:.-: ([^\n]+)'
 		if rlp then
+			t.os, t.arch = rlp.osarch()
 			t.installed_package_count = glue.count(rlp.installed_packages())
 			t.known_package_count = glue.count(rlp.known_packages())
 			t.load_errors = {}
