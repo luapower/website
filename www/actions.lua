@@ -1,5 +1,5 @@
 
-setfenv(1, require'app')
+package.loaded.grep = nil
 
 local glue = require'glue'
 local lp = require'luapower'
@@ -7,22 +7,40 @@ local pp = require'pp'
 local lfs = require'lfs'
 local tuple = require'tuple'
 local zip = require'minizip'
-local luapower_dir = config'luapower_dir'
-package.loaded.grep = nil
+local lustache = require'lustache'
 local grep = require'grep'
 
-lp.config('luapower_dir', luapower_dir)
-lp.config('servers').linux64 = nil
+local action = {} --action table: {action_name = action_handler}
+local app = {} --HTTP API (to be set at runtime by the loader of this module)
 
 --helpers --------------------------------------------------------------------
 
-function render_main(name, data, env)
+local function readwwwfile(name)
+	return assert(glue.readfile(app.wwwpath(name)))
+end
+
+local function render(name, data, env)
+	lustache.renderer:clear_cache()
+	local function get_partial(_, name)
+		return readwwwfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
+	end
+	local template = readwwwfile(name)
+	env = setmetatable(env or {}, {__index = get_partial})
+	return (lustache:render(template, data, env))
+end
+
+local function render_main(name, data, env)
+	data.grep_enabled = app.grep_enabled
 	return render('main.html',
 		data,
 		glue.merge({
-			content = readfile(name),
+			content = readwwwfile(name),
 		}, env)
 	)
+end
+
+local function escape_filename(s)
+	return s:gsub('[/\\%?%%%*%:|"<> ]', '-')
 end
 
 local function rel_time(s)
@@ -76,17 +94,17 @@ local function md_refs()
 	for mod in pairs(lp.modules()) do
 		addref(mod)
 	end
-	for file in lfs.dir(wwwpath'md') do
+	for file in lfs.dir(app.wwwpath'md') do
 		if file:find'%.md$' then
 			addref(file:match'^(.-)%.md$')
 		end
 	end
-	table.insert(t, glue.readfile(wwwpath'ext-links.md'))
+	table.insert(t, readwwwfile'ext-links.md')
 	return table.concat(t, '\n')
 end
 
 local function render_docfile(infile)
-	local outfile = wwwpath('docs/'..escape_filename(infile)..'.html')
+	local outfile = app.wwwpath('.cache/'..escape_filename(infile)..'.html')
 	if older(outfile, infile) then
 		local s1 = glue.readfile(infile)
 		local s2 = md_refs()
@@ -101,7 +119,7 @@ local function render_docfile(infile)
 end
 
 local function www_docfile(doc)
-	local docfile = wwwpath('md/'..doc..'.md')
+	local docfile = app.wwwpath('md/'..doc..'.md')
 	if not lfs.attributes(docfile, 'mtime') then return end
 	return docfile
 end
@@ -114,7 +132,7 @@ local function action_docfile(docfile)
 	data.tagline = dtags.tagline
 	data.doc_mtime = nil --TODO: use git on the _website repo
 	data.doc_mtime_ago = data.doc_mtime and timeago(data.doc_mtime)
-	out(render_main('doc.html', data))
+	app.out(render_main('doc.html', data))
 end
 
 ------------------------------------------------------------------------------
@@ -250,9 +268,7 @@ local function package_icons(ptype, platforms, small)
 end
 
 local function package_info(pkg, doc)
-	local lp = require'luapower'
-	local glue = require'glue'
-
+	lp.config('allow_update_db', false)
 	doc = doc or pkg
 	local t = {package = pkg}
 	t.type = lp.package_type(pkg)
@@ -427,7 +443,6 @@ local function package_info(pkg, doc)
 		for platform in pairs(platforms) do
 			local pext = lp.module_requires_packages_for('module_requires_loadtime_ext', mod, pkg, platform, true)
 			local pall = lp.module_requires_packages_for('module_requires_loadtime_all', mod, pkg, platform, true)
-			--pp(mod, pkg, platform, pall)
 			local pt = {}
 			for p in pairs(pall) do
 				pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
@@ -537,7 +552,7 @@ local function package_info(pkg, doc)
 	return t
 end
 
-function action_package(pkg, doc, what)
+local function action_package(pkg, doc, what)
 	local t = package_info(pkg, doc)
 	if what == 'info' then
 		t.info = true
@@ -552,10 +567,10 @@ function action_package(pkg, doc, what)
 			t.doc_mtime_ago = t.doc_mtime and timeago(t.doc_mtime)
 		end
 	end
-	out(render_main('package.html', t))
+	app.out(render_main('package.html', t))
 end
 
-function action_home()
+local function action_home()
 	local data = {}
 	local pt = {}
 	data.packages = pt
@@ -599,7 +614,7 @@ function action_home()
 		local ext = pl:find'linux' and '.tar.gz' or '.zip'
 		local name = pl..ext
 		local file = 'luapower-'..name
-		local size = lfs.attributes(wwwpath(file), 'size')
+		local size = lfs.attributes(app.wwwpath(file), 'size')
 		local size = string.format('%d MB', size / 1024 / 1024)
 		if size then
 			table.insert(t, {
@@ -611,28 +626,7 @@ function action_home()
 		end
 	end
 
-	out(render_main('home.html', data))
-end
-
-function action.default(s, ...)
-	if not s then
-		return action_home()
-	elseif lp.installed_packages()[s] then
-		return action_package(s, nil, ...)
-	elseif lp.docs()[s] then
-		local pkg = lp.doc_package(s)
-		return action_package(pkg, s, ...)
-	elseif lp.modules()[s] then
-		local pkg = lp.module_package(s)
-		return action_package(pkg, nil, s, ...)
-	else
-		local docfile = www_docfile(s)
-		if docfile then
-			return action_docfile(docfile, ...)
-		else
-			redirect'/'
-		end
-	end
+	app.out(render_main('home.html', data))
 end
 
 --status page ----------------------------------------------------------------
@@ -642,7 +636,7 @@ function action.status()
 	for platform, server in glue.sortedpairs(lp.config'servers') do
 		local ip, port = unpack(server)
 		local t = {platform = platform, ip = ip, port = port}
-		local rlp, err = lp.connect(platform, nil, connect)
+		local rlp, err = lp.connect(platform, nil, app.connect)
 		t.status = rlp and 'up' or 'down'
 		t.error = err and err:match'^.-:.-: ([^\n]+)'
 		if rlp then
@@ -660,7 +654,7 @@ function action.status()
 		end
 		table.insert(statuses, t)
 	end
-	out(render_main('status.html', {statuses = statuses}))
+	app.out(render_main('status.html', {statuses = statuses}))
 end
 
 --grepping through the source code and documentation -------------------------
@@ -678,28 +672,29 @@ function action.grep(s)
 		results.message = #results.results > 0 and '' or 'Nothing found.'
 		results.searched = true
 	end
-	out(render_main('grep.html', results))
+	app.out(render_main('grep.html', results))
 end
 
 --update via github ----------------------------------------------------------
 
 function action.github(...)
-	if not POST then return end
-	local repo = POST.repository.name
+	if not app.POST then return end
+	local repo = app.POST.repository.name
 	if not repo then return end
 	if not lp.installed_packages()[repo] then return end
-	os.exec(luapower.git(repo, 'pull')) --TODO: this is blocking the server!!!
-	luapower.update_db(repo) --TODO: this is blocking the server!!!
+	os.exec(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
+	lp.update_db(repo, nil, 'force') --TODO: this is blocking the server!!!
 end
 
 --dependency lister for git clone --------------------------------------------
 
-function action.deps(pkg)
-	setmime'txt'
+action['deps.txt'] = function(pkg)
+	app.setmime'txt'
 	local deps = lp.package_requires_packages_for(
 		'module_requires_loadtime_all', pkg, nil, true)
 	for k in glue.sortedpairs(deps) do
-		print(k)
+		app.out(k)
+		app.out'\n'
 	end
 end
 
@@ -707,14 +702,14 @@ end
 
 function action.update_db(package)
 	lp.clear_cache(package)
-	lp.update_db(package)
+	lp.update_db(package, nil, 'force')
 	lp.save_db()
-	print'ok'
+	app.out'ok\n'
 end
 
 --creating rockspecs ---------------------------------------------------------
 
-function action.rockspec(pkg)
+local function action_rockspec(pkg)
 	pkg = pkg:match'^luapower%-([%w_]+)'
 	local dtags = lp.doc_tags(pkg, pkg)
 	local tagline = dtags and dtags.tagline or pkg
@@ -776,12 +771,46 @@ function action.rockspec(pkg)
 		},
 		--copy_directories = {},
 	}
-	setmime'txt'
+	app.setmime'txt'
 	for k,v in glue.sortedpairs(t) do
-		out(k)
-		out' = '
-		out(pp.format(v, '   '))
-		out'\n'
+		app.out(k)
+		app.out' = '
+		app.out(pp.format(v, '   '))
+		app.out'\n'
 	end
 end
+
+--action dispatch ------------------------------------------------------------
+
+function action.default(s, ...)
+	if not s then
+		return action_home()
+	elseif lp.installed_packages()[s] then
+		return action_package(s, nil, ...)
+	elseif lp.docs()[s] then
+		local pkg = lp.doc_package(s)
+		return action_package(pkg, s, ...)
+	elseif lp.modules()[s] then
+		local pkg = lp.module_package(s)
+		return action_package(pkg, nil, s, ...)
+	elseif s:find'%.rockspec$' then
+		local pkg = s:match'^(.-)%.rockspec$'
+		if not lp.installed_packages()[pkg] then
+			app.redirect'/'
+		end
+		action_rockspec(pkg)
+	else
+		local docfile = www_docfile(s)
+		if docfile then
+			return action_docfile(docfile, ...)
+		else
+			app.redirect'/'
+		end
+	end
+end
+
+return {
+	action = action,
+	app = app,
+}
 

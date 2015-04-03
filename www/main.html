@@ -66,10 +66,12 @@
 						<a class=github_label href="{{github_url}}">{{github_title}}<i class="github_icon fa fa-github"></i></a>
 						{{/github_url}}
 					</td>
+					{{#grep_enabled}}
 					<td align=left valign=middle width=190>
 						<input class=search_input type=text value="{{{search}}}" placeholder="grep in sources">
 						<div class="fa fa-search search_icon"></div>
 					</td>
+					{{/grep_enabled}}
 				</tr>
 			</table>
 		</td>

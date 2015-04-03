@@ -4,7 +4,7 @@ body { background: #151515; color: #bbb; }
 
 strong { font-weight: 600; }
 
-a, h1, h2, h3 { color: #fff; } #docnav a { color: #bbb; }
+a, h1, h2, h3, h4 { color: #fff; } #docnav a { color: #bbb; }
 a:visited { color: #eee; }
 a:hover { color: #fff; }
 a.external_link { color: #f33; }

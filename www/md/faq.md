@@ -12,8 +12,14 @@ on simplicity and portability, and staying out of your way.
 
 ## What is different about it?
 
-Luapower is the platform that allows you to have your cake and eat it too:
-it solves all the problems that package managers are supposed to solve
+Luapower works on all major desktop systems, old and new, out-of-the-box.
+Backward-compatible binaries are included for all platforms, including Linux.
+C sources are always included (there's no such thing as an external
+dependency), the build toolchain is specified for each platform and
+contains only easy-to-get open source components, so building binaries
+is no longer a hit-or-miss experience.
+
+Luapower solves all the problems that package managers are supposed to solve
 (and more), but with none of the bureaucracy that is usually imposed
 on module writers. With luapower you don't have to write manifest files to
 describe your packages, you don't have to declare dependencies (except in a
@@ -37,9 +43,16 @@ cloned overlaid like that, the result is a self-contained, runnable
 luajit installation. Binaries for all platforms are included directly
 into the repo's master branch, and `luajit` is a shell script which
 selects the right luajit executable for your platform at runtime,
-and sets up the environment so that modules and other dependencies
-are looked for in the luapower directory first, effectively isolating the
-installation from other libraries that might be present in the host system.
+and sets up the environment so that modules and other dependencies are
+looked for in the luapower directory first, effectively isolating
+the installation from other libraries that might be present
+in the host system. C sources and build scripts are in there too
+in separate directories.
+
+This results in a self-contained, version-controled,
+run-everywhere, build-anytime LuaJIT installation in which packages can
+be added, removed, upgraded and downgraded at will.
+
 
 ## How do I install it?
 
@@ -58,7 +71,7 @@ run the included luajit command from any directory and on any platform.
 
   * Windows XP/2000+, 32bit and 64bit
   * Linux on x86, 32bit and 64bit, GLIBC 2.7+ (Debian 5+, Ubuntu 8.04+, etc.)
-  * OSX 10.6+ on x86, 32bit and 64bit ([objc] needs OSX 10.7+)
+  * OSX 10.6+, 32bit and 64bit ([objc] needs OSX 10.7+)
 
 ## How do I compile the binaries?
 
@@ -171,59 +184,50 @@ There isn't one. Package information is computed on-the-fly
 using the [luapower] module (which also has a command-line interface,
 so check it out).
 
-## Why put code on Public Domain?
+## Why is your code Public Domain?
 
-Because I want to [set my code free](http://unlicense.org).
-I don't support the copyright law, and you probably
+Because I don't support copyright law, and you probably
 [shouldn't either][against ip].
 
 [against ip]:  http://www.stephankinsella.com/publications/#againstip
 
-## Where can I get more help?
+## Where can I get help?
 
-Go to the [luapower forum](http://luapower.org),
-which incidentally, is also the place where you can share your plans for
-world domination. Any discussion is welcome here, there's no such thing
-as a stupid question.
+Go to the [luapower forum](http://luapower.org) and ask away.
+There's no such thing as a stupid question there, any discussion is welcome.
+Incidentally, that is also the place where you can share your plans
+for world domination, so go and introduce yourself now.
 
 ## How can I help?
 
-Go on the [forum](http://luapower.org) and tell us your luapower love/hate
-story. Your feedback will help make it better. Another way
-to help is to make a luapower package and share it with the world.
+Making new packages, reporting bugs, writing docs, sending pull requests,
+are great ways to help luapower grow, and probably make some friends
+in the process.
+
+If you have a great idea, or you would rather make things differently,
+just go to the [forum](http://luapower.org) and say it.
+Luapower is at an early stage, so now is a good time to influence its
+direction.
 
 ## Who are you?
 
 I'm [Cosmin Apreutesei][cosmin], a programmer from Bucharest.
 
-## Why are you doing this?
-
-This is my platform for world domination and I want to share it.
-
-Many years ago I hit a plateau with the technologies I was using, mainly
-Delphi and C++. I had many ideas for some [great apps], but the tools I was
-using were holding me back. So I started the search for my next programming
-language. I knew that hi-level languages were friendly to my brain but
-unfriendly to my computer, and yet the low-level ones where just the reverse.
-There was no hammer that was good at both ends.
-And then I found Lua, and was hooked. I knew there was a lot of code
-to assemble, and a lot more to write, to turn it into something
-useful, but there was no turning back. Lua had a good escape-hatch to C,
-for the moments where I would find myself losing the bet with the CPU,
-so I wasn't that worried about speed. And then came LuaJIT, and later on,
-LuaJIT2 and the ffi, and I started [playing around][winapi] with it one
-night, and from there, things got out of hand, and after 2 years of
-on-and-off module writing, luapower was born.
-
-[great apps]: http://www.youtube.com/watch?v=yJDv-zdhzMY
-
 ## Where are you going with this?
 
 My goal is to create a cross-platform environment for creating
-the next generation of desktop apps that run closest-to-identically
+the next generation of desktop apps that run close-to-identically
 on every platform, with pixel-perfect vector-graphics including
 text shaping and rendering, complex interactivity beyond standard
-widget systems, peer-to-peer communication, full usage of processes
-and threads, live self-updating, and access to webcams and microphones
-and at the minimum.
+widget systems, peer-to-peer communication, a multi-threading/multi-process
+architecture, and access to communication peripherals like webcams
+and tablets.
+
+This requires a large number of high-quality packages with
+extensive APIs that are well below the "scripting" level of abstraction.
+Achieving this in an open source environment requires a model for development
+and collaboration with lower friction and a higher level of specificity
+than what current module distributions provide.
+
+Luapower is an attempt to create that model.
 

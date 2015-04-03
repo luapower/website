@@ -5,9 +5,10 @@
 local glue = require'glue'
 local lfs = require'lfs'
 local pp = require'pp'
-local cjson = require'cjson'
-local lustache = require'lustache'
 local ffi = require'ffi'
+local actions = require'actions'
+local luapower = require'luapower'
+local cjson = require'cjson'
 local ngx = ngx
 
 cjson.encode_sparse_array(false, 0, 0) --encode all sparse arrays
@@ -108,45 +109,13 @@ end
 redirect = ngx.redirect
 sleep = ngx.sleep
 
---json API -------------------------------------------------------------------
-
-function json(v)
-	if type(v) == 'table' then
-		return cjson.encode(v)
-	elseif type(v) == 'string' then
-		return cjson.decode(v)
-	else
-		error('invalid arg '..type(v))
-	end
-end
-
 --filesystem API -------------------------------------------------------------
-
-function escape_filename(s)
-	return s:gsub('[/\\%?%%%*%:|"<> ]', '-')
-end
 
 function wwwpath(file) --file -> path (if exists)
 	local www = config'www_dir'
 	if not file then return www end
 	assert(not file:find('..', 1, true))
 	return www..'/'..file
-end
-
-function readfile(name)
-	return assert(glue.readfile(wwwpath(name)))
-end
-
---template API ---------------------------------------------------------------
-
-function render(name, data, env)
-	lustache.renderer:clear_cache()
-	local function get_partial(_, name)
-		return readfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
-	end
-	local template = readfile(name)
-	env = setmetatable(env or {}, {__index = get_partial})
-	return (lustache:render(template, data, env))
 end
 
 --socket API -----------------------------------------------------------------
@@ -164,7 +133,17 @@ wait = ngx.thread.wait
 
 --action API -----------------------------------------------------------------
 
-action = {} --{name = handler}
+glue.update(actions.app, {
+	setmime = setmime,
+	out = out,
+	print = print,
+	redirect = redirect,
+	wwwpath = wwwpath,
+	grep_enabled = true,
+	connect = connect,
+})
+
+luapower.config('luapower_dir', config'luapower_dir') --setup luapower
 
 function run()
 	--init global and request contexts
@@ -174,17 +153,16 @@ function run()
 	setfenv(pp.pp, __index) --replace _G for pp.pp
 	__index.coroutine = require'coroutine' --nginx for windows doesn't include it
 	init_request()
-	--these are loaded at runtime because they load the 'app' module back.
-	require'actions'
+	actions.app.POST = POST
 	--decide on the action: unknown actions go to the default action.
 	local act = ARGS[1]
-	if not act or not action[act] or act == 'default' then
+	if not act or not actions.action[act] or act == 'default' then
 		act = 'default'
 	else
 		table.remove(ARGS, 1)
 	end
 	--find and run the action
-	local handler = action[act]
+	local handler = actions.action[act]
 	handler(unpack(ARGS))
 	ngx.print(table.concat(outbuf))
 end
