@@ -1,37 +1,23 @@
 HIGH-PRIORITY
 ==============================================================================
-22.03 - bundle as tar.gz for linux, zip for the rest
-		- Lua references column on the homepage made smaller
-
-TODO
-- fix glue.memoize
-- x64 winapi hanging
-- libgit2 git.open() windows problem
-- libgit2 git.config_find_*() linux problem
-- test ./git on windows again
 
 BUGS
+- libgit2 git.open() windows problem
+- libgit2 git.config_find_*() linux problem
 - giflib crashes with too-small strings
-- get rid of amanithvg (wants msvcr100)
 - expat_test takes too long
 - libpng_test fails -- save not implemented
-- not testing anything (but fast and don't crash):
-	bitmap_test 
-	freetype_test
-	fribidi_test
-	harfbuzz_test
-	lexer_test
 - svg_parser_demo doesn't work anymore (CairoSGPanel?)
 
-- run all demos and tests on:
+luapower day
+	- run tests and record the status and errors in luapower_db
+
+website day
+	- make it static!
+
+- run all demos on:
 	- on windows 64
 		- ?
-	- on osx
-		- install OSX 10.6 or 10.7 ?
-		- ?
-	- on linux
-		- ?
-	- run tests and record the status and errors in luapower_db
 
 - git versioning day
 	- pinning dependencies: git --all version > .versions; git clone-versions < .versions
@@ -47,6 +33,12 @@ BUGS
 		- gambiarra
 		- luaunit
 		- shake even?
+	- not testing anything (but fast and don't crash):
+		bitmap_test 
+		freetype_test
+		fribidi_test
+		harfbuzz_test
+		lexer_test
 
 - API cleanup day
 	- unprotect(pcall()) all I/O-bearing functions (glue.readfile, jpeg/png/gif load/save) 

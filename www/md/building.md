@@ -37,7 +37,7 @@ the current luapower stack:
 
 [mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
 
-Additional tools needed by a few special packages. 
+Additional tools needed by a few special packages.
 The build scripts assume these are in your PATH too.
 Use them on 64bit Windows too.
 
@@ -96,20 +96,20 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
 	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
 	sudo apt-get install nasm cmake ragel
-	
+
 The current luapower stack is built this way and it's the only supported way
 to build it.
 
 Note that shipping libstdc++ (and its dependency libgcc) with your app
-on Linux can bring you tears if you're also using other external libraries 
-that happen to dlopen libstdc++ themselves and expect to get a different 
-version of it than the one that you just loaded. Such is the case with 
-OpenGL with Radeon drivers (google "steam libstdc++" to see the drama). 
-In that case it's better to either 
-a) link libstdc++ statically to each C++ library (the luapower way), or 
-b) link it dynamically, but check at runtime which libstdc++ is newer 
-(the one that you ship or the one on the host), and then ffi.load 
-the newer one _before_  loading that external C library so that _it_ 
+on Linux can bring you tears if you're also using other external libraries
+that happen to dlopen libstdc++ themselves and expect to get a different
+version of it than the one that you just loaded. Such is the case with
+OpenGL with Radeon drivers (google "steam libstdc++" to see the drama).
+In that case it's better to either
+a) link libstdc++ statically to each C++ library (the luapower way), or
+b) link it dynamically, but check at runtime which libstdc++ is newer
+(the one that you ship or the one on the host), and then ffi.load
+the newer one _before_  loading that external C library so that _it_
 doesn't load the older one.
 
 
@@ -131,12 +131,17 @@ and 64bit.
 > NOTE: Clang on OSX doesn't (and will not) support static linking of
 libstdc++ or libgcc.
 
+> NOTE: For Lion and above users, Apple provides a package called
+"Command Line Tools for Xcode" which can be downloaded from Apple's
+developer site (free registration required). You can _try_ to build
+luapower with it. If you do, please report back on your experience
+and maybe we'll make this a supported toolchain.
 
 ## Building packages in order
 
-You can use [luapower] so that for any package or list of packages 
-(or for all installed packages) you will get the full list of packages 
-that need to be compiled _in the right order_, including 
+You can use [luapower] so that for any package or list of packages
+(or for all installed packages) you will get the full list of packages
+that need to be compiled _in the right order_, including
 all the dependencies:
 
 	./luapower build-order pkg1,...|--all [platform]
