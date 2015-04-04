@@ -666,7 +666,7 @@ function action.grep(s)
 		results.message = 'Type two or more non-space characters and not '..
 			table.concat(glue.keys(disallow), ', ')..'.'
 	else
-		sleep(1) --sorry about this
+		app.sleep(1) --sorry about this
 		glue.update(results, grep(s, 10))
 		results.title = 'grepping for '..(s or '')
 		results.message = #results.results > 0 and '' or 'Nothing found.'
