@@ -140,6 +140,7 @@ glue.update(actions.app, {
 	redirect = redirect,
 	wwwpath = wwwpath,
 	grep_enabled = true,
+	sleep = sleep,
 	connect = connect,
 })
 
