@@ -8,16 +8,10 @@ BUGS
 - expat_test takes too long
 - libpng_test fails -- save not implemented
 - svg_parser_demo doesn't work anymore (CairoSGPanel?)
+- disposing objc classes with subclasses crashes
 
 luapower day
 	- run tests and record the status and errors in luapower_db
-
-website day
-	- make it static!
-
-- run all demos on:
-	- on windows 64
-		- ?
 
 - git versioning day
 	- pinning dependencies: git --all version > .versions; git clone-versions < .versions
@@ -34,14 +28,14 @@ website day
 		- luaunit
 		- shake even?
 	- not testing anything (but fast and don't crash):
-		bitmap_test 
+		bitmap_test
 		freetype_test
 		fribidi_test
 		harfbuzz_test
 		lexer_test
 
 - API cleanup day
-	- unprotect(pcall()) all I/O-bearing functions (glue.readfile, jpeg/png/gif load/save) 
+	- unprotect(pcall()) all I/O-bearing functions (glue.writefile, jpeg/png/gif load/save)
 
 - documentation cleanup day
 	- use of headings
