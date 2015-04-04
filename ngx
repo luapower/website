@@ -5,7 +5,7 @@
 die() { echo "$@" >&2; exit 1; }
 
 # everything is done relative to this script's parent dir.
-cd "$(dirname "$0")/.." || die "Could not cd to \"$(dirname "$0")/..\"."
+cd "$(dirname "$0")" || die "Could not cd to \"$(dirname "$0")\"."
 
 OPENRESTY_DIR="$PWD/openresty"; [ -d "$OPENRESTY_DIR" ] || die "Directory \"$OPENRESTY_DIR\" not found."
 LUAPOWER_DIR="$PWD/luapower";   [ -d "$LUAPOWER_DIR" ]  || die "Directory \"$LUAPOWER_DIR\" not found."
