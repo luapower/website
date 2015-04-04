@@ -1,8 +1,11 @@
 #!/bin/sh
 # make daily bundles for each platform, for downloading from the homepage.
 
-outdir="$(dirname "$0")"; cd "$outdir" || exit 1; outdir="$PWD/www"
-cd ../.. && [ -d luapower ] || exit 1
+die() { echo "$@" >&2; exit 1; }
+cd "$(dirname "$0")" || die "Could not cd to script dir"
+[ -d luapower ] || die "Directory \"$PWD/luapower\" not found"
+outdir="$PWD/www"; [ -d "$outdir" ] || die "Directory \"$outdir\" not found"
+which zip >/dev/null || die "zip not found."
 
 files() {
 	(platform="$1"
