@@ -140,7 +140,7 @@ Here's a quick gcc cheat list:
   * `-arch x86_64`        : OSX: create 64bit x86 binaries
   * `-include _memcpy.h`  : Linux on x64: fix the memcpy@GLIBC_2.14 disaster
   (copy _memcpy.h from other packages)
-  * `-D_XOPEN_SOURCE=700` : Linux: for libs that use pthreads if they report 
+  * `-D_XOPEN_SOURCE=700` : Linux: for libs that use pthreads if they report
   undeclared symbols
 
 #### Dynamic linking with gcc:
@@ -261,7 +261,7 @@ The luapower website is composed of:
   dependency information and run automated tests.
 
 If you want to put this together but get stuck on the details,
-ask away on the [forum](https://luapower.org), we'll help you
+ask away on the [forum](/forum), we'll help you
 seeing it through.
 
 

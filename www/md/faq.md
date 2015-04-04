@@ -193,7 +193,7 @@ Because I don't support copyright law, and you probably
 
 ## Where can I get help?
 
-Go to the [luapower forum](http://luapower.org) and ask away.
+Go to the [luapower forum](/forum) and ask away.
 There's no such thing as a stupid question there, any discussion is welcome.
 Incidentally, that is also the place where you can share your plans
 for world domination, so go and introduce yourself now.
@@ -205,7 +205,7 @@ are great ways to help luapower grow, and probably make some friends
 in the process.
 
 If you have a great idea, or you would rather make things differently,
-just go to the [forum](http://luapower.org) and say it.
+just go to the [forum](/forum) and say it.
 Luapower is at an early stage, so now is a good time to influence its
 direction.
 
