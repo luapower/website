@@ -346,8 +346,9 @@ $(function() {
 	// mark all external links
 	$('a[href]').each(function() {
 		var url = $(this).attr('href')
-		if (url.match(/\w+:\/\//))
-			$(this).addClass('external_link')
+		if (url.match(/\w+:\/\//)) {
+			$(this).addClass('external_link').attr('target', '_blank')
+		}
 	})
 
 	// make headings clickable
