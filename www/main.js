@@ -343,7 +343,7 @@ $(function() {
 
 $(function() {
 
-	// mark all external links
+	// mark all external links and make them open in a new window
 	$('a[href]').each(function() {
 		var url = $(this).attr('href')
 		if (url.match(/\w+:\/\//)) {

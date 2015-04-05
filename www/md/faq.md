@@ -94,16 +94,15 @@ to create self-contained single-exe apps on any platform.
 
 Yes. Almost all packages have a non-viral, open-source license, and many
 are in public domain. If in doubt, check the package table on the homepage
-(click on the license column to sort by license).
-
-Luapower itself is in Public Domain.
+(click on the license column to sort by license). Luapower itself,
+which includes the git wrapper, the build scripts, and the luapower
+module are all in Public Domain.
 
 ## Can I use it with plain Lua?
 
 Partially, yes. All Lua modules should work with Lua 5.1 just fine,
 and some of them might even work with Lua 5.2 out-of-the-box.
-Lua/C modules should work with Lua 5.1 (on Windows, the Lua dll must be
-(re)named `lua51.dll`).
+Lua/C modules should work with Lua 5.1 (with which LuaJIT is ABI-compatible).
 
 You can also compile stock Lua, bundle it as a luapower package
 and use that as your runtime instead of luajit.
@@ -183,6 +182,14 @@ and maturity, usually in that order.
 There isn't one. Package information is computed on-the-fly
 using the [luapower] module (which also has a command-line interface,
 so check it out).
+
+## What's with the weird package versions?
+
+A package's version is the result of `git describe --tags --long --always`,
+which returns a string of form `tag-N-hash` where `tag` is the latest tag,
+`N` is the number of commits after that tag, and `hash` is the hash prefix
+of the last commit. This way versioning is unambiguous, not prone
+to human error, and doesn't require maintenance.
 
 ## Why is your code Public Domain?
 
