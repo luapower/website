@@ -36,6 +36,11 @@ These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
 package information and build the package database and this website.
 
+Check out the templates for:
+
+  * [Lua module](https://github.com/luapower/template-lua)
+  * [Lua+ffi module](https://github.com/luapower/template-lua-ffi)
+
 ### The docs
 
 In order to appear on the website, docs should start with a yaml header:

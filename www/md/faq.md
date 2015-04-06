@@ -85,6 +85,10 @@ Just make sure you have a compatible [build toolchain][building] installed,
 and that you build the dependencies first, as listed on the website (or
 in the WHAT files).
 
+To build many packages (or _all_ packages) at once, including all their
+dependencies _in the right order_, use `sh csrc/build.sh`
+(note: requires [luapower]).
+
 ## Can I make single-exe apps with it?
 
 Yes. Static libraries are included for all C packages, and can be
