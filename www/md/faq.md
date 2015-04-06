@@ -5,10 +5,11 @@ tagline: questions & answers
 
 ## What is luapower?
 
-Luapower is a module distribution for [LuaJIT](http://luajit.org/luajit.html),
-the just-in-time compiler of the [Lua programming language](http://lua.org/about.html).
-More than that, it is a way of deploying and sharing Lua modules. It focuses
-on simplicity and portability, and staying out of your way.
+Luapower is a free and open source module distribution for
+[LuaJIT](http://luajit.org/luajit.html), the just-in-time compiler
+of the [Lua programming language](http://lua.org/about.html).
+More than that, it is a way of deploying and sharing Lua modules.
+It focuses on simplicity and portability, and staying out of your way.
 
 ## What is different about it?
 
