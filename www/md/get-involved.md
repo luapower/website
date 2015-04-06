@@ -14,6 +14,13 @@ There are 5 types of luapower packages:
   * __C module__: binary dependency or support library for other module; source and binary included
   * __other__: none of the above: media/support files, etc.
 
+
+### TL;dr: Template packages
+
+  * [Lua module](https://github.com/luapower/template-lua)
+  * [Lua+ffi module](https://github.com/luapower/template-lua-ffi)
+
+
 ### Directory layout
 
   * main module: `foo.lua`
@@ -35,11 +42,6 @@ There are 5 types of luapower packages:
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
 package information and build the package database and this website.
-
-Check out the templates for:
-
-  * [Lua module](https://github.com/luapower/template-lua)
-  * [Lua+ffi module](https://github.com/luapower/template-lua-ffi)
 
 ### The docs
 
