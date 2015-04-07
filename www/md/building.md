@@ -17,8 +17,7 @@ tagline:  how to build binaries
  * For building Lua/C modules you need [lua-headers].
  * For building Lua/C modules on Windows you also need [luajit].
  * You will get both dynamic libraries and static libraries (stripped).
- * For C libs, libgcc will be statically linked.
- * For C++ libs, libgcc and libstdc++ will be dynamically linked.
+ * libgcc and libstdc++ will be statically linked, except on OSX.
  * Binaries on Windows are linked to msvcrt.dll.
  * Lua/C modules on Windows are linked to lua51.dll (which is why you need luajit).
  * OSX libs set their install_name to `@rpath/<libname>.dylib`

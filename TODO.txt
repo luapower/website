@@ -1,11 +1,6 @@
 HIGH-PRIORITY
 ==============================================================================
 
-VPS DAY
--------
-install ssl cert
-
-
 BUGS
 - libgit2 git.open() windows problem
 - libgit2 git.config_find_*() linux problem
@@ -18,20 +13,29 @@ BUGS
 luapower day
 	- run tests and record the status and errors in luapower_db
 
-- git wrapper day
-	- git release 2.0 ==> git --all ver > _/git/2.0.release
-	- git checkout 2.0 <== cat _/git/2.0.release | while read pkg ver; do ./git pkg checkout hash
-	- git pkg checkout 2.0
-	- git clone --all
-	- git clone pkg1 url2
-	- git add pkg url
-	- git add pkg origin
-	- pinning dependencies: git --all version > .versions; git clone-versions < .versions
-	- git clone <package>
+- multigit day
+	- record and checkout releases (snapshots)
+		- git release 2.0 ==> git --all ver > _/git/2.0.release
+		- git checkout 2.0 <== cat _/git/2.0.release | while read pkg ver; do ./git pkg checkout hash-part
+
+	- port luapower-git to multigit
+		- change homepage:
+			git clone https://github.com/capr/multigit luapower
+			luapower/mg clone https://github.com/luapower/multigit
+			luapower/mg clone-all
+		- change download page:
+			./mg clone all-deps+package
+		- change get-involved
+			- change excludefile section
+		- change luapower-git page...
+		- write wiki doc for multigit
+
+	- clone dependencies
+
 		- _git/<origin>.depurl <- http://luapower.com/deps/
 		- `wget http://luapower.com/deps/<package>`
 		- git clone-only pkg
-	- faq entry: why no semantic versioning?
+
 
 - unit testing day
 	- replace 'unit' with a proper unit testing library
