@@ -306,7 +306,7 @@ function set_lights(on) {
 		on = get_lights_state()
 
 	jQuery('#lights_css').attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
-	jQuery('#force_repaint').html(' ')
+	jQuery('#force_repaint').addClass('dummy').removeClass('dummy')
 	set_lights_state(on)
 	set_lights_button_text(on)
 }
@@ -375,7 +375,7 @@ $(function() {
 
 	// make faq button red when on faq page
 	if (location.pathname == '/faq')
-		$('.faq_btn').css({'background-color': '#c00'}).find('a').css('color', '#fff')
+		$('.faq_btn').css({'background-color': '#e4741f'}).find('a').css('color', '#fff')
 
 })
 

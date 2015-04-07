@@ -197,8 +197,8 @@ warn {
 .topbar a { color: #ccc; font-weight: 400; }
 .topbar a:visited { color: #ccc; }
 .topbar a:hover, .topbar a:visited:hover { color: #eee; }
-.topbar a.external_link { color: #f33; }
-.topbar a.external_link:visited { color: #f66; }
+.topbar a.external_link { color: #e4741f; }
+.topbar a.external_link:visited { color: #e4741f; }
 .topbar a.external_link:hover { color: #fff; }
 
 .topbar_content {

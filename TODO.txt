@@ -10,35 +10,50 @@ BUGS
 - svg_parser_demo doesn't work anymore (CairoSGPanel?)
 - disposing objc classes with subclasses crashes
 
-luapower day
-	- run tests and record the status and errors in luapower_db
+HOT TODO
 
-- multigit day
-	- record and checkout releases (snapshots)
-		- git release 2.0 ==> git --all ver > _/git/2.0.release
-		- git checkout 2.0 <== cat _/git/2.0.release | while read pkg ver; do ./git pkg checkout hash-part
+- multigit
+	- allow multiple origins? UI/complexity issues? forking/pull-request scenarios?
+	- release update to specified lockfile; release checkout from specified lockfile?
+	- mgit bump <- bump the version tag (signal incompatible change)
+	- releases are actually called "locks" (i.e. Gemfile.lock)
+	- getting stuff to work is the default - upgrading to the newest version needs work.
+	- Q: multiple release checkouts to different directories - is it possible?
+		- make zip bundles based on release checkouts
+	- write the README for multigit
+	- plugins? .multigit/*.sh --> pluginname()
+		- mg build pkg [platform] <- invoke luapower for build order
+		- mg push pkg
 
-	- port luapower-git to multigit
-		- change homepage:
-			git clone https://github.com/capr/multigit luapower
-			luapower/mg clone https://github.com/luapower/multigit
-			luapower/mg clone-all
-		- change download page:
-			./mg clone all-deps+package
-		- change get-involved
-			- change excludefile section
-		- change luapower-git page...
-		- write wiki doc for multigit
 
-	- clone dependencies
+- increase transparency
+	- version all packages
+	- create issues
+	- bump versions when APIs change
+	- clear histories and start committing everything with messages
+		- so we can put back the news section
 
-		- _git/<origin>.depurl <- http://luapower.com/deps/
-		- `wget http://luapower.com/deps/<package>`
-		- git clone-only pkg
+- download buttons
+	- put the bundle script in cron!
+	- version them with full date!
+	- make the bundle script automatically delete old versions
+	- make the homepage choose latest version based on files' mtime
+	- keep old versions around (80M * 6 = 500M / day -- how many days can we keep?)
+	- make daily lock files
 
+- publishing packages
+	- mg publish -> pull request on `multigit` ->
+	- web hook or polling?
+
+- luapower day
+	- document default license (public domain)
+	- add license tag to pkg.md ?
+	- parse license from pkg.lua header ?
+	- fix tests => run tests => record results and errors in luapower_db
 
 - unit testing day
-	- replace 'unit' with a proper unit testing library
+	- dev-dependencies <- dependencies required by tests, demos, and other scripts only
+ 	- replace 'unit' with a proper unit testing library
 		- busted
 		- gambiarra
 		- luaunit
@@ -50,12 +65,59 @@ luapower day
 		harfbuzz_test
 		lexer_test
 
+- forum day
+	- development journal
+	- luapower roadmap
+	- faq entry: roadmap
+
+	- hate mail
+	- who are you and what's your plan for world domination?
+	- what modules would you like to see in luapower? poll?
+	- horror stories
+
+- port luapower-git to multigit
+	- change homepage:
+		git clone https://github.com/capr/multigit luapower
+		luapower/mg clone https://github.com/luapower/multigit
+		luapower/mg clone-all
+	- change download page:
+		./mg clone all-deps+package
+	- change get-involved
+		- change excludefile section
+	- change luapower-git page...
+
+- package management documentation consolidation
+	- read https://docs.npmjs.com/
+	- read http://guides.rubygems.org/
+
+- versioned dependencies brainstorm
+	- note: need a way to specify version ranges of _indirect_ dependencies too!
+	- objective:
+		- all packages in a collection should work together on their latest version
+			- so each package has to keep up with the others
+				- if you break a package, you have to upgrade all its dependants
+	- how to solve the problem without having to declare dependency ranges?
+	- how useful is it in practice, even with the best of intentions? (not much)
+	- simpler conventions:
+		- tag everything with just major version
+		- increment the tag whenever existing behavior of any kind is changed
+		- dependants will break automatically
+	- other ideas:
+		- assume masters are always in sink at close times?
+		- allow dependants to add tags to their dependencies?
+
+- describe how each aspect of a package manager is handled by different components:
+	- github: author, contact
+	- mg: versioning, transport
+	- luapower: dependencies, platforms, description, C package info,
+	- standard: docs, binaries, build tools, build scripts, unit tests, demos,
+
 - API cleanup day
 	- unprotect(pcall()) all I/O-bearing functions (glue.writefile, jpeg/png/gif load/save)
 
 - documentation cleanup day
 	- use of headings
-	- move screenshots to media
+	- move screenshots to media/web/* and route media/web to /media?
 
 - website cleanup / bugs / design day
 	- homepage
@@ -65,6 +127,8 @@ luapower day
 		- add links for built-in modules
 		- don't make links for the rest of the built-in modules
 		- which platform to go to for platform-dependent Lua modules? (package luajit)
+	- doc page
+		- "last updated ..." -> make it a link to the update log on that file!
 	- discuss button
 	- issues button
 	- left sidebar
@@ -80,19 +144,6 @@ luapower day
 		- git pull sucks the most
 		- upgrade to a process queue system?
 		- use shm/clear cache stack?
-
-- discourse forum day
-	- install the piece of shit
-		- fix docker/routing
-			- set up smtp
-			- set up oauth
-			- set up logo & colors
-			- set up nginx / ssl
-			- make auto-backups work
-	- bootstrap topics
-		- hate mail
-		- who are you and what's your plan for world domination?
-		- what modules would you like to see in luapower? poll?
 
 - anouncement day
 	- put more pure-Lua libs on the lua wiki

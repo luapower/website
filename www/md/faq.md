@@ -198,8 +198,7 @@ to human error, and doesn't require maintenance.
 
 ## Why is your code Public Domain?
 
-Because I don't support copyright law, and you probably
-[shouldn't either][against ip].
+Because I [don't support][against ip] copyright law.
 
 [against ip]:  http://www.stephankinsella.com/publications/#againstip
 
