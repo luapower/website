@@ -13,37 +13,66 @@ BUGS
 HOT TODO
 
 - multigit
-	- allow multiple origins? UI/complexity issues? forking/pull-request scenarios?
-	- release update to specified lockfile; release checkout from specified lockfile?
-	- mgit bump <- bump the version tag (signal incompatible change)
-	- releases are actually called "locks" (i.e. Gemfile.lock)
-	- getting stuff to work is the default - upgrading to the newest version needs work.
-	- Q: multiple release checkouts to different directories - is it possible?
-		- make zip bundles based on release checkouts
-	- write the README for multigit
-	- plugins? .multigit/*.sh --> pluginname()
-		- mg build pkg [platform] <- invoke luapower for build order
-		- mg push pkg
+	- export name=tag (not full ver)
+	- clone name=tag without ambiguity (use tags/tag)
+	- clone name=version works on already cloned packages, just switching version
+	- more robust bump: make it work with vN or even vX.Y.Z
+	- plugins: .multigit/*.sh --> pluginname()
+		- mgit build pkg [platform] <- invoke luapower for build order
+		- mgit push pkg
+		- how to make safe?
 
+- documentation
+	- try-out the collaboration workflow and explain it
+		- go to github and fork luapower/luapower-repos
+		- mgit baseurl bob https://github.com/bob/
+		- mgit unclone luapower-repos     # unclone so you can clone the fork
+		- mgit clone bob/luapower-repos   # clone the fork
+		- mgit luapower-repos status      # see what you're about to add
+		- mgit luapower-repos up "my baseurl and origins"
+		- go to github and make a pull request
+	- `mgit publish` to do all the above?
+	- web hook or polling for pulling? or both?
+		- polling on cron doesn't block the server but can leave stalled git processes
+	- write the README for multigit
+
+- port luapower-git to multigit
+	- change homepage:
+		git clone https://github.com/capr/multigit luapower
+		luapower/mg clone https://github.com/luapower/multigit
+		luapower/mg clone-all
+	- change download page:
+		./mg clone all-deps+package
+	- change get-involved
+		- change excludefile section
+	- change luapower-git page...
+	- change faq Q for luadist (get features from zerobrane blog)
+
+- package management documentation consolidation
+	- read https://docs.npmjs.com/
+	- read http://guides.rubygems.org/
+
+
+- explanations
+ 	- versioning using only major version
+ 		- the only honest choice: the tags will show exactly how unstable an api really is
+ 		- explain how just adding an extra arg to a function breaks compat.
+ 	- explain M-N-hash versioning: M = API version, N = dev advancement
 
 - increase transparency
 	- version all packages
-	- create issues
 	- bump versions when APIs change
-	- clear histories and start committing everything with messages
-		- so we can put back the news section
+	- start committing with messages again so we can put back the news section
 
 - download buttons
+	- multiple release checkouts to different directories - is it possible?
+		- make zip bundles based on release checkouts
 	- put the bundle script in cron!
 	- version them with full date!
 	- make the bundle script automatically delete old versions
 	- make the homepage choose latest version based on files' mtime
 	- keep old versions around (80M * 6 = 500M / day -- how many days can we keep?)
 	- make daily lock files
-
-- publishing packages
-	- mg publish -> pull request on `multigit` ->
-	- web hook or polling?
 
 - luapower day
 	- document default license (public domain)
@@ -74,21 +103,6 @@ HOT TODO
 	- who are you and what's your plan for world domination?
 	- what modules would you like to see in luapower? poll?
 	- horror stories
-
-- port luapower-git to multigit
-	- change homepage:
-		git clone https://github.com/capr/multigit luapower
-		luapower/mg clone https://github.com/luapower/multigit
-		luapower/mg clone-all
-	- change download page:
-		./mg clone all-deps+package
-	- change get-involved
-		- change excludefile section
-	- change luapower-git page...
-
-- package management documentation consolidation
-	- read https://docs.npmjs.com/
-	- read http://guides.rubygems.org/
 
 - versioned dependencies brainstorm
 	- note: need a way to specify version ranges of _indirect_ dependencies too!
