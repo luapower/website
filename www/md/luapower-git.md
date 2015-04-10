@@ -90,8 +90,8 @@ You want to name the package `foo` and you intend to host it at
 `https://github.com/bob/foo`.
 
 1. Create a new repo `bob/foo` at github.
-2. Add bob's base url: `mgit baseurl bob https://github.com/bob/`.
-3. Add foo's origin, which is bob: `mgit origin foo bob`.
+2. Add bob's base url: `mgit baseurl bob https://github.com/bob/`
+3. Add foo's origin, which is bob: `mgit origin foo bob`
 4. Clone the package: `mgit clone foo`
 5. Add your files to git: `mgit foo add -f ...`
 6. Commit and push your changes: `mgit foo commit -m ...; mgit foo push`
