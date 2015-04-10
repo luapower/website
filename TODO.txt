@@ -13,14 +13,12 @@ BUGS
 HOT TODO
 
 - multigit
-	- export name=tag (not full ver)
-	- clone name=tag without ambiguity (use tags/tag)
-	- clone name=version works on already cloned packages, just switching version
 	- more robust bump: make it work with vN or even vX.Y.Z
-	- plugins: .multigit/*.sh --> pluginname()
-		- mgit build pkg [platform] <- invoke luapower for build order
-		- mgit push pkg
-		- how to make safe?
+	- mgit repo ver shows name=tag (not full ver)
+		- test that git checkout also accepts just a tag without ambiguity
+	- make clone name=version work on already cloned packages (branch/reset)
+	- mgit rename oldname newname
+	- mgit publish pkg
 
 - documentation
 	- try-out the collaboration workflow and explain it
@@ -34,7 +32,6 @@ HOT TODO
 	- `mgit publish` to do all the above?
 	- web hook or polling for pulling? or both?
 		- polling on cron doesn't block the server but can leave stalled git processes
-	- write the README for multigit
 
 - port luapower-git to multigit
 	- change homepage:

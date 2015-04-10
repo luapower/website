@@ -16,15 +16,19 @@
 			Option 1. Like a Pro (using git and <a href="/luapower-git">luapower-git</a>):
 			<div class="shell_btn"></div>
 			<div class=doc style="padding-right: 0;">
-			<pre class="windows_shell"><code>git clone https://github.com/luapower/luapower-git luapower
-luapower\git clone-all
+			<pre class="windows_shell"><code>git clone https://github.com/capr/multigit luapower
+cd luapower
+mgit clone https://github.com/luapower/luapower-repos
+mgit clone-all
 </code></pre>
 
-			<pre class="unix_shell"><code>git clone https://github.com/luapower/luapower-git luapower
-luapower/git clone-all
+			<pre class="unix_shell"><code>git clone https://github.com/capr/multigit luapower
+cd luapower
+./mgit clone https://github.com/luapower/luapower-repos
+./mgit clone-all
 </code></pre>
 			</div>
-			Option 2. All-inclusive (daily bundles):
+			Option 2. Daily bundles:
 			<p class=downloads_home>
 				{{#download_buttons}}
 					<a class=download_btn href="/{{file}}">
