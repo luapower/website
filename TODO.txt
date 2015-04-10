@@ -64,7 +64,6 @@ HOT TODO
 - download buttons
 	- multiple release checkouts to different directories - is it possible?
 		- make zip bundles based on release checkouts
-	- put the bundle script in cron!
 	- version them with full date!
 	- make the bundle script automatically delete old versions
 	- make the homepage choose latest version based on files' mtime
