@@ -109,9 +109,19 @@ Tell your luapower users to clone it using:
 Before you start, make sure to read [get-involved], and check your
 package with the [luapower] command.
 
-You can now publish your package to luapower.com by commiting the additions
-made to luapower-repos (use `mgit luapower-repos status` to see what they are)
-and sending a pull request.
+Publishing your package to luapower.com is just a matter of sending
+a pull request on the [luapower-repos](https://github.com/luapower/luapower-repos)
+package with your additions (use `mgit luapower-repos status`
+to see what they are).
+
+> At this point, you might be interested in [hub](https://hub.github.com/) too.
+
+For that you would have to fork luapower-repos first and re-clone it
+(or add your fork as a remote and push to that):
+
+	./mgit fork luapower-repos
+	./mgit remove luapower-repos
+	./mgit clone https://github.com/you/luapower-repos
 
 Lastly, set up a webhook on the repo, pointing at
 `http://luapower.com/github` so that luapower.com can be kept up-to-date

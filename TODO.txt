@@ -13,6 +13,7 @@ BUGS
 HOT TODO
 
 - multigit
+	- mgit fork pkg url
 	- mgit pkg1,pkg2,... cmd ...
 	- more robust bump: make it work with vN or even vX.Y.Z
 	- mgit repo ver shows name=tag (not full ver)
