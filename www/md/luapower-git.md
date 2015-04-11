@@ -1,4 +1,5 @@
 ---
+title: luapower with git
 tagline: git workflow for luapower
 ---
 
@@ -120,8 +121,6 @@ For that you would have to fork luapower-repos first and re-clone it
 (or add your fork as a remote and push to that):
 
 	./mgit fork luapower-repos
-	./mgit remove luapower-repos
-	./mgit clone https://github.com/you/luapower-repos
 
 Lastly, set up a webhook on the repo, pointing at
 `http://luapower.com/github` so that luapower.com can be kept up-to-date

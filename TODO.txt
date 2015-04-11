@@ -19,8 +19,6 @@ HOT TODO
 	- mgit repo ver shows name=tag (not full ver)
 		- test that git checkout also accepts just a tag without ambiguity
 	- make clone name=version work on already cloned packages (branch/reset)
-	- mgit rename oldname newname
-	- mgit publish pkg
 
 - documentation
 	- try-out the collaboration workflow and explain it

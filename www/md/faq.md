@@ -57,7 +57,7 @@ be added, removed, upgraded and downgraded at will.
 
 ## How do I install it?
 
-The best way to get to a runnable installation is with [luapower-git],
+The best way to get to a runnable installation is with [multigit][luapower-git],
 which keeps everything under version control at all times, making it easy
 to add and remove packages, stay up-to-date, make pull requests,
 and even make deployments.
@@ -117,23 +117,36 @@ and use that as your runtime instead of luajit.
 Some Lua+ffi modules _might_ work with luaffi but you are on your own
 on that one.
 
-## How do I make new packages?
+## How do I see what packages are available?
 
-Refer to [get-involved] for what a package should contain.<br>
-Refer to [luapower-git] for the actual procedure.
+	mgit ls-uncloned
 
-## How do I see a package's files?
+## How do I see what packages are installed?
 
-Type `./git <package> ls-files`
+	mgit ls
+
+## How do I see a package's files separately?
+
+	mgit <package> ls-files
 
 ## But can I browse them too?
 
 Yes (but not in Windows).
-Create hard links with `./git --all make-hardlinks` which makes
+Create hard links with `mgit --all make-hardlinks` which makes
 hard links in the `_git` directory for all the packages. Now they're separate
 and you can list them and check their size, and even edit them and commit
 the changes. Remember to run that command again if you add or delete
 files though.
+
+## How do I fix a package?
+
+Fork it, clone it from your place (i.e. instead of `mgit clone foo`, do
+`mgit clone https://github.com/you/foo`), fix it, then send a pull request.
+
+## How do I make a new package?
+
+Refer to [get-involved] for what it should contain.<br>
+Refer to [luapower-git] for the actual procedure.
 
 ## How is it different from LuaRocks?
 
@@ -165,7 +178,7 @@ which may come in linked against various versions of msvcrt.
 of LuaDist. Someone else should write this, ideally an user of both systems.
 Feedback welcome.
 
-LuaDist is a git-based binaries-included distro with some similarities
+LuaDist is a git-based binaries-included distro with many similarities
 to luapower and a large module collection. LuaDist supports more platforms
 and more compilers than luapower. LuaDist requires declaring all package
 dependencies. Building LuaDist binaries requires knowledge of
@@ -188,13 +201,18 @@ There isn't one. Package information is computed on-the-fly
 using the [luapower] module (which also has a command-line interface,
 so check it out).
 
-## What's with the weird package versions?
+## How is versioning maintained?
 
 A package's version is the result of `git describe --tags --long --always`,
-which returns a string of form `tag-N-hash` where `tag` is the latest tag,
-`N` is the number of commits after that tag, and `hash` is the hash prefix
-of the last commit. This way versioning is unambiguous, not prone
-to human error, and doesn't require maintenance.
+which returns a string of form `tag-N-hash` where `tag` is the latest _major_
+version, `N` is the number of commits after that version, and `hash`
+is the hash prefix of the last commit. This way versioning is unambiguous,
+not prone to human error, and doesn't require maintenance. For every
+incompatible API change, the major version gets bumped. The HEAD is kept
+compatible across all libraries (incompatible developments happen in
+separate branches, except for packages tagged `dev`).
+
+> To clone package foo at version 5, do `mgit clone foo=5`.
 
 ## Why is your code Public Domain?
 
