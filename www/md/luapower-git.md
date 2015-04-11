@@ -1,6 +1,6 @@
 ---
 title: luapower with git
-tagline: git workflow for luapower
+tagline: git-based workflow for luapower
 ---
 
 ## What
