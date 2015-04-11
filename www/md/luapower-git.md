@@ -70,8 +70,8 @@ You won't have to clone luapower into the multigit directory either.
 
 ## Getting packages from other sources
 
-Say you want to clone packages `foo` and `bar` from
-`https://github.com/bob/` to your luapower tree:
+Say you want to clone `foo` and `bar` from `https://github.com/bob/`
+into your tree:
 
 <div class="shell_btn"></div>
 <div class="unix_shell">
@@ -85,8 +85,8 @@ Say you want to clone packages `foo` and `bar` from
 
 ## Creating a new package
 
-Say you created a new module into your luapower tree, and now you want
-to turn it into a package named `foo`, hosted at `https://github.com/bob/foo`.
+Say you created a new module locally, and now you want to turn it
+into a package named `foo`, hosted at `https://github.com/bob/foo`.
 
 Create the repo `bob/foo` on github, make it known to luapower so
 it can clone it, clone it, add in your files, commit and push:
