@@ -88,8 +88,8 @@ Say you want to clone packages `foo` and `bar` from
 Say you created a new module into your luapower tree, and now you want
 to turn it into a package named `foo`, hosted at `https://github.com/bob/foo`.
 
-First, create a new repo `bob/foo` at github, then make it known to luapower
-so it can clone it, then clone it, add your files, commit and push:
+Create the repo `bob/foo` on github, make it known to luapower so
+it can clone it, clone it, add in your files, commit and push:
 
 	mgit baseurl bob https://github.com/bob/    # add bob's base url
 	mgit origin foo bob                         # add foo's origin, which is bob
