@@ -101,8 +101,8 @@ so it can clone it, then clone it, add your files, commit and push:
 Once commited, the package is "registered" into your local tree
 and you can use the [luapower] command on it.
 
-At this point, you can share your package to the world.
-Tell your luapower users to clone it using:
+Once pushed, you can share it to the world.
+Tell your users to clone it using:
 
 	mgit clone https://github.com/bob/foo
 
