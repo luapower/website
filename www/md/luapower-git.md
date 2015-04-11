@@ -117,6 +117,7 @@ add your package origins to it, push, then send a pull request:
 
 	mgit remove luapower-repos
 	mgit clone https://github.com/you/luapower-repos
+	mgit luapower-repos remote add upstream https://github.com/luapower/luapower-repos
 	mgit luapower-repos status        # see your additions
 	mgit luapower-repos add ...       # add them
 	mgit luapower-repos commit -m "new stuff"
