@@ -1,12 +1,12 @@
 ---
-title: luapower with git
+title: luapower & git
 tagline: git-based workflow for luapower
 ---
 
 ## What
 
-Managing luapower packages with [multigit](https://github.com/capr/multigit),
-the git tool for working with overlaid repositories.
+Managing packages with [multigit](https://github.com/capr/multigit),
+the tool for working with overlaid git repositories.
 
 ## Why not plain git?
 
