@@ -75,12 +75,22 @@ into your tree:
 
 <div class="shell_btn"></div>
 <div class="unix_shell">
-	./mgit clone https://github.com/bob/foo
-	./mgit clone https://github.com/bob/bar
+	./mgit clone https://github.com/bob/foo https://github.com/bob/bar
 </div>
 <div class="windows_shell">
-	mgit clone https://github.com/bob/foo
-	mgit clone https://github.com/bob/bar
+	mgit clone https://github.com/bob/foo https://github.com/bob/bar
+</div>
+
+Say you don't want to type the full url all the time:
+
+<div class="shell_btn"></div>
+<div class="unix_shell">
+	./mgit baseurl bob https://github.com/bob/
+	./mgit clone foo bar
+</div>
+<div class="windows_shell">
+	mgit baseurl bob https://github.com/bob/
+	mgit clone bob/foo bob/bar
 </div>
 
 ## Creating a new package
