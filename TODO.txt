@@ -20,7 +20,8 @@ HOT TODO
 - port luapower-git to multigit
 	- remove {{#meta_package}} nonsense
 	- change download page:
-		./mgit clone all-deps+package
+		- clone all-deps
+		- make buttons for windows, linux and osx (different deps!)
 	- change get-involved
 		- change excludefile section
 	- change luapower-git page...

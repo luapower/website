@@ -73,32 +73,6 @@ git.exe config core.excludesfile luapower-git.exclude
 </code></pre>
 			</div>
 
-			<h2>Clone manually</h2>
-			<div class="shell_btn"></div>
-			<div class=doc>
-			<pre class=windows_shell><code>cd luapower
-md .mgit\{{package}}
-set GIT_DIR=.mgit\{{package}}\.git
-git.exe init
-git.exe config --local core.worktree ../../..
-git.exe config --local core.excludesfile .mgit/{{package}}.exclude
-git.exe remote add origin https://github.com/luapower/{{package}}.git
-git.exe fetch
-git.exe branch --track master origin/master
-git.exe checkout
-</code></pre>
-			<pre class=unix_shell><code>cd luapower
-mkdir -p .mgit/{{package}}
-export GIT_DIR=.mgit/{{package}}/.git
-git init
-git config --local core.worktree ../../..
-git config --local core.excludesfile .mgit/{{package}}.exclude
-git remote add origin https://github.com/luapower/{{package}}.git
-git fetch
-git branch --track master origin/master
-git checkout
-</code></pre>
-
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
 			<pre>
