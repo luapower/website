@@ -90,12 +90,15 @@ and now you want to gather all those new files and turn them into a package.
 You want to name the package `foo` and you intend to host it at
 `https://github.com/bob/foo`.
 
-1. Create a new repo `bob/foo` at github.
-2. Add bob's base url: `mgit baseurl bob https://github.com/bob/`
-3. Add foo's origin, which is bob: `mgit origin foo bob`
-4. Clone the package: `mgit clone foo`
-5. Add your files to git: `mgit foo add -f ...`
-6. Commit and push your changes: `mgit foo commit -m ...; mgit foo push`
+First, create a new repo `bob/foo` at github, then make it known to luapower
+so it can clone it, then clone it, add your files, commit and push:
+
+	mgit baseurl bob https://github.com/bob/    # add bob's base url
+	mgit origin foo bob                         # add foo's origin, which is bob
+	mgit clone foo                              # clone it
+	mgit foo add -f ...                         # add your files to git
+	mgit foo commit -m "init"                   # commit
+	mgit foo push                               # push
 
 Once commited, the package is "registered" into your local tree
 and you can use the [luapower] command on it.
