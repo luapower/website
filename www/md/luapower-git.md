@@ -86,7 +86,7 @@ Say you don't want to type the full url all the time:
 <div class="shell_btn"></div>
 <div class="unix_shell">
 	./mgit baseurl bob https://github.com/bob/
-	./mgit clone foo bar
+	./mgit clone bob/foo bob/bar
 </div>
 <div class="windows_shell">
 	mgit baseurl bob https://github.com/bob/
