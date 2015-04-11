@@ -133,9 +133,13 @@ repository, so it's important that your repository remains accessible
 at its url, and that you don't destroy its history, in case users might
 need an older version of the package _in the future_.
 
-## Creating custom luapower-git trees
+## Creating package collections
 
-Remember that you can always fork luapower-repos and replace all the origins
-and baseurls and create custom luapower trees with entirely different
-sets of modules, which users will then be able to clone wholesale with
-`mgit clone-all`.
+Remember that you don't have to use the luapower-repos meta-package
+if you don't want to. You can create your own meta-package with an
+entirely different module collection, which users will then be
+able to clone wholesale with:
+
+	mgit clone https://github.com/you/your-repos
+	mgit clone-all
+
