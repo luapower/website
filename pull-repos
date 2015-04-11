@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd "$(dirname "$0")/luapower" || exit 1
+./mgit --all pull
