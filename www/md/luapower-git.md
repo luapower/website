@@ -112,15 +112,15 @@ package with the [luapower] command.
 
 Publishing your package to luapower.com is just a matter of sending
 a pull request on the [luapower-repos](https://github.com/luapower/luapower-repos)
-package with your additions (use `mgit luapower-repos status`
-to see what they are).
+package with your additions. This means you have to fork luapower-repos
+first and re-clone it:
 
-> At this point, you might be interested in [hub](https://hub.github.com/) too.
-
-For that you would have to fork luapower-repos first and re-clone it
-(or add your fork as a remote and push to that):
-
-	./mgit fork luapower-repos
+	mgit remove luapower-repos
+	mgit clone https://github.com/you/luapower-repos
+	mgit luapower-repos status        # see your additions
+	mgit luapower-repos add ...       # add them
+	mgit luapower-repos commit -m "new stuff"
+	mgit push
 
 Lastly, set up a webhook on the repo, pointing at
 `http://luapower.com/github` so that luapower.com can be kept up-to-date
