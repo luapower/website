@@ -64,13 +64,12 @@ git.exe config core.excludesfile luapower-git.exclude
 			{{/meta_package}}
 
 			{{^meta_package}}
-			<h2>Clone with <a href="/luapower-git">luapower-git</a></h2>
-			<p>From the <a href="/luapower-git">luapower-git</a> directory, type:</p>
+			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
 			<div class="shell_btn"></div>
 			<div class=doc>
-				<pre class=windows_shell><code><a href="/luapower-git">git</a> clone {{package}}
+				<pre class=windows_shell><code>mgit clone {{package}}
 </code></pre>
-				<pre class=unix_shell><code><a href="/luapower-git">./git</a> clone {{package}}
+				<pre class=unix_shell><code>./mgit clone {{package}}
 </code></pre>
 			</div>
 
@@ -78,24 +77,24 @@ git.exe config core.excludesfile luapower-git.exclude
 			<div class="shell_btn"></div>
 			<div class=doc>
 			<pre class=windows_shell><code>cd luapower
-md _git\{{package}}
-set GIT_DIR=_git\{{package}}\.git
+md .mgit\{{package}}
+set GIT_DIR=.mgit\{{package}}\.git
 git.exe init
 git.exe config --local core.worktree ../../..
-git.exe config --local core.excludesfile {{package}}.exclude
+git.exe config --local core.excludesfile .mgit/{{package}}.exclude
 git.exe remote add origin https://github.com/luapower/{{package}}.git
-git.exe fetch --all
+git.exe fetch
 git.exe branch --track master origin/master
 git.exe checkout
 </code></pre>
 			<pre class=unix_shell><code>cd luapower
-mkdir -p _git/{{package}}
-export GIT_DIR=_git/{{package}}/.git
+mkdir -p .mgit/{{package}}
+export GIT_DIR=.mgit/{{package}}/.git
 git init
 git config --local core.worktree ../../..
-git config --local core.excludesfile {{package}}.exclude
+git config --local core.excludesfile .mgit/{{package}}.exclude
 git remote add origin https://github.com/luapower/{{package}}.git
-git fetch --all
+git fetch
 git branch --track master origin/master
 git checkout
 </code></pre>

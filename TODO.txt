@@ -13,33 +13,14 @@ BUGS
 HOT TODO
 
 - multigit
-	- mgit fork pkg url
 	- mgit pkg1,pkg2,... cmd ...
-	- more robust bump: make it work with vN or even vX.Y.Z
-	- mgit repo ver shows name=tag (not full ver)
-		- test that git checkout also accepts just a tag without ambiguity
-	- make clone name=version work on already cloned packages (branch/reset)
+	- mgit fork-replace pkg?
 
-- documentation
-	- try-out the collaboration workflow and explain it
-		- go to github and fork luapower/luapower-repos
-		- mgit baseurl bob https://github.com/bob/
-		- mgit unclone luapower-repos     # unclone so you can clone the fork
-		- mgit clone bob/luapower-repos   # clone the fork
-		- mgit luapower-repos status      # see what you're about to add
-		- mgit luapower-repos up "my baseurl and origins"
-		- go to github and make a pull request
-	- `mgit publish` to do all the above?
-	- web hook or polling for pulling? or both?
-		- polling on cron doesn't block the server but can leave stalled git processes
 
 - port luapower-git to multigit
-	- change homepage:
-		git clone https://github.com/capr/multigit luapower
-		luapower/mg clone https://github.com/luapower/multigit
-		luapower/mg clone-all
+	- remove {{#meta_package}} nonsense
 	- change download page:
-		./mg clone all-deps+package
+		./mgit clone all-deps+package
 	- change get-involved
 		- change excludefile section
 	- change luapower-git page...

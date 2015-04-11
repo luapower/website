@@ -134,14 +134,12 @@ add your package origins to it, push, then send a pull request:
 	mgit luapower-repos commit -m "new stuff"
 	mgit push
 
-Lastly, set up a webhook on the repo, pointing at
-`http://luapower.com/github` so that luapower.com can be kept up-to-date
-with future changes to the repo.
-
 Note that luapower users will always pull the package directly from your
 repository, so it's important that your repository remains accessible
 at its url, and that you don't destroy its history, in case users might
 need an older version of the package _in the future_.
+
+Repos are git-pulled every hour for updating the website.
 
 ## Creating package collections
 
