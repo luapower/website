@@ -142,6 +142,7 @@ files though.
 
 Fork it, clone it from your place (i.e. instead of `mgit clone foo`, do
 `mgit clone https://github.com/you/foo`), fix it, then send a pull request.
+If you want to become a maintainer, email me so I can add you to github.
 
 ## How do I make a new package?
 
