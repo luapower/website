@@ -67,12 +67,11 @@ git.exe config core.excludesfile luapower-git.exclude
 			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
 			<div class="shell_btn"></div>
 			<div class=doc>
-				<pre class=windows_shell><code>mgit clone {{package}}
+				<pre class=windows_shell><code>mgit clone {{package}} {{#package_deps}}{{#packages}}{{dep_package}} {{/packages}}{{/package_deps}}
 </code></pre>
-				<pre class=unix_shell><code>./mgit clone {{package}}
+				<pre class=unix_shell><code>./mgit clone {{package}} {{#package_deps}}{{#packages}}{{dep_package}} {{/packages}}{{/package_deps}}
 </code></pre>
 			</div>
-
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
 			<pre>
