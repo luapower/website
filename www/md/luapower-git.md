@@ -85,10 +85,8 @@ Say you want to clone packages `foo` and `bar` from
 
 ## Creating a new package
 
-Say you created some new modules into your luapower tree,
-and now you want to gather all those new files and turn them into a package.
-You want to name the package `foo` and you intend to host it at
-`https://github.com/bob/foo`.
+Say you created a new module into your luapower tree, and now you want
+to turn it into a package named `foo`, hosted at `https://github.com/bob/foo`.
 
 First, create a new repo `bob/foo` at github, then make it known to luapower
 so it can clone it, then clone it, add your files, commit and push:
