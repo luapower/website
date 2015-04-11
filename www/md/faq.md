@@ -133,7 +133,7 @@ on that one.
 
 Yes (but not in Windows).
 Create hard links with `mgit --all make-hardlinks` which makes
-hard links in the `_git` directory for all the packages. Now they're separate
+hard links in the `.mgit` directory for all the packages. Now they're separate
 and you can list them and check their size, and even edit them and commit
 the changes. Remember to run that command again if you add or delete
 files though.
