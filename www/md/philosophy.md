@@ -87,6 +87,21 @@ module writer and module consumer, opening the way for more collaboration.
 The consumer can always push back changes. A luapower installation is like
 a distributed wiki in this sense.
 
+## VERSIONING
+
+Luapower doesn't use semantic versioning. Each compatibility-breaking change
+is _eagerly_ signaled with a tag change. This is the only honest choice,
+and if done without reserve, the tag number will show exactly how unstable
+an API really is. Note that in any language, and Lua is no exception,
+just adding an extra argument to a function is a compatibility-breaking
+change, because you can't assume that your function isn't already called
+with extra arguments in existing code, arguments which the previous version
+of your function discarded, but the current version doesn't.
+With semantic versioning you have three choices here: either
+a) increment the major version now, b) wait until more changes
+accumulate to warrant a major version bump, or c) lie, and increment
+the minor version instead. None of these are particularly good options.
+
 ## NO DIRECTORIES
 
 This may be a hard sell but I stand by it. Directories are evil. Not so

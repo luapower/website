@@ -16,21 +16,15 @@ HOT TODO
 	- mgit pkg1,pkg2,... cmd ...
 	- mgit fork-replace pkg?
 
-
 - port luapower-git to multigit
 	- remove {{#meta_package}} nonsense
 	- change download page:
-		- clone all-deps
 		- make buttons for windows, linux and osx (different deps!)
-	- change get-involved
-		- change excludefile section
-	- change luapower-git page...
 	- change faq Q for luadist (get features from zerobrane blog)
 
 - package management documentation consolidation
 	- read https://docs.npmjs.com/
 	- read http://guides.rubygems.org/
-
 
 - explanations
  	- versioning using only major version

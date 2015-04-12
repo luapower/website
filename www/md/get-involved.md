@@ -37,7 +37,7 @@ There are 5 types of luapower packages:
 	   * C libraries: `bin/mingwXX/foo.dll`, `bin/linuxXX/libfoo.so`, `bin/osxXX/libfoo.dylib`
 	   * Lua/C libraries: `bin/<platform>/clib/foo[.dll|.so]`
 	 * description: `csrc/foo/WHAT` (see below)
-  * exclude file: `foo.exclude` (see below)
+  * exclude file: `.mgit/foo.exclude` (optional; see below)
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
@@ -226,8 +226,7 @@ and check the symvers of your compiled binaries with
 
 ## Publishing packages on luapower.com
 
-The way you add new packages to luapower.com is using the [luapower-git]
-command and it's described in detail there.
+> Refer to [luapower-git] for the actual procedure.
 
 Before publishing a luapower module, please consider:
 
@@ -251,15 +250,15 @@ Of course, few modules (in any language) qualify on all fronts, so
 luapower.com is necessarily an eclectic mix. In any case, if your module
 collection is too specialized to be added to luapower.com or you simply don't
 want to mix it in with the others, remember that you can always fork
-[luapower-git] and make your own module collections. And ultimately, you
+[luapower-repos] and make your own module collections. And ultimately, you
 can fork the website too.
 
 ## Forking luapower.com
 
 The luapower website is composed of:
 
-  * [luapower-git], a meta repository which contains the
-  list of packages and a git wrapper for cloning them.
+  * [luapower-repos], a meta repository which contains the
+  list of packages to be cloned with multigit.
   * [luapower], a Lua module for collecting package metadata.
   * [website][website-src], a web app based on [open-resty], with
   very simple css, lustache-based templates and table-based layout.
