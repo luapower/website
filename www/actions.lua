@@ -304,11 +304,6 @@ local function package_info(pkg, doc)
 	local origin_url = lp.git_origin_url(pkg)
 	t.github_url = origin_url:find'github.com' and origin_url
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
-	t.meta_package = pkg == 'luapower-repos'
-
-	if t.meta_package then
-		return t
-	end
 
 	local modmap = {}
 	for mod, file in pairs(lp.modules(pkg)) do

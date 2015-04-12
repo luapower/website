@@ -26,9 +26,7 @@
 					</td>
 					<td valign=top align=right class=action_links>
 						<a href="/{{package}}" class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}"><i class="fa fa-file-text-o"></i> documentation</a>
-						{{^meta_package}}
 						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}"><i class="fa fa-info-circle"></i> package info</a>
-						{{/meta_package}}
 						<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
 					</td>
 				</tr>
@@ -48,22 +46,6 @@
 				<span>{{package}}-master.tar.gz</span>
 			</a>
 
-			{{#meta_package}}
-			<h2>Clone</h2>
-			<div class="shell_btn"></div>
-			<div class=doc>
-				<pre class=unix_shell><code>git clone https://github.com/luapower/luapower-git luapower
-cd luapower
-git config core.excludesfile luapower-git.exclude
-</code></pre>
-				<pre class=windows_shell><code>git clone https://github.com/luapower/luapower-git luapower
-cd luapower
-git.exe config core.excludesfile luapower-git.exclude
-</code></pre>
-			</div>
-			{{/meta_package}}
-
-			{{^meta_package}}
 			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
 			<div class="shell_btn"></div>
 			<div class=doc>
@@ -78,7 +60,6 @@ git.exe config core.excludesfile luapower-git.exclude
 luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			</pre>
 			-->
-			{{/meta_package}}
 			<br>
 			<br>
 			{{/download}}
@@ -345,7 +326,6 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				<tr>
 					<td align=left class="gray">License: </td><td align=left>{{license}}</td>
 				</tr>
-				{{^meta_package}}
 				<tr>
 					<td align=left valign=top colspan=2>
 						<span class="gray requires_label">Requires:</span>
@@ -378,7 +358,6 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{/package_rdeps}}
 					</td>
 				</tr>
-				{{/meta_package}}
 			</table>
 			<br>
 			<div id=docnav></div>
