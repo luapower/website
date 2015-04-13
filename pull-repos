@@ -1,4 +1,6 @@
 #!/bin/sh
+# pull all repos and invalidate the ones that were updated.
+# to be added as an hourly cron job.
 
 cd "$(dirname "$0")/luapower" || exit 1
-./mgit --all pull
+mgit --all pull

@@ -1,5 +1,6 @@
 #!/bin/sh
 # make daily bundles for each platform, for downloading from the homepage.
+# to be added as a daily cron job.
 
 die() { echo "$@" >&2; exit 1; }
 cd "$(dirname "$0")" || die "Could not cd to script's dir"
