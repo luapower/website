@@ -570,21 +570,23 @@ local function action_home()
 	local pt = {}
 	data.packages = pt
 	for pkg in glue.sortedpairs(lp.installed_packages()) do
-		local t = {name = pkg}
-		t.type = lp.package_type(pkg)
-		t.platforms = lp.platforms(pkg)
-		t.icons, t.platform_string = package_icons(t.type, t.platforms, true)
-		local dtags = lp.doc_tags(pkg, pkg)
-		t.tagline = dtags and dtags.tagline
-		local cat = lp.package_cat(pkg)
-		t.cat = cat and cat.name
-		t.version = lp.git_version(pkg)
-		t.mtime = lp.git_mtime(pkg)
-		t.mtime_ago = timeago(t.mtime)
-		local ctags = lp.c_tags(pkg)
-		t.license = ctags and ctags.license or 'PD'
-		table.insert(pt, t)
-		t.hot = math.abs(os.difftime(os.time(), t.mtime)) < 3600 * 24 * 7
+		if lp.known_packages()[pkg] then --exclude "luapower-repos"
+			local t = {name = pkg}
+			t.type = lp.package_type(pkg)
+			t.platforms = lp.platforms(pkg)
+			t.icons, t.platform_string = package_icons(t.type, t.platforms, true)
+			local dtags = lp.doc_tags(pkg, pkg)
+			t.tagline = dtags and dtags.tagline
+			local cat = lp.package_cat(pkg)
+			t.cat = cat and cat.name
+			t.version = lp.git_version(pkg)
+			t.mtime = lp.git_mtime(pkg)
+			t.mtime_ago = timeago(t.mtime)
+			local ctags = lp.c_tags(pkg)
+			t.license = ctags and ctags.license or 'PD'
+			table.insert(pt, t)
+			t.hot = math.abs(os.difftime(os.time(), t.mtime)) < 3600 * 24 * 7
+		end
 	end
 	data.github_title = 'github.com/luapower'
 	data.github_url = 'https://'..data.github_title
