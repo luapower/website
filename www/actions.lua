@@ -355,6 +355,7 @@ local function package_info(pkg, doc)
 		return packages
 	end
 
+	--package dependency lists
 	local pts = {}
 	for platform in pairs(platforms) do
 		local pt = {}
@@ -374,6 +375,18 @@ local function package_info(pkg, doc)
 		})
 	end
 	t.has_package_deps = #t.package_deps > 0
+
+	--package clone lists
+	t.clone_lists = {}
+	for platform, pdeps in glue.sortedpairs(pdeps_pl) do
+		local packages = {{dep_package = pkg}}
+		glue.extend(packages, pdep_list(pdeps))
+		table.insert(t.clone_lists, {
+			icon = platform,
+			is_unix = not platform:find'mingw',
+			packages = packages,
+		})
+	end
 
 	--package reverse dependency lists
 	local rpdeps = {}

@@ -47,12 +47,20 @@
 			</a>
 
 			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
-			<div class="shell_btn"></div>
+			<div>
+				<div class="switch_group" switch_group_for=".clone_for" persistent=1>
+				{{#clone_lists}}
+					<a
+						switch_for=".clone_for_{{icon}}"
+						class="icon-{{icon}} disabled"></a>
+				{{/clone_lists}}
+				</div>
+			</div>
 			<div class=doc>
-				<pre class=windows_shell><code>mgit clone {{package}} {{#package_deps}}{{#packages}}{{dep_package}} {{/packages}}{{/package_deps}}
+				{{#clone_lists}}
+				<pre class="clone_for clone_for_{{icon}} hidden"><code>{{#is_unix}}./{{/is_unix}}mgit clone{{#packages}} {{dep_package}}{{/packages}}
 </code></pre>
-				<pre class=unix_shell><code>./mgit clone {{package}} {{#package_deps}}{{#packages}}{{dep_package}} {{/packages}}{{/package_deps}}
-</code></pre>
+				{{/clone_lists}}
 			</div>
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
@@ -385,6 +393,17 @@ $(function() {
 		// prevent selection of subsequent text on double-click.
 		e.preventDefault()
 	})
+
+	// activate the clone_for switch for the current OS by default
+
+	var ua = navigator.userAgent
+	var os =
+		getcookie('switch.clone_for') ||
+		ua.indexOf('Windows') >= 0 && 'mingw' ||
+		ua.indexOf('Linux') >= 0 && 'linux' ||
+		ua.indexOf('OS X') >= 0 && 'osx'
+
+	$('[switch_for^=".clone_for_'+os+'"]').click()
 
 })
 </script>

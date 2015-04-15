@@ -306,12 +306,43 @@ function set_lights(on) {
 		on = get_lights_state()
 
 	jQuery('#lights_css').attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
-	jQuery('#force_repaint').html(' ').addClass('dummy').html('').removeClass('dummy')
+	jQuery('.force_repaint').html('   ').addClass('dummy').removeClass('dummy')
 	set_lights_state(on)
 	set_lights_button_text(on)
 }
 
 $(set_lights_button)
+
+// grouped switch buttons ----------------------------------------------------
+
+$(function() {
+	$('.switch_group').each(function() {
+		var grp = $(this)
+		var grpcls = grp.attr('switch_group_for')
+		var persistent = grp.attr('persistent')
+		function activate(cls) {
+			grp.find('[switch_for]').addClass('disabled')
+			grp.find('[switch_for="'+cls+'"]').removeClass('disabled')
+			$(grpcls).addClass('hidden')
+			$(cls).removeClass('hidden')
+			if (persistent)
+				setcookie('switch'+grpcls, cls)
+		}
+		// make switches clickable
+		grp.find('[switch_for]').click(function() {
+			var cls = $(this).attr('switch_for')
+			activate(cls)
+		})
+		// find the active switch and click on it
+		var cls = persistent && getcookie('switch'+grpcls) || grp.attr('active_switch')
+		if (cls)
+			activate(cls)
+	})
+})
+
+function init_switch(grp, val) {
+	$('[switch_for="'+val+'"]').click()
+}
 
 // shell switch buttons ------------------------------------------------------
 
