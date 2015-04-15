@@ -145,11 +145,11 @@ all the dependencies:
 
 	./luapower build-order pkg1,...|--all [platform]
 
-[luapower-git] contains a build script that leverages that to actually
-build all those packages:
+You can use mgit to actually build all those packages:
 
-	csrc/build.sh pkg1,...|--all [platform]
+	mgit build pkg1,...|--all [platform]
 
 To build all installed packages on the current platform, run:
 
-	csrc/build.sh --all
+	mgit build --all
+

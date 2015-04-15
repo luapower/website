@@ -214,7 +214,8 @@ incompatible API change, the major version gets bumped. The HEAD is kept
 compatible across all libraries (incompatible developments happen in
 separate branches, except for packages tagged `dev`).
 
-> To clone package foo at version 5, do `mgit clone foo=5`.
+> To clone package foo at tag point r5 (which indicates the 5th release),
+do `mgit clone foo=r5`.
 
 ## Why is your code Public Domain?
 
@@ -228,6 +229,12 @@ Go to the [luapower forum](/forum) and ask away.
 There's no such thing as a stupid question there, any discussion is welcome.
 Incidentally, that is also the place where you can share your plans
 for world domination, so go and introduce yourself now.
+
+## How do I report bugs?
+
+For software bugs, use the github issues for that specific piece of software
+(all software is on github, including this website).
+For anything else, use the forum.
 
 ## How can I help?
 

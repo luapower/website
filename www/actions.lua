@@ -130,7 +130,7 @@ local function action_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
-	data.doc_mtime = nil --TODO: use git on the _website repo
+	data.doc_mtime = nil --TODO: use git on the website repo
 	data.doc_mtime_ago = data.doc_mtime and timeago(data.doc_mtime)
 	app.out(render_main('doc.html', data))
 end
@@ -246,25 +246,25 @@ local function package_icons(ptype, platforms, small)
 			name = small and 'luas' or 'lua',
 			title = 'written in pure Lua',
 		})
+	else
+		table.insert(t, {
+			name = small and 'luas' or 'lua',
+			title = ptype .. ' package',
+			invisible = 'invisible',
+		})
 	end
-	--TODO: review this sorting
-	local pn, ps = 0, ''
-	if next(platforms) then
-		local picons = platform_icons(platforms)
-		pn = #picons
-		for i,icon in ipairs(picons) do
-			if not icon.disabled then
-				ps = ps .. icon.name .. ';'
-			end
-		end
-		glue.extend(t, picons)
+	if next(platforms) then --don't show platform icons for Lua modules
+		glue.extend(t, platform_icons(platforms))
 	end
-	if pn == 0 and has_lua then
-		ps = #platforms .. (has_ffi and 1 or 2)
-	elseif pn > 0 then
-		ps = (has_lua and (has_ffi and 1 or 2) or 0) .. ';' .. ps
-	end
-	return t, ps
+	--create a "sorting string" that sorts the packages by platform support
+	local st = {}
+	local pt = glue.keys(platforms, true)
+	table.insert(st, tostring(((has_lua or has_ffi) and #pt == 0)
+		and 100 or #pt)) --portable vs cross-platform
+	table.insert(st, has_ffi and 1 or has_lua and 2 or 0) --Lua vs Lua+ffi vs others
+	table.insert(st, ptype) --type, just to sort others predictably too
+	glue.extend(st, pt) --platforms, just to group the same combinations together
+	return t, table.concat(st, ';')
 end
 
 local function package_info(pkg, doc)
