@@ -274,7 +274,7 @@ local function packages_of(dep_func, mod, pkg, platform)
 	local t = {}
 	for mod in pairs(dep_func(mod, pkg, platform)) do
 		local dpkg = lp.module_package(mod)
-		if dpkg and dpkg ~= pkg then
+		if dpkg and dpkg ~= pkg then --exclude self
 			t[dpkg] = true
 		end
 	end
@@ -383,8 +383,8 @@ local function package_info(pkg, doc)
 		pts[platform] = pt
 		local pext = packages_of_all(lp.module_requires_loadtime_ext, pkg, platform)
 		local pall = packages_of_all(lp.module_requires_loadtime_all, pkg, platform)
-		glue.update(pall, lp.bin_deps_all(pkg, platform))
 		glue.update(pext, lp.bin_deps(pkg, platform))
+		glue.update(pall, lp.bin_deps_all(pkg, platform))
 		for p in pairs(pall) do
 			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
 		end
@@ -421,18 +421,24 @@ local function package_info(pkg, doc)
 	end
 
 	--package reverse dependency lists
-	local rpdeps = {}
+	local pts = {}
 	for platform in pairs(platforms) do
 		local pt = {}
-		rpdeps[platform] = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
-		glue.update(rpdeps[platform], lp.rev_bin_deps_all(pkg, platform))
+		pts[platform] = pt
+		local pext = packages_of_all(lp.module_required_loadtime, pkg, platform)
+		local pall = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
+		glue.update(pext, lp.rev_bin_deps(pkg, platform))
+		glue.update(pall, lp.rev_bin_deps_all(pkg, platform))
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+		end
 	end
-	local rpdeps, rpdeps_pl = platform_maps(rpdeps, 'common')
+	local pdeps, pdeps_pl = platform_maps(pts, 'common')
 	t.package_rdeps = {}
-	for platform, rpdeps in glue.sortedpairs(rpdeps) do
+	for platform, pdeps in glue.sortedpairs(pdeps) do
 		table.insert(t.package_rdeps, {
 			icon = platform ~= 'common' and platform,
-			packages = glue.keys(rpdeps, true),
+			packages = pdep_list(pdeps),
 		})
 	end
 	t.has_package_rdeps = #t.package_rdeps > 0
