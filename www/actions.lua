@@ -10,6 +10,9 @@ local zip = require'minizip'
 local lustache = require'lustache'
 local grep = require'grep'
 
+--in our current setup, the dependency db must be updated manually.
+lp.config('auto_update_db', false)
+
 local action = {} --action table: {action_name = action_handler}
 local app = {} --HTTP API (to be set at runtime by the loader of this module)
 
@@ -267,8 +270,26 @@ local function package_icons(ptype, platforms, small)
 	return t, table.concat(st, ';')
 end
 
+local function packages_of(dep_func, mod, pkg, platform)
+	local t = {}
+	for mod in pairs(dep_func(mod, pkg, platform)) do
+		local dpkg = lp.module_package(mod)
+		if dpkg and dpkg ~= pkg then
+			t[dpkg] = true
+		end
+	end
+	return t
+end
+
+local function packages_of_all(dep_func, pkg, platform)
+	local t = {}
+	for mod in pairs(lp.modules(pkg)) do
+		glue.update(t, packages_of(dep_func, mod, pkg, platform))
+	end
+	return t
+end
+
 local function package_info(pkg, doc)
-	lp.config('allow_update_db', false)
 	doc = doc or pkg
 	local t = {package = pkg}
 	t.type = lp.package_type(pkg)
@@ -360,8 +381,10 @@ local function package_info(pkg, doc)
 	for platform in pairs(platforms) do
 		local pt = {}
 		pts[platform] = pt
-		local pext = lp.package_requires_packages_for('module_requires_loadtime_ext', pkg, platform, true)
-		local pall = lp.package_requires_packages_for('module_requires_loadtime_all', pkg, platform, true)
+		local pext = packages_of_all(lp.module_requires_loadtime_ext, pkg, platform)
+		local pall = packages_of_all(lp.module_requires_loadtime_all, pkg, platform)
+		glue.update(pall, lp.bin_deps_all(pkg, platform))
+		glue.update(pext, lp.bin_deps_all(pkg, platform))
 		for p in pairs(pall) do
 			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
 		end
@@ -401,8 +424,8 @@ local function package_info(pkg, doc)
 	local rpdeps = {}
 	for platform in pairs(platforms) do
 		local pt = {}
-		rpdeps[platform] = lp.package_requires_packages_for(
-			'module_required_loadtime_all', pkg, platform, true)
+		rpdeps[platform] = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
+		glue.update(rpdeps[platform], lp.rev_bin_deps_all(pkg, platform))
 	end
 	local rpdeps, rpdeps_pl = platform_maps(rpdeps, 'common')
 	t.package_rdeps = {}
@@ -458,8 +481,10 @@ local function package_info(pkg, doc)
 		--package deps
 		local pdeps = {}
 		for platform in pairs(platforms) do
-			local pext = lp.module_requires_packages_for('module_requires_loadtime_ext', mod, pkg, platform, true)
-			local pall = lp.module_requires_packages_for('module_requires_loadtime_all', mod, pkg, platform, true)
+			local pext = packages_of(lp.module_requires_loadtime_ext, mod, pkg, platform)
+			local pall = packages_of(lp.module_requires_loadtime_all, mod, pkg, platform)
+			glue.update(pall, lp.bin_deps_all(pkg, platform))
+			glue.update(pext, lp.bin_deps_all(pkg, platform))
 			local pt = {}
 			for p in pairs(pall) do
 				pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
@@ -702,7 +727,7 @@ function action.github(...)
 	if not repo then return end
 	if not lp.installed_packages()[repo] then return end
 	os.exec(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
-	lp.update_db(repo, nil, 'force') --TODO: this is blocking the server!!!
+	lp.update_db(repo) --TODO: this is blocking the server!!!
 end
 
 --dependency lister for git clone --------------------------------------------
@@ -721,7 +746,7 @@ end
 
 function action.update_db(package)
 	lp.clear_cache(package)
-	lp.update_db(package, nil, 'force')
+	lp.update_db(package)
 	lp.save_db()
 	app.out'ok\n'
 end
@@ -735,8 +760,7 @@ local function action_rockspec(pkg)
 	local homepage = 'http://luapower.com/'..pkg
 	local ctags = lp.c_tags(pkg)
 	local license = ctags and ctags.license or 'Public Domain'
-	local pext = lp.package_requires_packages_for(
-		'module_requires_loadtime_ext', pkg, platform, true)
+	local pext = package_deps(lp.module_requires_loadtime_ext, pkg, platform)
 	local deps = {}
 	for pkg in glue.sortedpairs(pext) do
 		table.insert(deps, 'luapower-'..pkg)
