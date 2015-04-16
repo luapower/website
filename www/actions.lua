@@ -384,7 +384,7 @@ local function package_info(pkg, doc)
 		local pext = packages_of_all(lp.module_requires_loadtime_ext, pkg, platform)
 		local pall = packages_of_all(lp.module_requires_loadtime_all, pkg, platform)
 		glue.update(pall, lp.bin_deps_all(pkg, platform))
-		glue.update(pext, lp.bin_deps_all(pkg, platform))
+		glue.update(pext, lp.bin_deps(pkg, platform))
 		for p in pairs(pall) do
 			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
 		end
@@ -484,7 +484,7 @@ local function package_info(pkg, doc)
 			local pext = packages_of(lp.module_requires_loadtime_ext, mod, pkg, platform)
 			local pall = packages_of(lp.module_requires_loadtime_all, mod, pkg, platform)
 			glue.update(pall, lp.bin_deps_all(pkg, platform))
-			glue.update(pext, lp.bin_deps_all(pkg, platform))
+			glue.update(pext, lp.bin_deps(pkg, platform))
 			local pt = {}
 			for p in pairs(pall) do
 				pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
