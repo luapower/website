@@ -357,8 +357,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#package_rdeps}}
 							{{#icon}}<span class="gray icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#packages}}
-								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">
-								{{dep_package}}</a>&nbsp;
+								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_rdeps}}
 						</span>
