@@ -433,12 +433,12 @@ local function package_info(pkg, doc)
 			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
 		end
 	end
-	local pdeps, pdeps_pl = platform_maps(pts, 'common')
+	local rpdeps = platform_maps(pts, 'common')
 	t.package_rdeps = {}
-	for platform, pdeps in glue.sortedpairs(pdeps) do
+	for platform, rpdeps in glue.sortedpairs(rpdeps) do
 		table.insert(t.package_rdeps, {
 			icon = platform ~= 'common' and platform,
-			packages = pdep_list(pdeps),
+			packages = pdep_list(rpdeps),
 		})
 	end
 	t.has_package_rdeps = #t.package_rdeps > 0
