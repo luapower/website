@@ -64,12 +64,12 @@ the current luapower stack:
 On x86:
 
 	cd csrc/<package>
-	build-linux32.sh
+	sh build-linux32.sh
 
 On x64:
 
 	cd csrc/<package>
-	build-linux64.sh
+	sh build-linux64.sh
 
 > Careful not to mix them up, or you'll get the wrong binaries in the wrong
 directory.
@@ -115,8 +115,8 @@ doesn't load the older one.
 ## Building on OSX for OSX
 
 	cd csrc/<package>
-	build-osx32.sh
-	build-osx64.sh
+	sh build-osx32.sh
+	sh build-osx64.sh
 
 Clang is a cross-compiler, so you can build for 32bit on a 64bit OSX
 and viceversa.
@@ -136,6 +136,14 @@ developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
 
+## Building packages with mgit
+
+	./mgit build <package>
+
+which is implemented as:
+
+	csrc/<package> && ./build-<current-platform>.sh
+
 ## Building packages in order
 
 You can use [luapower] so that for any package or list of packages
@@ -145,11 +153,11 @@ all the dependencies:
 
 	./luapower build-order pkg1,...|--all [platform]
 
-You can use mgit to actually build all those packages:
+Again, you can use mgit to leverage that and actually build the packages:
 
-	mgit build pkg1,...|--all [platform]
+	./mgit build-all pkg1,...|--all [platform]
 
 To build all installed packages on the current platform, run:
 
-	mgit build --all
+	./mgit build-all --all
 

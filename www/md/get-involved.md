@@ -170,7 +170,7 @@ Here's a quick gcc cheat list:
   * `-mmacosx-version-min=10.6`  : for C++ modules on OSX: link to older libstdc++.6
   because we don't ship the standard C++ library on OSX
   * `-install_name @rpath/<libname>.dylib` : for OSX
-  * `-U_FORTIFY_SOURCE`   : for Linux x64 to keep compatibility with glibc 2.7
+  * `-U_FORTIFY_SOURCE`   : for Linux to preserve compatibility with glibc 2.7
 
 > __IMPORTANT__: always place the `-L` and `-l` switches ___after___ the
 input files!
@@ -207,10 +207,10 @@ After compilation, check your builds against the minimum supported platforms:
 
 Also, you may want to check the following:
 
-  * on Linux, run `csrc/check-glibc-symvers.sh` to check that you don't have
-  any symbols that require glibc > 2.7. Also run `csrc/check-other-symvers.sh`
+  * on Linux, run `mgit check-glibc-symvers` to check that you don't have
+  any symbols that require glibc > 2.7. Also run `mgit check-other-symvers`
   to check for other dependencies that contain versioned symbols.
-  * on OSX, run `csrc/check-osx-rpath.sh` to check that all library paths
+  * on OSX, run `mgit check-osx-rpath` to check that all library paths
   contain the `@rpath/` prefix.
 
 > A quick note about versioned symbols on Linux:
@@ -222,7 +222,7 @@ versions that your binary will require on _any_ machine. Now you just made
 your binary incompatible with an older Linux for no good reason. So always
 build on the _oldest_ Linux which still has a _recent enough gcc_ (good luck),
 and check the symvers of your compiled binaries with
-`csrc/check-glibc-symvers.sh`.
+`mgit check-glibc-symvers`.
 
 ## Publishing packages on luapower.com
 
