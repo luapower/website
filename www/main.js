@@ -375,7 +375,7 @@ $(function() {
 $(function() {
 
 	// mark all external links and make them open in a new window
-	$('a[href]:not(.download_link)').each(function() {
+	$('a[href]:not(.download_link):not(.download_btn)').each(function() {
 		var url = $(this).attr('href')
 		if (url.match(/\w+:\/\//)) {
 			$(this).addClass('external_link').attr('target', '_blank')
