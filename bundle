@@ -11,8 +11,8 @@ which zip >/dev/null || die "zip not found"
 files() {
 	(platform="$1"
 	cd luapower
-	./mgit ls | while read pkg; do
-		./mgit $pkg ls-files | while read f; do
+	mgit ls | while read pkg; do
+		mgit $pkg ls-files | while read f; do
 			[ "$f" = "${f%.exclude}" ] && \
 			[ "$f" = "${f#.mgit/}" ] && \
 			[ "${f#bin/*/}" = "${f#bin/$platform/}" ] && \
