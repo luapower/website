@@ -85,9 +85,9 @@
 				<a href="{{changes_url}}">{{changes_text}}</a>
 				<br>
 			{{/git_tags}}
-			{{^has_git_tags}}
+			{{^git_tags}}
 				No releases made yet.
-			{{/has_git_tags}}
+			{{/git_tags}}
 
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
@@ -111,7 +111,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<td>Releases:</td>
 					<td>
 						{{#git_tags}}
-							<a href="https://github.com/luapower/{{package}}/releases/tag/{{.}}">{{.}}</a>
+							<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
 						{{/git_tags}}
 						{{^git_tags}}
 							None yet.
