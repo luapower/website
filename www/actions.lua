@@ -516,8 +516,9 @@ local function package_info(pkg, doc)
 				or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
 		})
 	end
-	if #t.git_tags < 2 or t.git_tags[1] == 'dev' then
-		t.git_tags = nil
+	t.has_git_tags = #t.git_tags > 0 and lp.git_tag(pkg) ~= 'dev'
+	if not t.has_git_tags then
+		t.git_tags = {}
 	end
 	local platforms = lp.platforms(pkg)
 	t.platforms = {}

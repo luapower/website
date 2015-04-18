@@ -64,7 +64,7 @@
 			</div>
 
 			<h2>
-				Past Releases
+				Releases
 				<a href="https://github.com/luapower/{{package}}/releases"
 					class=hastip
 					style="margin-left: 1em"
@@ -85,8 +85,10 @@
 				<a href="{{changes_url}}">{{changes_text}}</a>
 				<br>
 			{{/git_tags}}
-			<br>
-			<a href="https://github.com/luapower/{{package}}/releases">See releases on github.</a>
+			{{^has_git_tags}}
+				No releases made yet.
+			{{/has_git_tags}}
+
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
 			<pre>
