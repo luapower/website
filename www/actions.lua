@@ -1,6 +1,6 @@
 
 package.loaded.grep = nil
---package.loaded.luapower = nil
+package.loaded.luapower = nil
 
 local glue = require'glue'
 local lp = require'luapower'
@@ -66,6 +66,14 @@ end
 local function timeago(time)
 	local s = os.difftime(os.time(), time)
 	return string.format(s > 0 and '%s ago' or 'in %s', rel_time(math.abs(s)))
+end
+
+local function format_time(time)
+	return os.date('%c', time)
+end
+
+local function format_date(time)
+	return os.date('%B %e, %Y', time)
 end
 
 --actions --------------------------------------------------------------------
@@ -503,16 +511,20 @@ local function package_info(pkg, doc)
 	local origin_url = lp.git_origin_url(pkg)
 	t.github_url = origin_url:find'github.com' and origin_url
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
+
 	t.git_tag = lp.git_tag(pkg)
 	t.changes_url = t.git_tag and t.git_tag ~= 'dev'
 		and string.format('https://github.com/luapower/%s/compare/%s...master', pkg, t.git_tag)
+
 	t.git_tags = {}
 	local tags = lp.git_tags(pkg)
 	for i=#tags,1,-1 do
 		local tag = tags[i]
 		local prevtag = tags[i-1]
+		local mtime = lp.git_tag_time(pkg, tag)
 		table.insert(t.git_tags, {
 			tag = tag,
+			date = format_date(mtime),
 			changes_text = prevtag and 'Changes...' or 'Files...',
 			changes_url = prevtag
 				and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
@@ -522,6 +534,7 @@ local function package_info(pkg, doc)
 	if #t.git_tags == 0 or t.git_tag == 'dev' then
 		t.git_tags = {}
 	end
+
 	local platforms = lp.platforms(pkg)
 	t.platforms = {}
 	for i,p in ipairs(platform_list) do
@@ -534,6 +547,7 @@ local function package_info(pkg, doc)
 		table.insert(t.platforms, {name = runtime and 'all that '..runtime..' supports'})
 	end
 	t.icons = package_icons(t.type, platforms)
+
 	local docs = lp.docs(pkg)
 	t.docs = {}
 	for name in glue.sortedpairs(docs) do
@@ -550,8 +564,8 @@ local function package_info(pkg, doc)
 		t.tagline = dtags.tagline
 	end
 	t.version = lp.git_version(pkg)
-	local mtime = lp.git_mtime(pkg)
-	t.mtime = os.date('%c', mtime)
+	local mtime = lp.git_master_time(pkg)
+	t.mtime = format_time(mtime)
 	t.mtime_ago = timeago(mtime)
 	local ctags = lp.c_tags(pkg) or {}
 	t.license = ctags.license or 'Public Domain'
@@ -714,7 +728,7 @@ local function action_package(pkg, doc, what)
 		if docfile then
 			local docpath = lp.powerpath(docfile)
 			t.doc_html = render_docfile(docpath)
-			t.doc_mtime = lp.git_mtime(pkg, docfile)
+			t.doc_mtime = lp.git_file_time(pkg, docfile)
 			t.doc_mtime_ago = t.doc_mtime and timeago(t.doc_mtime)
 		end
 	end
@@ -736,12 +750,12 @@ local function action_home()
 			local cat = lp.package_cat(pkg)
 			t.cat = cat and cat.name
 			t.version = lp.git_version(pkg)
-			t.mtime = lp.git_mtime(pkg)
-			t.mtime_ago = timeago(t.mtime)
+			local mtime = lp.git_master_time(pkg)
+			t.mtime_ago = timeago(mtime)
 			local ctags = lp.c_tags(pkg)
 			t.license = ctags and ctags.license or 'PD'
 			table.insert(pt, t)
-			t.hot = math.abs(os.difftime(os.time(), t.mtime)) < 3600 * 24 * 7
+			t.hot = math.abs(os.difftime(os.time(), mtime)) < 3600 * 24 * 7
 		end
 	end
 	data.github_title = 'github.com/luapower'

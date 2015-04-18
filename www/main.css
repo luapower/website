@@ -459,9 +459,9 @@ warn {
 	padding-top: 2px;
 }
 
-.download_link {
-	margin-right: 20px;
-}
+.download_link { margin-left: 0.5em; margin-right: 0.5em; }
+.download_link .fa { display: inline; } /* makes the next line work */
+.download_link .fa:hover { text-decoration: underline; }
 
 .rightside {
 	width: 190px;
@@ -512,7 +512,7 @@ warn {
 	padding-bottom: inherit;
 	position: relative;
 	left: 0;
-	margin-right: 0.5em;
+	margin-right: 0.2em;
 }
 .download_btn span, .download_btn i {
 	text-shadow: 1px 1px 0px #020;

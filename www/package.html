@@ -45,7 +45,7 @@
 						</a>
 						<br>
 						<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-							<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+							<i class="fa fa-download"></i>
 							<span>{{package}}-master.tar.gz</span>
 						</a>
 					</td>
@@ -57,7 +57,7 @@
 				</tr>
 			</table>
 
-			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
+			<h2>Clone with <a href="/luapower-git"><span>multigit</span></a></h2>
 			<div>
 				<div class="switch_group" switch_group_for=".clone_for" persistent=1>
 				{{#clone_lists}}
@@ -84,13 +84,13 @@
 				</a>
 			</h2>
 			{{#git_tags}}
-				{{tag}}
+				<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a> from {{date}}
 				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
-					<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+					<i class="fa fa-download"></i>
 					<span>{{package}}-{{tag}}.zip</span>
 				</a>
 				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.tar.gz">
-					<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+					<i class="fa fa-download"></i>
 					<span>{{package}}-{{tag}}.tar.gz</span>
 				</a>
 				<a href="{{changes_url}}">{{changes_text}}</a>
