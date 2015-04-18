@@ -1,6 +1,6 @@
 
 package.loaded.grep = nil
-package.loaded.luapower = nil
+--package.loaded.luapower = nil
 
 local glue = require'glue'
 local lp = require'luapower'
