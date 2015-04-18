@@ -69,11 +69,14 @@ local function timeago(time)
 end
 
 local function format_time(time)
-	return os.date('%c', time)
+	local t = os.date('*t', time)
+	local tnow = os.date('*t')
+	local y = tnow.year ~= t.year
+	return os.date('%B %e'..(y and ' %Y' or '')..' @ %H:%M', time)
 end
 
 local function format_date(time)
-	return os.date('%B %e, %Y', time)
+	return os.date('%Y, %B %e', time)
 end
 
 --actions --------------------------------------------------------------------
