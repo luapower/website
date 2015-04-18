@@ -503,7 +503,19 @@ local function package_info(pkg, doc)
 	local origin_url = lp.git_origin_url(pkg)
 	t.github_url = origin_url:find'github.com' and origin_url
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
-	t.git_tags = lp.git_tags(pkg)
+	t.git_tags = {}
+	local tags = lp.git_tags(pkg)
+	for i=#tags,1,-1 do
+		local tag = tags[i]
+		local prevtag = tags[i-1]
+		table.insert(t.git_tags, {
+			tag = tag,
+			changes_text = prevtag and 'Changes...' or 'Files...',
+			changes_url = prevtag
+				and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
+				or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
+		})
+	end
 	if #t.git_tags < 2 or t.git_tags[1] == 'dev' then
 		t.git_tags = nil
 	end

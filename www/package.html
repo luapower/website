@@ -62,6 +62,31 @@
 </code></pre>
 				{{/clone_lists}}
 			</div>
+
+			<h2>
+				Past Releases
+				<a href="https://github.com/luapower/{{package}}/releases"
+					class=hastip
+					style="margin-left: 1em"
+					title="View releases on github">
+					<i class="fa fa-github"></i>
+				</a>
+			</h2>
+			{{#git_tags}}
+				{{tag}}
+				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
+					<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+					<span>{{package}}-{{tag}}.zip</span>
+				</a>
+				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.tar.gz">
+					<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+					<span>{{package}}-{{tag}}.tar.gz</span>
+				</a>
+				<a href="{{changes_url}}">{{changes_text}}</a>
+				<br>
+			{{/git_tags}}
+			<br>
+			<a href="https://github.com/luapower/{{package}}/releases">See releases on github.</a>
 			<!--
 			<h2>Install with <a href="http://luarocks.org/">LuaRocks</a></h2>
 			<pre>
