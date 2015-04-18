@@ -1,5 +1,6 @@
 
 package.loaded.grep = nil
+--package.loaded.luapower = nil
 
 local glue = require'glue'
 local lp = require'luapower'
@@ -142,6 +143,11 @@ end
 
 local os_list = {'mingw', 'linux', 'osx'}
 local platform_list = {'mingw32', 'mingw64', 'linux32', 'linux64', 'osx32', 'osx64'}
+local os_platforms = {
+	mingw = {'mingw32', 'mingw64'},
+	linux = {'linux32', 'linux64'},
+	osx   = {'osx32', 'osx64'},
+}
 
 local platform_icon_titles = {
 	mingw   = 'Windows',
@@ -191,6 +197,8 @@ end
 local function extract_common_keys(maps, all_key)
 	--count occurences for each item
 	local maxn = glue.count(maps)
+	--if less than two places to group, don't group
+	if maxn < 2 then return maps end
 	local nt = {} --{item = n}
 	local tt = {} --{item = val}
 	for place, items in pairs(maps) do
@@ -218,21 +226,47 @@ local function extract_common_keys(maps, all_key)
 	return t
 end
 
---given {platform1 = {item1 = val1, ...}, ...}, extract items that are
---common to the same OS and common to all platforms to OS keys and all_key key.
-local function platform_maps(maps, all_key)
-	--combine 32 and 64 bit lists
-	maps = glue.update({}, maps)
-	for _,p in ipairs(os_list) do
-		local t = {}
-		for _,n in ipairs{32, 64} do
-			t[p..n], maps[p..n] = maps[p..n], nil
+--same as above, but use an "all-or-nothing strategy" of extraction
+local function extract_common_keys_aot(maps, all_key)
+	--count occurences for each item
+	local maxn = glue.count(maps)
+	--if less than two places to group, don't group
+	if maxn < 2 then return maps end
+	local nt = {} --{item = n}
+	local tt = {} --{item = val}
+	for place, items in pairs(maps) do
+		for item, val in pairs(items) do
+			nt[item] = (nt[item] or 0) + 1
+			tt[item] = tt[item] or val --val of 'all' is the val of the first item.
 		end
-		t = extract_common_keys(t, p)
-		glue.update(maps, t)
 	end
+	--check to see if all items were extracted
+	local all_extracted = true
+	for item, n in pairs(nt) do
+		if n < maxn then
+			all_extracted = false
+		end
+	end
+	return all_extracted and {[all_key] = tt} or maps
+end
+
+--given {platform1 = {item1 = val1, ...}, ...}, group items that are
+--common to the same OS into OS keys, and all-around common items
+--into the all_key key, if given.
+local function platform_maps(maps, all_key, aot)
+	local extract = aot and extract_common_keys_aot or extract_common_keys
 	--extract common items across all places, if all_key given
-	return all_key and extract_common_keys(maps, all_key) or maps, maps
+	maps = all_key and extract(maps, all_key) or glue.update({}, maps)
+	--combine platforms per OS
+	for _,os in ipairs(os_list) do
+		local t = {}
+		for _,platform in ipairs(os_platforms[os]) do
+			t[platform] = maps[platform]
+			maps[platform] = nil
+		end
+		glue.update(maps, extract(t, os))
+	end
+	return maps
 end
 
 local function package_icons(ptype, platforms, small)
@@ -270,6 +304,40 @@ local function package_icons(ptype, platforms, small)
 	return t, table.concat(st, ';')
 end
 
+--dependency lists, sorted by (kind, name).
+local function sorted_names(deps)
+	return glue.keys(deps, function(name1, name2)
+		local kind1 = deps[name1].kind
+		local kind2 = deps[name2].kind
+		if kind1 == kind2 then return name1 < name2 end
+		return kind1 < kind2
+	end)
+end
+local function pdep_list(pdeps)
+	local packages = {}
+	local names = sorted_names(pdeps)
+	for _,pkg in ipairs(names) do
+		local pdep = pdeps[pkg]
+		table.insert(packages, glue.update({
+			dep_package = pkg,
+			external = pdep and pdep.kind == 'external',
+		}, pdep))
+	end
+	return packages
+end
+
+local function mdep_list(mdeps)
+	local modules = {}
+	local names = sorted_names(mdeps)
+	for _,mod in ipairs(names) do
+		local mt = mdeps[mod]
+		table.insert(modules, glue.update({
+			dep_module = mod,
+		}, mt))
+	end
+	return modules
+end
+
 local function packages_of(dep_func, mod, pkg, platform)
 	local t = {}
 	for mod in pairs(dep_func(mod, pkg, platform)) do
@@ -281,23 +349,176 @@ local function packages_of(dep_func, mod, pkg, platform)
 	return t
 end
 
-local function packages_of_all(dep_func, pkg, platform)
+local function packages_of_many(dep_func, mod, pkg, platform)
 	local t = {}
-	for mod in pairs(lp.modules(pkg)) do
+	for mod in pairs(mod) do
 		glue.update(t, packages_of(dep_func, mod, pkg, platform))
 	end
 	return t
 end
 
+local function packages_of_all(dep_func, _, pkg, platform)
+	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
+end
+
+function package_platforms(pkg)
+	local t = lp.platforms(pkg)
+	if not next(t) then
+		t = glue.update({}, lp.config'platforms')
+	end
+	return t
+end
+
+local function package_dep_maps(pkg, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pt = {}
+		pts[platform] = pt
+		local pext = packages_of_all(lp.module_requires_loadtime_ext, nil, pkg, platform)
+		local pall = packages_of_all(lp.module_requires_loadtime_all, nil, pkg, platform)
+		glue.update(pext, lp.bin_deps(pkg, platform))
+		glue.update(pall, lp.bin_deps_all(pkg, platform))
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+		end
+	end
+	return pts
+end
+
+local function package_rev_dep_maps(pkg, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pt = {}
+		pts[platform] = pt
+		local pext = packages_of_all(lp.module_required_loadtime, nil, pkg, platform)
+		local pall = packages_of_all(lp.module_required_loadtime_all, nil, pkg, platform)
+		glue.update(pext, lp.rev_bin_deps(pkg, platform))
+		glue.update(pall, lp.rev_bin_deps_all(pkg, platform))
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+		end
+	end
+	return pts
+end
+
+local function filter(t1, t2)
+	local dt = {}
+	for k, v in pairs(t1) do
+		if t2[k] then
+			dt[k] = v
+		end
+	end
+	return dt
+end
+
+local function module_package_dep_maps(pkg, mod, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pext = packages_of(lp.module_requires_loadtime_ext, mod, pkg, platform)
+		local pall = packages_of(lp.module_requires_loadtime_all, mod, pkg, platform)
+		glue.update(pext, filter(lp.bin_deps(pkg, platform), lp.module_platforms(mod, pkg)))
+		glue.update(pall, filter(lp.bin_deps_all(pkg, platform), lp.module_platforms(mod, pkg)))
+		local pt = {}
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
+		end
+		pts[platform] = pt
+	end
+	return pts
+end
+
+local function module_module_dep_maps(pkg, mod, platforms)
+	local mts = {}
+	local mint = lp.modules(pkg)
+	for platform in pairs(platforms) do
+		local mext = lp.module_requires_loadtime_ext(mod, pkg, platform)
+		local mall = lp.module_requires_loadtime_all(mod, pkg, platform)
+		local mt = {}
+		for m in pairs(mall) do
+			local pkg = lp.module_package(m)
+			local path = lp.modules(pkg)[m]
+			mt[m] = {
+				kind = mext[m] and 'external'
+					or mint[m] and 'internal' or 'indirect',
+				dep_package = pkg,
+				dep_file = path,
+			}
+		end
+		mts[platform] = mt
+	end
+	return mts
+end
+
+local function package_dep_lists(pdeps)
+	local t = {}
+	for platform, pdeps in glue.sortedpairs(pdeps) do
+		table.insert(t, {
+			icon = platform ~= 'all' and platform ~= 'common' and platform,
+			packages = pdep_list(pdeps),
+		})
+	end
+	return t
+end
+
+local function module_dep_lists(mdeps)
+	local t = {}
+	for platform, mdeps in glue.sortedpairs(mdeps) do
+		table.insert(t, {
+			icon = platform ~= 'all' and platform ~= 'common' and platform,
+			modules = mdep_list(mdeps),
+		})
+	end
+	return t
+end
+
+local function package_dep_matrix(pdeps)
+	local names = {}
+	local icons = {}
+	local depmat = {}
+	for platform, pmap in glue.sortedpairs(pdeps) do
+		table.insert(icons, platform)
+		for pkg in pairs(pmap) do
+			names[pkg] = true
+		end
+	end
+	local depmat_names = glue.keys(names, true)
+	for i, icon in ipairs(icons) do
+		depmat[i] = {pkg = {}, icon = icon}
+		for j, pkg in ipairs(depmat_names) do
+			local pt = pdeps[icon][pkg]
+			depmat[i].pkg[j] = {
+				checked = pt ~= nil,
+				kind = pt and pt.kind,
+			}
+		end
+	end
+	return depmat, depmat_names
+end
+
 local function package_info(pkg, doc)
+
 	doc = doc or pkg
 	local t = {package = pkg}
 	t.type = lp.package_type(pkg)
-	local platforms = lp.platforms(pkg)
-	t.icons = package_icons(t.type, platforms)
-	if not next(platforms) then
-		platforms = glue.update({}, lp.config'platforms')
+	local origin_url = lp.git_origin_url(pkg)
+	t.github_url = origin_url:find'github.com' and origin_url
+	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
+	t.git_tags = lp.git_tags(pkg)
+	if #t.git_tags < 2 or t.git_tags[1] == 'dev' then
+		t.git_tags = nil
 	end
+	local platforms = lp.platforms(pkg)
+	t.platforms = {}
+	for i,p in ipairs(platform_list) do
+		if platforms[p] then
+			table.insert(t.platforms, {icon = p})
+		end
+	end
+	if not next(t.platforms) then
+		local runtime = t.type == 'Lua+ffi' and 'LuaJIT' or t.type == 'Lua' and 'Lua'
+		table.insert(t.platforms, {name = runtime and 'all that '..runtime..' supports'})
+	end
+	t.icons = package_icons(t.type, platforms)
 	local docs = lp.docs(pkg)
 	t.docs = {}
 	for name in glue.sortedpairs(docs) do
@@ -313,97 +534,48 @@ local function package_info(pkg, doc)
 		t.title = dtags.title
 		t.tagline = dtags.tagline
 	end
+	t.version = lp.git_version(pkg)
+	local mtime = lp.git_mtime(pkg)
+	t.mtime = os.date('%c', mtime)
+	t.mtime_ago = timeago(mtime)
 	local ctags = lp.c_tags(pkg) or {}
 	t.license = ctags.license or 'Public Domain'
-	t.version = lp.git_version(pkg)
-	t.mtime = lp.git_mtime(pkg)
-	t.mtime_ago = timeago(t.mtime)
-	t.cname = ctags.realname
-	t.cversion = ctags.version
-	t.curl = ctags.url
+	t.c_name = ctags.realname
+	t.c_version = ctags.version
+	t.c_url = ctags.url
 	t.cat = lp.package_cat(pkg)
-	local origin_url = lp.git_origin_url(pkg)
-	t.github_url = origin_url:find'github.com' and origin_url
-	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
 
 	local modmap = {}
 	for mod, file in pairs(lp.modules(pkg)) do
-		modmap[mod] = {module = mod, file = file}
-	end
-
-	--create specific platform icons in front of the modules that have
-	--load errors on supported platforms.
-	for mod, mt in pairs(modmap) do
-		local platforms = {}
-		--[[
-		local load_errors
-		for platform in pairs(t.platforms(pkg)) do
-			local err = lp.module_load_error(mod, pkg, platform)
-			if err then
-				platforms[platform] = true
-			elseif t.platforms[platform] then
-				load_errors = true
-			end
-		end
-		if not load_errors then
-			platforms = {}
-		end
-		]]
-		mt.icons = platform_icons(platforms, true)
+		modmap[mod] = {
+			module = mod,
+			file = file,
+			icons = {},
+		}
 	end
 
 	--package dependencies ----------------------------------------------------
 
-	--dependency lists, sorted by (kind, name).
-	local function sorted_names(deps)
-		return glue.keys(deps, function(name1, name2)
-			local kind1 = deps[name1].kind
-			local kind2 = deps[name2].kind
-			if kind1 == kind2 then return name1 < name2 end
-			return kind1 < kind2
-		end)
-	end
-	local function pdep_list(pdeps)
-		local packages = {}
-		local names = sorted_names(pdeps)
-		for _,pkg in ipairs(names) do
-			local pdep = pdeps[pkg]
-			table.insert(packages, glue.update({
-				dep_package = pkg,
-				external = pdep and pdep.kind == 'external',
-			}, pdep))
-		end
-		return packages
-	end
+	local all_platforms = package_platforms(pkg)
 
-	--package dependency lists
-	local pts = {}
-	for platform in pairs(platforms) do
-		local pt = {}
-		pts[platform] = pt
-		local pext = packages_of_all(lp.module_requires_loadtime_ext, pkg, platform)
-		local pall = packages_of_all(lp.module_requires_loadtime_all, pkg, platform)
-		glue.update(pext, lp.bin_deps(pkg, platform))
-		glue.update(pall, lp.bin_deps_all(pkg, platform))
-		for p in pairs(pall) do
-			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
-		end
-	end
-	local pdeps, pdeps_pl = platform_maps(pts, 'common')
-	t.package_deps = {}
-	for platform, pdeps in glue.sortedpairs(pdeps) do
-		table.insert(t.package_deps, {
-			icon = platform ~= 'common' and platform,
-			packages = pdep_list(pdeps),
-		})
-	end
+	local pts = package_dep_maps(pkg, all_platforms)
+	local pdeps = platform_maps(pts, 'common')
+	t.package_deps = package_dep_lists(pdeps)
 	t.has_package_deps = #t.package_deps > 0
+
+	local pdeps_aot = platform_maps(pts, nil, 'aot')
+	t.depmat, t.depmat_names = package_dep_matrix(pdeps_aot)
+
+	local pts = package_rev_dep_maps(pkg, all_platforms)
+	local rpdeps = platform_maps(pts, 'common')
+	t.package_rdeps = package_dep_lists(rpdeps)
+	t.has_package_rdeps = #t.package_rdeps > 0
 
 	--package clone lists
 	local all = {{dep_package = pkg}}
 	local allmap = {}
 	t.clone_lists = {{icon = 'all', text = 'all', packages = all}}
-	for platform, pdeps in glue.sortedpairs(pdeps_pl) do
+	for platform, pdeps in glue.sortedpairs(pdeps_aot) do
 		local packages = {{dep_package = pkg}}
 		local pdeps = pdep_list(pdeps)
 		for i,t in ipairs(pdeps) do
@@ -420,64 +592,7 @@ local function package_info(pkg, doc)
 		table.insert(all, {dep_package = pkg})
 	end
 
-	--package reverse dependency lists
-	local pts = {}
-	for platform in pairs(platforms) do
-		local pt = {}
-		pts[platform] = pt
-		local pext = packages_of_all(lp.module_required_loadtime, pkg, platform)
-		local pall = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
-		glue.update(pext, lp.rev_bin_deps(pkg, platform))
-		glue.update(pall, lp.rev_bin_deps_all(pkg, platform))
-		for p in pairs(pall) do
-			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
-		end
-	end
-	local rpdeps = platform_maps(pts, 'common')
-	t.package_rdeps = {}
-	for platform, rpdeps in glue.sortedpairs(rpdeps) do
-		table.insert(t.package_rdeps, {
-			icon = platform ~= 'common' and platform,
-			packages = pdep_list(rpdeps),
-		})
-	end
-	t.has_package_rdeps = #t.package_rdeps > 0
-
-	--package dependency matrix
-	local names = {}
-	local icons = {}
-	t.depmat = {}
-	for platform, pmap in glue.sortedpairs(pdeps_pl) do
-		table.insert(icons, platform)
-		for pkg in pairs(pmap) do
-			names[pkg] = true
-		end
-	end
-	t.depmat_names = glue.keys(names, true)
-	for i, icon in ipairs(icons) do
-		t.depmat[i] = {pkg = {}, icon = icon}
-		for j, pkg in ipairs(t.depmat_names) do
-			local pt = pdeps_pl[icon][pkg]
-			t.depmat[i].pkg[j] = {
-				checked = pt ~= nil,
-				kind = pt and pt.kind,
-			}
-		end
-	end
-
 	--module list -------------------------------------------------------------
-
-	local function mdep_list(mdeps)
-		local modules = {}
-		local names = sorted_names(mdeps)
-		for _,mod in ipairs(names) do
-			local mt = mdeps[mod]
-			table.insert(modules, glue.update({
-				dep_module = mod,
-			}, mt))
-		end
-		return modules
-	end
 
 	t.modules = {}
 	local has_autoloads
@@ -485,53 +600,14 @@ local function package_info(pkg, doc)
 		table.insert(t.modules, mt)
 
 		--package deps
-		local pdeps = {}
-		for platform in pairs(platforms) do
-			local pext = packages_of(lp.module_requires_loadtime_ext, mod, pkg, platform)
-			local pall = packages_of(lp.module_requires_loadtime_all, mod, pkg, platform)
-			glue.update(pall, lp.bin_deps_all(pkg, platform))
-			glue.update(pext, lp.bin_deps(pkg, platform))
-			local pt = {}
-			for p in pairs(pall) do
-				pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
-			end
-			pdeps[platform] = pt
-		end
-		pdeps = platform_maps(pdeps, 'all')
-		mt.package_deps = {}
-		for platform, pdeps in glue.sortedpairs(pdeps) do
-			table.insert(mt.package_deps, {
-				icon = platform ~= 'all' and platform,
-				packages = pdep_list(pdeps),
-			})
-		end
+		local pts = module_package_dep_maps(pkg, mod, all_platforms)
+		local pdeps = platform_maps(pts, 'all')
+		mt.package_deps = package_dep_lists(pdeps)
 
 		--module deps
-		local mdeps = {}
-		for platform in pairs(platforms) do
-			local mext = lp.module_requires_loadtime_ext(mod, pkg, platform)
-			local mall = lp.module_requires_loadtime_all(mod, pkg, platform)
-			local mt = {}
-			for m in pairs(mall) do
-				local pkg = lp.module_package(m)
-				local path = lp.modules(pkg)[m]
-				mt[m] = {
-					kind = mext[m] and 'external' or modmap[m]
-					and 'internal' or 'indirect',
-					dep_package = pkg,
-					dep_file = path,
-				}
-			end
-			mdeps[platform] = mt
-		end
-		mdeps = platform_maps(mdeps, 'all')
-		mt.module_deps = {}
-		for platform, mdeps in glue.sortedpairs(mdeps) do
-			table.insert(mt.module_deps, {
-				icon = platform ~= 'all' and platform,
-				modules = mdep_list(mdeps),
-			})
-		end
+		local mts = module_module_dep_maps(pkg, mod, all_platforms)
+		mdeps = platform_maps(mts, 'all')
+		mt.module_deps = module_dep_lists(mdeps)
 
 		--autoloads
 		local auto = {}
@@ -594,8 +670,20 @@ local function package_info(pkg, doc)
 	t.has_autoloads = has_autoloads
 
 	--script list
-	t.scripts = glue.keys(lp.scripts(pkg), true)
-	t.has_scripts = glue.count(t.scripts) > 0
+	t.scripts = {}
+	for name, path in glue.sortedpairs(lp.scripts(pkg)) do
+		table.insert(t.scripts, {name = name, path = path})
+	end
+	t.has_scripts = #t.scripts > 0
+
+	--docs list
+	t.docs = {}
+	for name, path in glue.sortedpairs(lp.docs(pkg)) do
+		table.insert(t.docs, {name = name, path = path})
+	end
+	t.has_docs = #t.docs > 0
+
+	--
 
 	return t
 end
