@@ -525,7 +525,7 @@ local function package_info(pkg, doc)
 		table.insert(t.git_tags, {
 			tag = tag,
 			date = format_date(mtime),
-			changes_text = prevtag and 'Changes...' or 'Files...',
+			changes_text = prevtag and 'Changes since '..prevtag..'...' or 'Files at '..tag..'...',
 			changes_url = prevtag
 				and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
 				or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
