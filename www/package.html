@@ -83,19 +83,33 @@
 					<i class="fa fa-github"></i>
 				</a>
 			</h2>
+			<table>
 			{{#git_tags}}
-				<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a> from {{date}}
-				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
-					<i class="fa fa-download"></i>
-					<span>{{package}}-{{tag}}.zip</span>
-				</a>
-				<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.tar.gz">
-					<i class="fa fa-download"></i>
-					<span>{{package}}-{{tag}}.tar.gz</span>
-				</a>
-				<a href="{{changes_url}}">{{changes_text}}</a>
-				<br>
+				<tr>
+					<td style="padding-right: 1em">
+						<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
+					</td>
+					<td style="padding-right: 1em">
+						from {{date}}
+					</td>
+					<td>
+						<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
+							<i class="fa fa-download"></i>
+							<span>{{package}}-{{tag}}.zip</span>
+						</a>
+					</td>
+					<td>
+						<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.tar.gz">
+							<i class="fa fa-download"></i>
+							<span>{{package}}-{{tag}}.tar.gz</span>
+						</a>
+					</td>
+					<td style="padding-left: 1em">
+						<a href="{{changes_url}}">{{changes_text}}</a>
+					</td>
+				</tr>
 			{{/git_tags}}
+			</table>
 			{{^git_tags}}
 				No releases made yet.
 			{{/git_tags}}
