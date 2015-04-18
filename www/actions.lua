@@ -19,9 +19,25 @@ local app = {} --HTTP API (to be set at runtime by the loader of this module)
 
 --helpers --------------------------------------------------------------------
 
+--filesystem
+
 local function readwwwfile(name)
 	return assert(glue.readfile(app.wwwpath(name)))
 end
+
+local function older(file1, file2)
+	local mtime1 = lfs.attributes(file1, 'modification')
+	local mtime2 = lfs.attributes(file2, 'modification')
+	if not mtime1 then return true end
+	if not mtime2 then return false end
+	return mtime1 < mtime2
+end
+
+local function escape_filename(s)
+	return s:gsub('[/\\%?%%%*%:|"<> ]', '-')
+end
+
+--rendering
 
 local function render(name, data, env)
 	lustache.renderer:clear_cache()
@@ -43,9 +59,7 @@ local function render_main(name, data, env)
 	)
 end
 
-local function escape_filename(s)
-	return s:gsub('[/\\%?%%%*%:|"<> ]', '-')
-end
+--date/time formatting
 
 local function rel_time(s)
 	if s > 2 * 365 * 24 * 3600 then
@@ -79,17 +93,7 @@ local function format_date(time)
 	return os.date('%Y, %B %e', time)
 end
 
---actions --------------------------------------------------------------------
-
---doc rendering
-
-local function older(file1, file2)
-	local mtime1 = lfs.attributes(file1, 'modification')
-	local mtime2 = lfs.attributes(file2, 'modification')
-	if not mtime1 then return true end
-	if not mtime2 then return false end
-	return mtime1 < mtime2
-end
+--doc rendering --------------------------------------------------------------
 
 local function md_refs()
 	local t = {}
@@ -150,7 +154,7 @@ local function action_docfile(docfile)
 	app.out(render_main('doc.html', data))
 end
 
-------------------------------------------------------------------------------
+--package info ---------------------------------------------------------------
 
 local os_list = {'mingw', 'linux', 'osx'}
 local platform_list = {'mingw32', 'mingw64', 'linux32', 'linux64', 'osx32', 'osx64'}
@@ -172,6 +176,10 @@ local platform_icon_titles = {
 	osx64   = '64bit OS X',
 }
 
+--platform icons, in order, given a map of supported platforms. vis_only
+--controls whether a missing platform show as disabled or not included at all.
+--if both 32bit and 64bit platforms of the same OS are supported,
+--the result is a single OS icon without the 32/64 label.
 local function platform_icons(platforms, vis_only)
 	local t = {}
 	for _,p in ipairs(platform_list) do
@@ -280,10 +288,15 @@ local function platform_maps(maps, all_key, aot)
 	return maps
 end
 
+--return the identifying icons for a package and a sorting string
 local function package_icons(ptype, platforms, small)
+
 	local has_lua = ptype:find'Lua'
 	local has_ffi = ptype:find'ffi'
+
 	local t = {}
+
+	--add Lua/LuaJIT icon
 	if has_ffi then
 		table.insert(t, {
 			name = 'luajit',
@@ -301,9 +314,12 @@ local function package_icons(ptype, platforms, small)
 			invisible = 'invisible',
 		})
 	end
+
+	--add platform icons
 	if next(platforms) then --don't show platform icons for Lua modules
 		glue.extend(t, platform_icons(platforms))
 	end
+
 	--create a "sorting string" that sorts the packages by platform support
 	local st = {}
 	local pt = glue.keys(platforms, true)
@@ -312,11 +328,14 @@ local function package_icons(ptype, platforms, small)
 	table.insert(st, has_ffi and 1 or has_lua and 2 or 0) --Lua vs Lua+ffi vs others
 	table.insert(st, ptype) --type, just to sort others predictably too
 	glue.extend(st, pt) --platforms, just to group the same combinations together
-	return t, table.concat(st, ';')
+	local ss = table.concat(st, ';')
+
+	return t, ss
 end
 
---dependency lists, sorted by (kind, name).
-local function sorted_names(deps)
+--dependency lists
+
+local function sorted_names(deps) --sort dependency lists by (kind, name)
 	return glue.keys(deps, function(name1, name2)
 		local kind1 = deps[name1].kind
 		local kind2 = deps[name2].kind
@@ -324,7 +343,8 @@ local function sorted_names(deps)
 		return kind1 < kind2
 	end)
 end
-local function pdep_list(pdeps)
+
+local function pdep_list(pdeps) --package dependency list
 	local packages = {}
 	local names = sorted_names(pdeps)
 	for _,pkg in ipairs(names) do
@@ -337,7 +357,7 @@ local function pdep_list(pdeps)
 	return packages
 end
 
-local function mdep_list(mdeps)
+local function mdep_list(mdeps) --module dependency list
 	local modules = {}
 	local names = sorted_names(mdeps)
 	for _,mod in ipairs(names) do
@@ -372,6 +392,8 @@ local function packages_of_all(dep_func, _, pkg, platform)
 	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
 end
 
+--actual supported platforms for a package i.e. all platforms
+--if luapower doesn't report any platforms.
 function package_platforms(pkg)
 	local t = lp.platforms(pkg)
 	if not next(t) then
@@ -508,37 +530,65 @@ end
 
 local function package_info(pkg, doc)
 
-	doc = doc or pkg
 	local t = {package = pkg}
-	t.type = lp.package_type(pkg)
-	local origin_url = lp.git_origin_url(pkg)
-	t.github_url = origin_url:find'github.com' and origin_url
-	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
 
-	t.git_tag = lp.git_tag(pkg)
-	t.changes_url = t.git_tag and t.git_tag ~= 'dev'
-		and string.format('https://github.com/luapower/%s/compare/%s...master', pkg, t.git_tag)
-
-	t.git_tags = {}
-	local tags = lp.git_tags(pkg)
-	for i=#tags,1,-1 do
-		local tag = tags[i]
-		local prevtag = tags[i-1]
-		local mtime = lp.git_tag_time(pkg, tag)
-		table.insert(t.git_tags, {
-			tag = tag,
-			date = format_date(mtime),
-			changes_text = prevtag and 'Changes since '..prevtag..'...' or 'Files at '..tag..'...',
-			changes_url = prevtag
-				and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
-				or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
-		})
-	end
-	if #t.git_tags == 0 or t.git_tag == 'dev' then
-		t.git_tags = {}
-	end
-
+	--gather info
+	local package_type = lp.package_type(pkg)
 	local platforms = lp.platforms(pkg)
+	local master_time = lp.git_master_time(pkg)
+	local ctags = lp.c_tags(pkg) or {}
+	local origin_url = lp.git_origin_url(pkg)
+	local on_github = origin_url:find'github%.com'
+	local git_version = lp.git_version(pkg)
+	local git_tag = lp.git_tag(pkg)
+	local released = git_tag and git_tag ~= 'dev' --tag "dev" is not a release
+	local git_tags = lp.git_tags(pkg)
+	local doc = doc or pkg
+	local docs = lp.docs(pkg)
+	local doc_path = docs[doc]
+	local title = doc
+	local tagline
+	if doc_path then
+		local dtags = lp.doc_tags(pkg, doc)
+		title = dtags.title
+		tagline = dtags.tagline
+	end
+
+	--top bar / github url
+	t.github_url = on_github and origin_url
+	t.github_title = on_github and origin_url:gsub('^https://', '')
+
+	--download / "Changes since..."
+	t.git_tag = git_tag
+	t.changes_url = released
+		and string.format('https://github.com/luapower/%s/compare/%s...master', pkg, git_tag)
+
+	--download / releases
+	t.git_tags = {}
+	if released then
+		for i=#git_tags,1,-1 do
+			local tag = git_tags[i]
+			local prevtag = git_tags[i-1]
+			local mtime = lp.git_tag_time(pkg, tag)
+			table.insert(t.git_tags, {
+				tag = tag,
+				date = format_date(mtime),
+				changes_text = prevtag and 'Changes...' or 'Files...',
+				changes_url = prevtag
+					and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
+					or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
+			})
+		end
+	end
+	t.has_git_tags = #t.git_tags > 0
+
+	--sidebar / package icons
+	t.icons = package_icons(package_type, platforms)
+
+	--sidebar / package type
+	t.type = package_type
+
+	--package info / overview / supported platorms
 	t.platforms = {}
 	for i,p in ipairs(platform_list) do
 		if platforms[p] then
@@ -549,55 +599,58 @@ local function package_info(pkg, doc)
 		local runtime = t.type == 'Lua+ffi' and 'LuaJIT' or t.type == 'Lua' and 'Lua'
 		table.insert(t.platforms, {name = runtime and 'all that '..runtime..' supports'})
 	end
-	t.icons = package_icons(t.type, platforms)
 
-	local docs = lp.docs(pkg)
+	--package info / docs
+	--menubar / doc list
 	t.docs = {}
 	for name in glue.sortedpairs(docs) do
 		table.insert(t.docs, {
 			name = name,
+			path = docs[name],
 			selected = name == doc,
 		})
 	end
+	t.has_docs = #t.docs > 0
+
+	--doc page
 	t.title = doc
-	t.docfile = docs[doc]
-	if t.docfile then
-		local dtags = lp.doc_tags(pkg, doc)
-		t.title = dtags.title
-		t.tagline = dtags.tagline
-	end
-	t.version = lp.git_version(pkg)
-	local mtime = lp.git_master_time(pkg)
-	t.mtime = format_time(mtime)
-	t.mtime_ago = timeago(mtime)
-	local ctags = lp.c_tags(pkg) or {}
+	t.doc_path = doc_path
+	t.title = title
+	t.tagline = tagline
+
+	--sidebar / version
+	t.version = git_version
+
+	--sidebar / last commit
+	t.mtime_ago = timeago(master_time)
+
+	--package info / overview / last commit
+	t.mtime = format_time(master_time)
+
+	--sidebar / license
 	t.license = ctags.license or 'Public Domain'
+
+	--sidebar / C lib info
 	t.c_name = ctags.realname
 	t.c_version = ctags.version
 	t.c_url = ctags.url
 	t.cat = lp.package_cat(pkg)
 
-	local modmap = {}
-	for mod, file in pairs(lp.modules(pkg)) do
-		modmap[mod] = {
-			module = mod,
-			file = file,
-			icons = {},
-		}
-	end
-
 	--package dependencies ----------------------------------------------------
 
 	local all_platforms = package_platforms(pkg)
 
+	--combined package dependencies
 	local pts = package_dep_maps(pkg, all_platforms)
 	local pdeps = platform_maps(pts, 'common')
 	t.package_deps = package_dep_lists(pdeps)
 	t.has_package_deps = #t.package_deps > 0
 
+	--combined package dependency matrix
 	local pdeps_aot = platform_maps(pts, nil, 'aot')
 	t.depmat, t.depmat_names = package_dep_matrix(pdeps_aot)
 
+	--combined package reverse dependencies
 	local pts = package_rev_dep_maps(pkg, all_platforms)
 	local rpdeps = platform_maps(pts, 'common')
 	t.package_rdeps = package_dep_lists(rpdeps)
@@ -625,6 +678,15 @@ local function package_info(pkg, doc)
 	end
 
 	--module list -------------------------------------------------------------
+
+	local modmap = {}
+	for mod, file in pairs(lp.modules(pkg)) do
+		modmap[mod] = {
+			module = mod,
+			file = file,
+			icons = {},
+		}
+	end
 
 	t.modules = {}
 	local has_autoloads
@@ -708,15 +770,6 @@ local function package_info(pkg, doc)
 	end
 	t.has_scripts = #t.scripts > 0
 
-	--docs list
-	t.docs = {}
-	for name, path in glue.sortedpairs(lp.docs(pkg)) do
-		table.insert(t.docs, {name = name, path = path})
-	end
-	t.has_docs = #t.docs > 0
-
-	--
-
 	return t
 end
 
@@ -727,11 +780,10 @@ local function action_package(pkg, doc, what)
 	elseif what == 'download' then
 		t.download = true
 	elseif not what then
-		local docfile = doc and lp.docs(pkg)[doc] or t.docfile
-		if docfile then
-			local docpath = lp.powerpath(docfile)
-			t.doc_html = render_docfile(docpath)
-			t.doc_mtime = lp.git_file_time(pkg, docfile)
+		if t.doc_path then
+			local path = lp.powerpath(t.doc_path)
+			t.doc_html = render_docfile(path)
+			t.doc_mtime = lp.git_file_time(pkg, t.doc_path)
 			t.doc_mtime_ago = t.doc_mtime and timeago(t.doc_mtime)
 		end
 	end
