@@ -151,6 +151,6 @@ able to clone wholesale with:
 	mgit clone https://github.com/you/your-repos
 	mgit clone-all
 
-The procedure for that is exactly the same as before, excepet you'll
+The procedure for that is exactly the same as before, except you'll
 be adding the .origin and .baseurl files to a different package
 instead of luapower-repos.
