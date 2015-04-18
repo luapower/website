@@ -36,15 +36,26 @@
 			<!-- download =================================================== -->
 			{{#download}}
 			<h2>Download</h2>
-			<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.zip">
-				<i class="fa fa-download"></i>
-				<span>{{package}}-master.zip</span>&nbsp;&nbsp;&nbsp;
-			</a>
-			<br>
-			<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
-				<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
-				<span>{{package}}-master.tar.gz</span>
-			</a>
+			<table>
+				<tr>
+					<td valign=top>
+						<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.zip">
+							<i class="fa fa-download"></i>
+							<span>{{package}}-master.zip</span>&nbsp;&nbsp;&nbsp;
+						</a>
+						<br>
+						<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+							<i class="fa fa-download" style="margin-left: 1em; margin-right: 0.5em"></i>
+							<span>{{package}}-master.tar.gz</span>
+						</a>
+					</td>
+					<td valign=top>
+						{{#changes_url}}
+							<a href="{{changes_url}}">Changes since {{git_tag}}...</a>
+						{{/changes_url}}
+					</td>
+				</tr>
+			</table>
 
 			<h2>Clone with <a href="/luapower-git">multigit</a></h2>
 			<div>

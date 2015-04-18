@@ -503,6 +503,9 @@ local function package_info(pkg, doc)
 	local origin_url = lp.git_origin_url(pkg)
 	t.github_url = origin_url:find'github.com' and origin_url
 	t.github_title = t.github_url and t.github_url:gsub('^%w+://', '')
+	t.git_tag = lp.git_tag(pkg)
+	t.changes_url = t.git_tag and t.git_tag ~= 'dev'
+		and string.format('https://github.com/luapower/%s/compare/%s...master', pkg, t.git_tag)
 	t.git_tags = {}
 	local tags = lp.git_tags(pkg)
 	for i=#tags,1,-1 do
@@ -516,7 +519,7 @@ local function package_info(pkg, doc)
 				or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
 		})
 	end
-	if #t.git_tags == 0 or lp.git_tag(pkg) == 'dev' then
+	if #t.git_tags == 0 or t.git_tag == 'dev' then
 		t.git_tags = {}
 	end
 	local platforms = lp.platforms(pkg)
