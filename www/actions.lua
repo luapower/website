@@ -13,6 +13,7 @@ local grep = require'grep'
 
 --in our current setup, the dependency db must be updated manually.
 lp.config('auto_update_db', false)
+lp.config('allow_update_db_locally', false)
 
 local action = {} --action table: {action_name = action_handler}
 local app = {} --HTTP API (to be set at runtime by the loader of this module)
@@ -40,7 +41,6 @@ end
 --rendering
 
 local function render(name, data, env)
-	lustache.renderer:clear_cache()
 	local function get_partial(_, name)
 		return readwwwfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
 	end
@@ -920,13 +920,20 @@ action['deps.txt'] = function(pkg)
 	end
 end
 
---updating the deps db -------------------------------------------------------
+--clearing the cache and updating the deps db --------------------------------
+
+function action.clear_cache(package)
+	app.setmime'txt'
+	lustache.renderer:clear_cache()
+	lp.clear_cache(package)
+	app.out('cached cleared for '..(package or 'all')..'\n')
+end
 
 function action.update_db(package)
-	lp.clear_cache(package)
+	action.clear_cache(package)
 	lp.update_db(package)
 	lp.save_db()
-	app.out'ok\n'
+	app.out'db updated and saved\n'
 end
 
 --creating rockspecs ---------------------------------------------------------
