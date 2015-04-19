@@ -779,6 +779,9 @@ local function action_package(pkg, doc, what)
 		t.info = true
 	elseif what == 'download' then
 		t.download = true
+	elseif what == 'cc' then
+		action.clear_cache(pkg)
+		return
 	elseif not what then
 		if t.doc_path then
 			local path = lp.powerpath(t.doc_path)
