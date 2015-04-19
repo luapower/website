@@ -1,5 +1,5 @@
 #!/bin/sh
-# pull all repos and invalidate the ones that were updated.
+# pull all repos and invalidate the cache on the ones that were updated.
 # to be added as an hourly cron job.
 
 cd "$(dirname "$0")/luapower" || exit 1
