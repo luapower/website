@@ -25,7 +25,8 @@ input:hover { border-color: #ccc; }
 .topbar { box-shadow: 0px 0px 15px #111; }
 
 .package_list a, .package_list a:visited { color: #999; } .package_list a:hover { color: #ccc; }
-.package_cat_name { color: #0c0; }
+.package_cat_name, .package_cat_name:visited { color: #0c0; }
+a .package_cat_name:hover, a .package_cat_name:visited:hover { color: #fff; }
 .package_card { border-color: #333; }
 
 .download_link { color: #0f0 !important; }

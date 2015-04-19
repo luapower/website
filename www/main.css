@@ -467,27 +467,27 @@ warn {
 	width: 190px;
 }
 
-#dep_matrix th {
+.dep_matrix th {
 	font-size: 100%;
 	font-weight: normal;
 	padding-top: 0;
 }
 
-#dep_matrix td {
+.dep_matrix td {
 	padding: 0px;
 }
 
-#dep_matrix td:first-child {
+.dep_matrix td:first-child {
 	padding-right: 0.5em;
 	border-right: 1px solid #888;
 }
 
-#dep_lists .col1 {
+.dep_lists .col1 {
 	padding-right: 0.5em;
 	border-right: 1px solid #888;
 }
 
-#dep_lists .col2 {
+.dep_lists .col2 {
 	padding-left: 0.5em;
 }
 

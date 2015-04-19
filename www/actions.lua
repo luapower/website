@@ -157,6 +157,30 @@ end
 
 --package info ---------------------------------------------------------------
 
+local ljsrc = 'https://github.com/luapower/luajit/blob/master/csrc/luajit/src/src/'
+
+local module_src_urls = {
+	string    = ljsrc..'lib_string.c',
+	table     = ljsrc..'lib_table.c',
+	coroutine = ljsrc..'lib_base.c',
+	package   = ljsrc..'lib_package.c',
+	io        = ljsrc..'lib_io.c',
+	math      = ljsrc..'lib_math.c',
+	os        = ljsrc..'lib_os.c',
+	_G        = ljsrc..'lib_base.c',
+	debug     = ljsrc..'lib_debug.c',
+	ffi       = ljsrc..'lib_ffi.c',
+	bit       = ljsrc..'lib_bit.c',
+	jit       = ljsrc..'lib_jit.c',
+	['jit.util']    = ljsrc..'lib_jit.c',
+	['jit.profile'] = ljsrc..'lib_jit.c',
+}
+
+local function source_url(pkg, path, mod)
+	return module_src_urls[mod] or type(path) == 'string' and string.format(
+			'https://github.com/luapower/%s/blob/master/%s?ts=3', pkg, path)
+end
+
 local os_list = {'mingw', 'linux', 'osx'}
 local platform_list = {'mingw32', 'mingw64', 'linux32', 'linux64', 'osx32', 'osx64'}
 local os_platforms = {
@@ -164,6 +188,13 @@ local os_platforms = {
 	linux = {'linux32', 'linux64'},
 	osx   = {'osx32', 'osx64'},
 }
+
+--create a custom-ordered list of possible platforms.
+local ext_platform_list = {'all', 'common'}
+for _,os in ipairs(os_list) do
+	table.insert(ext_platform_list, os)
+	glue.extend(ext_platform_list, os_platforms[os])
+end
 
 local platform_icon_titles = {
 	mingw   = 'Windows',
@@ -393,16 +424,6 @@ local function packages_of_all(dep_func, _, pkg, platform)
 	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
 end
 
---actual supported platforms for a package i.e. all platforms
---if luapower doesn't report any platforms.
-function package_platforms(pkg)
-	local t = lp.platforms(pkg)
-	if not next(t) then
-		t = glue.update({}, lp.config'platforms')
-	end
-	return t
-end
-
 local function package_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
@@ -489,7 +510,7 @@ local function module_module_dep_maps(pkg, mod, platforms)
 				kind = mext[m] and 'external'
 					or mint[m] and 'internal' or 'indirect',
 				dep_package = pkg,
-				dep_file = path,
+				dep_source_url = source_url(pkg, path, m),
 			}
 		end
 		mts[platform] = mt
@@ -499,22 +520,28 @@ end
 
 local function package_dep_lists(pdeps)
 	local t = {}
-	for platform, pdeps in glue.sortedpairs(pdeps) do
-		table.insert(t, {
-			icon = platform ~= 'all' and platform ~= 'common' and platform,
-			packages = pdep_list(pdeps),
-		})
+	for _,platform in ipairs(ext_platform_list) do
+		local pdeps = pdeps[platform]
+		if pdeps then
+			table.insert(t, {
+				icon = platform ~= 'all' and platform ~= 'common' and platform,
+				packages = pdep_list(pdeps),
+			})
+		end
 	end
 	return t
 end
 
 local function module_dep_lists(mdeps)
 	local t = {}
-	for platform, mdeps in glue.sortedpairs(mdeps) do
-		table.insert(t, {
-			icon = platform ~= 'all' and platform ~= 'common' and platform,
-			modules = mdep_list(mdeps),
-		})
+	for _,platform in ipairs(ext_platform_list) do
+		local mdeps = mdeps[platform]
+		if mdeps then
+			table.insert(t, {
+				icon = platform ~= 'all' and platform ~= 'common' and platform,
+				modules = mdep_list(mdeps),
+			})
+		end
 	end
 	return t
 end
@@ -523,10 +550,14 @@ local function package_dep_matrix(pdeps)
 	local names = {}
 	local icons = {}
 	local depmat = {}
-	for platform, pmap in glue.sortedpairs(pdeps) do
-		table.insert(icons, platform)
-		for pkg in pairs(pmap) do
-			names[pkg] = true
+
+	for _,platform in ipairs(ext_platform_list) do
+		local pmap = pdeps[platform]
+		if pmap then
+			table.insert(icons, platform)
+			for pkg in pairs(pmap) do
+				names[pkg] = true
+			end
 		end
 	end
 	local depmat_names = glue.keys(names, true)
@@ -550,6 +581,10 @@ local function package_info(pkg, doc)
 	--gather info
 	local package_type = lp.package_type(pkg)
 	local platforms = lp.platforms(pkg)
+	local all_platforms =
+		next(platforms)
+			and platforms
+			or glue.update({}, lp.config'platforms')
 	local master_time = lp.git_master_time(pkg)
 	local ctags = lp.c_tags(pkg) or {}
 	local origin_url = lp.git_origin_url(pkg)
@@ -568,6 +603,7 @@ local function package_info(pkg, doc)
 		title = dtags.title
 		tagline = dtags.tagline
 	end
+	local package_cat = lp.package_cat(pkg)
 
 	--top bar / github url
 	t.github_url = on_github and origin_url
@@ -649,25 +685,30 @@ local function package_info(pkg, doc)
 	t.c_name = ctags.realname
 	t.c_version = ctags.version
 	t.c_url = ctags.url
-	t.cat = lp.package_cat(pkg)
+
+	--menubar / other packages in cat
+	t.cats = {}
+	for i,cat in ipairs(lp.cats()) do
+		if cat.name == package_cat then
+			local ct = {name = cat.name}
+			table.insert(t.cats, ct)
+			ct.packages = {}
+			for i, package in ipairs(cat.packages) do
+				table.insert(ct.packages, {
+					package = package,
+					selected = package == pkg,
+				})
+			end
+		end
+	end
 
 	--package dependencies ----------------------------------------------------
-
-	local all_platforms = package_platforms(pkg)
 
 	--combined package dependencies
 	local pts = package_dep_maps(pkg, all_platforms)
 	local pdeps = platform_maps(pts, 'common')
 	t.package_deps = package_dep_lists(pdeps)
 	t.has_package_deps = #t.package_deps > 0
-
-	--[[
-	--binary dependencies
-	local pts = package_bin_dep_maps(pkg, all_platforms)
-	local pdeps = platform_maps(pts, 'common')
-	t.package_bin_deps = package_dep_lists(pdeps)
-	t.has_package_bin_deps = #t.package_bin_deps > 0
-	]]
 
 	--combined package dependency matrix
 	local pdeps_aot = platform_maps(pts, nil, 'aot')
@@ -683,40 +724,71 @@ local function package_info(pkg, doc)
 	local all = {{dep_package = pkg}}
 	local allmap = {}
 	t.clone_lists = {{icon = 'all', text = 'all', packages = all}}
-	for platform, pdeps in glue.sortedpairs(pdeps_aot) do
-		local packages = {{dep_package = pkg}}
-		local pdeps = pdep_list(pdeps)
-		for i,t in ipairs(pdeps) do
-			allmap[t.dep_package] = t
+
+	for _,platform in ipairs(platform_list) do
+		local pdeps = pdeps_aot[platform]
+		if pdeps then
+			local packages = {{dep_package = pkg}}
+			local pdeps = pdep_list(pdeps)
+			for i,t in ipairs(pdeps) do
+				allmap[t.dep_package] = t
+			end
+			glue.extend(packages, pdeps)
+			table.insert(t.clone_lists, {
+				icon = platform,
+				is_unix = not platform:find'mingw',
+				packages = packages,
+			})
 		end
-		glue.extend(packages, pdeps)
-		table.insert(t.clone_lists, {
-			icon = platform,
-			is_unix = not platform:find'mingw',
-			packages = packages,
-		})
 	end
 	for pkg in glue.sortedpairs(allmap) do
 		table.insert(all, {dep_package = pkg})
 	end
 
-	--module list -------------------------------------------------------------
+	--binary dependencies
+	local pts = package_bin_dep_maps(pkg, all_platforms)
+	local pdeps = platform_maps(pts, 'common')
+	t.bin_deps = package_dep_lists(pdeps)
+	t.has_bin_deps = #t.bin_deps > 0
 
-	local modmap = {}
-	for mod, file in pairs(lp.modules(pkg)) do
-		modmap[mod] = {
-			module = mod,
-			file = file,
-			icons = {},
-		}
+	--build order
+	local pts = {}
+	for platform in pairs(all_platforms) do
+		local bo = lp.build_order(pkg, platform)
+		pts[platform] = {[tuple(unpack(bo))] = bo}
 	end
+	local bo = platform_maps(pts, 'all', 'aot')
+	t.build_order = {}
+	for _,platform in ipairs(ext_platform_list) do
+		local bo = bo[platform]
+		if bo then
+			table.insert(t.build_order, {
+				icon = platform ~= 'all' and platform,
+				text = platform == 'all' and 'all',
+				packages = {next(bo)()},
+			})
+		end
+	end
+
+	--module list -------------------------------------------------------------
 
 	t.modules = {}
 	local has_autoloads
-	for mod, mt in glue.sortedpairs(modmap) do
+	for mod, path in glue.sortedpairs(lp.modules(pkg)) do
+		local mt = {module = mod}
 		table.insert(t.modules, mt)
 
+		mt.source_url = source_url(pkg, path, mod)
+
+		local mplatforms = lp.module_platforms(mod, pkg)
+
+		mt.icons = {}
+		if tuple(unpack(glue.keys(mplatforms, true))) ~= tuple(unpack(glue.keys(platforms, true))) then
+			mt.icons = platform_icons(mplatforms, true)
+		end
+
 		--package deps
+		--TODO: check if mplatforms is ok there
 		local pts = module_package_dep_maps(pkg, mod, all_platforms)
 		local pdeps = platform_maps(pts, 'all')
 		mt.package_deps = package_dep_lists(pdeps)

@@ -9,13 +9,14 @@
 			{{/docs}}
 			{{/download}}{{/info}}
 			<br>
-			{{#cat}}
-			<h4 class="package_cat_name tight">{{name}}</h4>
+			{{#cats}}
+			<div><a href="/{{name}}" class="package_cat_name">{{name}}</a></div>
 			{{#packages}}
-				<a href="/{{.}}">{{.}}</a>
+				{{#selected}}<span class=selected_doc>{{package}}</span>{{/selected}}
+				{{^selected}}<a href="/{{package}}">{{package}}</a>{{/selected}}
 				<br>
 			{{/packages}}
-			{{/cat}}
+			{{/cats}}
 		</td>
 		<td valign=top>
 			<table width=100%>
@@ -159,22 +160,22 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<h2>Combined Package Dependencies
 				&nbsp;
 				<a class=infotip>
-					This is a combined list of packages required by <i>all modules</i> of this<br>
-					package on each supported platform. Darker names, if present,<br>
-					represent indirect dependencies.<br>
+					This is a combined list of packages required by <b><i>all modules</i></b> of this<br>
+					package on each supported platform, plus <b><i>binary dependencies</i></b> if any.<br>
+					Darker names, if present, represent indirect dependencies.<br>
 					<br>
 					<b>Note:</b> These are only the dependencies required for the modules to <i>load</i>.<br>
 					Runtime dependencies, if any, are shown separately below.<br>
 					<br>
-					<b>Tip:</b> You may not need all the dependencies if you are not planning to use<br>
-					all the modules of the package -- see per-module dependency lists below.<br>
+					<b>Tip:</b> You may not need all the dependencies listed here if you are not planning<br>
+					 to use all the modules of the package -- look at per-module dependencies below.<br>
 				</a>
 				&nbsp;
 				<a class="hastip package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
 				<a class="hastip package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
 			</h2>
 			{{#has_package_deps}}
-			<table id=dep_lists>
+			<table class="dep_lists package_dep_lists">
 				{{#package_deps}}
 				<tr>
 					<td class=col1 valign=top align=right>
@@ -189,7 +190,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				</tr>
 				{{/package_deps}}
 			</table>
-			<div id=dep_matrix class="doc hidden">
+			<div class="dep_matrix package_dep_matrix doc hidden">
 				<table>
 					<thead>
 						<tr>
@@ -219,14 +220,6 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			{{^has_package_deps}}
 				<span class=smallnote>No dependencies.</span>
 			{{/has_package_deps}}
-
-			{{#has_bin_deps}}
-			<h2>Binary Dependencies</h2>
-
-			{{#bin_deps}}
-
-			{{/bin_deps}}
-			{{/has_bin_deps}}
 
 			{{#has_modules}}
 			<h2>
@@ -267,7 +260,12 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{/icons}}
 					</td>
 					<td class="nowrap" valign=top style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3" module="{{module}}">{{module}}</a>
+						{{#source_url}}
+							<a href="{{source_url}}">{{module}}</a>
+						{{/source_url}}
+						{{^source_url}}
+							<span>{{module}}</span>
+						{{/source_url}}
 					</td>
 					<td valign=top>
 						<span class="{{error_class}}">
@@ -288,13 +286,72 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#module_deps}}
 							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
 							{{#modules}}
-								<a href="https://github.com/luapower/{{dep_package}}/blob/master/{{dep_file}}?ts=3" class="{{kind}}">{{dep_module}}</a>&nbsp;
+								{{#dep_source_url}}
+									<a href="{{dep_source_url}}" class="{{kind}}">{{dep_module}}</a>
+								{{/dep_source_url}}
+								{{^dep_source_url}}
+									<span class="{{kind}}">{{dep_module}}</span>
+								{{/dep_source_url}}
+								&nbsp;
 							{{/modules}}
 						{{/module_deps}}
 					</td>
 				</tr>
 				{{/modules}}
 			</table>
+			{{/has_modules}}
+
+			{{#has_bin_deps}}
+			<h2>
+				Binary Dependencies
+				&nbsp;
+				<a class=infotip>
+					Binary dependencies are the libraries that this library is<br>
+					<b><i>dynamically linked</i></b> against.<br>
+					Darker names represent indirect dependencies.
+				</a>
+			</h2>
+			<table class="dep_lists bin_lists">
+				{{#bin_deps}}
+				<tr>
+					<td class=col1 valign=top align=right>
+						{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
+						{{^icon}}<i>common</i>{{/icon}}
+					</td>
+					<td class=col2 valign=top>
+						{{#packages}}
+						{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+						{{/packages}}
+					</td>
+				</tr>
+				{{/bin_deps}}
+			</table>
+
+			<h2>
+				Build Order
+				&nbsp;
+				<a class=infotip>
+					This is the complete list of packages that need to be compiled<br>
+					<b><i>in the prescribed order</i></b> in order to build this package.
+				</a>
+			</h2>
+
+			<table class=dep_lists>
+				{{#build_order}}
+				<tr>
+					<td class=col1>
+						{{#icon}}<i class="icon icon-{{icon}}"></i>{{/icon}}
+						{{text}}
+					</td>
+					<td class=col2>
+						{{#packages}}<a href="/{{.}}">{{.}}</a>&nbsp; {{/packages}}
+					</td>
+				</tr>
+				{{/build_order}}
+			</table>
+
+			{{/has_bin_deps}}
+
 			{{#has_autoloads}}
 			<h2>Runtime Dependencies - Autoloads
 				&nbsp;
@@ -360,8 +417,6 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				</table>
 				{{/module_has_runtime_deps}}{{/modules}}
 			{{/has_runtime_deps}}
-
-			{{/has_modules}}
 
 			{{#has_scripts}}
 			<h2>Scripts</h2>
@@ -473,8 +528,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 $(function() {
 
 	$('.package_dep_switch').click(function() {
-		$('#dep_lists').toggle()
-		$('#dep_matrix').toggle()
+		$('.package_dep_lists').toggle()
+		$('.package_dep_matrix').toggle()
 		$('.package_dep_switch').toggle()
 	}).mousedown(function(e) {
 		// prevent selection of subsequent text on double-click.
