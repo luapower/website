@@ -29,8 +29,11 @@ function setcookie(k, v) {
 	jQuery.cookie(k, v, {path: '/'})
 }
 
-function getcookie(k) {
-	return jQuery.cookie(k)
+function getcookie(k, default_v) {
+	var v = jQuery.cookie(k)
+	if (v === undefined)
+		v = default_v
+	return v
 }
 
 // ajax requests -------------------------------------------------------------
@@ -402,6 +405,20 @@ $(function() {
 			var target = $(this).clone().css('cursor', 'pointer')
 			$(this).css('cursor', 'pointer').featherlight(target)
 		}
+	})
+
+	// make time and reltime switchable and the option persistent
+	var reltime = getcookie('reltime', 'true') == 'true'
+	function setreltime() {
+		$('.time[reltime][time]').each(function() {
+			$(this).html(reltime ? $(this).attr('reltime') : $(this).attr('time'))
+		})
+	}
+	setreltime()
+	$('.time[reltime][time]').click(function() {
+		reltime = !reltime
+		setreltime()
+		setcookie('reltime', reltime)
 	})
 
 	// make faq button red when on faq page

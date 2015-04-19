@@ -673,6 +673,7 @@ local function package_info(pkg, doc)
 	t.version = git_version
 
 	--sidebar / last commit
+	t.mtime = format_time(master_time)
 	t.mtime_ago = timeago(master_time)
 
 	--package info / overview / last commit
@@ -904,6 +905,8 @@ local function action_home()
 			t.cat = cat and cat.name
 			t.version = lp.git_version(pkg)
 			local mtime = lp.git_master_time(pkg)
+			t.mtimestamp = mtime
+			t.mtime = format_time(mtime)
 			t.mtime_ago = timeago(mtime)
 			local ctags = lp.c_tags(pkg)
 			t.license = ctags and ctags.license or 'PD'

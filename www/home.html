@@ -156,7 +156,9 @@ cd luapower
 			<td><a href="/{{name}}">{{name}}</a></td>
 			<td>{{tagline}}</td>
 			<td>{{version}}</td>
-			<td><span class=hidden>{{mtime}}</span> {{mtime_ago}}</td>
+			<td>
+				<span class=hidden>{{mtimestamp}}</span> <!--always sort by timestamp-->
+				<span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span></td>
 			<td class=nowrap>
 				<span class=hidden>{{platform_string}}</span>
 				{{#icons}}<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>{{/icons}}
@@ -187,7 +189,7 @@ cd luapower
 					<tr>
 						<td valign=bottom class="small gray">
 							Version: {{version}}<br>
-							Updated: {{mtime_ago}}<br>
+							Updated: <span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span><br>
 							Type: {{type}} &nbsp;
 							{{#icons}}
 								<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>

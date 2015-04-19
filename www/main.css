@@ -328,6 +328,10 @@ warn {
 
 .unix_shell, .windows_shell { display: none; }
 
+/* time spans ------------------------------------------------------------- */
+
+.time { cursor: pointer; }
+
 /* homepage --------------------------------------------------------------- */
 
 .home_logo {

@@ -131,7 +131,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<table class=doc>
 				<tr><td>Package type:</td><td><a href="/get-involved">{{type}}</a></td></tr>
 				<tr><td>Version:</td><td>{{version}}</td></tr>
-				<tr><td>Last commit:</td><td>{{mtime}}</td></tr>
+				<tr><td>Last commit:</td><td><span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></td></tr>
 				<tr>
 					<td>Releases:</td>
 					<td>
@@ -468,10 +468,14 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<td align=left class="gray">Pkg type:</td><td align=left><a href="/get-involved">{{type}}</a></td>
 				</tr>
 				<tr>
-					<td align=left class="gray">Version: </td><td align=left>{{version}}</td>
+					<td align=left class="gray">Version: </td><td align=left>
+						<a href="https://github.com/luapower/{{package}}/commits/master">{{version}}</a>
+					</td>
 				</tr>
 				<tr>
-					<td align=left class="gray">Last commit: </td><td align=left><a href="https://github.com/luapower/{{package}}/commits/master">{{mtime_ago}}</a></td>
+					<td align=left class="gray">Last commit: </td><td align=left>
+						<span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span>
+					</td>
 				</tr>
 				{{#c_name}}
 				<tr>
