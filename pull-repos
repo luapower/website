@@ -3,4 +3,18 @@
 # to be added as an hourly cron job.
 
 cd "$(dirname "$0")/luapower" || exit 1
-mgit --all pull
+
+for pkg in $(mgit ls); do
+
+	mgit "$pkg" remote update
+
+	LOCAL=$(git rev-parse @)
+	BASE=$(git merge-base @ @{u})
+
+	if [ $LOCAL = $BASE ]; then
+		mgit "$pkg" pull
+		wget -qO- https://luapower.com/$pkg/cc
+	fi
+
+done
+
