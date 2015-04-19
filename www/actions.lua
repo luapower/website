@@ -41,6 +41,7 @@ end
 --rendering
 
 local function render(name, data, env)
+	lustache.renderer:clear_cache()
 	local function get_partial(_, name)
 		return readwwwfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
 	end
@@ -418,6 +419,20 @@ local function package_dep_maps(pkg, platforms)
 	return pts
 end
 
+local function package_bin_dep_maps(pkg, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pt = {}
+		pts[platform] = pt
+		local pext = lp.bin_deps(pkg, platform)
+		local pall = lp.bin_deps_all(pkg, platform)
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+		end
+	end
+	return pts
+end
+
 local function package_rev_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
@@ -645,6 +660,14 @@ local function package_info(pkg, doc)
 	local pdeps = platform_maps(pts, 'common')
 	t.package_deps = package_dep_lists(pdeps)
 	t.has_package_deps = #t.package_deps > 0
+
+	--[[
+	--binary dependencies
+	local pts = package_bin_dep_maps(pkg, all_platforms)
+	local pdeps = platform_maps(pts, 'common')
+	t.package_bin_deps = package_dep_lists(pdeps)
+	t.has_package_bin_deps = #t.package_bin_deps > 0
+	]]
 
 	--combined package dependency matrix
 	local pdeps_aot = platform_maps(pts, nil, 'aot')
