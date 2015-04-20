@@ -879,8 +879,11 @@ local function action_package(pkg, doc, what)
 		if t.doc_path then
 			local path = lp.powerpath(t.doc_path)
 			t.doc_html = render_docfile(path)
-			t.doc_mtime = lp.git_file_time(pkg, t.doc_path)
-			t.doc_mtime_ago = t.doc_mtime and timeago(t.doc_mtime)
+			local mtime = lp.git_file_time(pkg, t.doc_path)
+			if mtime then
+				t.doc_mtime = format_date(mtime)
+				t.doc_mtime_ago = timeago(mtime)
+			end
 		end
 	end
 	app.out(render_main('package.html', t))

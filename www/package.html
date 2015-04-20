@@ -89,7 +89,7 @@
 						<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
 					</td>
 					<td valign=top style="padding-right: 1em">
-						<span class=time time="{{time}}" reltime="{{reltime}}"></span>
+						<span class=time time="{{time}}" reltime="{{reltime}}">{{reltime}}</span>
 					</td>
 					<td valign=top style="padding-bottom: 1em">
 						<a class="nowrap small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
@@ -129,7 +129,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<table class=doc>
 				<tr><td>Package type:</td><td><a href="/get-involved">{{type}}</a></td></tr>
 				<tr><td>Version:</td><td>{{version}}</td></tr>
-				<tr><td>Last commit:</td><td><span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></td></tr>
+				<tr><td>Last commit:</td><td><span class=time time="{{mtime}}" reltime="{{mtime_ago}}">{{mtime_ago}}</span></td></tr>
 				<tr>
 					<td>Releases:</td>
 					<td>
@@ -450,7 +450,12 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{/doc_html}}
 				<br>
 				<p class="small gray" style="float: right">
-					{{#doc_mtime_ago}}Last updated: <b>{{doc_mtime_ago}}</b>{{/doc_mtime_ago}}
+					{{#doc_mtime_ago}}
+					Last updated:
+						<b class="time"
+							time="{{doc_mtime}}"
+							reltime="{{doc_mtime_ago}}">{{doc_mtime_ago}}</b>
+					{{/doc_mtime_ago}}
 				</p>
 				<!--enddoc is needed for spyscroll docnav-->
 				<enddoc></enddoc>
