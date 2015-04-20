@@ -68,7 +68,7 @@ The WHAT file is used for packages that have a C component (i.e. Lua+ffi,
 Lua/C and C packages), and it's used to describe that C component. Pure Lua
 packages don't need a WHAT file.
 
-	cairo 1.12.16 from http://cairographics.org/releases/ (LGPL license)
+	cairo 1.12.16 from http://cairographics.org/releases/ (MPL/LGPL license)
 	requires: pixman, freetype, zlib, libpng
 
 The first line should contain "`<name> <version> from <browse-url>

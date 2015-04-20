@@ -312,6 +312,8 @@ function set_lights(on) {
 		.attr('href', '')
 		.attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
 
+	//jQuery('body')[0].style.webkitTransform = element.style.webkitTransform
+
 	set_lights_state(on)
 	set_lights_button_text(on)
 }
@@ -325,13 +327,15 @@ $(function() {
 		var grp = $(this)
 		var grpcls = grp.attr('switch_group_for')
 		var persistent = grp.attr('persistent')
-		function activate(cls) {
+		function activate(pcls) {
+			var cls = pcls && grp.find('[switch_for="'+pcls+'"]').length &&
+				pcls || grp.attr('active_switch')
 			grp.find('[switch_for]').addClass('disabled')
 			grp.find('[switch_for="'+cls+'"]').removeClass('disabled')
 			$(grpcls).addClass('hidden')
 			$(cls).removeClass('hidden')
 			if (persistent)
-				setcookie('switch'+grpcls, cls)
+				setcookie('switch'+grpcls, pcls || cls)
 		}
 		// make switches clickable
 		grp.find('[switch_for]').click(function() {
@@ -339,9 +343,7 @@ $(function() {
 			activate(cls)
 		})
 		// find the active switch and click on it
-		var cls = persistent && getcookie('switch'+grpcls) || grp.attr('active_switch')
-		if (cls)
-			activate(cls)
+		activate(persistent && getcookie('switch'+grpcls))
 	})
 })
 

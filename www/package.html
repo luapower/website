@@ -60,17 +60,15 @@
 
 			<h2>Clone with <a href="/luapower-git"><span>multigit</span></a></h2>
 			<div>
-				<div class="switch_group" switch_group_for=".clone_for" persistent=1>
+				<div class="switch_group" switch_group_for=".clone_for" active_switch=".clone_for_all" persistent=1>
 				{{#clone_lists}}
-					<a
-						switch_for=".clone_for_{{icon}}"
-						class="icon-{{icon}} disabled"><i>{{text}}</i></a>&nbsp;
+					<a switch_for=".clone_for_{{platform}}" class="{{disabled}}"><i {{#icon}}class="icon-{{icon}}"{{/icon}}>{{text}}</i></a>&nbsp;
 				{{/clone_lists}}
 				</div>
 			</div>
 			<div class=doc>
 				{{#clone_lists}}
-				<pre class="clone_for clone_for_{{icon}} hidden"><code>{{#is_unix}}./{{/is_unix}}mgit clone{{#packages}} {{dep_package}}{{/packages}}
+				<pre class="clone_for clone_for_{{platform}} {{hidden}}"><code>{{#is_unix}}./{{/is_unix}}mgit clone{{#packages}} {{dep_package}}{{/packages}}
 </code></pre>
 				{{/clone_lists}}
 			</div>
@@ -91,7 +89,7 @@
 						<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
 					</td>
 					<td valign=top style="padding-right: 1em">
-						{{date}}
+						<span class=time time="{{time}}" reltime="{{reltime}}"></span>
 					</td>
 					<td valign=top style="padding-bottom: 1em">
 						<a class="nowrap small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
@@ -203,7 +201,10 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<tbody>
 						{{#depmat}}
 						<tr>
-							<td><span class="icon-{{icon}}"></span></td>
+							<td>
+								{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
+								{{text}}
+							</td>
 							{{#pkg}}
 							<td align=center>
 								{{#.}}
@@ -482,19 +483,14 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				</tr>
 				{{#c_name}}
 				<tr>
-					<td align=left class="gray">C library: </td><td align=left>{{c_name}}</td>
+					<td align=left class="gray">Import: </td><td align=left>{{c_name}}</td>
 				</tr>
 				{{/c_name}}
 				{{#c_version}}
 				<tr>
-					<td align=left class="gray">C lib version: </td><td align=left><a href="{{c_url}}">{{c_version}}</a></td>
+					<td align=left class="gray">Import ver: </td><td align=left><a href="{{c_url}}">{{c_version}}</a></td>
 				</tr>
 				{{/c_version}}
-				{{#c_license}}
-				<tr>
-					<td align=left class="gray">C lib license: </td><td align=left>{{c_license}}</td>
-				</tr>
-				{{/c_license}}
 				<tr>
 					<td align=left valign=top colspan=2>
 						<span class="gray requires_label">Requires:</span>
@@ -554,17 +550,6 @@ $(function() {
 		// prevent selection of subsequent text on double-click.
 		e.preventDefault()
 	})
-
-	// activate the clone_for switch for the current OS by default
-
-	var ua = navigator.userAgent
-	var os =
-		getcookie('switch.clone_for') ||
-		ua.indexOf('Windows') >= 0 && 'mingw' ||
-		ua.indexOf('Linux') >= 0 && 'linux' ||
-		ua.indexOf('OS X') >= 0 && 'osx'
-
-	$('[switch_for^=".clone_for_'+os+'"]').click()
 
 })
 </script>

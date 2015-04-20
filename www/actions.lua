@@ -83,14 +83,11 @@ local function timeago(time)
 end
 
 local function format_time(time)
-	local t = os.date('*t', time)
-	local tnow = os.date('*t')
-	local y = tnow.year ~= t.year
-	return os.date('%B %e'..(y and ' %Y' or '')..' @ %H:%M', time)
+	return os.date('%b %e \'%y %H:%M', time)
 end
 
 local function format_date(time)
-	return os.date('%Y, %B %e', time)
+	return os.date('%b %e \'%y', time)
 end
 
 --doc rendering --------------------------------------------------------------
@@ -561,7 +558,11 @@ local function package_dep_matrix(pdeps)
 	end
 	local depmat_names = glue.keys(names, true)
 	for i, icon in ipairs(icons) do
-		depmat[i] = {pkg = {}, icon = icon}
+		depmat[i] = {
+			pkg = {},
+			text = icon == 'all' and icon or nil,
+			icon = icon ~= 'all' and icon or nil,
+		}
 		for j, pkg in ipairs(depmat_names) do
 			local pt = pdeps[icon][pkg]
 			depmat[i].pkg[j] = {
@@ -623,7 +624,8 @@ local function package_info(pkg, doc)
 			local mtime = lp.git_tag_time(pkg, tag)
 			table.insert(t.git_tags, {
 				tag = tag,
-				date = format_date(mtime),
+				time = format_date(mtime),
+				reltime = timeago(mtime),
 				changes_text = prevtag and 'Changes...' or 'Files...',
 				changes_url = prevtag
 					and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
@@ -669,24 +671,14 @@ local function package_info(pkg, doc)
 	t.title = title
 	t.tagline = tagline
 
-	--sidebar / version
+	--sidebar
 	t.version = git_version
-
-	--sidebar / last commit
 	t.mtime = format_time(master_time)
 	t.mtime_ago = timeago(master_time)
-
-	--package info / overview / last commit
-	t.mtime = format_time(master_time)
-
-	--sidebar / license
 	t.license = license
-
-	--sidebar / C lib info
-	t.c_name = ctags.realname
+	t.c_name = ctags.realname and ctags.realname ~= pkg and ctags.realname or nil
 	t.c_version = ctags.version
 	t.c_url = ctags.url
-	t.c_license = ctags.license
 
 	--menubar / other packages in cat
 	t.cats = {}
@@ -713,39 +705,43 @@ local function package_info(pkg, doc)
 	t.has_package_deps = #t.package_deps > 0
 
 	--combined package dependency matrix
-	local pdeps_aot = platform_maps(pts, nil, 'aot')
+	local pdeps_aot = platform_maps(pts, 'all', 'aot')
 	t.depmat, t.depmat_names = package_dep_matrix(pdeps_aot)
+
+	--package clone lists
+	if not pdeps_aot.all then --make a combined list for all platforms
+		local all = {}
+		for platform, pts in pairs(pdeps_aot) do
+			for package in pairs(pts) do
+				all[package] = {}
+			end
+		end
+		pdeps_aot.all = all
+	end
+	t.clone_lists = {}
+	for _,platform in ipairs(ext_platform_list) do
+		local pdeps = pdeps_aot[platform]
+		if pdeps then
+			local packages = {{dep_package = pkg}}
+			local pdeps = pdep_list(pdeps)
+			glue.extend(packages, pdeps)
+			table.insert(t.clone_lists, {
+				platform = platform,
+				text = platform == 'all' and platform or nil,
+				icon = platform ~= 'all' and platform or nil,
+				is_unix = not platform:find'mingw',
+				hidden = platform ~= 'all' and 'hidden' or nil,
+				disabled = platform ~= 'all' and 'disabled' or nil,
+				packages = packages,
+			})
+		end
+	end
 
 	--combined package reverse dependencies
 	local pts = package_rev_dep_maps(pkg, all_platforms)
 	local rpdeps = platform_maps(pts, 'common')
 	t.package_rdeps = package_dep_lists(rpdeps)
 	t.has_package_rdeps = #t.package_rdeps > 0
-
-	--package clone lists
-	local all = {{dep_package = pkg}}
-	local allmap = {}
-	t.clone_lists = {{icon = 'all', text = 'all', packages = all}}
-
-	for _,platform in ipairs(platform_list) do
-		local pdeps = pdeps_aot[platform]
-		if pdeps then
-			local packages = {{dep_package = pkg}}
-			local pdeps = pdep_list(pdeps)
-			for i,t in ipairs(pdeps) do
-				allmap[t.dep_package] = t
-			end
-			glue.extend(packages, pdeps)
-			table.insert(t.clone_lists, {
-				icon = platform,
-				is_unix = not platform:find'mingw',
-				packages = packages,
-			})
-		end
-	end
-	for pkg in glue.sortedpairs(allmap) do
-		table.insert(all, {dep_package = pkg})
-	end
 
 	--binary dependencies
 	local pts = package_bin_dep_maps(pkg, all_platforms)
@@ -909,8 +905,7 @@ local function action_home()
 			t.mtimestamp = mtime
 			t.mtime = format_time(mtime)
 			t.mtime_ago = timeago(mtime)
-			local ctags = lp.c_tags(pkg)
-			t.license = lp.combined_license(pkg)
+			t.license = lp.license(pkg)
 			table.insert(pt, t)
 			t.hot = math.abs(os.difftime(os.time(), mtime)) < 3600 * 24 * 7
 		end
@@ -1045,8 +1040,7 @@ local function action_rockspec(pkg)
 	local dtags = lp.doc_tags(pkg, pkg)
 	local tagline = dtags and dtags.tagline or pkg
 	local homepage = 'http://luapower.com/'..pkg
-	local ctags = lp.c_tags(pkg)
-	local license = ctags and ctags.license or 'Public Domain'
+	local license = lp.license(pkg)
 	local pext = package_deps(lp.module_requires_loadtime_ext, pkg, platform)
 	local deps = {}
 	for pkg in glue.sortedpairs(pext) do
