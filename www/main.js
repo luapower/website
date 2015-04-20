@@ -308,8 +308,10 @@ function set_lights(on) {
 	if (on !== true && on !== false)
 		on = get_lights_state()
 
-	jQuery('#lights_css').attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
-	jQuery('.force_repaint').html(Math.random()).addClass('dummy').removeClass('dummy').html('')
+	jQuery('#lights_css')
+		.attr('href', '')
+		.attr('href', '/lights' + (on ? 'on' : 'off') + '.css')
+
 	set_lights_state(on)
 	set_lights_button_text(on)
 }
