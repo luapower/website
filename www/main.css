@@ -143,9 +143,9 @@ warn {
 
 .multicol_name {
 	list-style: none;
-	-webkit-column-width: 140px;
-	column-width: 140px;
-	-moz-column-width: 140px;
+	-webkit-column-width: 130px;
+	column-width: 130px;
+	-moz-column-width: 130px;
 }
 
 /* custom icons ----------------------------------------------------------- */
@@ -388,6 +388,7 @@ warn {
 
 .package_cat_name {
 	font-weight: 400;
+	line-height: 160%;
 }
 
 .package_list .hot {

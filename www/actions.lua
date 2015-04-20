@@ -1,3 +1,5 @@
+--actions: the bulk of the web app.
+package.loaded.luapower = nil
 
 local glue = require'glue'
 local lp = require'luapower'
