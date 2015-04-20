@@ -1,7 +1,4 @@
 
-package.loaded.grep = nil
---package.loaded.luapower = nil
-
 local glue = require'glue'
 local lp = require'luapower'
 local pp = require'pp'
@@ -586,6 +583,7 @@ local function package_info(pkg, doc)
 			and platforms
 			or glue.update({}, lp.config'platforms')
 	local master_time = lp.git_master_time(pkg)
+	local license = lp.license(pkg)
 	local ctags = lp.c_tags(pkg) or {}
 	local origin_url = lp.git_origin_url(pkg)
 	local on_github = origin_url:find'github%.com'
@@ -680,12 +678,13 @@ local function package_info(pkg, doc)
 	t.mtime = format_time(master_time)
 
 	--sidebar / license
-	t.license = ctags.license or 'Public Domain'
+	t.license = license
 
 	--sidebar / C lib info
 	t.c_name = ctags.realname
 	t.c_version = ctags.version
 	t.c_url = ctags.url
+	t.c_license = ctags.license
 
 	--menubar / other packages in cat
 	t.cats = {}
@@ -909,7 +908,7 @@ local function action_home()
 			t.mtime = format_time(mtime)
 			t.mtime_ago = timeago(mtime)
 			local ctags = lp.c_tags(pkg)
-			t.license = ctags and ctags.license or 'PD'
+			t.license = lp.combined_license(pkg)
 			table.insert(pt, t)
 			t.hot = math.abs(os.difftime(os.time(), mtime)) < 3600 * 24 * 7
 		end

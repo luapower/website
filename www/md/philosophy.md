@@ -178,9 +178,16 @@ beyond that table once you get past the initial learning curve for that API.
 
 ## FREEDOM
 
-_I always felt that shoveling LICENSE files around is ridiculously
-anachronistic._
+As much as possible, I try to find libraries that are free as-in non-viral,
+to avoid the case where one module is imposing licensing restrictions
+on _other_ modules and on your own apps.
 
-Libraries are chosen to be free as-in non-viral, to avoid the case
-where one module is imposing licensing restrictions on _other_ modules
-and on your own applications.
+My own code is in Public Domain. There are good reasons for avoiding
+copyright altogether instead of choosing a permissive license,
+but they cannot be meaningfully expressed without delving into
+the history of IP law, politics and philosophy even, so I'll not expand
+on that here (even though this _is_ the philosophy section).
+If you feel like opening up that can of worms for yourself,
+try to research an answer to the following practical question:
+Who is the copyright holder of the output of preprocessing a copyrighted
+C header file?

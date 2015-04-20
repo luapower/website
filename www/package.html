@@ -477,6 +477,9 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						<span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span>
 					</td>
 				</tr>
+				<tr>
+					<td align=left class="gray">License: </td><td align=left>{{license}}</td>
+				</tr>
 				{{#c_name}}
 				<tr>
 					<td align=left class="gray">C library: </td><td align=left>{{c_name}}</td>
@@ -484,12 +487,14 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{/c_name}}
 				{{#c_version}}
 				<tr>
-					<td align=left class="gray">Clib version: </td><td align=left><a href="{{c_url}}">{{c_version}}</a></td>
+					<td align=left class="gray">C lib version: </td><td align=left><a href="{{c_url}}">{{c_version}}</a></td>
 				</tr>
 				{{/c_version}}
+				{{#c_license}}
 				<tr>
-					<td align=left class="gray">License: </td><td align=left>{{license}}</td>
+					<td align=left class="gray">C lib license: </td><td align=left>{{c_license}}</td>
 				</tr>
+				{{/c_license}}
 				<tr>
 					<td align=left valign=top colspan=2>
 						<span class="gray requires_label">Requires:</span>
@@ -497,7 +502,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#package_deps}}
 							{{#icon}}<span class="gray icon-{{icon}}"></span>{{/icon}}
 							{{#packages}}
-								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</span>
@@ -513,7 +518,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#package_rdeps}}
 							{{#icon}}<span class="gray icon-{{icon}}"></span>{{/icon}}
 							{{#packages}}
-								<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_rdeps}}
 						</span>
