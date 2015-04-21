@@ -157,7 +157,7 @@ warn {
 	font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"], [class="icon"] {
+[class^="icon-"], [class*=" icon-"] {
 	font-family: Icons;
 	display: inline-block;
 	font-size: inherit;

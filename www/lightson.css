@@ -38,7 +38,7 @@ a .package_cat_name:hover, a .package_cat_name:visited:hover { color: #000; }
 
 .indirect { color: #aaa !important; }
 .internal { color: #ccc !important; }
-#module_table .error { background-color: #900 !important; color: #fff !important; }
+.error_line { background-color: #900 !important; color: #fff !important; }
 
 .grep .result.active { border-color: #f00; }
 .grep pre { border-color: #ccc; }

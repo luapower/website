@@ -1,5 +1,4 @@
 --actions: the bulk of the web app.
-package.loaded.luapower = nil
 
 local glue = require'glue'
 local lp = require'luapower'
@@ -420,6 +419,18 @@ local function packages_of_all(dep_func, _, pkg, platform)
 	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
 end
 
+local function all_module_deps(pkg, platforms)
+	local t = {}
+	for platform in pairs(platforms) do
+		t[platform] = {}
+		for mod in pairs(lp.modules(pkg)) do
+			glue.update(t[platform],
+				lp.module_requires_loadtime_all(mod, pkg, platform))
+		end
+	end
+	return t
+end
+
 local function package_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
@@ -492,6 +503,19 @@ local function module_package_dep_maps(pkg, mod, platforms)
 	return pts
 end
 
+local function module_runtime_package_dep_maps(pkg, mod, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pdeps = packages_of(lp.module_requires_runtime, mod, pkg, platform)
+		local pt = {}
+		for p in pairs(pdeps) do
+			pt[p] = {kind = 'direct'}
+		end
+		pts[platform] = pt
+	end
+	return pts
+end
+
 local function module_module_dep_maps(pkg, mod, platforms)
 	local mts = {}
 	local mint = lp.modules(pkg)
@@ -514,13 +538,36 @@ local function module_module_dep_maps(pkg, mod, platforms)
 	return mts
 end
 
+local function module_runtime_module_dep_maps(pkg, mod, platforms)
+	local mts = {}
+	local mint = lp.modules(pkg)
+	for platform in pairs(platforms) do
+		local mrun = lp.module_requires_runtime(mod, pkg, platform)
+		local mt = {}
+		for m in pairs(mrun) do
+			local pkg = lp.module_package(m)
+			local path = lp.modules(pkg)[m]
+			mt[m] = {
+				kind = 'external',
+				dep_package = pkg,
+				dep_source_url = source_url(pkg, path, m),
+			}
+		end
+		mts[platform] = mt
+	end
+	return mts
+end
+
 local function package_dep_lists(pdeps)
 	local t = {}
 	for _,platform in ipairs(ext_platform_list) do
 		local pdeps = pdeps[platform]
 		if pdeps then
+			local icon = platform ~= 'all' and platform ~= 'common' and platform or nil
+			local text = not icon and platform or nil
 			table.insert(t, {
-				icon = platform ~= 'all' and platform ~= 'common' and platform,
+				icon = icon,
+				text = text,
 				packages = pdep_list(pdeps),
 			})
 		end
@@ -533,8 +580,11 @@ local function module_dep_lists(mdeps)
 	for _,platform in ipairs(ext_platform_list) do
 		local mdeps = mdeps[platform]
 		if mdeps then
+			local icon = platform ~= 'all' and platform ~= 'common' and platform or nil
+			local text = not icon and platform or nil
 			table.insert(t, {
-				icon = platform ~= 'all' and platform ~= 'common' and platform,
+				icon = icon,
+				text = text,
 				modules = mdep_list(mdeps),
 			})
 		end
@@ -635,12 +685,6 @@ local function package_info(pkg, doc)
 	end
 	t.has_git_tags = #t.git_tags > 0
 
-	--sidebar / package icons
-	t.icons = package_icons(package_type, platforms)
-
-	--sidebar / package type
-	t.type = package_type
-
 	--package info / overview / supported platorms
 	t.platforms = {}
 	for i,p in ipairs(platform_list) do
@@ -649,17 +693,18 @@ local function package_info(pkg, doc)
 		end
 	end
 	if not next(t.platforms) then
-		local runtime = t.type == 'Lua+ffi' and 'LuaJIT' or t.type == 'Lua' and 'Lua'
-		table.insert(t.platforms, {name = runtime and 'all that '..runtime..' supports'})
+		local runtime = package_type == 'Lua+ffi' and 'LuaJIT' or package_type == 'Lua' and 'Lua'
+		table.insert(t.platforms, {name = runtime and 'all '..runtime..' platforms'})
 	end
 
 	--package info / docs
 	--menubar / doc list
 	t.docs = {}
-	for name in glue.sortedpairs(docs) do
+	for name, path in glue.sortedpairs(docs) do
 		table.insert(t.docs, {
 			name = name,
-			path = docs[name],
+			path = path,
+			source_url = source_url(pkg, path),
 			selected = name == doc,
 		})
 	end
@@ -672,6 +717,8 @@ local function package_info(pkg, doc)
 	t.tagline = tagline
 
 	--sidebar
+	t.icons = package_icons(package_type, platforms)
+	t.type = package_type
 	t.version = git_version
 	t.mtime = format_time(master_time)
 	t.mtime_ago = timeago(master_time)
@@ -771,34 +818,49 @@ local function package_info(pkg, doc)
 	--module list -------------------------------------------------------------
 
 	t.modules = {}
-	local has_autoloads
 	for mod, path in glue.sortedpairs(lp.modules(pkg)) do
 		local mt = {module = mod}
 		table.insert(t.modules, mt)
+
+		local mtags = lp.module_tags(pkg, mod)
+		mt.lang = mtags.lang
 
 		mt.source_url = source_url(pkg, path, mod)
 
 		local mplatforms = lp.module_platforms(mod, pkg)
 
 		mt.icons = {}
-		if tuple(unpack(glue.keys(mplatforms, true))) ~= tuple(unpack(glue.keys(platforms, true))) then
+		if tuple(unpack(glue.keys(mplatforms, true))) ~=
+			tuple(unpack(glue.keys(platforms, true)))
+		then
 			mt.icons = platform_icons(mplatforms, true)
 		end
 
-		--package deps
-		--TODO: check if mplatforms is ok there
+		--loadtime package deps
 		local pts = module_package_dep_maps(pkg, mod, all_platforms)
 		local pdeps = platform_maps(pts, 'all')
 		mt.package_deps = package_dep_lists(pdeps)
 
-		--module deps
+		--loadtime module deps
 		local mts = module_module_dep_maps(pkg, mod, all_platforms)
-		mdeps = platform_maps(mts, 'all')
+		local mdeps = platform_maps(mts, 'all')
 		mt.module_deps = module_dep_lists(mdeps)
+
+		--runtime package deps
+		local pts = module_runtime_package_dep_maps(pkg, mod, all_platforms)
+		local pdeps = platform_maps(pts, 'all')
+		mt.runtime_package_deps = package_dep_lists(pdeps)
+		mt.module_has_runtime_deps = #mt.runtime_package_deps > 0
+		t.has_runtime_deps = t.has_runtime_deps or mt.module_has_runtime_deps
+
+		--runtime module deps
+		local mts = module_runtime_module_dep_maps(pkg, mod, all_platforms)
+		local mdeps = platform_maps(mts, 'all')
+		mt.runtime_module_deps = module_dep_lists(mdeps)
 
 		--autoloads
 		local auto = {}
-		for platform in pairs(platforms) do
+		for platform in pairs(all_platforms) do
 			local autoloads = lp.module_autoloads(mod, pkg, platform)
 			if next(autoloads) then
 				for k, mod in pairs(autoloads) do
@@ -819,12 +881,13 @@ local function package_info(pkg, doc)
 			for k in glue.sortedpairs(auto, cmp) do
 				local k, mod = k()
 				local pkg = lp.module_package(mod)
-				local file = pkg and lp.modules(pkg)[mod]
+				local impl_path = pkg and lp.modules(pkg)[mod]
 				table.insert(t, {
 					platform ~= 'all' and platform,
 					key = k,
+					path = path,
 					impl_module = mod,
-					impl_file = file,
+					impl_path = impl_path,
 				})
 			end
 			return t
@@ -833,7 +896,7 @@ local function package_info(pkg, doc)
 			glue.extend(mt.autoloads, autoload_list(platform, auto))
 		end
 		mt.module_has_autoloads = #mt.autoloads > 0
-		has_autoloads = has_autoloads or mt.module_has_autoloads
+		t.has_autoloads = t.has_autoloads or mt.module_has_autoloads
 
 		--load errors
 		local errs = {}
@@ -843,8 +906,7 @@ local function package_info(pkg, doc)
 				errs[platform] = {[err] = true}
 			end
 		end
-		errs = platform_maps(errs)
-		mt.error_class = glue.count(errs, 1) > 0 and 'error' or nil
+		errs = platform_maps(errs, 'all')
 		mt.load_errors = {}
 		for platform, errs in pairs(errs) do
 			table.insert(mt.load_errors, {
@@ -852,14 +914,46 @@ local function package_info(pkg, doc)
 				errors = glue.keys(errs, true),
 			})
 		end
+		mt.module_has_load_errors = #mt.load_errors > 0
+		t.has_load_errors = t.has_load_errors or mt.module_has_load_errors
 	end
 	t.has_modules = glue.count(t.modules, 1) > 0
-	t.has_autoloads = has_autoloads
+
+
+	local all_package_deps = package_dep_maps(pkg, all_platforms)
+	local all_module_deps = all_module_deps(pkg, all_platforms)
 
 	--script list
 	t.scripts = {}
-	for name, path in glue.sortedpairs(lp.scripts(pkg)) do
-		table.insert(t.scripts, {name = name, path = path})
+	for mod, path in glue.sortedpairs(lp.scripts(pkg)) do
+		local st = {}
+		table.insert(t.scripts, st)
+
+		st.module = mod
+		st.path = path
+		st.source_url = source_url(pkg, path, mod)
+
+		local mts = glue.update({}, lp.module_requires_parsed(mod))
+		local pts = {}
+		for mod in pairs(mts) do
+			local pkg = lp.module_package(mod)
+			if pkg then
+				pts[pkg] = true
+			end
+		end
+
+		st.package_deps = glue.keys(pts, true)
+
+		st.module_deps = {}
+		for mod in glue.sortedpairs(mts) do
+			local pkg = lp.module_package(mod)
+			local path = lp.modules(pkg)[mod]
+			table.insert(st.module_deps, {
+				dep_module = mod,
+				dep_source_url = source_url(pkg, path, mod),
+			})
+		end
+
 	end
 	t.has_scripts = #t.scripts > 0
 

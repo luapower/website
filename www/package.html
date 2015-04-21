@@ -62,7 +62,7 @@
 			<div>
 				<div class="switch_group" switch_group_for=".clone_for" active_switch=".clone_for_all" persistent=1>
 				{{#clone_lists}}
-					<a switch_for=".clone_for_{{platform}}" class="{{disabled}}"><i {{#icon}}class="icon-{{icon}}"{{/icon}}>{{text}}</i></a>&nbsp;
+					<a switch_for=".clone_for_{{platform}}" class="{{disabled}}">{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}<i>{{text}}</i></a>&nbsp;
 				{{/clone_lists}}
 				</div>
 			</div>
@@ -148,14 +148,57 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<td>Platforms:</td>
 					<td>
 						{{#platforms}}
-							{{#icon}}<span class="icon icon-{{icon}}"></span>{{/icon}}
+							{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}
 							{{name}}
 						{{/platforms}}
 					</td>
 				</tr>
 			</table>
 
-			<h2>Combined Package Dependencies
+			{{#has_load_errors}}
+			<h2>
+				Load Errors
+				&nbsp;
+				<a class=infotip>
+					Errors encountered when loading the module. Modules with load errors<br>
+					on a platform don't have their dependencies recorded on that platform,<br>
+					which also screws up the combined dependency list.
+				</a>
+				&nbsp;
+			</h2>
+			<table>
+				<tr>
+					<th></th>
+					<th align=left valign=top style="padding-right: 1em; padding-bottom: 1em">module</th>
+					<th align=left valign=top>load errors</th>
+				</tr>
+				{{#modules}}{{#module_has_load_errors}}
+				<tr>
+					<td width=30></td>
+					<td class="nowrap" valign=top style="padding-right: 1em">
+						{{#source_url}}
+							<a href="{{source_url}}">{{module}}</a>
+						{{/source_url}}
+						{{^source_url}}
+							<span>{{module}}</span>
+						{{/source_url}}
+					</td>
+					<td valign=top>
+						{{#load_errors}}
+							{{#errors}}
+								<span class=error_line>
+									{{#icon}}<span class="icon-{{icon}}"></span>&nbsp;{{/icon}}
+									{{.}}
+								</span><br>
+							{{/errors}}
+						{{/load_errors}}
+					</td>
+				</tr>
+				{{/module_has_load_errors}}{{/modules}}
+			</table>
+			{{/has_load_errors}}
+
+			<h2>Dependencies
 				&nbsp;
 				<a class=infotip>
 					This is a combined list of packages required by <b><i>all modules</i></b> of this<br>
@@ -169,16 +212,22 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					 to use all the modules of the package -- look at per-module dependencies below.<br>
 				</a>
 				&nbsp;
-				<a class="hastip package_dep_switch" title="show as table"><i class="fa fa-table"></i></a>
-				<a class="hastip package_dep_switch hidden" title="show as list"><i class="fa fa-list"></i></a>
+				<span
+					class="switch_group"
+					switch_group_for=".combined_deps"
+					active_switch=".combined_deps_list"
+					persistent=1>
+					<a switch_for=".combined_deps_list" class="hastip" title="show as list"><i class="fa fa-list"></i></a>
+					<a switch_for=".combined_deps_table" class="hastip" title="show as table"><i class="fa fa-table"></i></a>
+				</span>
 			</h2>
 			{{#has_package_deps}}
-			<table class="dep_lists package_dep_lists">
+			<table class="dep_lists combined_deps combined_deps_list hidden">
 				{{#package_deps}}
 				<tr>
 					<td class=col1 valign=top align=right>
-						{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
-						{{^icon}}<i>common</i>{{/icon}}
+						{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}
+						<i>{{text}}</i>
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
@@ -188,7 +237,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				</tr>
 				{{/package_deps}}
 			</table>
-			<div class="dep_matrix package_dep_matrix doc hidden">
+			<div class="dep_matrix doc combined_deps combined_deps_table hidden">
 				<table>
 					<thead>
 						<tr>
@@ -202,8 +251,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#depmat}}
 						<tr>
 							<td>
-								{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
-								{{text}}
+								{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}
+								<i>{{text}}</i>
 							</td>
 							{{#pkg}}
 							<td align=center>
@@ -223,41 +272,48 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			{{/has_package_deps}}
 
 			{{#has_modules}}
-			<h2>
-				<span class="package_toggle">Package</span>
-				<span class="module_toggle hidden">Module</span>
-				Dependencies
+			<h2>Modules
 				&nbsp;
-				<a class=infotip>
-					<span class=package_toggle>
-						These are the lists of packages required by each module of this package.
-						<br>Darker names, if present, represent indirect dependencies.
-					</span>
-					<span class="module_toggle hidden">
-						These are the lists of modules required by each module of this package.
-						<br>Darker names, if present, represent indirect dependencies.
-						<br>Even darker names are internal dependencies.
-					</span>
-				</a>
+				<span class="module_deps module_deps_packages hidden">
+					<a class="infotip">
+						This is the list of modules for this package.<br>
+						On the right column you have the required packages for each module.<br>
+						Darker names, if present, represent indirect dependencies.
+					</a>
+				</span>
+				<span class="module_deps module_deps_modules hidden">
+					<a class="infotip">
+						This is the list of modules for this package.<br>
+						On the right column you have the required modules for each module.<br>
+						Darker names, if present, represent indirect dependencies.<br>
+						Even darker names are internal dependencies.<br>
+					</a>
+				</span>
 				&nbsp;
-				<a class="hastip modpkg_switch" type=P title="show required modules">P</a>
-				<a class="hastip modpkg_switch hidden" type=M title="show required packages">M</a>
+				<span
+					class="switch_group"
+					switch_group_for=".module_deps"
+					active_switch=".module_deps_packages"
+					persistent=1>
+					<a switch_for=".module_deps_packages" class="hastip" title="show required packages">P</a>
+					<a switch_for=".module_deps_modules" class="hastip" title="show required modules">M</a>
+				</span>
 			</h2>
-			<table id=module_table>
+			<table>
 				<tr>
 					<th></th>
 					<th align=left valign=top style="padding-bottom: 1em">module &nbsp;</th>
+					<th align=left valign=top style="padding-right: 1em">language</th>
 					<th align=left valign=top>
-						<span class="package_toggle">package</span>
-						<span class="module_toggle hidden">module</span>
-						dependencies
+						<span class="module_deps module_deps_packages hidden">required packages</span>
+						<span class="module_deps module_deps_modules hidden">required modules</span>
 					</th>
 				</tr>
 				{{#modules}}
 				<tr>
 					<td valign=top align=center width=30>
 						{{#icons}}
-							<span class="icon-{{name}} {{disabled}}" title="{{title}}"></span>
+							<i class="icon-{{name}} {{disabled}}" title="{{title}}"></i>
 						{{/icons}}
 					</td>
 					<td class="nowrap" valign=top style="padding-right: 1em">
@@ -269,33 +325,34 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{/source_url}}
 					</td>
 					<td valign=top>
-						<span class="{{error_class}}">
-						{{#load_errors}}
-							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
-							{{#errors}}{{.}}<br>{{/errors}}
-						{{/load_errors}}
-						</span>
-						<div class="package_toggle">
+						{{lang}}
+					</td>
+					<td valign=top>
+						{{#module_has_load_errors}}
+							<i class="disabled">(has errors)</i>
+						{{/module_has_load_errors}}
+						{{^module_has_load_errors}}
+						<div class="module_deps module_deps_packages">
 						{{#package_deps}}
-							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#icon}}<span class="icon-{{icon}}"></span>&nbsp;{{/icon}}
 							{{#packages}}
 								<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
 						</div>
-						<div class="module_toggle hidden">
+						<div class="module_deps module_deps_modules hidden">
 						{{#module_deps}}
-							{{#icon}}<span class="icon-{{icon}}" style="padding-right: 0.5em"></span>{{/icon}}
+							{{#icon}}<span class="icon-{{icon}}"></span>&nbsp;{{/icon}}
 							{{#modules}}
 								{{#dep_source_url}}
-									<a href="{{dep_source_url}}" class="{{kind}}">{{dep_module}}</a>
+									<a href="{{dep_source_url}}" class="{{kind}}">{{dep_module}}</a>&nbsp;
 								{{/dep_source_url}}
 								{{^dep_source_url}}
-									<span class="{{kind}}">{{dep_module}}</span>
+									<span class="{{kind}}">{{dep_module}}</span>&nbsp;
 								{{/dep_source_url}}
-								&nbsp;
 							{{/modules}}
 						{{/module_deps}}
+						{{/module_has_load_errors}}
 					</td>
 				</tr>
 				{{/modules}}
@@ -316,8 +373,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{#bin_deps}}
 				<tr>
 					<td class=col1 valign=top align=right>
-						{{#icon}}<span class="icon-{{icon}}"></span>{{/icon}}
-						{{^icon}}<i>common</i>{{/icon}}
+						{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}
+						<i>{{text}}</i>
 					</td>
 					<td class=col2 valign=top>
 						{{#packages}}
@@ -333,7 +390,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				&nbsp;
 				<a class=infotip>
 					This is the complete list of packages that need to be compiled<br>
-					<b><i>in the prescribed order</i></b> in order to build this package.
+					<b><i>in the prescribed order</i></b> in order to build this package.<br>
 				</a>
 			</h2>
 
@@ -341,8 +398,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{#build_order}}
 				<tr>
 					<td class=col1>
-						{{#icon}}<i class="icon icon-{{icon}}"></i>{{/icon}}
-						{{text}}
+						{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}
+						<i>{{text}}</i>
 					</td>
 					<td class=col2>
 						{{#packages}}<a href="/{{.}}">{{.}}</a>&nbsp; {{/packages}}
@@ -357,10 +414,9 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<h2>Runtime Dependencies - Autoloads
 				&nbsp;
 				<div class=infotip>
-					Some modules implement parts of their API in separate sub-modules.
-					<br>These <i>implementation</i> modules are loaded automatically at runtime
-					<br>only if and when accessing those APIs.
-					<br>See <a href="/glue#autoload">glue.autoload</a> for how this works.
+					Some modules implement parts of their API in separate sub-modules.<br>
+					These <i>implementation</i> modules are loaded automatically at runtime<br>
+					only if and when accessing those APIs. See <a href="/glue#autoload">glue.autoload</a> for how this works.
 				</div>
 			</h2>
 			{{#modules}}{{#module_has_autoloads}}
@@ -373,13 +429,13 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{#autoloads}}
 				<tr>
 					<td valign=top align=center width=30>
-						<span class="icon-{{icon}}"></span>
+						<i class="icon-{{icon}}"></i>
 					</td>
 					<td style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3">{{module}}.{{key}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{path}}?ts=3">{{module}}.{{key}}</a>
 					</td>
 					<td>
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}?ts=3">{{impl_module}}</a>
+						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_path}}?ts=3">{{impl_module}}</a>
 					</td>
 				</tr>
 				{{/autoloads}}
@@ -388,55 +444,148 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			{{/has_autoloads}}
 
 			{{#has_runtime_deps}}
-			<h2>Runtime Dependencies - Other</h2>
+			<h2>Runtime Dependencies - Other
 				&nbsp;
 				<a class=infotip>
-					These are additional modules that are required automatically
-					<br>at runtime in specific circumstances.
-					<br>Check the module's documentation or source code for when.
+					These are additional modules that are required at runtime<br>
+					in specific circumstances. Check the module's documentation<br>
+					or source code to find out what these circumstances are.
 				</a>
+				&nbsp;
+				<span
+					class="switch_group"
+					switch_group_for=".runtime_deps"
+					active_switch=".runtime_deps_packages"
+					persistent=1>
+					<a switch_for=".runtime_deps_packages" class="hastip" title="show required packages">P</a>
+					<a switch_for=".runtime_deps_modules" class="hastip" title="show required modules">M</a>
+				</span>
+			</h2>
+			<table>
+				<tr>
+					<th></th>
+					<th align=left valign=top style="padding-right: 1em; padding-bottom: 1em">module</th>
+					<th align=left valign=top>
+						<span class="runtime_deps runtime_deps_packages hidden">required packages</span>
+						<span class="runtime_deps runtime_deps_modules hidden">required modules</span>
+					</th>
+				</tr>
 				{{#modules}}{{#module_has_runtime_deps}}
-				<table>
-					<tr>
-						<th></th>
-						<th align=left style="border-bottom: 1px solid gray">module</th>
-						<th align=left style="border-bottom: 1px solid gray">runtime dependencies</th>
-					</tr>
-					{{#runtime_deps}}
-					<tr>
-						<td valign=top align=center width=30>
-							<span class="icon-{{icon}}"></span>
-						</td>
-						<td style="padding-right: 1em">
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{file}}?ts=3">{{module}}.{{key}}</a>
-						</td>
-						<td>
-							<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_file}}?ts=3">{{impl_module}}</a>
-						</td>
-					</tr>
-					{{/runtime_deps}}
-				</table>
+				<tr>
+					<td width=30></td>
+					<td class="nowrap" valign=top style="padding-right: 1em">
+						{{#source_url}}
+							<a href="{{source_url}}">{{module}}</a>
+						{{/source_url}}
+						{{^source_url}}
+							<span>{{module}}</span>
+						{{/source_url}}
+					</td>
+					<td valign=top>
+						<div class="runtime_deps runtime_deps_packages hidden">
+						{{#runtime_package_deps}}
+							{{#icon}}<span class="icon-{{icon}}"></span>&nbsp;{{/icon}}
+							{{#packages}}
+								<a href="/{{dep_package}}/info" class="{{kind}}">{{dep_package}}</a>&nbsp;
+							{{/packages}}
+						{{/runtime_package_deps}}
+						</div>
+						<div class="runtime_deps runtime_deps_modules hidden">
+						{{#runtime_module_deps}}
+							{{#icon}}<span class="icon-{{icon}}"></span>&nbsp;{{/icon}}
+							{{#modules}}
+								{{#dep_source_url}}
+									<a href="{{dep_source_url}}" class="{{kind}}">{{dep_module}}</a>&nbsp;
+								{{/dep_source_url}}
+								{{^dep_source_url}}
+									<span class="{{kind}}">{{dep_module}}</span>&nbsp;
+								{{/dep_source_url}}
+							{{/modules}}
+						{{/runtime_module_deps}}
+					</td>
+				</tr>
 				{{/module_has_runtime_deps}}{{/modules}}
+			</table>
 			{{/has_runtime_deps}}
 
 			{{#has_scripts}}
-			<h2>Scripts</h2>
-			<ul>
-			{{#scripts}}
-				<li>
-					<a href="https://github.com/luapower/{{package}}/blob/master/{{path}}">{{name}}</a>
-				</li>
-			{{/scripts}}
-			</ul>
+			<h2>Scripts
+				&nbsp;
+				<a class=infotip>
+					This is the list of scripts (tests, demos, etc.).<br>
+					Unlike normal modules, scripts are not run to track dependencies.<br>
+					Instead, they are just <i>parsed</i> for <code>require()</code> calls.<br>
+					This means that indirect dependencies are never shown.
+				</a>
+				&nbsp;
+				<span
+					class="switch_group"
+					switch_group_for=".script_deps"
+					active_switch=".script_deps_packages"
+					persistent=1>
+					<a switch_for=".script_deps_packages" class="hastip" title="show required packages">P</a>
+					<a switch_for=".script_deps_modules" class="hastip" title="show required modules">M</a>
+				</span>
+			</h2>
+			<table>
+				<tr>
+					<th></th>
+					<th align=left valign=top style="padding-bottom: 1em">script &nbsp;</th>
+					<th align=left valign=top>
+						<span class="script_deps script_deps_packages hidden">required packages</span>
+						<span class="script_deps script_deps_modules hidden">required modules</span>
+					</th>
+				</tr>
+				{{#scripts}}
+				<tr>
+					<td valign=top align=center width=30>
+					</td>
+					<td class="nowrap" valign=top style="padding-right: 1em">
+						{{#source_url}}
+							<a href="{{source_url}}">{{module}}</a>
+						{{/source_url}}
+						{{^source_url}}
+							<span>{{module}}</span>
+						{{/source_url}}
+					</td>
+					<td valign=top>
+						<div class="script_deps script_deps_packages">
+						{{#package_deps}}
+							<a href="/{{.}}/info">{{.}}</a>&nbsp;
+						{{/package_deps}}
+						</div>
+						<div class="script_deps script_deps_modules hidden">
+						{{#module_deps}}
+							{{#dep_source_url}}
+								<a href="{{dep_source_url}}">{{dep_module}}</a>&nbsp;
+							{{/dep_source_url}}
+							{{^dep_source_url}}
+								<span>{{dep_module}}</span>&nbsp;
+							{{/dep_source_url}}
+						{{/module_deps}}
+					</td>
+				</tr>
+				{{/scripts}}
+			</table>
 			{{/has_scripts}}
 
 			{{#has_docs}}
 			<h2>Docs</h2>
-			<ul>
-			{{#docs}}
-				<li><a href="/{{name}}">{{name}}</a></li>
-			{{/docs}}
-			</ul>
+			<table>
+				<tr>
+					<th></th>
+					<th align=left>name</th>
+					<th align=left>source file</th>
+					<th></th>
+				</tr>
+				{{#docs}}
+				<tr>
+					<td width=30></td>
+					<td valign=top style="padding-right: 1em; padding-bottom: 1em"><a href="/{{name}}">{{name}}</a></td>
+					<td valign=top style="padding-bottom: 1em"><a href="{{source_url}}">{{path}}</a></td>
+				</tr>
+				{{/docs}}
+			</table>
 			{{/has_docs}}
 
 			{{/info}}
@@ -534,27 +683,3 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 		</td>
 	</tr>
 </table>
-<script>
-$(function() {
-
-	$('.package_dep_switch').click(function() {
-		$('.package_dep_lists').toggle()
-		$('.package_dep_matrix').toggle()
-		$('.package_dep_switch').toggle()
-	}).mousedown(function(e) {
-		// prevent selection of subsequent text on double-click.
-		e.preventDefault()
-	})
-
-	$('.modpkg_switch').click(function() {
-		var pkg = $(this).attr('type') == 'P'
-		$('.package_toggle').toggle()
-		$('.module_toggle').toggle()
-		$('.modpkg_switch').toggle()
-	}).mousedown(function(e) {
-		// prevent selection of subsequent text on double-click.
-		e.preventDefault()
-	})
-
-})
-</script>

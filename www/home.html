@@ -106,19 +106,19 @@ cd luapower
 </table>
 
 <br>
-<br>
 
-<table>
-	<tr>
-		<td class=home_switches>
-			<a class="hastip pswitch disabled" switch_for=".package_list" title="view condensed package list"><i class="fa fa-align-justify"></i></a>
-			<a class="hastip pswitch disabled" switch_for=".package_table" title="view full package table"><i class="fa fa-table"></i></a>
-			<a class="hastip pswitch disabled" switch_for=".package_cards" title="view info cards"><i class="fa fa-th"></i></a>
-		</td>
-	</tr>
-</table>
+<h3 class=switch_group
+	switch_group_for=".package"
+	active_switch=".package_list"
+	persistent=1>
+	Packages
+	&nbsp;
+	<a class="hastip" switch_for=".package_list" title="view condensed package list"><i class="fa fa-align-justify"></i></a>
+	<a class="hastip" switch_for=".package_table" title="view full package table"><i class="fa fa-table"></i></a>
+	<a class="hastip" switch_for=".package_cards" title="view info cards"><i class="fa fa-th"></i></a>
+</h3>
 
-<div class="pswitch_target package_list hidden">
+<div class="package package_list hidden">
 	<ul class=multicol_name>
 		{{#cats}}
 			<li class=package_cat>
@@ -137,7 +137,7 @@ cd luapower
 	<i class="fa fa-star hot"></i> <span class=smallnote>updated in the last 7 days</span>
 </div>
 
-<table width=100% class="pswitch_target package_table doc hidden">
+<table width=100% class="package package_table doc hidden">
 	<thead>
 		<tr>
 			<th align=left title="Hold Shift to sort by multiple columns">Type</th>
@@ -169,7 +169,7 @@ cd luapower
 	</tbody>
 </table>
 
-<table width=100% class="pswitch_target package_cards">
+<table width=100% class="package package_cards hidden">
 	{{#cats}}
 	<tr>
 		<td>
@@ -210,30 +210,13 @@ cd luapower
 
 $(function() {
 
-	// pswitch = package-list display-mode switch
-	$('.pswitch').click(function(e) {
-		e.preventDefault()
-		$('.pswitch').addClass('disabled')
-		$(this).removeClass('disabled')
-		$('.pswitch_target').hide()
-		var target = $(this).attr('switch_for')
-		$(target).show()
-		setcookie('pswitch_target', target)
-	}).mousedown(function(e) {
-		// prevent selection of subsequent text on double-click.
-		e.preventDefault()
-	})
-
-	// init pswitch using
-	var pswitch_target = getcookie('pswitch_target') || '.package_list'
-	$('.pswitch[switch_for="'+pswitch_target+'"]').click()
-
 	$('.package_table').tablesorter({
 		cancelSelection: true,
-		sortList: [[1,0]], //initially sort by name
+		sortList: JSON.parse(getcookie('pt_sortlist', '[[1,0]]')), //initially sort by name
+	}).bind("sortEnd", function(sorter) {
+		var sl = sorter.target.config.sortList
+		setcookie('pt_sortlist', JSON.stringify(sl))
 	})
-
-
 
 })
 
