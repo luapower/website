@@ -379,8 +379,7 @@ $(function() {
 
 // misc ----------------------------------------------------------------------
 
-$(function() {
-
+function fix_external_links() {
 	// mark all external links and make them open in a new window
 	$('a[href]:not(.download_link):not(.download_btn)').each(function() {
 		var url = $(this).attr('href')
@@ -388,6 +387,11 @@ $(function() {
 			$(this).addClass('external_link').attr('target', '_blank')
 		}
 	})
+}
+
+$(function() {
+
+	fix_external_links()
 
 	// make headings clickable
 	$('.doc').find('h1,h2,h3').click(function() {

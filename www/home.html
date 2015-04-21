@@ -106,7 +106,6 @@ cd luapower
 </table>
 
 <br>
-
 <h3 class=switch_group
 	switch_group_for=".package"
 	active_switch=".package_list"
@@ -206,6 +205,10 @@ cd luapower
 	{{/cats}}
 </table>
 
+<div class=news_table></div>
+
+<script src="/github.js"></script>
+
 <script>
 
 $(function() {
@@ -218,6 +221,12 @@ $(function() {
 		setcookie('pt_sortlist', JSON.stringify(sl))
 	})
 
+})
+
+load_github_events({
+{{#packages}}
+	"{{name}}": { link: ["{{name}}", "/{{name}}"], },
+{{/packages}}
 })
 
 </script>

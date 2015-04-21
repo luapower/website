@@ -442,6 +442,11 @@ warn {
 	opacity: 0.3;
 }
 
+.news_table table {
+	line-height: 160%;
+	font-size: 90%;
+}
+
 /* package page ----------------------------------------------------------- */
 
 .action_links {
