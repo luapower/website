@@ -224,6 +224,23 @@ build on the _oldest_ Linux which still has a _recent enough gcc_ (good luck),
 and check the symvers of your compiled binaries with
 `mgit check-glibc-symvers`.
 
+### The License
+
+  * add `license: XXX` to the header of your main doc (foo.md)
+  * put the full license file in csrc/foo/LICENSE
+  * the default license in absence of a license tag is Public Domain
+
+### Versioning
+
+All modules should work together from the master branch at any time.
+Each package has to keep up with the others. If you introduce breaking
+changes on a package, you have to upgrade all its dependants immediately.
+
+Conventions that I follow (you can of course use semantic versioning too):
+
+  * tag everything with just the major version (i.e. start with `mgit tag foo r1`)
+  * increment the tag on breaking changes (i.e. `mgit foo bump`)
+
 ## Publishing packages on luapower.com
 
 > Refer to [luapower-git] for the actual procedure.

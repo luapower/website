@@ -82,12 +82,7 @@ in the host system, because all dependencies are available as luapower
 packages as well. The build scripts are in the `csrc` directory for each
 package. The C sources are also included, so you can start right away.
 Just make sure you have a compatible [build toolchain][building] installed,
-and that you build the dependencies first, as listed on the website (or
-in the WHAT files).
-
-To build many packages (or _all_ packages) at once, including all their
-dependencies _in the right order_, use `sh csrc/build.sh`
-(note: requires [luapower]).
+and that you build the dependencies first, as listed on the website.
 
 ## Can I make single-exe apps with it?
 
@@ -100,40 +95,34 @@ to create self-contained single-exe apps on any platform.
 Yes. Almost all packages have a non-viral, open-source license, and many
 are in public domain. If in doubt, check the package table on the homepage
 (click on the license column to sort by license). Luapower itself,
-which includes the git wrapper, the build scripts, and the luapower
-module are all in Public Domain.
+which includes multigit, the build scripts, and the [luapower] module
+are in Public Domain.
 
 ## Can I use it with plain Lua?
 
-Partially, yes. All Lua modules should work with Lua 5.1 just fine,
-and some of them might even work with Lua 5.2 out-of-the-box.
-Lua/C modules should work with Lua 5.1 (with which LuaJIT is ABI-compatible).
+Although the module collection on the whole is focused on LuaJIT,
+pure Lua modules should work with Lua 5.1 just fine, and some of them
+might even work with Lua 5.2 out-of-the-box. Lua/C modules should work
+with Lua 5.1 too, since LuaJIT is ABI-compatible with it.
 
 You can also compile stock Lua, bundle it as a luapower package
 and use that as your runtime instead of luajit.
 
 ## What about luaffi?
 
-Some Lua+ffi modules _might_ work with luaffi but you are on your own
-on that one.
+Increasing the portability of luapower beyond LuaJIT is beyond my priorities
+at the moment. That being said, some Lua+ffi modules might work with
+luaffi already, but you would have to check that out yourself.
 
-## How do I see what packages are available?
-
-	mgit ls-uncloned
-
-## How do I see what packages are installed?
-
-	mgit ls
-
-## How do I see a package's files separately?
+## The files are all mixed up. How do I see which files come from which package?
 
 	mgit <package> ls-files
 
 ## But can I browse them too?
 
 Yes (but not in Windows).
-Create hard links with `mgit --all make-hardlinks` which makes
-hard links in the `.mgit` directory for all the packages. Now they're separate
+Create hard links with `mgit --all make-hardlinks` and you will get
+hard links in the `.mgit` directory for every package. Now they're separate
 and you can list them and check their size, and even edit them and commit
 the changes. Remember to run that command again if you add or delete
 files though.
@@ -143,7 +132,8 @@ files though.
 Fork it, clone it from your place (i.e. instead of `mgit clone foo`, do
 `mgit clone https://github.com/you/foo`), fix it, then send a pull request.
 If you want to become a maintainer,
-[email me](mailto:cosmin.apreutesei@gmail.com) so I can add you to github.
+[email me](mailto:cosmin.apreutesei@gmail.com) so I can add you to the
+luapower account on github.
 
 ## How do I make a new package?
 
