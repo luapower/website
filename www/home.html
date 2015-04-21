@@ -221,12 +221,12 @@ $(function() {
 		setcookie('pt_sortlist', JSON.stringify(sl))
 	})
 
-})
+	load_github_events({
+		{{#packages}}
+		"{{name}}": { link: ["{{name}}", "/{{name}}"], },
+		{{/packages}}
+	})
 
-load_github_events({
-{{#packages}}
-	"{{name}}": { link: ["{{name}}", "/{{name}}"], },
-{{/packages}}
 })
 
 </script>
