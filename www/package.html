@@ -534,7 +534,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<table>
 				<tr>
 					<th></th>
-					<th align=left valign=top style="padding-bottom: 1em">script &nbsp;</th>
+					<th align=left valign=top style="padding-right: 1em; padding-bottom: 1em">script &nbsp;</th>
 					<th align=left valign=top>
 						<span class="script_deps script_deps_packages hidden">required packages</span>
 						<span class="script_deps script_deps_modules hidden">required modules</span>
@@ -578,15 +578,15 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 			<table>
 				<tr>
 					<th></th>
-					<th align=left>name</th>
+					<th align=left style="padding-right: 1em; padding-bottom: 1em">name</th>
 					<th align=left>source file</th>
 					<th></th>
 				</tr>
 				{{#docs}}
 				<tr>
 					<td width=30></td>
-					<td valign=top style="padding-right: 1em; padding-bottom: 1em"><a href="/{{name}}">{{name}}</a></td>
-					<td valign=top style="padding-bottom: 1em"><a href="{{source_url}}">{{path}}</a></td>
+					<td valign=top style="padding-right: 1em"><a href="/{{name}}">{{name}}</a></td>
+					<td valign=top><a href="{{source_url}}">{{path}}</a></td>
 				</tr>
 				{{/docs}}
 			</table>
