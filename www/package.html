@@ -60,7 +60,11 @@
 
 			<h2>Clone with <a href="/luapower-git"><span>multigit</span></a></h2>
 			<div>
-				<div class="switch_group" switch_group_for=".clone_for" active_switch=".clone_for_all" persistent=1>
+				<div
+					class="switch_group"
+					switch_group_for=".clone_for"
+					active_switch=".clone_for_all"
+					persistent=1>
 				{{#clone_lists}}
 					<a switch_for=".clone_for_{{platform}}" class="{{disabled}}">{{#icon}}<i class="icon-{{icon}}"></i>{{/icon}}<i>{{text}}</i></a>&nbsp;
 				{{/clone_lists}}
