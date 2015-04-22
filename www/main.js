@@ -34,6 +34,9 @@ $(function() {
 	if(!doc.length || !nav.length) return
 
 	// wrap content sections (heading + everything till next heading) into divs
+	doc.find('h4').each(function() {
+		$(this).nextUntil('h4,h3,h2,h1,enddoc').andSelf().wrapAll('<div></div>')
+	})
 	doc.find('h3').each(function() {
 		$(this).nextUntil('h3,h2,h1,enddoc').andSelf().wrapAll('<div></div>')
 	})
@@ -48,16 +51,23 @@ $(function() {
 	var t = []
 	var i = 0
 
-	var h = doc.find('h1,h2,h3')
-	if (h.length > 60) // too many entries. cut the h3s
+	var h = doc.find('h1,h2,h3,h4')
+	if (h.length > 60) // too many entries. cut the h4s
+		h = doc.find('h1,h2,h3')
+	if (h.length > 60) // still too many entries. cut the h3's too
 		h = doc.find('h1,h2')
 
 	h.each(function() {
 		var h = $(this)
 		var s = h.html().trim()
 		var level = parseInt(h.prop('tagName').match(/\d/))
-		if (h.has('code').length)
+		if (h.has('code').length) {
+			// cut the args part from API declarations
 			s = h.find('code').html().trim().replace(/\(.*/, '')
+			// skip the "require..." headings
+			if (h.html().indexOf('require\'') >= 0)
+				return
+		}
 		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
 			' style="padding-left: '+((level-2)*1.5+.5)+
 			'em" idx='+i+'><a>'+s+'</a></div>')
@@ -252,7 +262,7 @@ $(function() {
 	fix_external_links()
 
 	// make headings clickable
-	$('.doc').find('h1,h2,h3').click(function() {
+	$('.doc').find('h1,h2,h3,h4').click(function() {
 		location = location.pathname +
 			(location.search ? '?' + location.search : '') +
 				'#' + $(this).attr('id')

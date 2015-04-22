@@ -106,9 +106,6 @@ local function md_refs()
 	for doc in pairs(lp.docs()) do
 		addref(doc)
 	end
-	for mod in pairs(lp.modules()) do
-		addref(mod)
-	end
 	for file in lfs.dir(app.wwwpath'md') do
 		if file:find'%.md$' then
 			addref(file:match'^(.-)%.md$')
@@ -947,7 +944,7 @@ local function package_info(pkg, doc)
 		st.module_deps = {}
 		for mod in glue.sortedpairs(mts) do
 			local pkg = lp.module_package(mod)
-			local path = lp.modules(pkg)[mod]
+			local path = lp.modules(pkg)[mod] or lp.scripts(pkg)[mod]
 			table.insert(st.module_deps, {
 				dep_module = mod,
 				dep_source_url = source_url(pkg, path, mod),
@@ -1120,6 +1117,7 @@ function action.clear_cache(package)
 	app.setmime'txt'
 	lustache.renderer:clear_cache()
 	lp.clear_cache(package)
+	lp.unload_db()
 	app.out('cached cleared for '..(package or 'all')..'\n')
 end
 

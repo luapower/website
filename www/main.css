@@ -101,6 +101,11 @@ h3 {
 	margin-bottom: 10px;
 }
 
+h4 {
+	margin-top: 28px;
+	margin-bottom: 10px;
+}
+
 h2 + ul, h2 + p, h2 + pre { margin-top: 10px; }
 h3 + ul, h3 + p, h3 + pre, h3 + div h4 { margin-top: 10px; }
 h2 + div h3 { margin-top: 20px; }
@@ -532,7 +537,10 @@ warn {
 .download_btn:visited { color: #999 !important; }
 .download_btn:hover { background-color: #0a0 !important; text-decoration: none; }
 
-.infobar { font-size: 13px; }
+.infobar {
+		font-size: 13px;
+		table-layout: fixed; /* overflow content instead of widening the table */
+}
 .infobar td { padding-right: 0.5em; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
@@ -678,7 +686,7 @@ warn {
 }
 
 /* make headings appear clickable */
-.doc h1, .doc h2, .doc h3 { cursor: pointer; }
+.doc h1, .doc h2, .doc h3, .doc h4 { cursor: pointer; }
 
 .doc h2 code,
 .doc h3 code,
@@ -707,7 +715,7 @@ warn {
 }
 
 /* hack: use <strong> in a table means a header */
-.doc td strong {
+.doc td > strong {
 	font-size: 120%;
 	margin-top: 6px;
 	display: inline-block;

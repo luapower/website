@@ -52,7 +52,7 @@ a .package_cat_name:hover, a .package_cat_name:visited:hover { color: #000; }
 }
 .doc code { background-color: #eee; } .doc h2 code, .doc h3 code { background-color: inherit; }
 .doc pre { background-color: #eee; }
-.doc th, .doc td strong { color: #666; }
+.doc th, .doc td strong { color: #000; }
 
 .doc .sourceCode     { color: #000; }
 .doc .sourceCode .kw { color: #909; } /*  KeyWordTok */
