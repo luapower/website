@@ -547,7 +547,7 @@ warn {
 
 .requires_label {
 	display: inline-block;
-	min-width: 84px;
+	min-width: 95px;
 }
 
 #docnav {
