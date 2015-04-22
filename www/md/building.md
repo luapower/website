@@ -136,13 +136,13 @@ developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
 
-## Building packages with mgit
+## Building with mgit
 
 	./mgit build <package>
 
 which is implemented as:
 
-	csrc/<package> && ./build-<current-platform>.sh
+	cd csrc/<package> && ./build-<current-platform>.sh
 
 ## Building packages in order
 
