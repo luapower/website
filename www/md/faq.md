@@ -193,14 +193,6 @@ There isn't one. Package information is computed on-the-fly
 using the [luapower] module (which also has a command-line interface,
 so check it out).
 
-> Luapower can also maintain a dependency database file ([luapower_db.lua])
-which can be used to acquire dependency info from multiple platforms
-(by running `./luapower update-db` on each platform) and then access that
-information from _any_ platform. That is why many luapower commands accept
-an optional platform arg.
-
-[luapower_db.lua]: https://luapower.com/files/luapower_db.lua
-
 ## How is versioning maintained?
 
 A package's version is the result of `git describe --tags --long --always`,
