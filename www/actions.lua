@@ -1209,9 +1209,6 @@ function action.default(s, ...)
 	elseif lp.docs()[s] then
 		local pkg = lp.doc_package(s)
 		return action_package(pkg, s, ...)
-	elseif lp.modules()[s] then
-		local pkg = lp.module_package(s)
-		return action_package(pkg, nil, s, ...)
 	elseif s:find'%.rockspec$' then
 		local pkg = s:match'^(.-)%.rockspec$'
 		if not lp.installed_packages()[pkg] then

@@ -193,6 +193,12 @@ There isn't one. Package information is computed on-the-fly
 using the [luapower] module (which also has a command-line interface,
 so check it out).
 
+> Luapower can also maintain a dependency database file (luapower_db.lua)
+which can be used to acquire dependency info from multiple platforms
+(by running `./luapower update-db` on each platform) and then access that
+information from _any_ platform. That is why many luapower commands accept
+an optional platform arg.
+
 ## How is versioning maintained?
 
 A package's version is the result of `git describe --tags --long --always`,
@@ -201,11 +207,12 @@ version, `N` is the number of commits after that version, and `hash`
 is the hash prefix of the last commit. This way versioning is unambiguous,
 not prone to human error, and doesn't require maintenance. For every
 incompatible API change, the major version gets bumped. The HEAD is kept
-compatible across all libraries (incompatible developments happen in
+compatible across all libraries (incompatible development happens in
 separate branches, except for packages tagged `dev`).
 
-> To clone package foo at tag point r5 (which indicates the 5th release),
-do `mgit clone foo=r5`.
+> __Tip:__ To clone package foo at tag point r5 (which indicates the
+5th release), do `mgit clone foo=r5`. To clone the same package at a known
+commit point, do `mgit clone foo=r5-2-a43cf7' or just `mgit clone foo=a43cf7'.
 
 ## Why is your code Public Domain?
 
