@@ -1118,7 +1118,7 @@ function action.clear_cache(package)
 	lustache.renderer:clear_cache()
 	lp.clear_cache(package)
 	lp.unload_db()
-	app.out('cached cleared for '..(package or 'all')..'\n')
+	app.out('cache cleared for '..(package or 'all')..'\n')
 end
 
 function action.update_db(package)
