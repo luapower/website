@@ -6,7 +6,7 @@ cd "$(dirname "$0")/luapower" || exit 1
 
 for pkg in $(mgit ls); do
 
-	mgit "$pkg" pull | grep -q -v 'Already up-to-date.' && \
+	mgit - "$pkg" pull | grep -q -v 'Already up-to-date.' && \
 		wget -qO- https://luapower.com/$pkg/cc
 
 done
