@@ -828,7 +828,7 @@ local function package_info(pkg, doc)
 
 		mt.icons = {}
 		if tuple(unpack(glue.keys(mplatforms, true))) ~=
-			tuple(unpack(glue.keys(platforms, true)))
+			tuple(unpack(glue.keys(all_platforms, true)))
 		then
 			mt.icons = platform_icons(mplatforms, true)
 		end
