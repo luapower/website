@@ -30,7 +30,9 @@ packaging steps, or even move code out of version control, ever.
 Modules don't need to be "installed" out of version control in order to
 create a proper runtime. You can make changes directly on your deployments,
 and you can push/pull changes between deployments and even create pull
-requests to upstream without any extra steps.
+requests to upstream without moving files around. There's no runtime
+overhead either, as there's no need for a custom module loader.
+
 
 ## Just the facts please
 
