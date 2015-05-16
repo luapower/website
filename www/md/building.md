@@ -78,7 +78,7 @@ In general, to get binaries that will work on older Linuxes, you want to
 build on the _oldest_ Linux that you care to support, but use
 the _newest_ gcc that you can install on that system. In particular,
 if you link against glibc 2.14+ your binary will not be backwards compatible
-with an older glibc (google "memcpy glibc 2.14" for the horror show).
+with an older glibc (google "memcpy glibc 2.14" to see the drama).
 
 Here's a fast and easy way to build binaries that are compatible
 down to glibc 2.7:
@@ -98,6 +98,14 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 
 The current luapower stack is built this way and it's the only supported way
 to build it.
+
+Note that the above setup contains EGLIBC 2.11 so it's not guaranteed that
+_anything_ you compile on it will be compatible down to GLIBC 2.7. It just
+so happens that the _current_ luapower libraries don't use any symbols that
+have a newer implementation on that version of glibc. In the future,
+we might have to bump up the backwards-compatibility claim up to GLIBC 2.11.
+Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that
+can run on that system might be too old for us. Having fun yet? Keep reading.
 
 Note that shipping libstdc++ (and its dependency libgcc) with your app
 on Linux can bring you tears if you're also using other external libraries
