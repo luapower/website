@@ -177,7 +177,8 @@ Feedback welcome.
 
 LuaDist is a git-based binaries-included distro with many similarities
 to luapower and a large module collection. LuaDist supports more platforms
-and more compilers than luapower. LuaDist requires declaring all package
+and more compilers than luapower, although binaries are not always included
+for all platforms. LuaDist requires declaring all package
 dependencies. Building LuaDist binaries requires knowledge of
 cmake and LuaDist's own custom macros. Because LuaDist binaries are in
 separate branches, portable installations under version control are not
@@ -189,7 +190,7 @@ library for package analysis.
 
 ## How are the libraries chosen?
 
-The included libraries are chosen based on license, portability, speed,
+The included libraries are chosen based on license, portability, speed
 and maturity, usually in that order.
 
 ## Where's the package database?
@@ -213,7 +214,7 @@ separate branches, except for packages tagged `dev`).
 5th release), do `mgit clone foo=r5`. To clone the same package at a known
 commit point, do `mgit clone foo=r5-2-a43cf7' or just `mgit clone foo=a43cf7'.
 
-## Why is your code Public Domain?
+## Why is your code in Public Domain?
 
 Because I [don't support][against ip] copyright law.
 
@@ -224,7 +225,7 @@ Because I [don't support][against ip] copyright law.
 Go to the [luapower forum](/forum) and ask away.
 There's no such thing as a stupid question there, any discussion is welcome.
 Incidentally, that is also the place where you can share your plans
-for world domination, so go and introduce yourself now.
+for world domination, so go and introduce yourself now!
 
 ## How do I report bugs?
 
@@ -240,8 +241,8 @@ in the process.
 
 If you have a great idea, or you would rather make things differently,
 just go to the [forum](/forum) and say it.
-Luapower is at an early stage, so now is a good time to influence its
-direction.
+Luapower is at an early stage, so now is a good time to influence
+where it's going.
 
 ## Who are you?
 
@@ -254,8 +255,8 @@ the next generation of desktop apps that run close-to-identically
 on every platform, with pixel-perfect vector-graphics including
 text shaping and rendering, complex interactivity beyond standard
 widget systems, peer-to-peer communication, a multi-threading/multi-process
-architecture, and access to communication peripherals like webcams
-and tablets.
+architecture, and fine-grained access to communication peripherals
+like webcams and pen tablets.
 
 This requires a large number of high-quality packages with
 extensive APIs that are well below the "scripting" level of abstraction.
