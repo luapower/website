@@ -33,14 +33,13 @@ and you can push/pull changes between deployments and even create pull
 requests to upstream without moving files around. There's no runtime
 overhead either, as there's no need for a custom module loader.
 
-
 ## Just the facts please
 
 Luapower is a dead simple idea: it puts [luajit] and a bunch
 of modules in separate repositories [on github](https://github.com/luapower),
 and it allows you to clone them back together _over the same directory_
-([git can do that](http://git-scm.com/blog/2010/04/11/environment.html)
-with a little [help][luapower-git]).
+(git can do that with the `--git-dir` option/`GIT_DIR` env var, which
+we wrap in a [script][luapower-git] for typing comfort).
 The files in the repos are [laid out][get-involved] such that when
 cloned overlaid like that, the result is a self-contained, runnable
 luajit installation. Binaries for all platforms are included directly
@@ -56,19 +55,23 @@ This results in a self-contained, version-controled,
 run-everywhere, build-anytime LuaJIT installation in which packages can
 be added, removed, upgraded and downgraded at will.
 
-
-## How do I install it?
+## OK, how do I install it?
 
 The best way to get to a runnable installation is with [multigit][luapower-git],
 which keeps everything under version control at all times, making it easy
 to add and remove packages, stay up-to-date, make pull requests,
 and even make deployments.
 
-Alternatively, you can just download the packages from the website directly.
+## But git sucks, can I skip it?
+
+Git does indeed suck (to some). If you want to avoid it,
+you can just download the packages from the website directly.
 [Getting luajit](/luajit/download) and the modules that you need and
 unzipping them over a common directory is enough to create a runnable
 LuaJIT installation that is self-contained and portable, meaning it will
 run the included luajit command from any directory and on any platform.
+The downside is that updating and removing modules must be done
+manually too.
 
 ## What platforms does it run on?
 
