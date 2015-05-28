@@ -46,6 +46,7 @@ b) configure git to replace urls on-the-fly with
 
 > __Tip:__ Add mgit to your PATH so you can type `mgit` instead of `./mgit`.
 You won't have to clone luapower into the multigit directory either.
+On Linux and OSX you can do that with: `sudo ln -s /path/to/mgit/mgit /usr/local/bin/`
 
 ## Managing packages
 
