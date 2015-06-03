@@ -229,7 +229,7 @@ local function platform_icons(platforms, vis_only)
 	end
 	--set the icon title
 	for i,pt in ipairs(t) do
-		pt.title = (pt.disabled and 'does\'nt work on ' or 'works on ')..
+		pt.title = (pt.disabled and 'doesn\'t work on ' or 'works on ')..
 			platform_icon_titles[pt.name]
 	end
 	return t
@@ -329,7 +329,7 @@ local function package_icons(ptype, platforms, small)
 	elseif has_lua then
 		table.insert(t, {
 			name = small and 'luas' or 'lua',
-			title = 'written in pure Lua',
+			title = 'written in Lua',
 		})
 	else
 		table.insert(t, {
@@ -343,6 +343,9 @@ local function package_icons(ptype, platforms, small)
 	if next(platforms) then --don't show platform icons for Lua modules
 		glue.extend(t, platform_icons(platforms))
 	end
+
+	require'pp'(platforms)
+	require'pp'(platform_icons(platforms))
 
 	--create a "sorting string" that sorts the packages by platform support
 	local st = {}
