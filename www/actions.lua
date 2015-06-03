@@ -222,6 +222,7 @@ local function platform_icons(platforms, vis_only)
 				t[i].name = t[i].name:match'^([^%d]+)'
 			else
 				t[i].name = t[i].disabled and t[i+1].name or t[i].name
+				t[i].disabled = nil
 			end
 			table.remove(t, i+1)
 		end
@@ -343,9 +344,6 @@ local function package_icons(ptype, platforms, small)
 	if next(platforms) then --don't show platform icons for Lua modules
 		glue.extend(t, platform_icons(platforms))
 	end
-
-	require'pp'(platforms)
-	require'pp'(platform_icons(platforms))
 
 	--create a "sorting string" that sorts the packages by platform support
 	local st = {}
