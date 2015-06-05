@@ -154,26 +154,27 @@ Here's a quick gcc cheat list:
 
 	gcc -shared options... files...
 
-  * `-shared`             : create a shared library
-  * `-s`                  : strip debug symbols (not for OSX)
-  * `-o <output-file>`    : output file path (eg. `-o ../../bin/mingw32/z.dll`)
-  * `-L<dir>`             : search path for library dependencies (eg. `-L../../bin/mingw32`)
-  * `-l<libname>`         : library dependency (eg. `-lz` looks for `z.dll`, `libz.so` or `libz.dylib`
-  depending on platform)
-  * `-static-libstdc++`   : static linking of the C++ standard library (for g++; not for OSX)
-  * `-static-libgcc`      : static linking of the GCC library (for gcc and g++; not for OSX)
-  * `-static`             : static linking of the winpthread library (for g++ mingw64)
-  * `-pthread`            : enable pthread support (not for Windows)
+  * `-shared`                    : create a shared library
+  * `-s`                         : strip debug symbols (not for OSX)
+  * `-o <output-file>`           : output file path (eg. `-o ../../bin/mingw32/z.dll`)
+  * `-L<dir>`                    : search path for library dependencies (eg. `-L../../bin/mingw32`)
+  * `-l<libname>`                : library dependency (eg. `-lz` looks for `z.dll`, `libz.so` or `libz.dylib` depending on platform)
+  * `-static-libstdc++`          : static linking of the C++ standard library (for C++ libraries; not for OSX)
+  * `-static-libgcc`             : static linking of the GCC runtime library (for C and C++ libraries; not for OSX)
+  * `-pthread`                   : enable pthread support (not for Windows)
   * `-arch i386`                 : OSX: create 32bit x86 binaries
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
-  * `-mmacosx-version-min=10.6`  : for C++ modules on OSX: link to older libstdc++.6
-  because we don't ship the standard C++ library on OSX
-  * `-install_name @rpath/<libname>.dylib` : for OSX
-  * `-U_FORTIFY_SOURCE`   : for Linux to preserve compatibility with glibc 2.7
+  * `-mmacosx-version-min=10.6`  : for C++ libraries on OSX: link to older libstdc++.6 because we don't ship
+  (and we can't statically link to) the standard C++ library on OSX
+  * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
+  * `-U_FORTIFY_SOURCE`   : for Linux, to preserve compatibility with GLIBC 2.7
+  * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
 
-> __IMPORTANT__: always place the `-L` and `-l` switches ___after___ the
-input files!
+__IMPORTANT__: always place the `-L` and `-l` switches ___after___ the input files!
+
+__EVEN MORE IMPORTANT__: The order in which `-l` options appear is significant!
+Always place ___all dependent libraries before all dependencies___.
 
 #### Static linking with ar:
 
@@ -208,13 +209,13 @@ After compilation, check your builds against the minimum supported platforms:
 Also, you may want to check the following:
 
   * on Linux, run `mgit check-glibc-symvers` to check that you don't have
-  any symbols that require glibc > 2.7. Also run `mgit check-other-symvers`
+  any symbols that require GLIBC > 2.7. Also run `mgit check-other-symvers`
   to check for other dependencies that contain versioned symbols.
   * on OSX, run `mgit check-osx-rpath` to check that all library paths
   contain the `@rpath/` prefix.
 
 > A quick note about versioned symbols on Linux:
-glibc has multiple implementations of its functions inside, which can be
+GLIBC has multiple implementations of its functions inside, which can be
 selected in the C code using a pragma (.symver). Leaving the insanity of that
 aside, when you link your binary, you will link against the symbol versions
 that you happen to have on your machine, and those will be the _minimum_
