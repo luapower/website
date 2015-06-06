@@ -165,8 +165,8 @@ Here's a quick gcc cheat list:
   * `-arch i386`                 : OSX: create 32bit x86 binaries
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
-  * `-mmacosx-version-min=10.6`  : for C++ libraries on OSX: link to older libstdc++.6 because we don't ship
-  (and we can't statically link to) the standard C++ library on OSX
+  * `-mmacosx-version-min=10.6`  : for C++ libraries on OSX: link to older libstdc++.6
+  * `-mmacosx-version-min=10.7`  : for C++11 libraries on OSX: link to newer libc++.1
   * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
   * `-U_FORTIFY_SOURCE`   : for Linux, to preserve compatibility with GLIBC 2.7
   * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
