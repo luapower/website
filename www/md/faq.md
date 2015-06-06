@@ -75,9 +75,9 @@ manually too.
 
 ## What platforms does it run on?
 
-  * Windows XP/2000+, 32bit and 64bit
-  * Linux on x86, 32bit and 64bit, GLIBC 2.7+ (Debian 5+, Ubuntu 8.04+, etc.)
-  * OSX 10.6+, 32bit and 64bit ([objc] needs OSX 10.7+)
+  * Windows XP SP3+ / Windows XP x64 SP2+
+  * Linux on x86 with GLIBC 2.7+, 32bit and 64bit (Debian 5+, Ubuntu 8.04+, etc.)
+  * OSX 10.7+, 32bit and 64bit
 
 ## How do I compile the binaries?
 
