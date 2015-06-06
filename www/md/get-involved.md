@@ -124,7 +124,7 @@ Example:
 Write a build script for each supported platform, based on the
 [luapower toolchain][building] (do not introduce additional tool
 requirements if you can avoid it). Building with gcc is a 2-step
-process, compilation and linking, becuase we want to build both static
+process, compilation and linking, because we want to build both static
 and dynamic versions the libraries.
 
 Here's a quick gcc cheat list:
