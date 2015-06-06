@@ -200,12 +200,7 @@ In some cases it's going to be more complicated than that.
   (if the package has a clean and simple makefile that doesn't add more
   dependencies to the toolchain, use that instead)
 
-After compilation, check your builds against the minimum supported platforms:
-
-  * Windows XP or 2000, 32bit and 64bit
-  * Linux with GLIBC 2.7 (Debian 5 or Ubuntu 8.04)
-  * OSX 10.6, 32bit and 64bit
-
+After compilation, check your builds against the minimum supported platforms.
 Also, you may want to check the following:
 
   * on Linux, run `mgit check-glibc-symvers` to check that you don't have
