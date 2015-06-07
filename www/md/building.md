@@ -99,7 +99,7 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 	sudo apt-get install gcc-4.8 g++-4.8
 	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
 	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
-	sudo apt-get install nasm cmake ragel
+	sudo apt-get install nasm cmake
 
 The current luapower stack is built this way and it's the only supported way
 to build it.
