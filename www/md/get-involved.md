@@ -134,21 +134,23 @@ Here's a quick gcc cheat list:
 	gcc -c options... files...
 	g++ -c options... files...
 
-  * `-c`                  : compile only (don't link; produce .o files)
-  * `-O2`                 : enable code optimizations
-  * `-I<dir>`             : search path for headers (eg. `-I../lua`)
-  * `-D<name>`            : set a `#define`
-  * `-D<name>=<value>`    : set a `#define`
-  * `-U<name>`            : unset `#define`
-  * `-fpic` or `-fPIC`    : generate position-independent code (required for linux64)
-  * `-DWINVER=0x501`      : set Windows API level to Windows XP
-  * `-DWINVER=0x502`      : set Windows API level to Windows XP SP2
-  * `-arch i386`          : OSX: create 32bit x86 binaries
-  * `-arch x86_64`        : OSX: create 64bit x86 binaries
-  * `-include _memcpy.h`  : Linux on x64: fix the memcpy@GLIBC_2.14 disaster
-  (copy _memcpy.h from other packages)
-  * `-D_XOPEN_SOURCE=700` : Linux: for libs that use pthreads if they report
+  * `-c`                   : compile only (don't link; produce .o files)
+  * `-O2`                  : enable code optimizations
+  * `-I<dir>`              : search path for headers (eg. `-I../lua`)
+  * `-D<name>`             : set a `#define`
+  * `-D<name>=<value>`     : set a `#define` with a value
+  * `-U<name>`             : unset `#define`
+  * `-fpic` or `-fPIC`     : generate position-independent code (required for linux64)
+  * `-DWINVER=0x501`       : set Windows API level to Windows XP
+  * `-DWINVER=0x502`       : set Windows API level to Windows XP SP2
+  * `-arch i386`           : OSX: create 32bit x86 binaries
+  * `-arch x86_64`         : OSX: create 64bit x86 binaries
+  * `-include _memcpy.h`   : Linux on x64: fix the memcpy@GLIBC_2.14 disaste (*)
+  * `-D_XOPEN_SOURCE=700`  : Linux: for libs that use pthreads if they report
   undeclared symbols
+
+ (*) Put the line `__asm__(".symver memcpy,memcpy@GLIBC_2.2.5");` in _memcpy.h.
+ This is not needed if building on Ubuntu 10.
 
 #### Dynamic linking with gcc:
 
@@ -165,8 +167,8 @@ Here's a quick gcc cheat list:
   * `-arch i386`                 : OSX: create 32bit x86 binaries
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
-  * `-mmacosx-version-min=10.6`  : for C++ libraries on OSX: link to older libstdc++.6
-  * `-mmacosx-version-min=10.7`  : for C++11 libraries on OSX: link to newer libc++.1
+  * `-mmacosx-version-min=10.6`  : set OSX 10.6 API level; for C++ it also means link to libstdc++
+  * `-mmacosx-version-min=10.7`  : set OSX 10.7 API level; for C++ it also means link to libc++
   * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
   * `-U_FORTIFY_SOURCE`   : for Linux, to preserve compatibility with GLIBC 2.7
   * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
