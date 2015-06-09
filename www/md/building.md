@@ -25,7 +25,8 @@ tagline:  how to build binaries
  * OSX libs set their install_name to `@rpath/<libname>.dylib`
  * the luajit exe on OSX sets `@rpath` to `@loader_path`
  * the luajit exe on Linux sets `rpath` to `$ORIGIN`
- * all listed tools are mirrored at [http://luapower.com/files]
+ * all listed tools are mirrored at 
+ [luapower.com/files](http://luapower.com/files)
  (but please report broken links anyway)
 
 ## Building on Win32 for Win32
