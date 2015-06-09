@@ -48,6 +48,9 @@ b) configure git to replace urls on-the-fly with
 You won't have to clone luapower into the multigit directory either.
 On Linux and OSX you can do that with: `sudo ln -s /path/to/mgit/mgit /usr/local/bin/`
 
+After all packages are cloned, your luapower directory should 
+look like [this](/files/luapower/).
+
 ## Managing packages
 
 <div class="shell_btn"></div>
