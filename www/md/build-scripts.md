@@ -1,6 +1,6 @@
 ---
 title:    build scripts
-tagline:  how to write simple build scripts
+tagline:  how to write build scripts
 ---
 
 The build scripts assume the [luapower toolchain][building].

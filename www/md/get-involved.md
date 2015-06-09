@@ -45,7 +45,8 @@ C libs & Lua/C libs have additional files:
 	bin/linux{32,64}/clib/foo.so     Lua/C library
 	bin/osx{32,64}/clib/foo.so       Lua/C library
 
-(*)	supported platforms: mingw32, mingw64, linux32, linux64, osx32, osx64.
+(*)	one script for each platform that your package supports, among
+the following: mingw32, mingw64, linux32, linux64, osx32, osx64.
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract

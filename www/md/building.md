@@ -5,8 +5,8 @@ tagline:  how to build binaries
 
 ## What you need to know first
 
- * Building is based on trivial shell scripts that invoke gcc directly
- (no makefiles).
+ * Building is based on trivial [shell scripts][build-scripts] 
+ that invoke gcc directly (no makefiles).
  * Each supported package/platform/arch combination has a separate build
  script in `csrc/<package>/build-<platf><arch>.sh`.
  * C sources are included so you can start right away.
