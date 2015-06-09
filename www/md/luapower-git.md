@@ -99,7 +99,7 @@ Say you don't want to type the full url all the time:
 Say you created a new module locally, and now you want to turn it
 into a package named `foo`, hosted at `https://github.com/bob/foo`.
 
-Create the repo `bob/foo` on github, make it known to luapower so
+Create the repo `bob/foo` on github, make it known to multigit so
 it can clone it, clone it, add in your files, commit and push:
 
 	mgit baseurl bob https://github.com/bob/    # add bob's base url
@@ -127,13 +127,16 @@ a pull request on the [luapower-repos](https://github.com/luapower/luapower-repo
 package with your additions. So you have to fork luapower-repos, re-clone it,
 add your package origins to it, push, then send a pull request:
 
-	mgit remove luapower-repos
-	mgit clone https://github.com/you/luapower-repos
-	mgit luapower-repos remote add upstream https://github.com/luapower/luapower-repos
-	mgit luapower-repos status        # see your additions
-	mgit luapower-repos add ...       # add them
-	mgit luapower-repos commit -m "new stuff"
-	mgit push
+	$ mgit remove luapower-repos
+	$ mgit clone https://github.com/you/luapower-repos
+	$ mgit luapower-repos                          # enter a git subshell
+	[luapower-repos]$ git remote add upstream https://github.com/luapower/luapower-repos
+	[luapower-repos]$ git status                   # see your additions
+	[luapower-repos]$ git add ...                  # add them
+	[luapower-repos]$ git commit -m "new stuff"    # commit
+	[luapower-repos]$ git push                     # push
+	[luapower-repos]$ exit                         # exit the git subshell
+	$ _
 
 Note that luapower users will always pull the package directly from your
 repository, so it's important that your repository remains accessible

@@ -29,9 +29,9 @@ There are 5 types of luapower packages:
 	foo_h.lua             ffi.cdef module (ffi.load in foo.lua)
 	foo_test.lua          test program: for tests that can be automated
 	foo_demo.lua          demo program: anything goes
-  foo.md                main doc: markdown with pandoc extensions
-  foo_bar.md            submodule doc: optional, for large submodules
-  .mgit/foo.exclude     .gitignore file: optional, see below
+	foo.md                main doc: markdown with pandoc extensions
+	foo_bar.md            submodule doc: optional, for large submodules
+	.mgit/foo.exclude     .gitignore file: optional, see below
 
 C libs & Lua/C libs have additional files:
 

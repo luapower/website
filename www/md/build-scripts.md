@@ -36,7 +36,7 @@ because we want to build both static and dynamic versions the libraries.
   * `-std=c++11`                 : for C++11 libraries
   * `-stdlib=libc++ -mmacosx-version-min=10.7` : for all C++ libraries on OSX
 
- (*) Put the line `__asm__(".symver memcpy,memcpy@GLIBC_2.2.5");` in _memcpy.h.
+ (*) put the line `__asm__(".symver memcpy,memcpy@GLIBC_2.2.5");` in _memcpy.h.
  This is _not needed_ if building on Ubuntu 10 or older.
 
 ### Dynamic linking with gcc/g++
@@ -62,8 +62,8 @@ because we want to build both static and dynamic versions the libraries.
   * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
 
 __IMPORTANT__: The order in which `-l` options appear is significant!
-Always place all object files __and__ all dependent libraries __before__
-all dependencies.
+Always place all object files _and_ all dependent libraries _before_
+all dependency libraries.
 
 ### Static linking with ar
 
@@ -163,7 +163,7 @@ doesn't load the older one.
 ### OSX
 
 OSX has two stdc++es: GNU's libstdc++ and the newer libc++ from LLVM.
-libc++ is 10.7+ and implements C++11.
+Only libc++ implements C++11 but it comes with OSX 10.7+.
 
 On OSX 10.8+, libc++ is pulled in by libSystem (via libdispatch) anyway,
 so linking against libstdc++ on these platforms is a net loss when libc++
