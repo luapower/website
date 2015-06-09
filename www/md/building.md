@@ -10,16 +10,16 @@ tagline:  how to build binaries
  * Each supported package/platform/arch combination has a separate build
  script in `csrc/<package>/build-<platf><arch>.sh`.
  * C sources are included so you can start right away.
- * Dependent packages are listed on the website and in `csrc/<package>/WHAT`.
- Build those first.
+ * Dependent packages are listed on the website (under the section 
+ "Binary Dependencies") and in `csrc/<package>/WHAT`. Build those first.
  * The only sure way to get a binary on the first try is to use the exact
  toolchain as described here for each platform.
  The good news is that you _will_ get a binary.
  * For building Lua/C modules you need [lua-headers].
  * For building Lua/C modules on Windows you also need [luajit].
- * You will get both dynamic libraries and static libraries (stripped).
+ * You will get both dynamic libraries (stripped) and static libraries.
  * libgcc and libstdc++ will be statically linked, except on OSX which 
- doesn't support that.
+ doesn't support that and where libc++ is used.
  * Binaries on Windows are linked to msvcrt.dll.
  * Lua/C modules on Windows are linked to lua51.dll (which is why you need luajit).
  * OSX libs set their install_name to `@rpath/<libname>.dylib`
@@ -33,7 +33,7 @@ tagline:  how to build binaries
 	sh build-mingw32.sh
 
 These scripts assume that both MSYS and MinGW bin dirs (in this order)
-are in your PATH. Here's the MinGW-w64 package used to build
+are in your PATH. Here's the MinGW-w64 package used to build 
 the current luapower stack:
 
 [mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
@@ -43,8 +43,8 @@ The build scripts assume these are in your PATH too.
 Use them on 64bit Windows too.
 
 ----
-[nasm 2.11 (only for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
-[cmake 2.8.12.2 (only for libjpeg-turbo)](http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip)
+[nasm 2.11 (for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
+[cmake 2.8.12.2 (for libjpeg-turbo)](http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip)
 ----
 
 The resulted binaries are linked to msvcrt.dll and should be compatible
@@ -83,7 +83,7 @@ In general, to get binaries that will work on older Linuxes, you want to
 build on the _oldest_ Linux that you care to support, but use
 the _newest_ gcc that you can install on that system. In particular,
 if you link against GLIBC 2.14+ your binary will not be backwards compatible
-with an older glibc (google "memcpy glibc 2.14" to see the drama).
+with an older GLIBC (google "memcpy glibc 2.14" to see the drama).
 
 Here's a fast and easy way to build binaries that are compatible
 down to GLIBC 2.7:
@@ -110,20 +110,7 @@ so happens that the _current_ luapower libraries don't use any symbols that
 have a newer implementation on that version of glibc. In the future,
 we might have to bump up the backwards-compatibility claim up to GLIBC 2.11.
 Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that
-can run on that system might be too old for us. Having fun yet? Keep reading.
-
-Note that shipping libstdc++ (and its dependency libgcc) with your app
-on Linux can bring you tears if you're also using other external libraries
-that happen to dlopen libstdc++ themselves and expect to get a different
-version of it than the one that you just loaded. Such is the case with
-OpenGL with Radeon drivers (google "steam libstdc++" to see the drama).
-In that case it's better to either
-a) link libstdc++ statically to each C++ library (the luapower way), or
-b) link it dynamically, but check at runtime which libstdc++ is newer
-(the one that you ship or the one on the host), and then ffi.load
-the newer one _before_  loading that external C library so that _it_
-doesn't load the older one.
-
+can run on that system might be too old for us.
 
 ## Building on OSX for OSX
 
@@ -138,7 +125,7 @@ Current OSX builds are based on clang 6.0 (LLVM 3.5svn) and are done
 on an OSX 10.9 using OSX SDK 10.10.
 
 The generated binaries are compatible down to OSX 10.6 for both 32bit
-and 64bit, except for C++11 libraries which link to libc++ which is 
+and 64bit, except for C++ libraries which link to libc++ which is 
 OSX 10.7+.
 
 > NOTE: For Lion and above users, Apple provides a package called

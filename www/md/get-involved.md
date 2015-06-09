@@ -23,21 +23,29 @@ There are 5 types of luapower packages:
 
 ### Directory layout
 
-  * main module: `foo.lua`
-  * submodule: `foo_bar.lua` for small packages, `foo/bar.lua` for large packages
-  * ffi cdef module: `foo_h.lua` (only ffi.cdef, no ffi.load in there)
-  * test program: `foo_test.lua` (only tests that can be automated)
-  * demo: `foo_demo.lua` (anything goes)
-  * documentation: `foo.md`, `foo_bar.md` (pandoc markdown format)
-  * C libs & Lua/C libs:
-    * sources: `csrc/foo/*`
-    * build scripts: `csrc/foo/build-<platform>.sh`
-		* currently supported platforms are: mingw32, mingw64, linux32, linux64, osx32, osx64.
-    * binaries (resulted from building):
-	   * C libraries: `bin/mingwXX/foo.dll`, `bin/linuxXX/libfoo.so`, `bin/osxXX/libfoo.dylib`
-	   * Lua/C libraries: `bin/<platform>/clib/foo[.dll|.so]`
-	 * description: `csrc/foo/WHAT` (see below)
-  * exclude file: `.mgit/foo.exclude` (optional; see below)
+	foo.lua               main module
+	foo_bar.lua           submodule, for small packages
+	foo/bar.lua           submodule, for large packages
+	foo_h.lua             ffi.cdef module (ffi.load in foo.lua)
+	foo_test.lua          test program: for tests that can be automated
+	foo_demo.lua          demo program: anything goes
+  foo.md                main doc: markdown with pandoc extensions
+  foo_bar.md            submodule doc: optional, for large submodules
+  .mgit/foo.exclude     .gitignore file: optional, see below
+
+C libs & Lua/C libs have additional files:
+
+	csrc/foo/*                       C sources
+	csrc/foo/WHAT                    WHAT file (see below)
+	csrc/foo/build-<platform>.sh     build scripts (*)
+	bin/mingw{32,64}/foo.dll         C library
+	bin/linux{32,64}/libfoo.so       C library
+	bin/osx{32,64}/libfoo.dylib      C library
+	bin/mingw{32,64}/clib/foo.dll    Lua/C library
+	bin/linux{32,64}/clib/foo.so     Lua/C library
+	bin/osx{32,64}/clib/foo.so       Lua/C library
+
+(*)	supported platforms: mingw32, mingw64, linux32, linux64, osx32, osx64.
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
@@ -56,7 +64,8 @@ A good, short tagline is important for figuring out what the module does
 when browsing the module list.
 
 The `platforms` line is only needed for Lua packages that are
-platform-specific but do not have a C component; for packages with a C
+platform-specific but do not have a C component (most packages either
+support all platforms or have a C component or both); for packages with a C
 component, the platforms are inferred from the names of the build scripts.
 
 You don't have to make a doc for each submodule if you don't have much to
@@ -94,6 +103,8 @@ Example:
 	!/foo/               ; include the directory in root named `foo`
 	!/foo/**             ; include the contents of the directory named `foo`, recursively
 
+This file is entirely optional and rarely used.
+
 ### The code
 
   * add at least a small comment on the first line of every Lua file with
@@ -121,111 +132,13 @@ Example:
 
 ### The build scripts
 
-Write a build script for each supported platform, based on the
-[luapower toolchain][building] (do not introduce additional tool
-requirements if you can avoid it). Building with gcc is a 2-step
-process, compilation and linking, because we want to build both static
-and dynamic versions the libraries.
-
-Here's a quick gcc cheat list:
-
-#### Compiling with gcc/g++:
-
-	gcc -c options... files...
-	g++ -c options... files...
-
-  * `-c`                   : compile only (don't link; produce .o files)
-  * `-O2`                  : enable code optimizations
-  * `-I<dir>`              : search path for headers (eg. `-I../lua`)
-  * `-D<name>`             : set a `#define`
-  * `-D<name>=<value>`     : set a `#define` with a value
-  * `-U<name>`             : unset `#define`
-  * `-fpic` or `-fPIC`     : generate position-independent code (required for linux64)
-  * `-DWINVER=0x501`       : set Windows API level to Windows XP
-  * `-DWINVER=0x502`       : set Windows API level to Windows XP SP2
-  * `-arch i386`           : OSX: create 32bit x86 binaries
-  * `-arch x86_64`         : OSX: create 64bit x86 binaries
-  * `-include _memcpy.h`   : Linux on x64: fix the memcpy@GLIBC_2.14 disaste (*)
-  * `-D_XOPEN_SOURCE=700`  : Linux: for libs that use pthreads if they report
-  undeclared symbols
-
- (*) Put the line `__asm__(".symver memcpy,memcpy@GLIBC_2.2.5");` in _memcpy.h.
- This is not needed if building on Ubuntu 10.
-
-#### Dynamic linking with gcc:
-
-	gcc -shared options... files...
-
-  * `-shared`                    : create a shared library
-  * `-s`                         : strip debug symbols (not for OSX)
-  * `-o <output-file>`           : output file path (eg. `-o ../../bin/mingw32/z.dll`)
-  * `-L<dir>`                    : search path for library dependencies (eg. `-L../../bin/mingw32`)
-  * `-l<libname>`                : library dependency (eg. `-lz` looks for `z.dll`, `libz.so` or `libz.dylib` depending on platform)
-  * `-static-libstdc++`          : static linking of the C++ standard library (for C++ libraries; not for OSX)
-  * `-static-libgcc`             : static linking of the GCC runtime library (for C and C++ libraries; not for OSX)
-  * `-pthread`                   : enable pthread support (not for Windows)
-  * `-arch i386`                 : OSX: create 32bit x86 binaries
-  * `-arch x86_64`               : OSX: create 64bit x86 binaries
-  * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
-  * `-mmacosx-version-min=10.6`  : set OSX 10.6 API level; for C++ it also means link to libstdc++
-  * `-mmacosx-version-min=10.7`  : set OSX 10.7 API level; for C++ it also means link to libc++
-  * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
-  * `-U_FORTIFY_SOURCE`   : for Linux, to preserve compatibility with GLIBC 2.7
-  * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
-
-__IMPORTANT__: always place the `-L` and `-l` switches ___after___ the input files!
-
-__EVEN MORE IMPORTANT__: The order in which `-l` options appear is significant!
-Always place ___all dependent libraries before all dependencies___.
-
-#### Static linking with ar:
-
-	ar rcs ../../bin/<platform>/static/<libname>.a *.o
-
-#### Example: compile and link lpeg 0.10 for linux32:
-
-	gcc -c -O2 lpeg.c -I. -I../lua
-	gcc -shared -s -static-libgcc -o ../../bin/linux32/clib/lpeg.so
-	ar rcs ../../bin/linux32/static/liblpeg.so
-
-In some cases it's going to be more complicated than that.
-
-  * sometimes you won't get away with specifying `*.c` -- some libraries rely
-  on the makefile to choose which .c files need to be compiled for a
-  specific platform or set of options as opposed to using platform defines
-  (eg. [socket])
-  * some libraries actually do use one or two of the myriad of defines
-  generated by the `./configure` script -- you might have to grep for those
-  and add appropriate `-D` switches to the command line.
-  * some libraries have parts written in assembler or other language.
-  At that point, maybe a simple makefile is a better alternative, YMMV
-  (if the package has a clean and simple makefile that doesn't add more
-  dependencies to the toolchain, use that instead)
-
-After compilation, check your builds against the minimum supported platforms.
-Also, you may want to check the following:
-
-  * on Linux, run `mgit check-glibc-symvers` to check that you don't have
-  any symbols that require GLIBC > 2.7. Also run `mgit check-other-symvers`
-  to check for other dependencies that contain versioned symbols.
-  * on OSX, run `mgit check-osx-rpath` to check that all library paths
-  contain the `@rpath/` prefix.
-
-> A quick note about versioned symbols on Linux:
-GLIBC has multiple implementations of its functions inside, which can be
-selected in the C code using a pragma (.symver). Leaving the insanity of that
-aside, when you link your binary, you will link against the symbol versions
-that you happen to have on your machine, and those will be the _minimum_
-versions that your binary will require on _any_ machine. Now you just made
-your binary incompatible with an older Linux for no good reason. So always
-build on the _oldest_ Linux which still has a _recent enough gcc_ (good luck),
-and check the symvers of your compiled binaries with
-`mgit check-glibc-symvers`.
+Write a build script for each supported platform. 
+Check out the [guideline][build-scripts] for how to do that.
 
 ### The License
 
   * add `license: XXX` to the header of your main doc (foo.md)
-  * put the full license file in csrc/foo/LICENSE
+  * put the full license file in csrc/foo/LICENSE|COPYING[.*]
   * the default license in absence of a license tag is Public Domain
 
 ### Versioning
@@ -233,6 +146,7 @@ and check the symvers of your compiled binaries with
 All modules should work together from the master branch at any time.
 Each package has to keep up with the others. If you introduce breaking
 changes on a package, you have to upgrade all its dependants immediately.
+Work on a dev branch until you do so.
 
 Conventions that I follow (you can of course use semantic versioning too):
 
@@ -275,7 +189,7 @@ The luapower website is composed of:
   * [luapower-repos], a meta repository which contains the
   list of packages to be cloned with multigit.
   * [luapower], a Lua module for collecting package metadata.
-  * [website][website-src], a web app based on [open-resty], with
+  * [website][website-src], an [open-resty]-based app, with
   very simple css, lustache-based templates and table-based layout.
   * [pandoc], for converting the docs to html.
   * a bunch of Windows, Linux and OSX machines set up to collect package
