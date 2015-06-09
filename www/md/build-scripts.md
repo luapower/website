@@ -136,8 +136,9 @@ you still need the hardware).
 
 Because there doesn't seem to be any hope of getting rid of this 
 language yet, we have to address the problem of the standard C++ library.
-The luapower answer to that is to bundle it as opposed to shipping it 
-(or not bundling it and not shipping it), except on OSX which 
+The luapower answer to that is to bundle it (i.e. link it statically
+in every C++ library) as opposed to linking it dynamically and shipping it
+(or linking it dynamically and not shipping it), except on OSX which 
 doesn't (and will not) support that. Here's why:
 
 ### Windows
