@@ -37,7 +37,7 @@ because we want to build both static and dynamic versions the libraries.
   * `-stdlib=libc++ -mmacosx-version-min=10.7` : for all C++ libraries on OSX
 
  (*) Put the line `__asm__(".symver memcpy,memcpy@GLIBC_2.2.5");` in _memcpy.h.
- This is not needed if building on Ubuntu 10 or older.
+ This is _not needed_ if building on Ubuntu 10 or older.
 
 ### Dynamic linking with gcc/g++
 
