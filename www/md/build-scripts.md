@@ -4,8 +4,8 @@ tagline:  how to write build scripts
 ---
 
 The build scripts assume the [luapower toolchain][building].
-This means using the same gcc/g++ frontend on every platform, which
-greatly simplifies the writing of the scripts.
+This means that the same gcc/g++ frontend is used on every platform,
+which greatly simplifies the writing of the scripts.
 
 Building with gcc is a 2-step process, compilation and linking, 
 because we want to build both static and dynamic versions the libraries.
