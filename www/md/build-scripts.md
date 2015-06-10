@@ -109,28 +109,30 @@ Also, you may want to check the following:
 
 ### Windows
 
-Acheiving WinXP compatibility is easy with MinGW-w64 which links against
+WinXP compatibility is the default with MinGW-w64 which links against
 msvcrt.dll and doesn't use newer WinAPIs itself.
 
 ### Linux
 
 GLIBC has multiple implementations of its functions inside, which can be
-selected in the C code using a pragma (.symver). Leaving the insanity of that
-aside, when you link your binary, you will link against the symbol versions
-that you happen to have on your machine, and those will be the _minimum_
-versions that your binary will require on _any_ machine. Now you just made
-your binary incompatible with an older Linux for no good reason. So always
-build on the _oldest_ Linux which can still run a _recent enough gcc_
-(good luck), and check the symvers of your compiled binaries with 
-`mgit check-glibc-symvers`.
+selected in the C code using a pragma (.symver). Of course nobody
+uses that pragma, and the default behavior is to to link against
+the latest versions of the symbols that you happen to have on your machine
+at the time of linking, and those will be the _minimum_ versions that 
+your binary will require on _any_ machine, which makes that binary
+potentially incompatible with an older Linux. Because whoever introduced
+that insanity didn't bother to make a linker option to select the minimum
+GLIBC version when linking, the only option left is to build on the _oldest_
+Linux which can still run a _recent enough gcc_ (good luck),  and check
+the symvers on the compiled binaries with `mgit check-glibc-symvers`.
 
 ### OSX
 
-Because running OSX in a VM is hard and painful and illegal, 
-backwards compatibility is entirely in the hands of the 
+Backwards compatibility on OSX is entirely in the hands of the 
 `-mmacosx-version-min` option, which is actually a much better deal
 than with gcc/Linux (of course, for actually testing the binary
-you still need the hardware).
+you still need the hardware, because running OSX in a VM is hard 
+and painful and illegal).
 
 ## The C++ situation
 
@@ -150,9 +152,9 @@ with the [pthread] package because it has a binding.
 ### Linux
 
 Shipping libstdc++ (and its dependency libgcc) with your app
-on Linux is not a good idea if you're also using other external libraries
+on Linux is not a good idea if the app is using other external libraries
 that happen to dlopen libstdc++ themselves and expect to get a different
-version of it than the one that you just loaded. Such is the case with
+version of it than the one that the app just loaded. Such is the case with
 OpenGL with Radeon drivers (google "steam libstdc++" to see the drama).
 In that case it's better to either
 a) link libstdc++ statically to each C++ library (the luapower way), or
@@ -169,7 +171,7 @@ Only libc++ implements C++11 but it comes with OSX 10.7+.
 On OSX 10.8+, libc++ is pulled in by libSystem (via libdispatch) anyway,
 so linking against libstdc++ on these platforms is a net loss when libc++
 is already loaded, and C++11 libs (eg. terra) need to link to 
-libc++ anyway. OTOH, libc+ is 10.7+, so it means leaving 10.6 users 
-in the cold, unless you ship libc++ for them, and only load it for them.
-The luapower answer so far is to leave the 10.6 users in the cold,
-but you can't say that Apple didn't help a little with that.
+libc++ anyway. OTOH, libc++ is 10.7+, so this means leaving 10.6 users 
+in the cold, unless you ship libc++ for them (and only load it for them).
+Because the [objc] binding requires OSX 10.7+ anyway (for reasons unrelated 
+to C++), we chose to drop 10.6 support altogether and stick with libc++.
