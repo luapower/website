@@ -1,0 +1,50 @@
+<table width=100%>
+	<tr>
+		<td valign=top>
+			<table>
+			{{#cats}}
+				{{#files}}{{#list}}
+				<tr>
+					{{#first}}
+					<td valign=top rowspan={{n}}>
+						<h4 class=tight style="padding-right: 1em">{{catname}}</h4>
+					</td>
+					{{/first}}
+					<td style="padding-right: 1em"><a id="file_{{header_id}}">{{header_name}}</a></td>
+					<td style="padding-right: 1em"><a id="file_{{impl_id}}">{{impl_name}}</a></td>
+					<td>{{tagline}}</td>
+				</tr>
+				{{/list}}{{/files}}
+			{{/cats}}
+			</table>
+		</td>
+		<td valign=top>
+			{{#cats}}
+				{{#files}}
+					<div class="symbols" style="display: none" id="syms_file_{{id}}">
+						<h1 class=tight>{{name}}</h1>
+						<br>
+						<table>
+						{{#defs}}
+							<tr>
+								<td align=right width=40 style="padding-right: 1em">{{line}}</td>
+								<td><a href="https://github.com/capr/luajit/blob/master/src/{{name}}#L{{line}}">{{text}}</a></td>
+							</tr>
+						{{/defs}}
+						</table>
+					</div>
+				{{/files}}
+			{{/cats}}
+		</td>
+	</tr>
+</table>
+
+<script>
+$(function() {
+	$('a[id^="file_"]').click(function() {
+		$('div[id^="syms_file_"]').hide()
+		console.log('#syms_'+$(this).attr('id'), $('#syms_'+$(this).attr('id')).length)
+		$('#syms_'+$(this).attr('id')).show()
+	})
+})
+</script>

@@ -1,5 +1,5 @@
 --actions: the bulk of the web app.
-
+package.loaded.cbrowser = nil
 local glue = require'glue'
 local lp = require'luapower'
 local pp = require'pp'
@@ -8,6 +8,7 @@ local tuple = require'tuple'
 local zip = require'minizip'
 local lustache = require'lustache'
 local grep = require'grep'
+local cbrowser = require'cbrowser'
 
 --in our current setup, the dependency db must be updated manually.
 lp.config('auto_update_db', false)
@@ -1162,7 +1163,7 @@ local function action_rockspec(pkg)
 	local lua_modules = {}
 	local luac_modules = {}
 	for mod, path in pairs(lp.modules(pkg)) do
-		local mtags = lp.module_tags(pkg, mod)
+		local mtags = lp.module_tags(pkg,	 mod)
 		if mtags.lang == 'C' then
 			luac_modules[mod] = path
 		elseif mtags.lang == 'Lua' or mtags.lang == 'Lua/ASM' then
@@ -1198,6 +1199,12 @@ local function action_rockspec(pkg)
 		app.out(pp.format(v, '   '))
 		app.out'\n'
 	end
+end
+
+--action cbrowser ------------------------------------------------------------
+
+function action.cbrowser(...)
+	app.out(render_main('cbrowser.html', cbrowser(...)))
 end
 
 --action dispatch ------------------------------------------------------------
