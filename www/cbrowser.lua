@@ -53,9 +53,15 @@ local function parse_cscope_db(filename)
 	local function adddef(text)
 		table.insert(ft.defs, {text = text, line = line})
 	end
-	local function addtext(text, mark)
-		if mark and mark:find'[#cegtsul]' then
-			adddef(text)
+	local function addtext(text, mark, bol)
+		if mark and mark:find'[%#%$cegtsul]' then
+			adddef(mark..' '..text)
+		end
+		if bol and text:find'^#' then
+			local s = text:match'^#(.*)'
+			if s == 'if' then
+
+			end
 		end
 	end
 	local i = 0
@@ -75,7 +81,7 @@ local function parse_cscope_db(filename)
 		local text
 		line, text = s:match'^(%d+) (.*)'
 		assert(line, s)
-		addtext(text)
+		addtext(text, nil, true)
 	end
 	for s in io.lines(filename) do
 		i = i + 1

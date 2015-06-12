@@ -1,9 +1,12 @@
 <table width=100%>
 	<tr>
 		<td valign=top>
-			<table>
+			<table style="border-collapse: separate;">
 			{{#cats}}
 				{{#files}}{{#list}}
+				{{#first}}
+				<tr><td colspan=4><br></td></tr>
+				{{/first}}
 				<tr>
 					{{#first}}
 					<td valign=top rowspan={{n}}>
@@ -28,7 +31,7 @@
 						{{#defs}}
 							<tr>
 								<td align=right width=40 style="padding-right: 1em">{{line}}</td>
-								<td><a href="https://github.com/capr/luajit/blob/master/src/{{name}}#L{{line}}">{{text}}</a></td>
+								<td><a href="https://github.com/capr/luajit/blob/v2.1/src/{{name}}#L{{line}}">{{text}}</a></td>
 							</tr>
 						{{/defs}}
 						</table>
