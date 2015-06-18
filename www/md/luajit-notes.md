@@ -118,7 +118,8 @@ Here's a handy NaN checker for doubles:
 
 ~~~{.lua}
 local cast, band, bor = ffi.cast, bit.band, bit.bor
-local lohi_p = ffi.typeof("struct { int32_t "..(ffi.abi("le") and "lo, hi" or "hi, lo").."; } *")
+local lohi_p = ffi.typeof("struct { int32_t "..(
+  ffi.abi("le") and "lo, hi" or "hi, lo").."; } *")
 
 local function double_isnan(p)
    local q = cast(lohi_p, p)
