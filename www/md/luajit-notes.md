@@ -136,7 +136,7 @@ to access all memory without restrictions. Keep the low 2G of your address
 space free for LuaJIT (this might be hard depending on how you integrate
 LuaJIT in your app). Needless to say, if your memory usage on x86 is above 2G,
 your app is already not portable to x64. Also, in the
-one-Lua-state-per-core-per-thread scenario, the memory available for each
+one-Lua-state-per-core-per-thread scenario, the memory available to each
 core is 2G/number-of-cores. If you use malloc, watch out for problems with
 finalization order: finalization and freeing are the same thing now.
 
