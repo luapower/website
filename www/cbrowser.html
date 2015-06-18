@@ -21,11 +21,19 @@
 			{{/cats}}
 			</table>
 		</td>
-		<td valign=top>
+		<td valign=top width=30%>
 			{{#cats}}
 				{{#files}}
 					<div class="symbols" style="display: none" id="syms_file_{{id}}">
 						<h1 class=tight>{{name}}</h1>
+						<br>
+						<table>
+						{{#ifdefs}}
+							<tr>
+								<td>{{.}}</td>
+							</tr>
+						{{/ifdefs}}
+						</table>
 						<br>
 						<table>
 						{{#defs}}
