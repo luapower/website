@@ -15,9 +15,9 @@ tagline: assumptions, gotchas, tricks
   * multiplications and additions are cheaper than memory access, so storing
   the results of these operations in temporary variables might actually harm
   performance.
-  * there's no difference between using if/else and using and/or expressions
-  - they generate the same pipeline-trashing branch code (so avoid
-  non-constant and/or in tight loops).
+  * there's no difference between using if/else and using and/or
+  expressions -- they generate the same pipeline-trashing branch code
+  (so avoid non-constant and/or in tight loops).
   * divisions are 4x slower than multiplications on x86, so when dividing by
   a constant, it helps turning `x / c` into `x * (1 / c)` since the constant
   expression is folded -- LuaJIT seems to do this already for power-of-2
