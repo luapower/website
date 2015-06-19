@@ -1210,13 +1210,14 @@ end
 --action dispatch ------------------------------------------------------------
 
 function action.default(s, ...)
+	local hs = s and s:match'^(.-)%.html$'
 	if not s then
 		return action_home()
-	elseif lp.installed_packages()[s] then
-		return action_package(s, nil, ...)
-	elseif lp.docs()[s] then
-		local pkg = lp.doc_package(s)
-		return action_package(pkg, s, ...)
+	elseif lp.installed_packages()[hs or s] then
+		return action_package(hs or s, nil, ...)
+	elseif lp.docs()[hs or s] then
+		local pkg = lp.doc_package(hs or s)
+		return action_package(pkg, hs or s, ...)
 	elseif s:find'%.rockspec$' then
 		local pkg = s:match'^(.-)%.rockspec$'
 		if not lp.installed_packages()[pkg] then
@@ -1224,7 +1225,7 @@ function action.default(s, ...)
 		end
 		action_rockspec(pkg)
 	else
-		local docfile = www_docfile(s)
+		local docfile = www_docfile(hs or s)
 		if docfile then
 			return action_docfile(docfile, ...)
 		else
