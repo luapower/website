@@ -108,7 +108,7 @@ $(function() {
 		$(window).scroll(function() {
 			if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
 				// reached footer
-				nav.css('position', 'absolute').css('top', '').css('bottom', 280)
+				nav.css('position', 'absolute').css('top', '').css('bottom', 320)
 			} else if (top0 - $(window).scrollTop() < 10) {
 				// follow scroll
 				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
