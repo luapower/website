@@ -14,18 +14,26 @@ tagline: assumptions, gotchas, tricks
   composition.
   * multiplications and additions are cheaper than memory access, so storing
   the results of these operations in temporary variables might actually harm
-  performance.
+  performance (registers still don't grow on trees).
   * there's no difference between using if/else and using and/or
   expressions -- they generate the same pipeline-trashing branch code
   (so avoid non-constant and/or in tight loops).
   * divisions are 4x slower than multiplications on x86, so when dividing by
   a constant, it helps turning `x / c` into `x * (1 / c)` since the constant
-  expression is folded -- LuaJIT seems to do this already for power-of-2
-  constants where the semantics are equivalent. (are they?)
+  expression is folded -- LuaJIT does this already for power-of-2
+  constants where the semantics are equivalent.
   * the `%` operator is slow (it's implemented in terms of `math.floor()`
   and division) and really kills hot loops; `math.fmod()` is even slower;
   I don't have a solution for this (except for `x % 2^n` which can be made
   with bit ops).
+  * __newindex and __index must check the hash part of the table
+  if that's not empty, so it's best to avoid adding keys on the hash
+  part of an array that uses these metamethods.
+  * pointers and int64 are allocated on the heap unless sunk by allocation
+  sinking, but that requires a small and predictable code path between
+  pointer creation and usage, so APIs should accept and return a
+  (base-pointer, offset) pair instead of creating a new pointer with
+  pointer + offset and passing that around.
 
 > These are assumptions that I use throughout my code, so if any of them are
 wrong, please correct me.
@@ -55,12 +63,15 @@ function ptr(p)
 end
 ~~~
 
-### `array[i], array[j] = array[j], array[i]`
+### Reference semantics vs value semantics
 
-This idiom doesn't work as you would expect (swapping) when the array
-elements are structs. This is because array indexing returns a reference
-type for structs, not a copy of the struct object. Just something to keep
-in mind.
+The result of a[i] for an array of structs is a reference type,
+not a copy of the struct object. This is different than with arrays
+of scalars which have value semantics (scalars being immutable).
+This shows when trying to implement data structures that generalize
+on the element type. Because value semantics cannot be assumed,
+you can't just use a[i] to pop a value out or for swapping values
+(the idiom `a[i], a[j] = a[j], a[i]` doesn't work anymore).
 
 ### Callbacks and JIT
 
@@ -81,7 +92,7 @@ don't do that, with the notable exception of OSX APIs which do that _a lot_.
 [cbframe] can be used as a workaround if you only have a few functions to fix,
 but it's not a general solution yet.
 
-### Cdata finalizer call order
+### CData finalizer call order
 
 Finalizers for cdata objects are called in undefined order. This means that
 objects anchored in a finalizer are not guaranteed to not be already finalized
