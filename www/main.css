@@ -267,7 +267,7 @@ warn {
 
 .main {
 	padding-top: 30px;
-	padding-bottom: 300px; /* padding + footer height */
+	padding-bottom: 330px; /* padding + footer height */
 }
 
 .footer {
