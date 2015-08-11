@@ -1097,7 +1097,7 @@ function action.github(...)
 	local repo = app.POST.repository.name
 	if not repo then return end
 	if not lp.installed_packages()[repo] then return end
-	os.exec(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
+	os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
 	lp.update_db(repo) --TODO: this is blocking the server!!!
 end
 
