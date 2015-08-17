@@ -1,6 +1,6 @@
 ---
-title:    get involved
-tagline:  creating luapower packages
+title:   get involved
+tagline: how to create luapower packages
 ---
 
 ## Anatomy of a package

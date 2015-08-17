@@ -1,11 +1,11 @@
 ---
-title:   API design
-tagline: tips & principles
+title:   api design
+tagline: how to design friendly APIs
 ---
 
-## Overview
+## The golden rule
 
-Design APIs from the point of view of the user and not for implementation requirements. The following guidelines and observations are mostly derived from this principle.
+Design your APIs from the point of view of the user, not to satisfy implementation requirements. Start with the usage code first. Real usage code, not fake usage code like unit tests. This is probably the number one reason why APIs suck, because their authors haven't put themselves in the shoes of the user to really see how it feels.
 
 ## Compact your API
 
@@ -14,9 +14,9 @@ Structuring your API semantically makes it easier to learn and later to recall b
   * group functions into namespaces (the easy one)
   * group semantic variations into a single function using parameter polymorphism (aka function overloading)
 
-Lua uses both tricks to extremes, making its API seem much smaller than it actually is, eg. by carefully shelving even the most basic functions like `table.insert` into their proper namespaces, or cramming multiple variations for reading from a file into a single function, `file:read()` with a `mode` argument with values that form a small namespace of their own and are cleverly mnemonic.
+Lua uses both of these techniques to extremes, making its API seem much smaller than it actually is, eg. by carefully shelving even the most basic functions like `table.insert` into their proper namespaces, or cramming multiple variations for reading from a file into a single function, `file:read()` with a `mode` argument with values that form a small namespace of their own and are cleverly mnemonic.
 
-__Explanation__: Semantic hierarchies are different than classification hierarchies. In terms of helping with remembering, the first is good, the second is bad. Eg. `file:read(mode)` creates a semantic hierarchy file -> read -> mode because each level in the hierarchy contains a different _class_ of concepts (file object -> file method -> mode parameter). Memory is helped by this association. But `urllib.parse.urlparse` is a classification hierarchy, which although a logical one to make from the implementation point of view, the fact that `urlparse` is to be found under the `parse` sub-namespace is completely arbitrary from the user's pov. and thus hard to remember.
+Note that semantic hierarchies are different than classification hierarchies. In terms of helping with remembering, the first is good, the second is bad. Eg. `file:read(mode)` creates a semantic hierarchy file -> read -> mode because each level in the hierarchy contains a different _class_ of concepts (file object -> file method -> mode parameter). Memory is helped by this association. But `urllib.parse.urlparse` is a classification hierarchy, which although a logical one to make from the implementation point of view, the fact that `urlparse` is to be found under the `parse` sub-namespace is completely arbitrary from the user's pov. and thus hard to remember.
 
 ## Caveats of function overloading
 

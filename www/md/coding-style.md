@@ -1,6 +1,6 @@
 ---
 title:   coding style
-tagline: rules for clarity and consistency
+tagline: how to maintain code consistency
 ---
 
 __NOTE__: This guide assumes familiarity with the [LuaStyleGuide](http://lua-users.org/wiki/LuaStyleGuide) from the Lua wiki. Read that first if you're new to Lua.

@@ -1,13 +1,13 @@
 ---
-title:    build scripts
-tagline:  how to write build scripts
+title:   build scripts
+tagline: how to write build scripts for multiple platforms
 ---
 
 The build scripts assume the [luapower toolchain][building].
 This means that the same gcc/g++ frontend is used on every platform,
 which greatly simplifies the writing of the scripts.
 
-Building with gcc is a 2-step process, compilation and linking, 
+Building with gcc is a 2-step process, compilation and linking,
 because we want to build both static and dynamic versions the libraries.
 
 ## Building with GCC
@@ -118,7 +118,7 @@ GLIBC has multiple implementations of its functions inside, which can be
 selected in the C code using a pragma (.symver). Of course nobody
 uses that pragma, and the default behavior is to to link against
 the latest versions of the symbols that you happen to have on your machine
-at the time of linking, and those will be the _minimum_ versions that 
+at the time of linking, and those will be the _minimum_ versions that
 your binary will require on _any_ machine, which makes that binary
 potentially incompatible with an older Linux. Because whoever introduced
 that insanity didn't bother to make a linker option to select the minimum
@@ -128,25 +128,25 @@ the symvers on the compiled binaries with `mgit check-glibc-symvers`.
 
 ### OSX
 
-Backwards compatibility on OSX is entirely in the hands of the 
+Backwards compatibility on OSX is entirely in the hands of the
 `-mmacosx-version-min` option, which is actually a much better deal
 than with gcc/Linux (of course, for actually testing the binary
-you still need the hardware, because running OSX in a VM is hard 
+you still need the hardware, because running OSX in a VM is hard
 and painful and illegal).
 
 ## The C++ situation
 
-Because there doesn't seem to be any hope of getting rid of this 
+Because there doesn't seem to be any hope of getting rid of this
 language yet, we have to address the problem of the standard C++ library.
 The luapower answer to that is to bundle it (i.e. link it statically
 in every C++ library) as opposed to linking it dynamically and shipping it
-(or linking it dynamically and not shipping it), except on OSX which 
+(or linking it dynamically and not shipping it), except on OSX which
 doesn't (and will not) support that. Here's why:
 
 ### Windows
 
 Shipping libstdc++ on Windows could work, but it would drag along
-libwinpthread and libgcc with it, and libwinpthread is already shipped 
+libwinpthread and libgcc with it, and libwinpthread is already shipped
 with the [pthread] package because it has a binding.
 
 ### Linux
@@ -170,8 +170,8 @@ Only libc++ implements C++11 but it comes with OSX 10.7+.
 
 On OSX 10.8+, libc++ is pulled in by libSystem (via libdispatch) anyway,
 so linking against libstdc++ on these platforms is a net loss when libc++
-is already loaded, and C++11 libs (eg. terra) need to link to 
-libc++ anyway. OTOH, libc++ is 10.7+, so this means leaving 10.6 users 
+is already loaded, and C++11 libs (eg. terra) need to link to
+libc++ anyway. OTOH, libc++ is 10.7+, so this means leaving 10.6 users
 in the cold, unless you ship libc++ for them (and only load it for them).
-Because the [objc] binding requires OSX 10.7+ anyway (for reasons unrelated 
+Because the [objc] binding requires OSX 10.7+ anyway (for reasons unrelated
 to C++), we chose to drop 10.6 support altogether and stick with libc++.
