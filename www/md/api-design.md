@@ -1,5 +1,5 @@
 ---
-title:   api design
+title:   API design
 tagline: how to design friendly APIs
 ---
 
