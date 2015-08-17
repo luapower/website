@@ -115,7 +115,7 @@ in finalizers unless you can ensure that they're still alive by other means.
 
 There is no way to fix this with the current garbage collector.
 
-### Floating points from outside
+### Floating point numbers from outside
 
 In places where an arbitrary bit pattern can be injected in place of a double
 or float, you have to normalize these to a standard NaN pattern
