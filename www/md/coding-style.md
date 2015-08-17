@@ -97,8 +97,8 @@ break the code								`return last_func_call()`								`last_func_call()` \
 declaring unrelated variables			`local var1, var2 = val1, val2`						`local var1 = val1` \
 																												`local var2 = val2`
 
-private methods							`local function obj_foo(self, ...) end` \			`function obj:_foo(...) end` \
-												`obj_foo(self, ...)`										`self:_foo(...)`
+private methods							`local function foo(self, ...) end` \			`function obj:_foo(...) end` \
+												`foo(self, ...)`										`self:_foo(...)`
 
 dealing with simple cases				`if simple_case then` \									`if simple_case then` \
 												&nbsp;&nbsp;`return simple_answer` \				&nbsp;&nbsp;`return simple_answer` \
