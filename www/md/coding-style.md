@@ -29,10 +29,6 @@ Instruct your editor to remove spaces at the end of the line and to keep an empt
 
 Use `\r\n` as line separator only for Windows-specific modules, if at all. Generally just use `\n`.
 
-## Naming
-
-Use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or fooBar. Take time to find good names and take time to _re-factor those names_ as much as necessary. As one wise stackoverflow user once said, the process of naming makes you face the horrible fact that you have no idea what the hell you're doing.
-
 ## Modules
 
 Keep Mr. _G clean, don't use `module()`. Use one of these patterns instead:
@@ -75,6 +71,37 @@ Split optional functionality into submodules. Submodules can either have their o
 Name submodules of `foo` `foo_bar.lua` instead of `foo/bar.lua`.
 
 Submodules can be loaded manually by the user with require() or they can be set up to be loaded automatically with [glue.autoload](/glue#autoload).
+
+## Naming
+
+Take time to find good names and take time to _re-factor those names_ as much as necessary. As one wise stackoverflow user once said, the process of naming makes you face the horrible fact that you have no idea what the hell you're doing.
+
+Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooBar`.
+
+Use short names for temporary variables:
+
+  * `t` is for tables
+  * `dt` is for destination (accumulation) tables (and for time diffs)
+  * `i` and `j` are for indexing
+  * `n` is for counting
+  * `k, v` is what you get out of pairs()
+  * `i, v` is what you get out of ipairs()
+  * `k` is for table keys
+  * `v` is for values that are passed around
+  * `x` is for generic math quantities
+  * `s` is for strings
+  * `c` is for chars
+  * `f` and `func` are for functions
+  * `ret` is for return values
+  * `ok, ret` is what you get out of `pcall`
+  * `buf, sz` is a (buffer, size) pair
+  * `p` is for pointers
+  * `x, y, w, h` is for rectangles
+  * `t0`, `t1` is for timestamps
+  * `err` is for errors
+  * `t0` or `t_` is for avoiding a name clash with `t`
+
+Abbreviations are good, just don't forget to document them when they first appear in the code. Don't worry about people having to learn your vocabulary to be able to grok your code. Short names are mnemonic and you can juggle more of them in your brain at the same time, and they're indicative of a deeply-understood problem: you're not being lazy for wanting them.
 
 ## FFI Declarations
 
