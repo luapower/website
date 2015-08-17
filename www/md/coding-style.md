@@ -74,11 +74,11 @@ Submodules can be loaded manually by the user with require() or they can be set 
 
 ## Naming
 
-Take time to find good names and take time to _re-factor those names_ as much as necessary. As one wise stackoverflow user once said, the process of naming makes you face the horrible fact that you have no idea what the hell you're doing.
+Take time to find good names and take time to _re-factor those names_ as much as necessary. As a wise stackoverflow user once said, the process of naming makes you face the horrible fact that you have no idea what the hell you're doing.
 
 Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooBar`.
 
-Use short names for temporary variables:
+### Temporary variables:
 
   * `t` is for tables
   * `dt` is for destination (accumulation) tables (and for time diffs)
@@ -102,7 +102,13 @@ Use short names for temporary variables:
   * `err` is for errors
   * `t0` or `t_` is for avoiding a name clash with `t`
 
+### Abreviations
+
 Abbreviations are ok, just don't forget to document them when they first appear in the code. Short names are mnemonic and you can juggle more of them in your brain at the same time, and they're indicative of a deeply-understood problem: you're not being lazy for using them.
+
+## Comments
+
+Assume that your readers know Lua so try not to teach that to them. But don't tell them that the code "speaks for itself" either because it doesn't. Take time to document the tricky parts of the code. If there's an underlying narrative on how you solved a problem, take time to document that too. Don't worry about how long that is, people love stories.
 
 ## Syntax
 
