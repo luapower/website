@@ -26,12 +26,12 @@ There are 5 types of luapower packages:
 	foo.lua               main module
 	foo_bar.lua           submodule, for small packages
 	foo/bar.lua           submodule, for large packages
-	foo_h.lua             ffi.cdef module (ffi.load in foo.lua)
+	foo_h.lua             ffi.cdef module (ffi.load is in foo.lua, not here)
 	foo_test.lua          test program: for tests that can be automated
 	foo_demo.lua          demo program: anything goes
 	foo.md                main doc: markdown with pandoc extensions
 	foo_bar.md            submodule doc: optional, for large submodules
-	.mgit/foo.exclude     .gitignore file: optional, see below
+	.mgit/foo.exclude     the .gitignore file: optional, see below
 
 C libs & Lua/C libs have additional files:
 
@@ -45,8 +45,9 @@ C libs & Lua/C libs have additional files:
 	bin/linux{32,64}/clib/foo.so     Lua/C library
 	bin/osx{32,64}/clib/foo.so       Lua/C library
 
-(*)	one script for each platform that your package supports, among
-the following: mingw32, mingw64, linux32, linux64, osx32, osx64.
+(*) one script for each platform that your package supports, among
+the following: mingw32, mingw64, linux32, linux64, osx32, osx64 (so
+`build-mingw32.sh`, etc.).
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
@@ -57,26 +58,29 @@ package information and build the package database and this website.
 In order to appear on the website, docs should start with a yaml header:
 
 	---
-	tagline: win32 windows and controls
+	tagline: foobars
 	platforms: mingw32, mingw64
+	license: MIT
 	---
 
-A good, short tagline is important for figuring out what the module does
-when browsing the module list.
+Take your time to write a good, short tagline. This is important for figuring
+out what the module does when browsing the module list.
 
 The `platforms` line is only needed for Lua packages that are
-platform-specific but do not have a C component (most packages either
-support all platforms or have a C component or both); for packages with a C
-component, the platforms are inferred from the names of the build scripts.
+platform-specific but do not have a C component (very rare case). In all
+other cases, do not specify the platforms.
+
+The `license` line is only if needed for Lua modules that are not
+`Public Domain`.
 
 You don't have to make a doc for each submodule if you don't have much to
 document for it, a single doc matching the package name would suffice.
 
 ### The WHAT file
 
-The WHAT file is used for packages that have a C component (i.e. Lua+ffi,
+The WHAT file is for packages that have a C component (i.e. Lua+ffi,
 Lua/C and C packages), and it's used to describe that C component. Pure Lua
-packages don't need a WHAT file.
+packages don't need a WHAT file. It should look like this:
 
 	cairo 1.12.16 from http://cairographics.org/releases/ (MPL/LGPL license)
 	requires: pixman, freetype, zlib, libpng
@@ -85,12 +89,16 @@ The first line should contain "`<name> <version> from <browse-url>
 (<license>)`". The second line should contain "`requires: package1, package2,
 ...`" and should only list the binary dependencies of the library, if there
 are any. After the first two lines and an empty line, you can type in
-additional notes, whatever, they aren't parsed.
+additional notes, whatever, they aren't parsed. In the rare case that a
+dependency is only available on some platforms, specify the platforms after
+the dependency name like this: `pthread (mingw32 mingw64)`.
 
 The WHAT file can also be used to describe Lua modules that are developed
 outside of luapower (eg. [lexer]).
 
 ### The exclude file
+
+__NOTE:__ This file is entirely optional and rarely used.
 
 This is the .gitignore file used for excluding files between packages so that
 files in one packages don't show as untracked files in other package. Another
@@ -104,11 +112,9 @@ Example:
 	!/foo/               ; include the directory in root named `foo`
 	!/foo/**             ; include the contents of the directory named `foo`, recursively
 
-This file is entirely optional and rarely used.
-
 ### The code
 
-Check out [coding-style] for tips on coding.
+Check out the [coding-style].
 
 ### The build scripts
 
@@ -117,9 +123,11 @@ Check out the [guideline][build-scripts] for how to do that.
 
 ### The License
 
-  * add `license: XXX` to the header of your main doc (foo.md)
+__NOTE:__ This only concerns Lua modules that are not `Public Domain`.
+
+  * add `license: ...` to the header of your main doc
   * put the full license file in csrc/foo/LICENSE|COPYING[.*]
-  * the default license in absence of a license tag is Public Domain
+  * the default license in absence of a license tag is Public Domain.
 
 ### Versioning
 

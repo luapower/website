@@ -1,13 +1,25 @@
 ---
-title:   Coding style
-tagline: how to write clear and readable Lua code
+title:   coding style
+tagline: rules for clarity and consistency
 ---
 
 __NOTE__: This guide assumes familiarity with the [LuaStyleGuide](http://lua-users.org/wiki/LuaStyleGuide) from the Lua wiki. Read that first if you're new to Lua.
 
 ## General
 
-Add at least a small comment on the header of every Lua file specifying what the module does, who's the author and what the license is. Don't embed the full contents of the license in the source code.
+Start each module with small comment specifying what the module does, who's the author and what the license is:
+
+~~~{.lua}
+
+--glue: everyday Lua functions.
+--Written by Cosmin Apreutesei. Public domain.
+
+...
+~~~
+
+Don't embed the full contents of the license in the source code.
+
+## Formatting
 
 Indent code with tabs, and use spaces inside the line, don't force your tab size on people (also, very few editors can jump through space indents). If you can't follow this, use 3 spaces for Lua and 4 spaces for C.
 
@@ -17,16 +29,22 @@ Instruct your editor to remove spaces at the end of the line and to keep an empt
 
 Use `\r\n` as line separator only for Windows-specific modules, if at all. Generally just use `\n`.
 
-Use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or fooBar.
+## Naming
+
+Use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or fooBar. Take time to find good names and take time to re-factor those names as much as necessary. You will notice how names improve with a deeper understanding of the problem at hand.
 
 ## Modules
 
 Keep Mr. _G clean, don't use `module()`. Use one of these patterns instead:
 
-~~~{lua}
+~~~{.lua}
 local M = {}
 
 function M.foo()
+	...
+end
+
+function M.bar()
 	...
 end
 
@@ -35,7 +53,7 @@ return M
 
 or:
 
-~~~{lua}
+~~~{.lua}
 local function foo()
 	...
 end
