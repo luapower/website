@@ -5,56 +5,56 @@ tagline: assumptions, gotchas, tricks
 
 ## LuaJIT assumptions
 
-  * LuaJIT hoists table accesses with constant keys (so module functions) out
-  of loops, so no point caching those in locals.
+  * LuaJIT hoists table accesses with constant keys  out of loops, so caching
+  module functions in locals is no longer (that much) needed.
   * LuaJIT hoists constant branches out of loops so it's ok to specialize
-  loop kernels with if/else or and/or inside the loops.
+  loop kernels with `if/else` or with `and/or` inside the loops.
   * LuaJIT inlines functions (except when using `...` and `select()` with
   non-constant indices), so it's ok to specialize loop kernels with function
   composition.
   * multiplications and additions are cheaper than memory access, so storing
   the results of these operations in temporary variables might actually harm
-  performance (registers still don't grow on trees).
-  * there's no difference between using if/else and using and/or
-  expressions -- they generate the same pipeline-trashing branch code
-  (so avoid non-constant and/or in tight loops).
+  performance (more register spills).
+  * there's no difference between using `if/else` statements and using
+  `and/or` expressions -- they generate the same pipeline-trashing branch code
+  (so avoid expressions with non-constant `and/or` operators in tight loops).
   * divisions are 4x slower than multiplications on x86, so when dividing by
   a constant, it helps turning `x / c` into `x * (1 / c)` since the constant
   expression is folded -- LuaJIT does this already for power-of-2
   constants where the semantics are equivalent.
   * the `%` operator is slow (it's implemented in terms of `math.floor()`
   and division) and really kills hot loops; `math.fmod()` is even slower;
-  I don't have a solution for this (except for `x % powers-of-two` which
-  can be computed with bit ops).
-  * __newindex and __index must check the hash part of the table
-  if that's not empty, so it's best to avoid adding keys on the hash
-  part of an array that uses these metamethods.
-  * pointers and int64 are allocated on the heap unless sunk by allocation
-  sinking, but that requires a small and predictable code path between
-  pointer creation and usage, so APIs should accept and return a
-  (base-pointer, offset) pair instead of creating a new pointer with
-  pointer + offset and passing that around.
+  I don't have a solution for this except for `x % powers-of-two` which
+  can be computed with bit ops.
+  * `__newindex` and `__index` metamethods must check the hash part of the
+  table, so it's best to avoid adding keys on the hash part of an array
+  that uses these metamethods.
+  * pointers and 64bit numbers are allocated on the heap unless sunk by
+  allocation sinking, but that requires a small and predictable code path
+  between pointer creation and usage so it's not a general solution.
+  So APIs that need to be fast should work with (base-pointer, offset) pairs
+  instead of just pointers.
 
 > These are assumptions that I use throughout my code, so if any of them are
 wrong, please correct me.
 
 ## LuaJIT gotchas
 
-### `null_ptr == nil`
+### Nil equality of pointers
 
-`ptr == nil` evaluates to true for a nil pointer. As innocent as this looks,
+`ptr == nil` evaluates to true for a NULL pointer. As innocent as this looks,
 this is actually a language extension because in Lua 5.1 world, objects of
-different types can't ever be equal (in this case type `cdata` == type `nil`).
+different types can't ever be equal, so a cdata cannot be equal to nil.
 
 This has two implications:
 
-1. Luaffi cannot implement this for Lua 5.1, so compatibility with Lua cannot
-be acheived if this idiom is used.
+1. Lua-ffi cannot implement this for Lua 5.1, so compatibility with Lua
+cannot be acheived if this idiom is used.
 2. The `if ptr then` idiom doesn't work, although you'd expect that anything
 that `== nil` to pass the `if` test too.
 
-Both problems can be solved easily with a NULL filter which must be applied
-to all pointers flowing into Lua (mostly from constructors):
+Both problems can be solved easily with a NULL->nil converter which must be
+applied on all pointers that flow into Lua (so mostly in constructors):
 
 ~~~{.lua}
 local NULL = ffi.new'void*'
