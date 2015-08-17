@@ -78,7 +78,7 @@ Take time to find good names and take time to _re-factor those names_ as much as
 
 Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooBar`.
 
-### Temporary variables:
+### Temporary variables
 
   * `t` is for tables
   * `dt` is for destination (accumulation) tables (and for time diffs)
