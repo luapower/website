@@ -142,6 +142,7 @@ dealing with simple cases				`if simple_case then` \									`if simple_case the
 												`else` \														`end` \
 												&nbsp;&nbsp;`hard case ...` \							`hard case ...`
 												`end`
+
 emulating bool()							`not not x`													`x and true or false`
 ----------------------------------- ----------------------------------------------- -----------------------------------------------
 
