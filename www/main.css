@@ -292,6 +292,10 @@ warn {
 	opacity: 0.5;
 }
 
+.footer_heading {
+	font-weight: bold;
+}
+
 .footer a { color: #aaa; }
 .footer a:visited { color: #aaa; }
 .footer a:hover, .footer a:visited:hover { color: #ddd; }

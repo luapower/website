@@ -3,8 +3,6 @@ title:   tricks
 tagline: quick Lua cheat sheet
 ---
 
-> Or, unreadable code that you should really turn into helper functions whenever you can.
-
 ------------------------------------------- -------------------------------------------
 __logic__
 `not a == not b`                            both or none
@@ -33,4 +31,3 @@ __strings__
 __i/o__
 `f:read(4096, '*l')`                        read lines efficiently
 ------------------------------------------- -------------------------------------------
-

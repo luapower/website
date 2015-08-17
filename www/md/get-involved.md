@@ -108,32 +108,11 @@ This file is entirely optional and rarely used.
 
 ### The code
 
-  * add at least a small comment on the first line of every Lua file with
-  a short tagline (what the module does), author and license. It can be a huge
-  barrier-remover towards approaching your code (adding a full screen of legal
-  crap on the other hand is just bad taste - IMHO).
-  * add a comment on top of the `foo_h.lua` file describing the origin (which
-  files? which version?) and process (cpp? by hand?) used for generating the
-  file. This adds confidence that the C API is complete and up-to-date.
-  * call `ffi.load()` without paths, custom names or version numbers to keep
-  the module away from any decision regarding how and where the library is
-  to be found. This allows for more freedom on how to deploy libraries.
-  * put cdefs in a separate "header" file because it may contain types that
-  other packages might need. If this is an unlikely scenario and the API is
-  small, embed the cdefs in the main module file directly.
-  * don't use `module()`, keep Mr. _G clean. For big modules with a shared
-  namespace, make a "namespace" module and use `setfenv(1, require'foo.ns')`
-  as the first line of every submodule (see [winapi]).
-  * indent your code with tabs, and use spaces inside the line, don't force
-  your tabsize on people (also, very few editors can jump through space
-  indents).
-  * use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or
-  fooBar.
-
+Check out [coding-style] for tips on coding.
 
 ### The build scripts
 
-Write a build script for each supported platform. 
+Write a build script for each supported platform.
 Check out the [guideline][build-scripts] for how to do that.
 
 ### The License

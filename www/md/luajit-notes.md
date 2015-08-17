@@ -24,8 +24,8 @@ tagline: assumptions, gotchas, tricks
   constants where the semantics are equivalent.
   * the `%` operator is slow (it's implemented in terms of `math.floor()`
   and division) and really kills hot loops; `math.fmod()` is even slower;
-  I don't have a solution for this (except for `x % 2^n` which can be made
-  with bit ops).
+  I don't have a solution for this (except for `x % powers-of-two` which
+  can be computed with bit ops).
   * __newindex and __index must check the hash part of the table
   if that's not empty, so it's best to avoid adding keys on the hash
   part of an array that uses these metamethods.
@@ -145,11 +145,10 @@ LuaJIT must be in the lowest 2G of address space on x64. This applies to all
 GC-managed memory, including `ffi.new` allocations. Use malloc, mmap, etc.
 to access all memory without restrictions. Keep the low 2G of your address
 space free for LuaJIT (this might be hard depending on how you integrate
-LuaJIT in your app). Needless to say, if your memory usage on x86 is above 2G,
-your app is already not portable to x64. Also, in the
-one-Lua-state-per-core-per-thread scenario, the memory available to each
-core is 2G/number-of-cores. If you use malloc, watch out for problems with
-finalization order: finalization and freeing are the same thing now.
+LuaJIT in your app). Keep in mind that that if your memory usage on x86 is
+above 2G, your app is already not portable to x64. If you use malloc to fix
+this, watch out for problems with finalization order: finalization and
+freeing are the same thing now.
 
 ## LuaJIT tricks
 
