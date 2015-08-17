@@ -31,7 +31,7 @@ Use `\r\n` as line separator only for Windows-specific modules, if at all. Gener
 
 ## Naming
 
-Use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or fooBar. Take time to find good names and take time to re-factor those names as much as necessary. You will notice how names improve with a deeper understanding of the problem at hand.
+Use Lua's naming conventions `foo_bar` and `foobar` instead of FooBar or fooBar. Take time to find good names and take time to _re-factor those names_ as much as necessary. As one wise stackoverflow user once said, the process of naming makes you face the horrible fact that you have no idea what the hell you're doing.
 
 ## Modules
 
