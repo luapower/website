@@ -25,7 +25,7 @@ Indent code with tabs, and use spaces inside the line, don't force your tab size
 
 Keep lines under 80 chars as much as you reasonably can.
 
-Instruct your editor to remove spaces at the end of the line and to keep an empty line at the end of the file.
+Tell your editor to remove trailing spaces and to keep an empty line at EOF.
 
 Use `\r\n` as line separator only for Windows-specific modules, if at all. Generally just use `\n`.
 
@@ -92,6 +92,7 @@ Use short names for temporary variables:
   * `s` is for strings
   * `c` is for chars
   * `f` and `func` are for functions
+  * `o` is for objects
   * `ret` is for return values
   * `ok, ret` is what you get out of `pcall`
   * `buf, sz` is a (buffer, size) pair
@@ -101,7 +102,16 @@ Use short names for temporary variables:
   * `err` is for errors
   * `t0` or `t_` is for avoiding a name clash with `t`
 
-Abbreviations are good, just don't forget to document them when they first appear in the code. Don't worry about people having to learn your vocabulary to be able to grok your code. Short names are mnemonic and you can juggle more of them in your brain at the same time, and they're indicative of a deeply-understood problem: you're not being lazy for wanting them.
+Abbreviations are ok, just don't forget to document them when they first appear in the code. Short names are mnemonic and you can juggle more of them in your brain at the same time, and they're indicative of a deeply-understood problem: you're not being lazy for using them.
+
+## Syntax
+
+  * use `foo()` instead of `foo ()`
+  * use `foo{}` instead of `foo({})`
+  * use `foo'bar'` instead of `foo"bar"`, `foo "bar"` or `foo("bar")`
+  * use `foo.bar` instead of `foo['bar']`
+  * use `local function foo() end` instead of `local foo = function() end` (this sugar shouldn't have existed, but it's too late now)
+  * put a comma after the last element of vertical lists
 
 ## FFI Declarations
 
@@ -111,7 +121,7 @@ Add a comment on top of your `foo_h.lua` file describing the origin (which files
 
 Call `ffi.load()` without paths, custom names or version numbers to keep the module away from any decision regarding how and where the library is to be found. This allows for more freedom on how to deploy libraries.
 
-## Clarity of meaning
+## Code patterns
 
 Sometimes the drive to compress and compact the code goes against clarity, obscuring the programmer's intention. Here's a few patterns of code that can be improved in that regard:
 
@@ -132,5 +142,10 @@ dealing with simple cases				`if simple_case then` \									`if simple_case the
 												`else` \														`end` \
 												&nbsp;&nbsp;`hard case ...` \							`hard case ...`
 												`end`
+emulating bool()							`not not x`													`x and true or false`
 ----------------------------------- ----------------------------------------------- -----------------------------------------------
+
+## Strict mode
+
+Use `require'strict'` when developing, but make sure to remove it before publishing your code to avoid breaking other people's code.
 
