@@ -113,7 +113,7 @@ Assume that your readers know Lua so try not to teach that to them. But don't te
 ## Syntax
 
   * use `foo()` instead of `foo ()`
-  * use `foo{}` instead of `foo({})`
+  * use `foo{}` instead of `foo({})` (there's no font to save you from that)
   * use `foo'bar'` instead of `foo"bar"`, `foo "bar"` or `foo("bar")`
   * use `foo.bar` instead of `foo['bar']`
   * use `local function foo() end` instead of `local foo = function() end` (this sugar shouldn't have existed, but it's too late now)
