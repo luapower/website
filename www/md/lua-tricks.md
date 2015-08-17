@@ -3,6 +3,8 @@ title:   tricks
 tagline: quick Lua cheat sheet
 ---
 
+This is a collection of Lua idioms and tricks that may not be immediately apparent to the casual code reader.
+
 ------------------------------------------- -------------------------------------------
 __logic__
 `not a == not b`                            both or none
