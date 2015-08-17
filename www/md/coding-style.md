@@ -74,7 +74,7 @@ Split optional functionality into submodules. Submodules can either have their o
 
 Name submodules of `foo` `foo_bar.lua` instead of `foo/bar.lua`.
 
-Submodules can be loaded manually by the user with require() or they can be set up to be loaded automatically with [glue.autoload][glue#autoload].
+Submodules can be loaded manually by the user with require() or they can be set up to be loaded automatically with [glue.autoload](/glue#autoload).
 
 ## FFI Declarations
 
