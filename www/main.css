@@ -288,9 +288,9 @@ warn {
 	margin-bottom: 0.5em;
 }
 
-.footer_footer {
-	opacity: 0.5;
-}
+.footer_footer { opacity: 0.5; }
+.footer_footer a { color: #fff; }
+.footer_footer a:visited { color: #ccc; }
 
 .footer_heading {
 	font-weight: bold;
