@@ -289,8 +289,8 @@ warn {
 }
 
 .footer_footer { opacity: 0.5; }
-.footer_footer a { color: #fff; }
-.footer_footer a:visited { color: #ccc; }
+.footer_footer a.external_link { color: #fff; }
+.footer_footer a.external_link:visited { color: #ccc; }
 
 .footer_heading {
 	font-weight: bold;
