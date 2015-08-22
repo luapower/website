@@ -12,5 +12,5 @@ for pkg in $(mgit ls); do
 done
 
 # pull the website too while we're at it
-cd "$(dirname "$@")" || exit 1
+cd "$(dirname "$0")" || exit 1
 git pull
