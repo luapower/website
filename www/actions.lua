@@ -184,7 +184,7 @@ local module_src_urls = {
 
 local function source_url(pkg, path, mod)
 	local url = module_src_urls[mod]
-	if url then return url
+	if url then return url end
 	if type(path) ~= 'string' then return end
 	local url = lp.git_origin_url(pkg)
 	if url:find'github%.com' then
