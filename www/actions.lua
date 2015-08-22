@@ -183,8 +183,17 @@ local module_src_urls = {
 }
 
 local function source_url(pkg, path, mod)
-	return module_src_urls[mod] or type(path) == 'string' and string.format(
-		lp.git_origin_url(pkg)..'/blob/master/%s?ts=3', path)
+	local url = module_src_urls[mod]
+	if url then return url
+	if type(path) ~= 'string' then return end
+	local url = lp.git_origin_url(pkg)
+	if url:find'github%.com' then
+		return string.format('%s/blob/master/%s?ts=3', url, path)
+	else
+		--NOTE: we don't have non-github browsable URLs yet,
+		--so this is just a placeholder for now.
+		return string.format('%s/master/%s', url, path)
+	end
 end
 
 local os_list = {'mingw', 'linux', 'osx'}
@@ -674,8 +683,7 @@ local function package_info(pkg, doc)
 
 	--download / "Changes since..."
 	t.git_tag = git_tag
-	t.changes_url = released
-		and string.format('https://github.com/luapower/%s/compare/%s...master', pkg, git_tag)
+	t.changes_url = released and string.format('%s/compare/%s...master', origin_url, git_tag)
 
 	--download / releases
 	t.git_tags = {}
@@ -690,8 +698,8 @@ local function package_info(pkg, doc)
 				reltime = timeago(mtime),
 				changes_text = prevtag and 'Changes...' or 'Files...',
 				changes_url = prevtag
-					and string.format('https://github.com/luapower/%s/compare/%s...%s', pkg, prevtag, tag)
-					or string.format('https://github.com/luapower/%s/tree/%s', pkg, tag),
+					and string.format('%s/compare/%s...%s', origin_url, prevtag, tag)
+					or string.format('%s/tree/%s', origin_url, tag),
 			})
 		end
 	end
