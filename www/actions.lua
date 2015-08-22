@@ -663,7 +663,7 @@ local function package_info(pkg, doc)
 	local on_github = origin_url:find'github%.com'
 	local git_version = lp.git_version(pkg)
 	local git_tag = lp.git_tag(pkg)
-	local released = git_tag and git_tag ~= 'dev' --tag "dev" is not a release
+	local released = git_tag and git_tag ~= '' and git_tag ~= 'dev' --tag "dev" is not a release
 	local git_tags = lp.git_tags(pkg)
 	local doc = doc or pkg
 	local docs = lp.docs(pkg)
