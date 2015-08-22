@@ -94,7 +94,7 @@ end
 
 local snippets = {}
 
-local function snippets.module_list()
+local function snippets.module_list(package)
 	local t = lp.module_headers(package)
 	local dt = {}
 	for i,t in ipairs(t) do
