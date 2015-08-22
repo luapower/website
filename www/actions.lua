@@ -678,12 +678,13 @@ local function package_info(pkg, doc)
 	local package_cat = lp.package_cat(pkg)
 
 	--top bar / github url
+	t.origin_url = origin_url
 	t.github_url = on_github and origin_url
 	t.github_title = on_github and origin_url:gsub('^https://', '')
 
 	--download / "Changes since..."
 	t.git_tag = git_tag
-	t.changes_url = released and string.format('%s/compare/%s...master', origin_url, git_tag)
+	t.changes_url = released and on_github and string.format('%s/compare/%s...master', origin_url, git_tag)
 
 	--download / releases
 	t.git_tags = {}
@@ -697,9 +698,9 @@ local function package_info(pkg, doc)
 				time = format_date(mtime),
 				reltime = timeago(mtime),
 				changes_text = prevtag and 'Changes...' or 'Files...',
-				changes_url = prevtag
+				changes_url = on_github and (prevtag
 					and string.format('%s/compare/%s...%s', origin_url, prevtag, tag)
-					or string.format('%s/tree/%s', origin_url, tag),
+					or string.format('%s/tree/%s', origin_url, tag)),
 			})
 		end
 	end

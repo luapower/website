@@ -42,12 +42,12 @@
 			<table>
 				<tr>
 					<td valign=top style="padding-right: 1em">
-						<a class=download_btn href="https://github.com/luapower/{{package}}/archive/master.zip">
+						<a class=download_btn href="{{github_url}}/archive/master.zip">
 							<i class="fa fa-download"></i>
 							<span>{{package}}-master.zip</span>&nbsp;&nbsp;&nbsp;
 						</a>
 						<br>
-						<a class="small download_link" href="https://github.com/luapower/{{package}}/archive/master.tar.gz">
+						<a class="small download_link" href="{{github_url}}/archive/master.tar.gz">
 							<i class="fa fa-download"></i>
 							<span>{{package}}-master.tar.gz</span>
 						</a>
@@ -81,7 +81,7 @@
 
 			<h2>
 				Releases
-				<a href="https://github.com/luapower/{{package}}/releases"
+				<a href="{{github_url}}/releases"
 					class=hastip
 					style="margin-left: 1em"
 					title="View releases on github">
@@ -92,18 +92,18 @@
 			{{#git_tags}}
 				<tr>
 					<td valign=top style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
+						<a href="{{github_url}}/releases/tag/{{tag}}">{{tag}}</a>
 					</td>
 					<td valign=top style="padding-right: 1em">
 						<span class=time time="{{time}}" reltime="{{reltime}}">{{reltime}}</span>
 					</td>
 					<td valign=top style="padding-bottom: 1em">
-						<a class="nowrap small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.zip">
+						<a class="nowrap small download_link" href="{{github_url}}/archive/{{tag}}.zip">
 							<i class="fa fa-download"></i>
 							<span>{{package}}-{{tag}}.zip</span>
 						</a>
 						<br>
-						<a class="nowrap small download_link" href="https://github.com/luapower/{{package}}/archive/{{tag}}.tar.gz">
+						<a class="nowrap small download_link" href="{{github_url}}/archive/{{tag}}.tar.gz">
 							<i class="fa fa-download"></i>
 							<span>{{package}}-{{tag}}.tar.gz</span>
 						</a>
@@ -141,9 +141,9 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<td>
 						{{#has_git_tags}}
 							{{#git_tags}}
-								<a href="https://github.com/luapower/{{package}}/releases/tag/{{tag}}">{{tag}}</a>
+								<a href="{{github_url}}/releases/tag/{{tag}}">{{tag}}</a>
 							{{/git_tags}}
-							<a href="https://github.com/luapower/{{package}}/releases"><i class="fa fa-github"></i></a>
+							<a href="{{github_url}}/releases"><i class="fa fa-github"></i></a>
 						{{/has_git_tags}}
 						{{^has_git_tags}}
 							None yet.
@@ -438,10 +438,10 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						<i class="icon-{{icon}}"></i>
 					</td>
 					<td style="padding-right: 1em">
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{path}}?ts=3">{{module}}.{{key}}</a>
+						<a href="{{github_url}}/blob/master/{{path}}?ts=3">{{module}}.{{key}}</a>
 					</td>
 					<td>
-						<a href="https://github.com/luapower/{{package}}/blob/master/{{impl_path}}?ts=3">{{impl_module}}</a>
+						<a href="{{github_url}}/blob/master/{{impl_path}}?ts=3">{{impl_module}}</a>
 					</td>
 				</tr>
 				{{/autoloads}}
@@ -630,7 +630,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				</tr>
 				<tr>
 					<td align=left class="gray">Version: </td><td align=left>
-						<a href="https://github.com/luapower/{{package}}/commits/master">{{version}}</a>
+						<a href="{{github_url}}/commits/master">{{version}}</a>
 					</td>
 				</tr>
 				<tr>
