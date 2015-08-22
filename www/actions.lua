@@ -90,6 +90,19 @@ local function format_date(time)
 	return os.date('%b %e \'%y', time)
 end
 
+--dynamic snippets -----------------------------------------------------------
+
+local snippets = {}
+
+local function snippets.module_list()
+	local t = lp.module_headers(package)
+	local dt = {}
+	for i,t in ipairs(t) do
+		dt[#dt+1] = t.module .. '<br>'
+	end
+	return table.concat(dt)
+end
+
 --doc rendering --------------------------------------------------------------
 
 local function md_refs()
@@ -972,6 +985,14 @@ local function action_package(pkg, doc, what)
 		if t.doc_path then
 			local path = lp.powerpath(t.doc_path)
 			t.doc_html = render_docfile(path)
+
+			--compile dynamic snippets
+			t.doc_html = t.doc_html:gsub('{{([^}]+)}}', function(name)
+				local snippet = snippets[name]
+				if not snippet then return '' end
+				return snippet(pkg)
+			end)
+
 			local mtime = lp.git_file_time(pkg, t.doc_path)
 			if mtime then
 				t.doc_mtime = format_date(mtime)
