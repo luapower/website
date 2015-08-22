@@ -163,7 +163,7 @@ end
 
 --package info ---------------------------------------------------------------
 
-local ljsrc = 'https://github.com/luapower/luajit/blob/master/csrc/luajit/src/src/'
+local ljsrc = 'https://github.com/LuaJIT/LuaJIT/blob/master/src/'
 
 local module_src_urls = {
 	string    = ljsrc..'lib_string.c',
@@ -184,7 +184,7 @@ local module_src_urls = {
 
 local function source_url(pkg, path, mod)
 	return module_src_urls[mod] or type(path) == 'string' and string.format(
-			'https://github.com/luapower/%s/blob/master/%s?ts=3', pkg, path)
+		lp.git_origin_url(pkg)..'/blob/master/%s?ts=3', pkg, path)
 end
 
 local os_list = {'mingw', 'linux', 'osx'}
