@@ -184,7 +184,7 @@ local module_src_urls = {
 
 local function source_url(pkg, path, mod)
 	return module_src_urls[mod] or type(path) == 'string' and string.format(
-		lp.git_origin_url(pkg)..'/blob/master/%s?ts=3', pkg, path)
+		lp.git_origin_url(pkg)..'/blob/master/%s?ts=3', path)
 end
 
 local os_list = {'mingw', 'linux', 'osx'}
