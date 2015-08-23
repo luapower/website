@@ -122,7 +122,7 @@ function snippets.module_list(package)
 			_ '  </td><td>'
 			_('   %s', t.descr or '')
 			_ '  </td><td>'
-			_('   <span class=time time="%s" reltime="%s">%s</span>', t.time, t.timeago, t.timeago)
+			_('   <span class=time time="%s" reltime="%s">%s</span>', t.mtime, t.mtime_ago, t.mtime_ago)
 			_ '  </td>'
 		_' </tr>'
 	end
