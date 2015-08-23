@@ -103,16 +103,26 @@ function snippets.module_list(package)
 	_'<table>'
 	for i,t in ipairs(t) do
 		local path = lp.modules(package)[t.module]
-		local cat = t.name and t.name:match'^(.-)/[^/]+$' or ''
+
+		local cat = t.name and t.name:match'^(.-)/[^/]+$' or 'other'
 		if cat ~= cat0 then
-			_(' <tr><td><strong>%s</strong></td><td></td></tr>', cat)
+			_(' <tr><td colspan=3><strong>%s</strong></td></tr>', cat)
 			cat0 = cat
 		end
+
+		local mtime = lp.git_file_time(pkg, t.doc_path)
+		if mtime then
+			t.mtime = format_date(mtime)
+			t.mtime_ago = timeago(mtime)
+		end
+
 		_' <tr>'
 			_ '  <td>'
 			_('   <a href="%s/blob/master/%s?ts=3">%s</a>', origin_url, path, t.module)
 			_ '  </td><td>'
 			_('   %s', t.descr or '')
+			_ '  </td><td>'
+			_('   <span class=time time="%s" reltime="%s">%s</span>', t.time, t.timeago, t.timeago)
 			_ '  </td>'
 		_' </tr>'
 	end
@@ -675,7 +685,7 @@ local function package_info(pkg, doc)
 			or glue.update({}, lp.config'platforms')
 	local master_time = lp.git_master_time(pkg)
 	local license = lp.license(pkg)
-	local ctags = lp.c_tags(pkg) or {}
+	local ctags = lp.what_tags(pkg) or {}
 	local origin_url = lp.git_origin_url(pkg)
 	local on_github = origin_url:find'github%.com'
 	local git_version = lp.git_version(pkg)
