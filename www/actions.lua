@@ -102,13 +102,13 @@ function snippets.module_list(package)
 	local cat0
 	_'<table>'
 	for i,t in ipairs(t) do
-		_' <tr>'
 		local path = lp.modules(package)[t.module]
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or ''
 		if cat ~= cat0 then
-			_('  <td><b>%s</b></td><td></td>', cat)
+			_(' <tr><td><b>%s</b></td><td></td></tr>', cat)
 			cat0 = cat
 		end
+		_' <tr>'
 			_ '  <td>'
 			_('   <a href="%s/blob/master/%s?ts=3">%s</a>', origin_url, path, t.module)
 			_ '  </td><td>'
