@@ -106,7 +106,7 @@ function snippets.module_list(package)
 
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or 'other'
 		if cat ~= cat0 then
-			_(' <tr><td colspan=2><strong>%s</strong></td><td class="gray small" valign=bottom>last updated</td></tr>', cat)
+			_(' <tr><td colspan=2><strong>%s</strong></td><td class="gray small" style="vertical-align: bottom">last updated</td></tr>', cat)
 			cat0 = cat
 		end
 
