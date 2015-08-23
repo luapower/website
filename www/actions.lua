@@ -100,7 +100,7 @@ function snippets.module_list(package)
 	local dt = {}
 	local function _(...) dt[#dt+1] = string.format(...)..'\n' end
 	local cat0
-	_'<table>'
+	_'<table width=100%>'
 	for i,t in ipairs(t) do
 		local path = lp.modules(package)[t.module]
 
