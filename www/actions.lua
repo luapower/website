@@ -116,11 +116,13 @@ function snippets.module_list(package)
 			t.mtime_ago = timeago(mtime)
 		end
 
+		local tagline = lp.module_tagline(package, t.module)
+
 		_' <tr>'
 			_ '  <td>'
 			_('   <a href="%s/blob/master/%s?ts=3">%s</a>', origin_url, path, t.module)
 			_ '  </td><td>'
-			_('   %s', t.descr or '')
+			_('   %s', tagline or '')
 			_ '  </td><td>'
 			_('   <span class=time time="%s" reltime="%s">%s</span>', t.mtime, t.mtime_ago, t.mtime_ago)
 			_ '  </td>'
