@@ -95,11 +95,28 @@ end
 local snippets = {}
 
 function snippets.module_list(package)
+	local origin_url = lp.git_origin_url(package)
 	local t = lp.module_headers(package)
 	local dt = {}
+	local function _(...) dt[#dt+1] = string.format(...)..'\n' end
+	local cat0
+	_'<table>'
 	for i,t in ipairs(t) do
-		dt[#dt+1] = t.module .. '<br>'
+		_' <tr>'
+		local path = lp.modules(package)[t.module]
+		local cat = t.name and t.name:match'^(.-)/[^/]+$' or ''
+		if cat ~= cat0 then
+			_('  <td><b>%s</b></td><td></td>', cat)
+			cat0 = cat
+		end
+			_ '  <td>'
+			_('   <a href="%s/blob/master/%s?ts=3">%s</a>', origin_url, path, t.module)
+			_ '  </td><td>'
+			_('   %s', t.descr or '')
+			_ '  </td>'
+		_' </tr>'
 	end
+	_'</table>'
 	return table.concat(dt)
 end
 
