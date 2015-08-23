@@ -105,7 +105,7 @@ function snippets.module_list(package)
 		local path = lp.modules(package)[t.module]
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or ''
 		if cat ~= cat0 then
-			_(' <tr><td><b>%s</b></td><td></td></tr>', cat)
+			_(' <tr><td><strong>%s</strong></td><td></td></tr>', cat)
 			cat0 = cat
 		end
 		_' <tr>'
