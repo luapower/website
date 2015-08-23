@@ -110,7 +110,7 @@ function snippets.module_list(package)
 			cat0 = cat
 		end
 
-		local mtime = lp.git_file_time(pkg, t.doc_path)
+		local mtime = lp.git_file_time(package, path)
 		if mtime then
 			t.mtime = format_date(mtime)
 			t.mtime_ago = timeago(mtime)
