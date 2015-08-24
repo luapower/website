@@ -762,3 +762,8 @@ warn {
 .doc .sourceCode .re {}
 /*  ErrorTok */
 .doc .sourceCode .er {}
+
+.doc .small {
+	font-size: 90%;
+	line-height: 160%;
+}
