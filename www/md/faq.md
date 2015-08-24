@@ -119,7 +119,7 @@ Increasing the portability of luapower beyond LuaJIT is beyond my priorities
 at the moment. That being said, some Lua+ffi modules might work with
 luaffi already, but you would have to check that out yourself.
 
-## The files are all mixed up. How do I see which files come from which package?
+## How do I see which files belong to which package?
 
 	mgit <package> ls-files
 
