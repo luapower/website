@@ -752,7 +752,7 @@ local function package_info(pkg, doc)
 	t.docs = {}
 	for name, path in glue.sortedpairs(docs) do
 		table.insert(t.docs, {
-			name = name,
+			name = name:gsub('^'..glue.escape(pkg)..'[%._]', ''),
 			path = path,
 			source_url = source_url(pkg, path),
 			selected = name == doc,
