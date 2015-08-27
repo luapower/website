@@ -286,6 +286,7 @@ warn {
 	border-top: 1px solid;
 	margin: 0;
 	margin-bottom: 0.5em;
+	margin-top: 2em;
 }
 
 .footer_footer { opacity: 0.7; }
