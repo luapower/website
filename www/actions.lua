@@ -122,11 +122,11 @@ function widgets.module_list(package)
 		local doclink = docpath and string.format(' [<a href="/%s">doc</a>]', t.module) or ''
 
 		_' <tr>'
-			_ '  <td>'
+			_ '  <td class=nowrap>'
 			_('   <a href="%s/blob/master/%s?ts=3">%s</a>%s', origin_url, path, t.module, doclink)
 			_ '  </td><td>'
 			_('   %s', tagline or '')
-			_ '  </td><td>'
+			_ '  </td><td class=nowrap>'
 			_('   <span class=time time="%s" reltime="%s">%s</span>', t.mtime, t.mtime_ago, t.mtime_ago)
 			_ '  </td>'
 		_' </tr>'
