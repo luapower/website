@@ -373,12 +373,13 @@ warn {
 }
 
 .downloads_home .download_btn {
-	min-width: 120px;
-}
-
-.downloads_home .download_btn i {
-	padding-top: 0;
-	padding-bottom: 0;
+	width: 100%;
+	height: 46px;
+	/*
+	font-size: 80%;
+	border-radius: 2px;
+	box-shadow: 1px 1px 1px #000;
+	*/
 }
 
 .package_list {

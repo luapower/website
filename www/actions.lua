@@ -1083,13 +1083,15 @@ local function action_home()
 		table.insert(data.cats, {cat = cat.name, packages = t})
 	end
 
+	--[[
+	--TODO: remove this if it turns out that we don't need the daily bundles anymore.
 	local t = {}
 	data.download_buttons = t
 	for _,pl in ipairs{'mingw32', 'linux32', 'osx32', 'mingw64', 'linux64', 'osx64'} do
 		local ext = pl:find'linux' and '.tar.gz' or '.zip'
 		local name = pl..ext
 		local file = 'luapower-'..name
-		local size = lfs.attributes(app.wwwpath(file), 'size')
+		local size = lfs.attributes(app.wwwpath('files/'..file), 'size')
 		local size = string.format('%d MB', size / 1024 / 1024)
 		if size then
 			table.insert(t, {
@@ -1100,6 +1102,12 @@ local function action_home()
 			})
 		end
 	end
+	]]
+
+	local file = 'files/luapower-all.zip'
+	local size = lfs.attributes(app.wwwpath(file), 'size')
+	local size = string.format('%d MB', size / 1024 / 1024)
+	data.all_download_size = size
 
 	app.out(render_main('home.html', data))
 end
