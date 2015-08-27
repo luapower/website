@@ -123,7 +123,7 @@ function widgets.module_list(package)
 
 		_' <tr>'
 			_ '  <td>'
-			_('   <a href="%s/blob/master/%s?ts=3">%s%s</a>', origin_url, path, t.module, doclink)
+			_('   <a href="%s/blob/master/%s?ts=3">%s</a>%s', origin_url, path, t.module, doclink)
 			_ '  </td><td>'
 			_('   %s', tagline or '')
 			_ '  </td><td>'
