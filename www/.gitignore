@@ -1,3 +1,4 @@
 oldbeat
 *.zip
 *.tar.gz
+.cache
