@@ -375,6 +375,7 @@ warn {
 .downloads_home .download_btn {
 	width: 100%;
 	height: 46px;
+	margin-right: 20px;
 	/*
 	font-size: 80%;
 	border-radius: 2px;
