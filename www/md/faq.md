@@ -158,7 +158,7 @@ implementation (full-fledged package manager vs simple git wrapper +
 reflection library), and with a large module collection.
 LuaRocks requires declaring all package dependencies, while luapower requires
 declaring only binary-only/build-only dependencies. Because LuaRocks does not
-enforce a standard directory layout on packages, having installed packages
+specify a standard directory layout on packages, having installed packages
 under version control is not possible. Luapower includes and compiles
 all external libraries, while that is out of the scope of LuaRocks. For this
 same reason, LuaRocks does not know how to find the include dir and lib dir
