@@ -104,11 +104,11 @@ Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooB
 
 ### Abreviations
 
-Abbreviations are ok, just don't forget to document them when they first appear in the code. Short names are mnemonic and you can juggle more of them in your brain at the same time, and they're indicative of a deeply-understood problem: you're not being lazy for using them.
+Abbreviations are ok, just don't forget to document them when they first appear in the code. Short names are mnemonic and you can juggle more of them in your head at the same time, and they're indicative of a deeply understood problem: you're not being lazy for using them.
 
 ## Comments
 
-Assume that your readers know Lua so try not to teach that to them. But don't tell them that the code "speaks for itself" either because it doesn't. Take time to document the tricky parts of the code. If there's an underlying narrative on how you solved a problem, take time to document that too. Don't worry about how long that is, people love stories.
+Assume your readers already know Lua so try not to teach that to them (it would show that you're really trying to teach yourself). But don't tell them that the code "speaks for itself" either because it doesn't. Take time to document the tricky parts of the code. If there's an underlying narrative on how you solved a problem, take time to document that too. Don't worry about how long that is, people love stories. And in fact the high-level overview, how everything is put together is more important than the nitty-gritty details and too often missing.
 
 ## Syntax
 
