@@ -90,11 +90,11 @@ local function format_date(time)
 	return os.date('%b %e \'%y', time)
 end
 
---dynamic snippets -----------------------------------------------------------
+--widgets --------------------------------------------------------------------
 
-local snippets = {}
+local widgets = {}
 
-function snippets.module_list(package)
+function widgets.module_list(package)
 	local origin_url = lp.git_origin_url(package)
 	local t = lp.module_headers(package)
 	local dt = {}
@@ -103,6 +103,7 @@ function snippets.module_list(package)
 	_'<table width=100%%>'
 	for i,t in ipairs(t) do
 		local path = lp.modules(package)[t.module]
+		local docpath = lp.docs(package)[t.module]
 
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or 'other'
 		if cat ~= cat0 then
@@ -118,9 +119,11 @@ function snippets.module_list(package)
 
 		local tagline = lp.module_tagline(package, t.module)
 
+		local doclink = docpath and string.format(' <a href="/%s">[DOC]</a>', docpath) or ''
+
 		_' <tr>'
 			_ '  <td>'
-			_('   <a href="%s/blob/master/%s?ts=3">%s</a>', origin_url, path, t.module)
+			_('   <a href="%s/blob/master/%s?ts=3">%s%s</a>', origin_url, path, t.module, doclink)
 			_ '  </td><td>'
 			_('   %s', tagline or '')
 			_ '  </td><td>'
@@ -1025,11 +1028,11 @@ local function action_package(pkg, doc, what)
 			local path = lp.powerpath(t.doc_path)
 			t.doc_html = render_docfile(path)
 
-			--compile dynamic snippets
+			--add any widgets
 			t.doc_html = t.doc_html:gsub('{{([^}]+)}}', function(name)
-				local snippet = snippets[name]
-				if not snippet then return '' end
-				return snippet(pkg)
+				local widget = widgets[name]
+				if not widget then return '' end
+				return widget(pkg)
 			end)
 
 			local mtime = lp.git_file_time(pkg, t.doc_path)
