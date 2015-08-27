@@ -13,46 +13,53 @@
 
 			<h3>How do I get started?</h3>
 
-			<b>Option 1.</b> Like a Pro (using <a href="/luapower-git">multigit</a>):
-			<div class="shell_btn"></div>
-			<div class=doc style="padding-right: 0;">
-			<pre class="windows_shell"><code>git clone https://github.com/capr/multigit luapower
+			<div style="margin-top: 15px">
+				<b>Option 1.</b> Like a Pro (using <a href="/luapower-git">multigit</a>):
+				<div class="shell_btn"></div>
+				<div class=doc style="padding-right: 0;">
+				<pre class="windows_shell"><code>git clone https://github.com/capr/multigit luapower
 cd luapower
 mgit clone https://github.com/luapower/luapower-repos
 mgit clone-all
 </code></pre>
 
-			<pre class="unix_shell"><code>git clone https://github.com/capr/multigit luapower
+				<pre class="unix_shell"><code>git clone https://github.com/capr/multigit luapower
 cd luapower
 ./mgit clone https://github.com/luapower/luapower-repos
 ./mgit clone-all
 </code></pre>
+				</div>
 			</div>
-			<!--
-			Option 2. Daily bundles:
-			<p class=downloads_home>
-				{{#download_buttons}}
-					<a class=download_btn href="/{{file}}">
-						<i class="icon-{{platform}}"></i>
-						<span>{{name}} <span class="small" style="padding-left: 0.5em;">{{size}}</span></span>
+
+			<div style="margin-top: 15px">
+				<!--
+				Option 2. Daily bundles:
+				<p class=downloads_home>
+					{{#download_buttons}}
+						<a class=download_btn href="/{{file}}">
+							<i class="icon-{{platform}}"></i>
+							<span>{{name}} <span class="small" style="padding-left: 0.5em;">{{size}}</span></span>
+						</a>
+					{{/download_buttons}}
+				</p>
+				-->
+
+				<b>Option 2.</b> All-in-one:
+				<p class=downloads_home>
+					<a class=download_btn href="https://github.com/luapower/all/archive/master.zip">
+						<i class="icon-mingw"></i>
+						<i class="icon-osx"></i>
+						<i class="icon-linux"></i>
+						<span>DOWNLOAD <span class="small" style="padding-left: 0.5em;">{{all_download_size}}</span></span>
 					</a>
-				{{/download_buttons}}
-			</p>
-			-->
+				</p>
+			</div>
 
-			<b>Option 2.</b> All-in-one:
-			<p class=downloads_home>
-				<a class=download_btn href="https://github.com/luapower/all/archive/master.zip">
-					<i class="icon-mingw"></i>
-					<i class="icon-osx"></i>
-					<i class="icon-linux"></i>
-					<span>DOWNLOAD <span class="small" style="padding-left: 0.5em;">{{all_download_size}}</span></span>
-				</a>
-			</p>
-
-			<b>Option 3.</b> Swedish buffet: Get only the modules you need from the
-			<b>table below</b>, and unzip their contents <i>over the same directory</i>
-			to get a portable, self-contained luapower installation.
+			<div style="margin-top: 15px">
+				<b>Option 3.</b> Swedish buffet: Get only the modules you need from the
+				<b>table below</b>, and unzip their contents <i>over the same directory</i>
+				to get a portable, self-contained luapower installation.
+			</div>
 
 		</td>
 		<td class="quick_faq2">
