@@ -119,7 +119,7 @@ function widgets.module_list(package)
 
 		local tagline = lp.module_tagline(package, t.module)
 
-		local doclink = docpath and string.format(' <a href="/%s">[DOC]</a>', docpath) or ''
+		local doclink = docpath and string.format(' <a href="/%s">[doc]</a>', docpath) or ''
 
 		_' <tr>'
 			_ '  <td>'
