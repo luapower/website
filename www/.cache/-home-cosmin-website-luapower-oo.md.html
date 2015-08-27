@@ -1,0 +1,149 @@
+<h2 id="local-oo-requireoo"><code>local oo = require'oo'</code></h2>
+<p>Object system with virtual properties and method overriding hooks.</p>
+<h2 id="in-a-nutshell">In a nutshell</h2>
+<ul>
+<li>single, dynamic inheritance by default:
+<ul>
+<li><code>Fruit = oo.Fruit()</code></li>
+<li><code>Apple = oo.Apple(Fruit)</code></li>
+<li><code>apple = Apple(...)</code></li>
+<li><code>apple.super -&gt; Apple</code></li>
+<li><code>Apple.super -&gt; Fruit</code></li>
+</ul></li>
+<li>multiple, static inheritance by request:
+<ul>
+<li><code>Apple:inherit(Fruit[,replace])</code> - statically inherit <code>Fruit</code>, optionally replacing existing properties.</li>
+<li><code>Apple:detach()</code> - detach from the parent class, in other words statically inherit <code>self.super</code>.</li>
+</ul></li>
+<li>virtual properties with getter and setter:
+<ul>
+<li>reading <code>Apple.foo</code> calls <code>Apple:get_foo()</code> to get the value, if <code>Apple.get_foo</code> is defined.</li>
+<li>assignment to <code>Apple.foo</code> calls <code>Apple:set_foo(value)</code> if <code>Apple.set_foo</code> is defined.</li>
+<li>missing the setter, the property is considered read-only and the assignment fails.</li>
+</ul></li>
+<li>stored properties (no getter):
+<ul>
+<li>assignment to <code>Apple.foo</code> calls <code>Apple:set_foo(value)</code> and sets <code>Apple.state.foo</code>.</li>
+<li>reading <code>Apple.foo</code> reads back <code>Apple.state.foo</code>.</li>
+</ul></li>
+<li>method overriding hooks:
+<ul>
+<li><code>function Apple:before_pick(args...) return newargs... end</code> makes <code>Apple:pick()</code> call your method first.</li>
+<li><code>function Apple:after_pick(ret...) return newret... end</code> makes <code>Apple:pick()</code> call your method last.</li>
+<li><code>function Apple:override_pick(inherited, ...)</code> lets you override <code>Apple:pick()</code> and call <code>inherited(self, ...)</code>.</li>
+</ul></li>
+<li>introspection:
+<ul>
+<li><code>self:allpairs() -&gt; iterator() -&gt; name, value, source</code> - iterate all properties, including inherited <em>and overriden</em> ones.</li>
+<li><code>self:properties()</code> -&gt; get a table of all current properties and values, including inherited ones.</li>
+<li><code>self:inspect()</code> - inspect the class/instance structure and contents in detail (requires <a href="/glue">glue</a>).</li>
+</ul></li>
+<li>overridable subclassing and instantiation mechanisms:
+<ul>
+<li><code>Fruit = oo.Fruit()</code> is sugar for <code>Fruit = oo.Object:subclass()</code></li>
+<li><code>Apple = oo.Apple(Fruit)</code> is sugar for <code>Apple = Fruit:subclass()</code></li>
+<li><code>apple = Apple(...)</code> is sugar for <code>apple = Apple:create(...)</code>
+<ul>
+<li><code>Apple:create()</code> calls <code>apple:init(...)</code></li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="inheritance-and-instantiation">Inheritance and instantiation</h2>
+<p><strong>Classes are created</strong> with <code>oo.ClassName([super])</code>, where <code>super</code> is usually another class, but can also be an instance, which is useful for creating polymorphic &quot;views&quot; on existing instances.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> Fruit <span class="ot">=</span> oo<span class="ot">.</span>Fruit<span class="ot">()</span></code></pre>
+<p>You can also create anonymous classes with <code>oo.class([super])</code>:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> cls <span class="ot">=</span> oo<span class="ot">.</span>class<span class="ot">()</span></code></pre>
+<p><strong>Instances are created</strong> with <code>cls:create(...)</code> or simply <code>cls()</code>, which in turn calls <code>cls:init(...)</code> which is the object constructor. While <code>cls</code> is normally a class, it can also be an instance, which effectively enables prototype-based inheritance.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> obj <span class="ot">=</span> cls<span class="ot">()</span></code></pre>
+<p><strong>The superclass</strong> of a class or the class of an instance is accessible as <code>self.super</code>.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>super <span class="ot">==</span> cls<span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>cls<span class="ot">.</span>super <span class="ot">==</span> oo<span class="ot">.</span>Object<span class="ot">)</span></code></pre>
+<p><strong>Inheritance is dynamic</strong>: properties are looked up at runtime in <code>self.super</code> and changing a property or method in the superclass reflects on all subclasses and instances. This can be slow, but it saves space.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">cls<span class="ot">.</span>the_answer <span class="ot">=</span> <span class="dv">42</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span></code></pre>
+<p>You can detach the class/instance from its parent class by calling <code>self:detach()</code>. This copies all inherited fields to the class/instance and removes <code>self.super</code>.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">cls:detach<span class="ot">()</span>
+obj:detach<span class="ot">()</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>super <span class="ot">==</span> <span class="kw">nil</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>cls<span class="ot">.</span>super <span class="ot">==</span> <span class="kw">nil</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>cls<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span></code></pre>
+<p><strong>Static inheritance</strong> can be achieved by calling <code>self:inherit(other[,override])</code> which copies over the properties of another class or instance, effectively <em>monkey-patching</em> <code>self</code>, optionally overriding properties with the same name. The fields <code>self.classname</code> and <code>self.super</code> are always preserved though, even with the <code>override</code> flag.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> other_cls <span class="ot">=</span> oo<span class="ot">.</span>class<span class="ot">()</span>
+other_cls<span class="ot">.</span>the_answer <span class="ot">=</span> <span class="dv">13</span>
+
+obj:inherit<span class="ot">(</span>other_cls<span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">13</span><span class="ot">)</span> <span class="co">--obj continues to dynamically inherit cls.the_answer</span>
+                             <span class="co">--but statically inherited other_cls.the_answer</span>
+
+obj<span class="ot">.</span>the_answer <span class="ot">=</span> <span class="kw">nil</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span> <span class="co">--reverted to class default</span>
+
+cls:inherit<span class="ot">(</span>other_cls<span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>cls<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span> <span class="co">--no override</span>
+
+cls:inherit<span class="ot">(</span>other_cls<span class="ot">,</span> <span class="kw">true</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>cls<span class="ot">.</span>the_answer <span class="ot">==</span> <span class="dv">13</span><span class="ot">)</span> <span class="co">--override</span></code></pre>
+<p>In fact, <code>self:detach()</code> is written as <code>self:inherit(self.super)</code> with the minor detail of setting <code>self.classname = self.classname</code> and removing <code>self.super</code>.</p>
+<p>To further customize how the values are copied over for static inheritance, override <code>self:properties()</code>.</p>
+<p><strong>Virtual properties</strong> are created by defining a getter and a setter. Once you have defined <code>self:get_foo()</code> and <code>self:set_foo(value)</code> you can read and write to <code>self.foo</code> and the getter and setter will be called to fulfill the indexing. The setter is optional: without it, the property is read-only and assigning it fails with an error.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> cls:get_answer_to_life<span class="ot">()</span> <span class="kw">return</span> deep_thought:get_answer<span class="ot">()</span> <span class="kw">end</span>
+<span class="kw">function</span> cls:set_answer_to_life<span class="ot">(</span>v<span class="ot">)</span> deep_thought:set_answer<span class="ot">(</span>v<span class="ot">)</span> <span class="kw">end</span>
+obj <span class="ot">=</span> cls<span class="ot">()</span>
+obj<span class="ot">.</span>answer_to_life <span class="ot">=</span> <span class="dv">42</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>answer_to_life <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span> <span class="co">--assuming deep_thought can store a number</span></code></pre>
+<h2 id="virtual-properties">Virtual properties</h2>
+<p><strong>Stored properties</strong> are virtual properties with a setter but no getter. The values of those properties are stored in the table <code>self.state</code> upon assignment of the property and read back upon indexing the property. If the setter breaks, the value is not stored.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> cls:set_answer_to_life<span class="ot">(</span>v<span class="ot">)</span> deep_thought:set_answer<span class="ot">(</span>v<span class="ot">)</span> <span class="kw">end</span>
+obj <span class="ot">=</span> cls<span class="ot">()</span>
+obj<span class="ot">.</span>answer_to_life <span class="ot">=</span> <span class="dv">42</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>answer_to_life <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span> <span class="co">--we return the stored the number</span>
+<span class="fu">assert</span><span class="ot">(</span>obj<span class="ot">.</span>state<span class="ot">.</span>answer_to_life <span class="ot">==</span> <span class="dv">42</span><span class="ot">)</span> <span class="co">--which we stored here</span></code></pre>
+<p>Virtual and inherited properties are all read by calling <code>self:getproperty(name)</code>. Virtual and real properties are written to with <code>self:setproperty(name, value)</code>. You can override these methods for <em>finer control</em> over the behavior of virtual and inherited properties.</p>
+<p>Virtual properties can be <em>generated in bulk</em> given a <em>multikey</em> getter and a <em>multikey</em> setter and a list of property names, by calling <code>self:gen_properties(names, getter, setter)</code>. The setter and getter must be methods of form:</p>
+<ul>
+<li><code>self:getter(k) -&gt; v</code></li>
+<li><code>self:setter(k, v)</code></li>
+</ul>
+<h2 id="overriding-hooks">Overriding hooks</h2>
+<p>Overriding hooks are sugar to make method overriding more easy and readable.</p>
+<p>Instead of:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> Apple:pick<span class="ot">(</span>arg<span class="ot">)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picking&#39;</span><span class="ot">,</span> arg<span class="ot">)</span>
+   <span class="kw">local</span> ret <span class="ot">=</span> Apple<span class="ot">.</span>super<span class="ot">.</span>pick<span class="ot">(</span>self<span class="ot">,</span> arg<span class="ot">)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picked&#39;</span><span class="ot">,</span> ret<span class="ot">)</span>
+   <span class="kw">return</span> ret
+<span class="kw">end</span></code></pre>
+<p>Write:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> Apple:override_pick<span class="ot">(</span>inherited<span class="ot">,</span> arg<span class="ot">,</span> <span class="ot">...)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picking&#39;</span><span class="ot">,</span> arg<span class="ot">)</span>
+   <span class="kw">local</span> ret <span class="ot">=</span> inherited<span class="ot">(</span>self<span class="ot">,</span> arg<span class="ot">,</span> <span class="ot">...)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picked&#39;</span><span class="ot">,</span> ret<span class="ot">)</span>
+   <span class="kw">return</span> ret
+<span class="kw">end</span></code></pre>
+<p>Or even better:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> Apple:before_pick<span class="ot">(</span>arg<span class="ot">)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picking&#39;</span><span class="ot">,</span> arg<span class="ot">)</span>
+<span class="kw">end</span>
+
+<span class="kw">function</span> Apple:after_pick<span class="ot">(</span>ret<span class="ot">)</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;picked&#39;</span><span class="ot">,</span> ret<span class="ot">)</span>
+   <span class="kw">return</span> ret
+<span class="kw">end</span></code></pre>
+<p>By defining <code>self:before_&lt;method&gt;(...)</code> a new implementation for <code>self.&lt;method&gt;</code> is created which calls the before hook (which receives all method's arguments) and then calls the existing (inherited) implementation with whatever the hook returns as arguments.</p>
+<p>By defining <code>self:after_&lt;method&gt;(...)</code> a new implementation for <code>self.&lt;method&gt;</code> is created which calls the existing (inherited) implementation, after which it calls the hook with whatever the method returns as arguments, and returns whatever the hook returns.</p>
+<p>By defining <code>self:override_&lt;method&gt;(inherited, ...)</code> you can access <code>self.super.&lt;method&gt;</code> as <code>inherited</code>.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> cls:before_init<span class="ot">(</span>foo<span class="ot">,</span> bar<span class="ot">)</span>
+  foo <span class="ot">=</span> foo <span class="kw">or</span> default_foo
+  bar <span class="ot">=</span> bar <span class="kw">or</span> default_bar
+  <span class="kw">return</span> foo<span class="ot">,</span> bar
+<span class="kw">end</span>
+
+<span class="kw">function</span> cls:after_init<span class="ot">()</span>
+  <span class="co">--allocate resources</span>
+<span class="kw">end</span>
+
+<span class="kw">function</span> cls:before_destroy<span class="ot">()</span>
+  <span class="co">--destroy resources</span>
+<span class="kw">end</span></code></pre>
+<p>If you don't know the name of the method you want to override until runtime, use <code>cls:before(name, func)</code>, <code>cls:after(name, func)</code> and <code>cls:override(name, func)</code> instead.</p>

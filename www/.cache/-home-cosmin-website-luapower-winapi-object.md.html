@@ -1,0 +1,61 @@
+<h2 id="requirewinapi.object"><code>require'winapi.object'</code></h2>
+<p>This module defines the <code>Object</code> class which is the base class of every other class in winapi.</p>
+<h2 id="object">Object</h2>
+<p>Object implements the single-inheritance object model specified in <a href="/winapi.class">winapi.class</a>. This means that you can use <code>subclass()</code> to subclass from <code>Object</code> and <code>isinstance()</code> on every instance or subclass of <code>Object</code>.</p>
+<p>It also defines how instantiation works: calling <code>Foo(args...)</code> creates an instance of <code>Foo</code>, calls <code>__init(self, args...)</code> on it, and returns it.</p>
+<p>Instances:</p>
+<ul>
+<li>inhert class fields dynamically</li>
+<li>inherit instance metamethods statically</li>
+<li>inherit super class fields dynamically</li>
+<li>inherit super class metamethods statically</li>
+</ul>
+<h3 id="hierarchy">Hierarchy</h3>
+<ul>
+<li>Object</li>
+</ul>
+<h3 id="methods">Methods</h3>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>subclassing</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>__subclass(class) -&gt; class</code></td>
+<td align="left">subclassing constructor</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>instantiation</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>__init(...)</code></td>
+<td align="left">stub object constructor (implemented in concrete classes)</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>introspection</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>__super() -&gt; class</code></td>
+<td align="left">access the super class</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>__supers() -&gt; iter() -&gt; class</code></td>
+<td align="left">iterate over the class hierarchy</td>
+</tr>
+<tr class="even">
+<td align="left"><code>__allpairs() -&gt; iter() -&gt; k, v, class</code></td>
+<td align="left">iterate instance and class members recursively</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>__pairs() -&gt; iter() -&gt; k, v</code></td>
+<td align="left">iterate the flattened map of instance and class members</td>
+</tr>
+<tr class="even">
+<td align="left"><code>__properties() -&gt; iter() -&gt; k, class</code></td>
+<td align="left">iterate the flattened map of instance and class members</td>
+</tr>
+</tbody>
+</table>

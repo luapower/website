@@ -1,0 +1,39 @@
+<h2 id="local-expat-requireexpat"><code>local expat = require'expat'</code></h2>
+<p>A ffi binding for the <a href="http://expat.sourceforge.net/">Expat XML parser</a>.</p>
+<h2 id="api">API</h2>
+<h3 id="expat.parsesource-callbacks"><code>expat.parse(source, callbacks)</code></h3>
+<p>Parse a XML from a string, cdata, file, or reader function, calling a callback for each piece of the XML parsed.</p>
+<p>The optional <code>namespacesep</code> field is a single-character string. If present, it causes XML namespaces to be resolved during parsing. Namespace URLs are then concatenated to tag names using the specified character.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">source <span class="ot">=</span> <span class="ot">{</span>path <span class="ot">=</span> S<span class="ot">}</span> | <span class="ot">{</span>string <span class="ot">=</span> S<span class="ot">}</span> | <span class="ot">{</span>cdata <span class="ot">=</span> CDATA<span class="ot">,</span> size <span class="ot">=</span> N<span class="ot">}</span> | <span class="ot">{</span><span class="fu">read</span> <span class="ot">=</span> read_function<span class="ot">}</span> &amp; <span class="ot">{[</span>namespacesep<span class="ot">=</span>S<span class="ot">]}</span>
+
+callbacks <span class="ot">=</span> <span class="ot">{</span>
+  element         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> model<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  attr_list       <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>elem<span class="ot">,</span> name<span class="ot">,</span> <span class="fu">type</span><span class="ot">,</span> dflt<span class="ot">,</span> is_required<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  xml             <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>version<span class="ot">,</span> encoding<span class="ot">,</span> standalone<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  entity          <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> is_param_entity<span class="ot">,</span> val<span class="ot">,</span> base<span class="ot">,</span> sysid<span class="ot">,</span> pubid<span class="ot">,</span> notation<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  start_tag       <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> attrs<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  end_tag         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  cdata           <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>s<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  pi              <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>target<span class="ot">,</span> data<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  comment         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>s<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  start_cdata     <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="kw">end</span><span class="ot">,</span>
+  end_cdata       <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="kw">end</span><span class="ot">,</span>
+  default         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>s<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  default_expand  <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>s<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  start_doctype   <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> sysid<span class="ot">,</span> pubid<span class="ot">,</span> has_internal_subset<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  end_doctype     <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="kw">end</span><span class="ot">,</span>
+  unparsed        <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> base<span class="ot">,</span> sysid<span class="ot">,</span> pubid<span class="ot">,</span> notation<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  notation        <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> base<span class="ot">,</span> sysid<span class="ot">,</span> pubid<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  start_namespace <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>prefix<span class="ot">,</span> uri<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  end_namespace   <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>prefix<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  not_standalone  <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="kw">end</span><span class="ot">,</span>
+  ref             <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>parser<span class="ot">,</span> context<span class="ot">,</span> base<span class="ot">,</span> sysid<span class="ot">,</span> pubid<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  skipped         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> is_parameter_entity<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+  unknown         <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>name<span class="ot">,</span> info<span class="ot">)</span> <span class="kw">end</span><span class="ot">,</span>
+<span class="ot">}</span></code></pre>
+<h3 id="expat.treeparsesource-known_tags---root_node"><code>expat.treeparse(source, [known_tags]) -&gt; root_node</code></h3>
+<p>Parse a XML to a tree of nodes. known_tags filters the output so that only the tags that known_tags indexes are returned.</p>
+<p>Nodes look like this:</p>
+<pre><code>node = {tag=, attrs={&lt;k&gt;=v}, children={node1,...}, tags={&lt;tag&gt; = node}, cdata=, parent=}</code></pre>
+<h3 id="expat.childrennode-tag---iter---node"><code>expat.children(node, tag) -&gt; iter() -&gt; node</code></h3>
+<p>Iterate a node's children that have a specific tag.</p>

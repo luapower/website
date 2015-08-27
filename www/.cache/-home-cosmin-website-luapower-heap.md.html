@@ -1,0 +1,108 @@
+<h2 id="local-heap-requireheap"><code>local heap = require'heap'</code></h2>
+<p>Priority queues implemented as binary heaps. A binary heap is a binary tree that maintains the lowest (or highest) value at the root. The tree is laid as an implicit data structure over an array. Pushing and popping values from the heap is O(log(n)) and doesn't use additional memory.</p>
+<h2 id="api">API</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><code>heap.heap(...) -&gt; push, pop</code></td>
+<td align="left">create a heap API from a stack API</td>
+</tr>
+<tr class="even">
+<td align="left"><code>heap.cdataheap(h) -&gt; h</code></td>
+<td align="left">create a fixed-capacity cdata-based heap</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>heap.valueheap([h]) -&gt; h</code></td>
+<td align="left">create a heap for Lua values</td>
+</tr>
+<tr class="even">
+<td align="left"><code>h:push(val) -&gt; index</code></td>
+<td align="left">push a value</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>h:pop([index][, dst]) -&gt; val</code></td>
+<td align="left">pop value (root value at default index 1)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>h:replace(index, val)</code></td>
+<td align="left">replace value at index</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>h:peek([index][, dst]) -&gt; val</code></td>
+<td align="left">get value without popping it</td>
+</tr>
+<tr class="even">
+<td align="left"><code>h:length() -&gt; n</code></td>
+<td align="left">number of elements in heap</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API Notes</strong>:</p>
+<ul>
+<li>a cdata heap can hold size-1 elements (element 0 is used for swapping).</li>
+<li>trying to push nil into a value heap raises an error.</li>
+<li>values that compare equally are popped in random order.</li>
+</ul>
+<h3 id="heap.heappush-pop-swap-len-cmp---push-pop-rebalance"><code>heap.heap(push, pop, swap, len, cmp) -&gt; push, pop, rebalance</code></h3>
+<p>Create a heap API:</p>
+<pre><code>push(v) -&gt; i         drop a value into the heap and return its index
+pop(i)               remove the value at index i (root is at index 1)
+rebalance(i)         rebalance the heap after the value at i has been changed</code></pre>
+<p>from a stack API:</p>
+<pre><code>push(v)              add a value to the top of the stack
+pop()                remove the value at the top of the stack
+swap(i, j)           swap two values (indices start at 1)
+len() -&gt; n           number of elements in stack
+cmp(i, j) -&gt; bool    compare elements</code></pre>
+<p>The heap can be a min-heap or max-heap depending on the comparison function. If cmp(i, j) returns a[i] &lt; a[j] then it's a min-heap.</p>
+<h3 id="heap.cdataheaph---h"><code>heap.cdataheap(h) -&gt; h</code></h3>
+<p>Create a cdata heap over table <code>h</code> which must contain:</p>
+<ul>
+<li><code>size</code>: heap capacity (required).</li>
+<li><code>ctype</code>: element type (required).</li>
+<li><code>data</code>, <code>length</code>: a pre-allocated heap (optional).</li>
+<li><code>cmp</code>: a comparison function (optional).</li>
+</ul>
+<h4 id="example">Example:</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> h <span class="ot">=</span> heap<span class="ot">.</span>cdataheap<span class="ot">{</span>
+   size <span class="ot">=</span> <span class="dv">100</span><span class="ot">,</span>
+   ctype <span class="ot">=</span> <span class="st">[[</span>
+<span class="st">      struct {</span>
+<span class="st">         int priority;</span>
+<span class="st">         int order;</span>
+<span class="st">      }</span>
+<span class="st">   ]]</span><span class="ot">,</span>
+   cmp <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>a<span class="ot">,</span> b<span class="ot">)</span>
+      <span class="kw">if</span> a<span class="ot">.</span>priority <span class="ot">==</span> b<span class="ot">.</span>priority <span class="kw">then</span>
+         <span class="kw">return</span> a<span class="ot">.</span>order <span class="ot">&gt;</span> b<span class="ot">.</span>order
+      <span class="kw">end</span>
+      <span class="kw">return</span> a<span class="ot">.</span>priority <span class="ot">&lt;</span> b<span class="ot">.</span>priority
+   <span class="kw">end</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">20</span><span class="ot">,</span> order <span class="ot">=</span> <span class="dv">1</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">10</span><span class="ot">,</span> order <span class="ot">=</span> <span class="dv">2</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">10</span><span class="ot">,</span> order <span class="ot">=</span> <span class="dv">3</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">20</span><span class="ot">,</span> order <span class="ot">=</span> <span class="dv">4</span><span class="ot">}</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>order <span class="ot">==</span> <span class="dv">3</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>order <span class="ot">==</span> <span class="dv">2</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>order <span class="ot">==</span> <span class="dv">4</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>order <span class="ot">==</span> <span class="dv">1</span><span class="ot">)</span></code></pre>
+<p>Note: the <code>order</code> field in this example is used to stabilize the order in which elements with the same priority are popped.</p>
+<h3 id="heap.valueheaph---h"><code>heap.valueheap([h]) -&gt; h</code></h3>
+<p>Create a value heap from table <code>h</code>, which can contain:</p>
+<ul>
+<li><code>cmp</code>: a comparison function (optional).</li>
+<li>a pre-allocated heap in the array part of the table (optional).</li>
+</ul>
+<h4 id="example-1">Example:</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> h <span class="ot">=</span> heap<span class="ot">.</span>valueheap<span class="ot">{</span>cmp <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>a<span class="ot">,</span> b<span class="ot">)</span>
+      <span class="kw">return</span> a<span class="ot">.</span>priority <span class="ot">&lt;</span> b<span class="ot">.</span>priority
+   <span class="kw">end</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">20</span><span class="ot">,</span> etc <span class="ot">=</span> <span class="st">&#39;bar&#39;</span><span class="ot">}</span>
+h:push<span class="ot">{</span>priority <span class="ot">=</span> <span class="dv">10</span><span class="ot">,</span> etc <span class="ot">=</span> <span class="st">&#39;foo&#39;</span><span class="ot">}</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>priority <span class="ot">==</span> <span class="dv">10</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>h:pop<span class="ot">().</span>priority <span class="ot">==</span> <span class="dv">20</span><span class="ot">)</span></code></pre>
+<h2 id="todo">TODO</h2>
+<ul>
+<li>heapifying the initial array</li>
+<li>merge(h), meld(h)</li>
+</ul>

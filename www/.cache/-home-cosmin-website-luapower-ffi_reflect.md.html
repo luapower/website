@@ -1,0 +1,17 @@
+<blockquote>
+<p><strong>NOTE</strong>: This is a fork of the reflect module by Peter Cawley, developed <a href="https://github.com/corsix/ffi-reflect">here</a>.</p>
+</blockquote>
+<p>Quick examples:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> ffi <span class="ot">=</span> <span class="fu">require</span> <span class="st">&quot;ffi&quot;</span>
+<span class="kw">local</span> reflect <span class="ot">=</span> <span class="fu">require</span> <span class="st">&quot;ffi_reflect&quot;</span>
+
+ffi<span class="ot">.</span>cdef <span class="st">&#39;int sc(const char*, const char*) __asm__(&quot;strcmp&quot;);&#39;</span>
+<span class="fu">print</span><span class="ot">(</span>reflect<span class="ot">.</span>typeof<span class="ot">(</span>ffi<span class="ot">.</span>C<span class="ot">.</span>sc<span class="ot">).</span>sym_name<span class="ot">)</span> <span class="co">--&gt; &quot;strcmp&quot;</span>
+
+<span class="kw">for</span> refct <span class="kw">in</span> reflect<span class="ot">.</span>typeof<span class="st">&quot;int(*)(int x, int y)&quot;</span><span class="ot">.</span>element_type:arguments<span class="ot">()</span> <span class="kw">do</span>
+  <span class="fu">print</span><span class="ot">(</span>refct<span class="ot">.</span>name<span class="ot">)</span>
+<span class="kw">end</span> <span class="co">--&gt; x, y</span>
+
+t <span class="ot">=</span> <span class="ot">{}</span>
+<span class="fu">assert</span><span class="ot">(</span>reflect<span class="ot">.</span>getmetatable<span class="ot">(</span>ffi<span class="ot">.</span>metatype<span class="ot">(</span><span class="st">&quot;struct {}&quot;</span><span class="ot">,</span> t<span class="ot">))</span> <span class="ot">==</span> t<span class="ot">)</span></code></pre>
+<p>For the full API reference, see <a href="http://corsix.github.io/ffi-reflect/" class="uri">http://corsix.github.io/ffi-reflect/</a>.</p>

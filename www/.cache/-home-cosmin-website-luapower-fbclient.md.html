@@ -1,0 +1,50 @@
+<h2 id="local-fb-requirefbclient"><code>local fb = require'fbclient'</code></h2>
+<p>A complete ffi binding of the <a href="http://www.firebirdsql.org/">Firebird</a> client library.</p>
+<h2 id="work-in-progress">Work in progress</h2>
+<p>In the meantime, you can use the <a href="https://code.google.com/p/fbclient/">old fbclient</a> which is stable and complete.</p>
+<h2 id="summary">Summary</h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Connections</strong></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>fb.connect(db, [user], [pass], [charset], [port]) -&gt; conn</code></td>
+<td align="left">connect to a firebird server</td>
+</tr>
+<tr class="even">
+<td align="left"><code>fb.connect(options_t) -&gt; conn</code></td>
+<td align="left">connect to a firebird server</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>conn:close()</code></td>
+<td align="left">close the connection</td>
+</tr>
+</tbody>
+</table>
+<h2 id="firebird-plug">Firebird plug</h2>
+<ul>
+<li>MVCC concurrency</li>
+<li>column-level character sets and collations</li>
+<li>updatable views and triggers</li>
+<li>selectable stored procedures</li>
+<li>elegant procedural language</li>
+<li>multi-database transactions</li>
+<li>global temporary tables (GTEs)</li>
+<li>common table expressions (CTEs)</li>
+<li>asynchronous events</li>
+<li>computed-by columns</li>
+<li>check constraints and foreign key constraints</li>
+<li>datatype domains</li>
+<li>online backup and restore, remotely controlled</li>
+<li>user-defined functions (UDFs)</li>
+<li>full SQL-92 compliance</li>
+<li>multi-process and multi-threading implementations</li>
+<li>feature-full embedded edition</li>
+<li>binaries for Windows, Linux and Mac</li>
+<li>a real [IBExpert][IDE] (made by real programmers who don't have time to build a website)</li>
+</ul>
+<p>If you don't need all this, there's also <a href="/mysql">bindings</a> for the most <em>popular</em> database in the world.</p>

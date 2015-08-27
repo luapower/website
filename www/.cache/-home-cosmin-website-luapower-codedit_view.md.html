@@ -1,0 +1,71 @@
+<h2 id="local-view_class-requirecodedit_view"><code>local view_class = require'codedit_view'</code></h2>
+<p>Codedit views deal with measuring, layouting, rendering and hit testing of codedit buffers. Rendering is done in terms of a set of primitive drawing methods, which in codedit_view are just stubs. You'll have to subclass codedit_view and implement these methods in order to have a working view (for subclassing you can use <a href="glue.html#inherit">glue.inherit</a> or <a href="glue.html#update">glue.update</a>).</p>
+<p><strong>NOTE:</strong> codedit_view assumes a monospace font and a fixed line height.</p>
+<h2 id="properties">Properties</h2>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="co">--tab expansion</span>
+tabsize <span class="ot">=</span> <span class="dv">3</span>
+<span class="co">--font metrics</span>
+line_h <span class="ot">=</span> <span class="dv">16</span>
+char_w <span class="ot">=</span> <span class="dv">8</span>
+char_baseline <span class="ot">=</span> <span class="dv">13</span>
+<span class="co">--cursor metrics</span>
+cursor_xoffset <span class="ot">=</span> <span class="ot">-</span><span class="dv">1</span>     <span class="co">--cursor x offset from a char&#39;s left corner</span>
+cursor_xoffset_col1 <span class="ot">=</span> <span class="dv">0</span> <span class="co">--cursor x offset for the first column</span>
+cursor_thickness <span class="ot">=</span> <span class="dv">2</span>
+<span class="co">--scrolling</span>
+cursor_margins <span class="ot">=</span> <span class="ot">{</span>top <span class="ot">=</span> <span class="dv">16</span><span class="ot">,</span> left <span class="ot">=</span> <span class="dv">0</span><span class="ot">,</span> right <span class="ot">=</span> <span class="dv">0</span><span class="ot">,</span> bottom <span class="ot">=</span> <span class="dv">16</span><span class="ot">},</span>
+<span class="co">--rendering</span>
+highlight_cursor_lines <span class="ot">=</span> <span class="kw">true</span>
+lang <span class="ot">=</span> <span class="kw">nil</span> <span class="co">--lexer to use for syntax highlighting. nil means no highlighting.</span>
+<span class="co">--reflowing</span>
+line_width <span class="ot">=</span> <span class="dv">72</span></code></pre>
+<h2 id="methods">Methods</h2>
+<hr />
+<p><code>view_class:new(buffer) -&gt; view</code> create a view for a buffer</p>
+<p><strong>rendering</strong></p>
+<p><code>view:add_selection(sel)</code> add a selection to the set of objects to render</p>
+<p><code>view:add_cursor(cur)</code> add a cursor to the set of objects to render</p>
+<p><code>view:add_margin(margin, pos)</code> add a margin to the set of objects to render</p>
+<p><code>view:render()</code> render the added objects</p>
+<p><strong>rendering stubs</strong></p>
+<p><code>view:draw_char(x, y, s, i, color)</code> draw a colored utf-8 char. the char to be drawn is the utf-8 codepoint at byte index <code>i</code> in string <code>s</code></p>
+<p><code>view:draw_rect(x, y, w, h, color)</code> draw a colored rectangle</p>
+<p><code>view:clip(x, y, w, h)</code> create a clipping rectangle so that all subsequent drawing operations will be clipped by it</p>
+<p><code>view:draw_scrollbox(x, y, w, h,             draw a scrollbox widget with (x, y, w, h) outside rect    cx, cy, cw, ch) -&gt; cx, cy,                and (cx, cy, cw, ch) client rect.    clip_x, clip_y, clip_w, clip_h</code> return the new cx, cy, adjusted from user input and other scrollbox constraints, followed by the clipping rect. the client rect is relative to the clipping rect of the scrollbox (which can be different than it's outside rect). this stub implementation is equivalent to a scrollbox that takes no user input, has no margins, and has invisible scrollbars.</p>
+<p><strong>hit testing</strong></p>
+<p><code>view:selection_hit_test(sel, x, y)          hit test a selection    -&gt; true | false</code></p>
+<p><code>view:margin_hit_test(margin, x, y)          hit test a margin    -&gt; true | false</code></p>
+<p><code>view:client_hit_test(x, y)                  hit test the client area    -&gt; true | false</code></p>
+<p><strong>scrolling</strong><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><code>view:scroll_by(x, y)</code> scroll the view, in pixels</p>
+<p><code>view:scroll_up()</code>   scroll one screen up or down <code>view:scroll_down()</code></p>
+<p><code>view:make_rect_visible(x, y, w, h)</code> scroll to make a specific rectangle visible</p>
+<p><code>view:cursor_make_visible(cur)</code> scroll to make the char under cursor visible</p>
+<p><strong>measurements in text space</strong><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><code>view:char_coords(line, vcol) -&gt; x, y</code> visual char position in text space</p>
+<p><code>view:char_at(x, y) -&gt; line, vcol</code> visual char at text space coordinates</p>
+<p><code>view:char_rect(line1, vcol1,    line2, vcol2) -&gt; x, y, w, h</code> the rectangle surrounding a block of text</p>
+<p><code>view:selection_line_rect(sel, line)         selection line shape in text space    -&gt; x, y, w, h</code></p>
+<p><code>view:cursor_rect(cursor) -&gt; x, y, w, h</code> cursor shape in text space</p>
+<p><code>view:pagesize() -&gt; n</code> how many lines of text are in the clipping rect</p>
+<p><strong>measurements in screen space</strong></p>
+<p><code>view:client_size() -&gt; w, h</code> size of the text space (also called client rectangle in the context of layouting) as limited by the available text and any out-of-text cursors.</p>
+<p><code>view:margins_width() -&gt; w</code> width of all margins combined</p>
+<p><code>view:margin_x(margin) -&gt; x</code> x coord of a margin in screen space</p>
+<p><strong>clipping rectangles</strong></p>
+<p><code>view:clip_rect() -&gt; x, y, w, h</code> clip rect of the client area, in screen space, as obtained from drawing the scrollbox</p>
+<p><code>view:margin_clip_rect(margin)               clip rect of a margin area, in screen space    -&gt; x, y, w, h</code></p>
+<p><code>view:line_clip_rect(line) -&gt; x, y, w, h</code> clip rect of a line of text, in screen space</p>
+<p><strong>clipping in visual char space</strong></p>
+<p><code>view:visible_lines() -&gt; line1, line2</code> which lines are partially or entirely visibile</p>
+<p><code>view:visible_cols() -&gt; col1, col2</code> which visual columns are partially or entirely visibile</p>
+<p><code>view:line_is_visible(line) -&gt; true | false</code> is line visibile?</p>
+<p><code>view:screen_to_client(x, y)</code>   point translation from screen space to client (text) space and back <code>view:client_to_screen(x, y)</code><br /><code>view:screen_to_margin_client(margin, x, y)</code><br /><code>view:margin_client_to_screen(margin, x, y)</code></p>
+<hr />
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>scrolling means adjusting the position of the client rectangle relative to the clipping rectangle<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>coordinates in text space are relative to the client rectangle<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>

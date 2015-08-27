@@ -1,0 +1,79 @@
+<h2 id="requirewinapi.buttonclass"><code>require'winapi.buttonclass'</code></h2>
+<p>This module implements the <code>Button</code> class for creating buttons.</p>
+<h2 id="button">Button</h2>
+<h3 id="hierarchy">Hierarchy</h3>
+<ul>
+<li><a href="/winapi.object">Object</a>
+<ul>
+<li><a href="/winapi.vobject">VObject</a>
+<ul>
+<li><a href="/winapi.basewindowclass">BaseWindow</a>
+<ul>
+<li><a href="/winapi.controlclass">Control</a>
+<ul>
+<li><a href="/winapi.basebuttonclass">BaseButton</a>
+<ul>
+<li>Button</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="initial-fields-and-properties">Initial fields and properties</h3>
+<div class="small">
+<p><strong>NOTE:</strong> in the table below <code>i</code> means initial field, <code>r</code> means property which can be read, <code>w</code> means property which can be set.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>field/property</strong></td>
+<td align="left"><strong>irw</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>default</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">text</td>
+<td align="left">irw</td>
+<td align="left">button's label</td>
+<td align="left">'&amp;OK'</td>
+<td align="left">Get/SetWindowText</td>
+</tr>
+<tr class="odd">
+<td align="left">w, h</td>
+<td align="left">irw</td>
+<td align="left">size</td>
+<td align="left">100, 24</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">text_margin</td>
+<td align="left">irw</td>
+<td align="left">margins that go with <code>autosize</code></td>
+<td align="left">{20,5}</td>
+<td align="left">BCM_GET/SETTEXTMARGIN</td>
+</tr>
+<tr class="odd">
+<td align="left">autosize</td>
+<td align="left">irw</td>
+<td align="left">set size based on text</td>
+<td align="left">false</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">pushed</td>
+<td align="left">irw</td>
+<td align="left">pushed state</td>
+<td align="left"></td>
+<td align="left">BM_GET/SETSTATE</td>
+</tr>
+<tr class="odd">
+<td align="left">ideal_size</td>
+<td align="left">r</td>
+<td align="left">get ideal size for text (<code>{w=, h=}</code>)</td>
+<td align="left"></td>
+<td align="left">BCM_GETIDEALSIZE</td>
+</tr>
+</tbody>
+</table>
+</div>

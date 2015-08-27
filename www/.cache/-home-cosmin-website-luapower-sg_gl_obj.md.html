@@ -1,0 +1,10 @@
+<h2 id="requiresg_gl_obj"><code>require'sg_gl_obj'</code></h2>
+<p>Extends <a href="/sg_gl">sg_gl</a> to render wavefront OBJ files. Uses <a href="/obj_loader">obj_loader</a> to parse obj files into <a href="/sg_gl_mesh">sg_gl_mesh mesh objects</a>.</p>
+<h2 id="wavefront-obj-objects">Wavefront obj objects</h2>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="ot">&lt;</span>obj_object<span class="ot">&gt;</span> <span class="ot">=</span> <span class="ot">{</span>
+  <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;obj&#39;</span><span class="ot">,</span>
+  file <span class="ot">=</span> <span class="ot">{</span>
+    path <span class="ot">=</span> S<span class="ot">,</span>
+    use_cache <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">),</span>
+  <span class="ot">},</span>
+<span class="ot">}</span></code></pre>

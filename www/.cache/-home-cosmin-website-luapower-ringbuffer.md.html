@@ -1,0 +1,88 @@
+<h2 id="local-ringbuffer-requireringbuffer"><code>local ringbuffer = require'ringbuffer'</code></h2>
+<p>Unidirectional cdata array-based ring buffers with the following properties:</p>
+<ul>
+<li>elements can be added or removed one by one or in bulk.</li>
+<li>data can only be added to the tail and removed from the head (FIFO).</li>
+<li>the buffer is fixed-size and can grow on request.</li>
+<li>can work with an internally allocated byffer, an external buffer, or can be used as an abstract interface over an external API.</li>
+</ul>
+<h2 id="api">API</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><code>ringbuffer{size=, ctype=, ...} -&gt; cb</code></td>
+<td align="left">create a cdata ring buffer</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb:head(i) -&gt; i</code></td>
+<td align="left">normalized offset from head</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>cb:tail(i) -&gt; i</code></td>
+<td align="left">normalized offset from tail</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb:segments() -&gt; i1, n1, i2, n2</code></td>
+<td align="left">offsets and sizes of buffer's occupied segments</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>cb:free_segments() -&gt; i1, n1, i2, n2</code></td>
+<td align="left">offsets and sizes of buffer's free segments</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb:push(n[, data]) -&gt; i1, n1, i2, n2</code></td>
+<td align="left">add data to tail, invoking cb:read()</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>cb:pull(n[, data]) -&gt; i1, n1, i2, n2</code></td>
+<td align="left">remove data from head, invoking cb:write()</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb:checksize(n)</code></td>
+<td align="left">grow the buffer to fit at least <code>n</code> more elements</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>cb:alloc(n) -&gt; cdata</code></td>
+<td align="left">allocator (defaults to ffi.new)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb:read(n, dst, di, src, si)</code></td>
+<td align="left">segment reader (defaults to ffi.copy)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>cb:write(n, dst, di, src, si)</code></td>
+<td align="left">segment writer (defaults to ffi.copy)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cb.data -&gt; cdata</code></td>
+<td align="left">the buffer itself</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>b.start -&gt; i</code></td>
+<td align="left">start index</td>
+</tr>
+<tr class="even">
+<td align="left"><code>b.size -&gt; n</code></td>
+<td align="left">capacity</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>b.length -&gt; n</code></td>
+<td align="left">occupied size</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ringbuffercb---cb"><code>ringbuffer(cb) -&gt; cb</code></h3>
+<p>Convert an initial table to a ring buffer and return it. The table can have fields:</p>
+<ul>
+<li><code>size</code>: the size of the buffer.</li>
+<li><code>ctype</code>: the element type for allocating an internal buffer, or</li>
+<li><code>data</code>: a pre-allocated buffer.</li>
+<li><code>start</code>, <code>length</code>: optional, in case the buffer comes pre-filled.</li>
+<li><code>alloc</code>: optional custom allocator, for initial allocation and growing.</li>
+</ul>
+<h2 id="how-it-works">How it works</h2>
+<p>When <code>push()</code> is called with a <code>data</code> arg, the <code>write()</code> method is called once or twice with the segments to be written from <code>data</code> into the buffer. When <code>pull()</code> is called with a <code>data</code> arg, the <code>read()</code> method is called once or twice with the segments to be read from the buffer into <code>data</code>.</p>
+<h2 id="as-an-interface">As an interface</h2>
+<p>A ring buffer doesn't have to manage an actual buffer. Instead, it can be used to manage an external resource that the ring buffer logic can be applied to. To do this pass <code>data = true</code> when creating a buffer to avoid allocating an actual buffer. Call <code>push()</code> and <code>pull()</code> without a <code>data</code> arg to avoid calls to <code>write()</code> and <code>read()</code> and use the buffer state variables <code>start</code>, <code>length</code> and <code>size</code> as you want. Or, pass <code>true</code> (or any other value) to the <code>data</code> arg in <code>push()</code> and <code>pull()</code> and override <code>read()</code> and <code>write()</code> to do the actual moving of data.</p>
+<h2 id="extending">Extending</h2>
+<p>The ringbuffer function is actually a callable table which can be copied or inherited from and patched to create custom buffer classes.</p>

@@ -1,0 +1,88 @@
+<h2 id="what-you-need-to-know-first">What you need to know first</h2>
+<ul>
+<li>Building is based on trivial <a href="/build-scripts">shell scripts</a> that invoke gcc directly (no makefiles).</li>
+<li>Each supported package/platform/arch combination has a separate build script in <code>csrc/&lt;package&gt;/build-&lt;platform&gt;.sh</code>.</li>
+<li>C sources are included so you can start right away.</li>
+<li>Dependent packages are listed on the website (under the section &quot;Binary Dependencies&quot;) and in <code>csrc/&lt;package&gt;/WHAT</code>. Build those first.</li>
+<li>The only sure way to get a binary on the first try is to use the exact toolchain as described here for each platform. The good news is that you <em>will</em> get a binary.</li>
+<li>For building Lua/C modules you need <a href="/lua-headers">lua-headers</a>.</li>
+<li>For building Lua/C modules on Windows you also need <a href="/luajit">luajit</a>.</li>
+<li>You will get both dynamic libraries (stripped) and static libraries.</li>
+<li>libgcc and libstdc++ will be statically linked, except on OSX which doesn't support that and where libc++ is used.</li>
+<li>Binaries on Windows are linked to msvcrt.dll.</li>
+<li>Lua/C modules on Windows are linked to lua51.dll (which is why you need luajit).</li>
+<li>OSX libs set their install_name to <code>@rpath/&lt;libname&gt;.dylib</code></li>
+<li>the luajit exe on OSX sets <code>@rpath</code> to <code>@loader_path</code></li>
+<li>the luajit exe on Linux sets <code>rpath</code> to <code>$ORIGIN</code></li>
+<li>all listed tools are mirrored at <a href="http://luapower.com/files">luapower.com/files</a> (but please report broken links anyway)</li>
+</ul>
+<h2 id="building-on-win32-for-win32">Building on Win32 for Win32</h2>
+<pre><code>cd csrc/&lt;package&gt;
+sh build-mingw32.sh</code></pre>
+<p>These scripts assume that both MSYS and MinGW bin dirs (in this order) are in your PATH. Here's the MinGW-w64 package used to build the current luapower stack:</p>
+<p><a href="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z">mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)</a></p>
+<p>Additional tools needed by a few special packages. The build scripts assume these are in your PATH too. Use them on 64bit Windows too.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip">nasm 2.11 (for libjpeg-turbo)</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip">cmake 2.8.12.2 (for libjpeg-turbo)</a></td>
+</tr>
+</tbody>
+</table>
+<p>The resulted binaries are linked to msvcrt.dll and should be compatible down to Windows XP SP3.</p>
+<h2 id="building-on-win64-for-win64">Building on Win64 for Win64</h2>
+<pre><code>cd csrc/&lt;package&gt;
+sh build-mingw64.sh</code></pre>
+<p>These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order) are in your PATH. Here's the MinGW-w64 package used to build the current luapower stack:</p>
+<p><a href="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z">mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)</a></p>
+<p>The resulted binaries are linked to msvcrt.dll and should be compatible down to Windows XP x64 SP2.</p>
+<h2 id="building-on-linux-x86-native">Building on Linux (x86 native)</h2>
+<p>On x86:</p>
+<pre><code>cd csrc/&lt;package&gt;
+sh build-linux32.sh</code></pre>
+<p>On x64:</p>
+<pre><code>cd csrc/&lt;package&gt;
+sh build-linux64.sh</code></pre>
+<blockquote>
+<p>Careful not to mix them up, or you'll get the wrong binaries in the wrong directory.</p>
+</blockquote>
+<p>In general, to get binaries that will work on older Linuxes, you want to build on the <em>oldest</em> Linux that you care to support, but use the <em>newest</em> gcc that you can install on that system. In particular, if you link against GLIBC 2.14+ your binary will not be backwards compatible with an older GLIBC (google &quot;memcpy glibc 2.14&quot; to see the drama).</p>
+<p>Here's a fast and easy way to build binaries that are compatible down to GLIBC 2.7:</p>
+<ul>
+<li>install an Ubuntu 10.04 in a VM</li>
+<li>add the &quot;test toolchain&quot; PPA to aptitude</li>
+<li>install the newest gcc and g++ from it</li>
+</ul>
+<p>Here's the complete procedure on a fresh Ubuntu 10.04:</p>
+<pre><code>sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install gcc-4.8 g++-4.8
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+sudo apt-get install nasm cmake</code></pre>
+<p>The current luapower stack is built this way and it's the only supported way to build it.</p>
+<p>Note that the above setup contains EGLIBC 2.11 so it's not guaranteed that <em>anything</em> you compile on it will be compatible down to GLIBC 2.7. It just so happens that the <em>current</em> luapower libraries don't use any symbols that have a newer implementation on that version of glibc. In the future, we might have to bump up the backwards-compatibility claim up to GLIBC 2.11. Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that can run on that system might be too old for us.</p>
+<h2 id="building-on-osx-for-osx">Building on OSX for OSX</h2>
+<pre><code>cd csrc/&lt;package&gt;
+sh build-osx32.sh
+sh build-osx64.sh</code></pre>
+<p>Clang is a cross-compiler, so you can build for 32bit on a 64bit OSX and viceversa.</p>
+<p>Current OSX builds are based on clang 6.0 (LLVM 3.5svn) and are done on an OSX 10.9 using OSX SDK 10.10.</p>
+<p>The generated binaries are compatible down to OSX 10.6 for both 32bit and 64bit, except for C++ libraries which link to libc++ which is OSX 10.7+.</p>
+<blockquote>
+<p>NOTE: For Lion and above users, Apple provides a package called &quot;Command Line Tools for Xcode&quot; which can be downloaded from Apple's developer site (free registration required). You can <em>try</em> to build luapower with it. If you do, please report back on your experience and maybe we'll make this a supported toolchain.</p>
+</blockquote>
+<h2 id="building-with-mgit">Building with mgit</h2>
+<pre><code>./mgit build &lt;package&gt;</code></pre>
+<p>which is implemented as:</p>
+<pre><code>cd csrc/&lt;package&gt; &amp;&amp; ./build-&lt;current-platform&gt;.sh</code></pre>
+<h2 id="building-packages-in-order">Building packages in order</h2>
+<p>You can use <a href="/luapower">luapower</a> so that for any package or list of packages (or for all installed packages) you will get the full list of packages that need to be compiled <em>in the right order</em>, including all the dependencies:</p>
+<pre><code>./luapower build-order pkg1,...|--all [platform]</code></pre>
+<p>Again, you can use mgit to leverage that and actually build the packages:</p>
+<pre><code>./mgit build-all pkg1,...|--all [platform]</code></pre>
+<p>To build all installed packages on the current platform, run:</p>
+<pre><code>./mgit build-all --all</code></pre>

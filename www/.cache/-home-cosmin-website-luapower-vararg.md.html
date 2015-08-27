@@ -1,0 +1,40 @@
+<h2 id="local-vararg-requirevararg"><code>local vararg = require'vararg'</code></h2>
+<p>Lua library for manipulating variable arguements (vararg) of functions. These functions allow you to do things with varargs that cannot be efficiently done in pure Lua but can be easily done through the C API.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">p <span class="ot">=</span> vararg<span class="ot">.</span>pack<span class="ot">(...)</span>
+  p<span class="ot">()</span>              <span class="co">--&gt; ...</span>
+  p<span class="ot">(</span><span class="st">&quot;#&quot;</span><span class="ot">)</span>           <span class="co">--&gt; select(&quot;#&quot;, ...)</span>
+  p<span class="ot">(</span>i<span class="ot">)</span>             <span class="co">--&gt; (select(i, ...))</span>
+  p<span class="ot">(</span>i<span class="ot">,</span> j<span class="ot">)</span>          <span class="co">--&gt; unpack({...}, i, j)</span>
+  <span class="kw">for</span> i<span class="ot">,</span>v <span class="kw">in</span> p <span class="kw">do</span>  <span class="co">--&gt; for i,v in apairs(...) do</span></code></pre>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">vararg.range(i, j, ...)</td>
+<td align="left">unpack({...}, i, j)</td>
+</tr>
+<tr class="even">
+<td align="left">vararg.remove(i, ...)</td>
+<td align="left">t={...} table.remove(t,i) return unpack(t,1,select(&quot;#&quot;,...)-1)</td>
+</tr>
+<tr class="odd">
+<td align="left">vararg.insert(v, i, ...)</td>
+<td align="left">t={...} table.insert(t,i,v) return unpack(t,1,select(&quot;#&quot;,...)+1)</td>
+</tr>
+<tr class="even">
+<td align="left">vararg.replace(v, i, ...)</td>
+<td align="left">t={...} t[i]=v return unpack(t,1,select(&quot;#&quot;,...))</td>
+</tr>
+<tr class="odd">
+<td align="left">vararg.append(v, ...)</td>
+<td align="left">c=select(&quot;#&quot;,...)+1 return unpack({[c]=val,...},1,c)</td>
+</tr>
+<tr class="even">
+<td align="left">vararg.map(f, ...)</td>
+<td align="left">t={} n=select(&quot;#&quot;,...) for i=1,n do t[i]=f((select(i,...))) end return unpack(t,1,n)</td>
+</tr>
+<tr class="odd">
+<td align="left">vararg.concat(f1,f2,...)</td>
+<td align="left">return all the values returned by functions 'f1,f2,...'</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,103 @@
+<h2 id="local-loop-requiresocketloop"><code>local loop = require'socketloop'</code></h2>
+<p>A socket loop enables coroutine-based asynchronous I/O programming model for <a href="http://w3.impa.br/~diego/software/luasocket/tcp.html">TCP sockets</a>. The concept is similar to <a href="http://keplerproject.github.com/copas/">Copas</a>, the API and the implementation are different. Supports both symmetric and asymmetric coroutines.</p>
+<h2 id="api">API</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><code>loop.wrap(socket) -&gt; asocket</code></td>
+<td align="left">wrap a TCP socket to an async socket</td>
+</tr>
+<tr class="even">
+<td align="left"><code>loop.connect(ip, port) -&gt; asocket</code></td>
+<td align="left">make an async TCP connection</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>loop.newthread(handler, arg)</code></td>
+<td align="left">create a thread for one connection</td>
+</tr>
+<tr class="even">
+<td align="left"><code>loop.current() -&gt; thread</code></td>
+<td align="left">current thread</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>loop.suspend()</code></td>
+<td align="left">suspend current thread</td>
+</tr>
+<tr class="even">
+<td align="left"><code>loop.resume(thread, arg)</code></td>
+<td align="left">resume a suspended thread</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>loop.newserver(ip, port, handler) -&gt; skt</code></td>
+<td align="left">dispatch inbound connections to a function</td>
+</tr>
+<tr class="even">
+<td align="left"><code>loop.start([timeout])</code></td>
+<td align="left">start the loop</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>loop.stop()</code></td>
+<td align="left">stop the loop (if started)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>loop.step([timeout]) -&gt; true|false</code></td>
+<td align="left">dispatch pending reads and writes</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>loop.coro -&gt; loop</code></td>
+<td align="left"><a href="/coro">coro</a>-based loop</td>
+</tr>
+</tbody>
+</table>
+<h3 id="loop.wrapsocket---asocket"><code>loop.wrap(socket) -&gt; asocket</code></h3>
+<p>Wrap a <a href="http://w3.impa.br/~diego/software/luasocket/tcp.html">TCP socket</a> into an asynchronous socket with the same API as the original, which btw is kept as <code>asocket.socket</code>.</p>
+<p>Being asynchronous means that if each socket is used from its own coroutine, different sockets won't block each other waiting for reads and writes, as long as the loop is doing the dispatching. The asynchronous methods are: <code>connect()</code>, <code>accept()</code>, <code>receive()</code>, <code>send()</code>, <code>close()</code>.</p>
+<p>An async socket should only be used inside a loop thread.</p>
+<h3 id="loop.connectip-port-local_ip-local_port---asocket"><code>loop.connect(ip, port [,local_ip] [,local_port]) -&gt; asocket</code></h3>
+<p>Make a TCP connection and return an async socket.</p>
+<h3 id="loop.newthreadhandler-arg---thread"><code>loop.newthread(handler, arg) -&gt; thread</code></h3>
+<p>Create and resume a thead (either a coroutine or a coro thread). The thread is suspended and control returns to the caller as soon as:</p>
+<ul>
+<li>an async socket method is called,</li>
+<li><code>loop.suspend()</code> is called,</li>
+<li>the thread finishes.</li>
+</ul>
+<h3 id="loop.current---thread"><code>loop.current() -&gt; thread</code></h3>
+<p>Return the current thread (either a coroutine or a coro thread).</p>
+<h3 id="loop.suspend"><code>loop.suspend()</code></h3>
+<p>Suspend the current thread. To resume a suspended thread, call <code>loop.resume()</code> from another thread.</p>
+<h3 id="loop.resumethread-arg"><code>loop.resume(thread, arg)</code></h3>
+<p>Resume a previously suspended thread. Only resume threads that were previously suspended by calling <code>loop.suspend()</code>. Resuming a thread that is suspended in an async call is undefined behavior.</p>
+<h3 id="loop.newserverip-port-handler"><code>loop.newserver(ip, port, handler)</code></h3>
+<p>Create a TCP socket and start accepting connections on it, and call <code>handler(client_skt)</code> on a separate coroutine for each accepted connection.</p>
+<h3 id="loop.starttimeout"><code>loop.start([timeout])</code></h3>
+<p>Start dispatching reads and writes continuously in a loop. The loop should be started only if there's at least one thread suspended in an async socket call.</p>
+<h3 id="loop.stop"><code>loop.stop()</code></h3>
+<p>Stop the dispatch loop (if started).</p>
+<h3 id="loop.steptimeout---truefalse"><code>loop.step([timeout]) -&gt; true|false</code></h3>
+<p>Dispatch currently pending reads and writes to their respective threads.</p>
+<h3 id="loop-requiresocketloop.coro"><code>loop = require'socketloop'.coro</code></h3>
+<p>An alternative loop that dispatches to <a href="/coro">symmetric coroutines</a> instead of Lua coroutines.</p>
+<h2 id="example">Example</h2>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> loop <span class="ot">=</span> require<span class="st">&#39;socketloop&#39;</span>
+<span class="kw">local</span> http <span class="ot">=</span> require<span class="st">&#39;socket.http&#39;</span>
+
+<span class="kw">local</span> <span class="kw">function</span> getpage<span class="ot">(</span>url<span class="ot">)</span>
+   <span class="kw">local</span> t <span class="ot">=</span> <span class="ot">{}</span>
+   <span class="kw">local</span> ok<span class="ot">,</span> code<span class="ot">,</span> headers <span class="ot">=</span> http<span class="ot">.</span>request<span class="ot">{</span>
+      url <span class="ot">=</span> url<span class="ot">,</span>
+      sink <span class="ot">=</span> ltn12<span class="ot">.</span>sink<span class="ot">.</span>table<span class="ot">(</span>t<span class="ot">),</span>
+      create <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span>
+         <span class="kw">return</span> loop<span class="ot">.</span>wrap<span class="ot">(</span>socket<span class="ot">.</span>try<span class="ot">(</span>socket<span class="ot">.</span>tcp<span class="ot">()))</span>
+      <span class="kw">end</span><span class="ot">,</span>
+   <span class="ot">}</span>
+   <span class="fu">assert</span><span class="ot">(</span>ok<span class="ot">,</span> code<span class="ot">)</span>
+   <span class="kw">return</span> <span class="fu">table.concat</span><span class="ot">(</span>t<span class="ot">),</span> headers<span class="ot">,</span> code
+<span class="kw">end</span>
+
+loop<span class="ot">.</span>newthread<span class="ot">(</span><span class="kw">function</span><span class="ot">()</span>
+   <span class="kw">local</span> body <span class="ot">=</span> getpage<span class="st">&#39;http://google.com/&#39;</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;got &#39;</span> <span class="ot">..</span> <span class="ot">#</span>body <span class="ot">..</span> <span class="st">&#39; bytes&#39;</span><span class="ot">)</span>
+<span class="kw">end</span><span class="ot">)</span>
+
+loop<span class="ot">.</span>start<span class="ot">()</span></code></pre>

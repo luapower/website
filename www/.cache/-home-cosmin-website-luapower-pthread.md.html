@@ -1,0 +1,240 @@
+<h2 id="local-pthread-requirepthread"><code>local pthread = require'pthread'</code></h2>
+<p>A lightweight ffi binding of POSIX threads. Includes <a href="http://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-libraries/winpthreads/">winpthreads</a> from MinGW-w64 for Windows support (uses the pthread library found on the system otherwise).</p>
+<h2 id="api">API</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>threads</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">pthread.new(func_ptr[, attrs]) -&gt; th</td>
+<td align="left">create and start a new thread</td>
+</tr>
+<tr class="odd">
+<td align="left">th:equal(other_th) -&gt; true | false</td>
+<td align="left">check if two threads are equal</td>
+</tr>
+<tr class="even">
+<td align="left">th:join() -&gt; status</td>
+<td align="left">wait for a thread to finish</td>
+</tr>
+<tr class="odd">
+<td align="left">th:detach()</td>
+<td align="left">detach a thread</td>
+</tr>
+<tr class="even">
+<td align="left">th:priority(new_priority)</td>
+<td align="left">set thread priority</td>
+</tr>
+<tr class="odd">
+<td align="left">th:priority() -&gt; priority</td>
+<td align="left">get thread priority</td>
+</tr>
+<tr class="even">
+<td align="left">pthread.min_priority() -&gt; priority</td>
+<td align="left">get min. priority</td>
+</tr>
+<tr class="odd">
+<td align="left">pthread.max_priority() -&gt; priority</td>
+<td align="left">get max. priority</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>mutexes</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">pthread.mutex([mattrs]) -&gt; mutex</td>
+<td align="left">create a mutex</td>
+</tr>
+<tr class="even">
+<td align="left">mutex:free()</td>
+<td align="left">free a mutex</td>
+</tr>
+<tr class="odd">
+<td align="left">mutex:lock()</td>
+<td align="left">lock a mutex</td>
+</tr>
+<tr class="even">
+<td align="left">mutex:unlock()</td>
+<td align="left">unlock a mutex</td>
+</tr>
+<tr class="odd">
+<td align="left">mutex:trylock() -&gt; true | false</td>
+<td align="left">lock a mutex or return false</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>condition variables</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">pthread.cond() -&gt; cond</td>
+<td align="left">create a condition variable</td>
+</tr>
+<tr class="even">
+<td align="left">cond:free()</td>
+<td align="left">free the condition variable</td>
+</tr>
+<tr class="odd">
+<td align="left">cond:broadcast()</td>
+<td align="left">broadcast</td>
+</tr>
+<tr class="even">
+<td align="left">cond:signal()</td>
+<td align="left">signal</td>
+</tr>
+<tr class="odd">
+<td align="left">cond:wait(mutex[, timeout]) -&gt; true | false</td>
+<td align="left">wait with optional timeout (*)</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>read/write locks</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">pthread.rwlock() -&gt; rwlock</td>
+<td align="left">create a r/w lock</td>
+</tr>
+<tr class="even">
+<td align="left">rwlock:free()</td>
+<td align="left">free a r/w lock</td>
+</tr>
+<tr class="odd">
+<td align="left">rwlock:writelock()</td>
+<td align="left">lock for writing</td>
+</tr>
+<tr class="even">
+<td align="left">rwlock:readlock()</td>
+<td align="left">lock for reading</td>
+</tr>
+<tr class="odd">
+<td align="left">rwlock:trywritelock() -&gt; true | false</td>
+<td align="left">try to lock for writing</td>
+</tr>
+<tr class="even">
+<td align="left">rwlock:tryreadlock() -&gt; true | false</td>
+<td align="left">try to lock for reading</td>
+</tr>
+<tr class="odd">
+<td align="left">rwlock:unlock()</td>
+<td align="left">unlock the r/w lock</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>scheduler</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">pthread.yield()</td>
+<td align="left">relinquish control to the scheduler</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>(*) timeout is an os.time() or <a href="/time">time</a>.time() timestamp, not a time period.</p>
+</blockquote>
+<p><strong>NOTE:</strong> All functions raise errors but error messages are not included and error codes are platform specific. Use <code>mgit precompile errno.h | grep CODE</code> to search for specific codes.</p>
+<h2 id="howto">Howto</h2>
+<p>Use it with <a href="/luastate">luastate</a>:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> ffi <span class="ot">=</span> require<span class="st">&#39;ffi&#39;</span>
+<span class="kw">local</span> pthread <span class="ot">=</span> require<span class="st">&#39;pthread&#39;</span>
+<span class="kw">local</span> luastate <span class="ot">=</span> require<span class="st">&#39;luastate&#39;</span>
+
+<span class="co">--make a new Lua state</span>
+<span class="kw">local</span> state <span class="ot">=</span> luastate<span class="ot">.</span>open<span class="ot">()</span>
+
+<span class="co">--load the standard libraries into the Lua state</span>
+state:openlibs<span class="ot">()</span>
+
+<span class="co">--create a callback into the Lua state to be called from a different thread</span>
+state:push<span class="ot">(</span><span class="kw">function</span><span class="ot">()</span>
+
+   <span class="co">--up-values are not copied unless we ask, so we have to require ffi again</span>
+   <span class="kw">local</span> ffi <span class="ot">=</span> require<span class="st">&#39;ffi&#39;</span>
+
+   <span class="co">--this is our worker function that will run in a different thread</span>
+   <span class="kw">local</span> <span class="kw">function</span> worker<span class="ot">()</span>
+      <span class="co">--print() is thread-safe so no need to guard it</span>
+      print<span class="st">&#39;Hello from thread!&#39;</span>
+   <span class="kw">end</span>
+
+   <span class="co">--make a ffi callback frame to call into our worker function.</span>
+   <span class="co">--luajit anchors both the callback object and its function</span>
+   <span class="co">--so we don&#39;t care about them getting garbage collected.</span>
+   <span class="kw">local</span> worker_cb <span class="ot">=</span> ffi<span class="ot">.</span>cast<span class="ot">(</span><span class="st">&#39;void *(*)(void *)&#39;</span><span class="ot">,</span> worker<span class="ot">)</span>
+
+   <span class="co">--get the callback pointer out of the Lua state as a number,</span>
+   <span class="co">--because we can&#39;t pass cdata between Lua states.</span>
+   <span class="co">--tonumber() works on x64 too in this case because the Lua state</span>
+   <span class="co">--was allocated by LuaJIT which can only allocate stuff in the</span>
+   <span class="co">--lowest 4GB of the address space.</span>
+   <span class="kw">return</span> <span class="fu">tonumber</span><span class="ot">(</span>ffi<span class="ot">.</span>cast<span class="ot">(</span><span class="st">&#39;intptr_t&#39;</span><span class="ot">,</span> worker_cb<span class="ot">))</span>
+<span class="kw">end</span><span class="ot">)</span>
+
+<span class="co">--call the function that we just pushed into the Lua state</span>
+<span class="co">--to get the callback pointer</span>
+<span class="kw">local</span> worker_cb_ptr <span class="ot">=</span> ffi<span class="ot">.</span>cast<span class="ot">(</span><span class="st">&#39;void*&#39;</span><span class="ot">,</span> state:<span class="fu">call</span><span class="ot">())</span>
+
+<span class="co">--create a thread which will start running automatically</span>
+<span class="kw">local</span> thread <span class="ot">=</span> pthread<span class="ot">.</span>new<span class="ot">(</span>worker_cb_ptr<span class="ot">)</span>
+
+<span class="co">--wait for the thread to finish</span>
+thread:join<span class="ot">()</span>
+
+<span class="co">--close the Lua state</span>
+state:<span class="fu">close</span><span class="ot">()</span></code></pre>
+<h2 id="reference">Reference</h2>
+<h3 id="pthread.newfunc_ptr-attrs---th"><code>pthread.new(func_ptr[, attrs]) -&gt; th</code></h3>
+<p>Create and start a new thread and return the thread object.</p>
+<p><code>func_ptr</code> is a C callback declared as: <code>void *(*func_ptr)(void *arg)</code>. Its return value is returned by <code>th:join()</code>.</p>
+<p>The optional attrs table can have the fields:</p>
+<ul>
+<li><code>detached = true</code> - start detached (not very useful with Lua states)</li>
+<li><code>priority = n</code> - thread priority; must be between pthread.min_priority() and pthread.max_priority() -- in Linux these are both 0.</li>
+<li><code>stackaddr = n</code> - stack address.</li>
+<li><code>stacksize = n</code> - stack size in bytes (OS restrictions apply).</li>
+</ul>
+<h3 id="pthread.mutexmattrs---mutex"><code>pthread.mutex([mattrs]) -&gt; mutex</code></h3>
+<p>Create a mutex. The optional mattrs table can have the fields:</p>
+<ul>
+<li><code>type = 'normal' | 'recursive' | 'errorcheck'</code>:
+<ul>
+<li>'normal' (default) - non-recursive mutex: locks are not counted and not owned, so double-locking as well as unlocking by a different thread results in undefined behavior.</li>
+<li>'recursive' - recursive mutex: locks are counted and owned, so double-locking is allowed as long as done by the same thread.</li>
+<li>'errorcheck' - non-recursive mutex with error checking, so double-locking and unlocking by a different thread results in an error being raised.</li>
+</ul></li>
+</ul>
+<h2 id="portability-notes">Portability notes</h2>
+<p>POSIX is a standard hostile to binary compatibility, resulting in each implementation having a different ABI. Moreso, different implementations cover different parts of the API.</p>
+<p>The list of currently supported pthreads implementations are:</p>
+<ul>
+<li>winpthreads 0.5.0 from Mingw-w64 4.9.2 (tested on WinXP 32bit and 64bit)</li>
+<li>libpthread from GNU libc (tested on Ubuntu 10.04, x86 and x64)</li>
+<li>libpthread from OSX (tested on OSX 10.9 with 32bit and 64bit binaries)</li>
+</ul>
+<p>Only functionality that is common <em>to all</em> of the above is available. Winpthreads dumbs down the API the most (no process-shared objects, no real-time extensions, etc.), but OSX too (no timed waits, no semaphores, no barriers, etc.) and even Linux (setting priority levels needs root access). Functions that don't make sense with Lua (pthread_once) or are stubs in one or more implementations (pthread_setconcurrency) or are unsafe to use with Lua states (killing, cancelation) were also dropped. All in all you get a pretty thin library with just the basics covered. The good news is that this is really all you need for most apps. A more comprehensive but still portable threading library would have to be implemented on top of native synchronization primitives. In any case, I cannot personally support extra functionality, but patches welcome.</p>
+<p>Next are a few tips to get a rough idea of the portability situation.</p>
+<p>To find out (part of) the truth about API coverage, you can start by checking the exported symbols on the pthreads library on each platform and compare them:</p>
+<pre><code>On Linux:
+
+   mgit syms /lib/libpthread.so.0 | \
+      grep &#39;^pthread&#39; &gt; pthread_syms_linux.txt
+
+On OSX:
+
+   (mgit syms /usr/lib/libpthread.dylib
+   mgit syms /usr/lib/system/libsystem_pthread.dylib) | \
+      grep &#39;^pthread&#39; &gt; pthread_syms_osx.txt
+
+On Windows:
+
+   mgit syms bin\mingw64\libwinpthread-1.dll | \
+      grep ^^pthread &gt; pthread_syms_mingw.txt
+
+Compare the results (the first column tells the number of platforms
+that a symbol was found on):
+
+   sort pthread_syms_* | uniq -c | sort -nr</code></pre>
+<p>To find out the differences in ABI and supported flags, you can preprocess the headers on different platforms and compare them:</p>
+<pre><code>mgit preprocess pthread.h sched.h semaphore.h &gt; pthread_h_&lt;platform&gt;.lua</code></pre>
+<p>The above will use gcc to preprocess the headers and generate a (very crude, mind you) Lua cdef template file that you can use as a starting point for a binding and/or to check ABI differences.</p>
+<p>Next step is to look at the source code for winpthreads and find out what is really implemented (and how).</p>

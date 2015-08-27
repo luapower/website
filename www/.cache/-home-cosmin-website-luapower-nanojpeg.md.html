@@ -1,0 +1,32 @@
+<h2 id="local-nanojpeg-requirenanojpeg"><code>local nanojpeg = require'nanojpeg'</code></h2>
+<p>A ffi binding of <a href="http://keyj.emphy.de/nanojpeg/">NanoJPEG</a>, a very small JPEG decoder suitable for embedded applications.</p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>no support for arithmetic coding (rarely used)</li>
+<li>no support for progressive jpeg (not-so-rarely used)</li>
+<li>slow (compared to <a href="/libjpeg">libjpeg-turbo</a>)</li>
+<li>no option to only read the headers</li>
+</ul>
+<h2 id="api">API</h2>
+<h3 id="nanojpeg.loadpath-t---image"><code>nanojpeg.load(path | t) -&gt; image</code></h3>
+<p>Read and decode a JPEG image.</p>
+<ul>
+<li><code>t</code> is a table specifying:
+<ul>
+<li>where to read the data from (one of the following):
+<ul>
+<li><code>path</code>: read data from a file given its filename</li>
+<li><code>string</code>: read data from a string</li>
+<li><code>cdata</code>, <code>size</code>: read data from a buffer</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>The returned image object is a table with the fields:</p>
+<ul>
+<li><code>data</code>, <code>size</code>, <code>format</code>, <code>stride</code>, <code>w</code>, <code>h</code>: image format, data and dimensions.
+<ul>
+<li>depending on the input file, the format can be either <code>rgb8</code> or <code>g8</code>, that is 24bit RGB or 8bit gray; use <a href="/bitmap">bitmap</a> to convert to other formats.</li>
+</ul></li>
+</ul>
+<hr />
+<p>See also: <a href="/libjpeg">libjpeg</a></p>

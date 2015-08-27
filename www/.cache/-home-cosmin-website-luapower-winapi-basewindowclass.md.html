@@ -1,0 +1,702 @@
+<h2 id="requirewinapi.basewindowclass"><code>require'winapi.basewindowclass'</code></h2>
+<p>This module implements the <code>BaseWindow</code> class which is the base class for both top-level windows and controls. The module also contains the message loop and the <code>Windows</code> singleton which deals with windows (top-level or not) as a collection.</p>
+<p><code>BaseWindow</code> is for subclassing, not for instantiation. Nevertheless, it contains properties and methods that are common to both windows and controls which are documented here.</p>
+<h2 id="basewindow">BaseWindow</h2>
+<h3 id="hierarchy">Hierarchy</h3>
+<ul>
+<li><a href="/winapi.object">Object</a>
+<ul>
+<li><a href="/winapi.vobject">VObject</a>
+<ul>
+<li>BaseWindow</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="initial-fields-and-properties">Initial fields and properties</h3>
+<div class="small">
+<p><strong>NOTE:</strong> in the table below <code>i</code> means initial field, <code>r</code> means property which can be read, <code>w</code> means property which can be set.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>state</strong></td>
+<td align="left"><strong>irw</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>default</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">visible</td>
+<td align="left">irw</td>
+<td align="left">visibility</td>
+<td align="left">true</td>
+<td align="left">WS_VISIBLE</td>
+</tr>
+<tr class="odd">
+<td align="left">is_visible</td>
+<td align="left">r</td>
+<td align="left">is actually visible?</td>
+<td align="left"></td>
+<td align="left">IsWindowVisible</td>
+</tr>
+<tr class="even">
+<td align="left">enabled</td>
+<td align="left">irw</td>
+<td align="left">focusability</td>
+<td align="left">true</td>
+<td align="left">WS_DISABLED</td>
+</tr>
+<tr class="odd">
+<td align="left">focused</td>
+<td align="left">rw</td>
+<td align="left">focused state</td>
+<td align="left"></td>
+<td align="left">GetFocus</td>
+</tr>
+<tr class="even">
+<td align="left">dead</td>
+<td align="left">r</td>
+<td align="left">was it destroyed?</td>
+<td align="left"></td>
+<td align="left">WM_NCDESTROY</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>positioning</strong></td>
+<td align="left"><strong>irw</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>default</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">x, y</td>
+<td align="left">irw</td>
+<td align="left">position</td>
+<td align="left"></td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="odd">
+<td align="left">w, h</td>
+<td align="left">irw</td>
+<td align="left">size</td>
+<td align="left"></td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="even">
+<td align="left">rect</td>
+<td align="left">rw</td>
+<td align="left">outer rect (RECT)</td>
+<td align="left"></td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="odd">
+<td align="left">client_w, client_h</td>
+<td align="left">r</td>
+<td align="left">inner size</td>
+<td align="left"></td>
+<td align="left">GetClientRect</td>
+</tr>
+<tr class="even">
+<td align="left">client_rect</td>
+<td align="left">r</td>
+<td align="left">inner rect (RECT)</td>
+<td align="left"></td>
+<td align="left">GetClientRect</td>
+</tr>
+<tr class="odd">
+<td align="left">screen_rect</td>
+<td align="left">r</td>
+<td align="left">outer rect in screen space</td>
+<td align="left"></td>
+<td align="left">GetWindowRect</td>
+</tr>
+<tr class="even">
+<td align="left">min_w, min_h</td>
+<td align="left">irw</td>
+<td align="left">minimum size</td>
+<td align="left"></td>
+<td align="left">WM_WINDOWPOSCHANGING</td>
+</tr>
+<tr class="odd">
+<td align="left">max_w, max_h</td>
+<td align="left">irw</td>
+<td align="left">maximum size</td>
+<td align="left"></td>
+<td align="left">WM_WINDOWPOSCHANGING</td>
+</tr>
+<tr class="even">
+<td align="left">monitor</td>
+<td align="left">r</td>
+<td align="left">monitor (HMONITOR)</td>
+<td align="left"></td>
+<td align="left">MonitorFromWindow</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>painting</strong></td>
+<td align="left"><strong>irw</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>default</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">updating</td>
+<td align="left">w</td>
+<td align="left">control automatic radraw</td>
+<td align="left"></td>
+<td align="left">SetRedraw</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>other</strong></td>
+<td align="left"><strong>irw</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>default</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">font</td>
+<td align="left">irw</td>
+<td align="left">default font</td>
+<td align="left">DEFAULT_GUI_FONT</td>
+<td align="left">Get/SetWindowFont</td>
+</tr>
+<tr class="odd">
+<td align="left">text</td>
+<td align="left">rw</td>
+<td align="left">depends on control</td>
+<td align="left"></td>
+<td align="left">Get/SetWindowText</td>
+</tr>
+<tr class="even">
+<td align="left">cursor_pos</td>
+<td align="left">r</td>
+<td align="left">mouse position (POINT)</td>
+<td align="left"></td>
+<td align="left">GetCursorPos</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="methods">Methods</h3>
+<div class="small">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>state</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">enable()</td>
+<td align="left">enable</td>
+<td align="left">EnableWindow</td>
+</tr>
+<tr class="odd">
+<td align="left">disable()</td>
+<td align="left">disable</td>
+<td align="left">EnableWindow</td>
+</tr>
+<tr class="even">
+<td align="left">focus()</td>
+<td align="left">focus</td>
+<td align="left">SetFocus</td>
+</tr>
+<tr class="odd">
+<td align="left">show([async])</td>
+<td align="left">show</td>
+<td align="left">ShowWindow</td>
+</tr>
+<tr class="even">
+<td align="left">hide()</td>
+<td align="left">hide</td>
+<td align="left">ShowWindow</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>positioning</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">move(x, y)</td>
+<td align="left">move</td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="odd">
+<td align="left">resize(w, h)</td>
+<td align="left">resize</td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="even">
+<td align="left">map_point(to_win, POINT) -&gt; POINT</td>
+<td align="left">map a POINT to a window's space</td>
+<td align="left">MapWindowPoint</td>
+</tr>
+<tr class="odd">
+<td align="left">map_rect(to_win, RECT) -&gt; RECT</td>
+<td align="left">map a RECT to a window's space</td>
+<td align="left">MapWindowRect</td>
+</tr>
+<tr class="even">
+<td align="left">client_to_frame(nil, RECT) -&gt; RECT</td>
+<td align="left">inner-&gt;outer frame space conversion</td>
+<td align="left">AdjustWindowRect</td>
+</tr>
+<tr class="odd">
+<td align="left">frame_to_client(nil, RECT) -&gt; RECT</td>
+<td align="left">outer-&gt;inner frame space conversion</td>
+<td align="left">AdjustWindowRect</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>children</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">children() -&gt; iter() -&gt; win</td>
+<td align="left">iterate children</td>
+<td align="left">EnumChildWindows</td>
+</tr>
+<tr class="even">
+<td align="left">child_at(POINT) -&gt; win</td>
+<td align="left">child window at position</td>
+<td align="left">ChildWindowFromPoint</td>
+</tr>
+<tr class="odd">
+<td align="left">real_child_at(POINT) -&gt; win</td>
+<td align="left">same but go through transparent children</td>
+<td align="left">RealChildWindowFromPoint</td>
+</tr>
+<tr class="even">
+<td align="left">child_at_recursive(POINT) -&gt; win</td>
+<td align="left">same but recursive</td>
+<td align="left">ChildWindowFromPoint</td>
+</tr>
+<tr class="odd">
+<td align="left">real_child_at_recursive(POINT) -&gt; win</td>
+<td align="left">same but go through transparent children</td>
+<td align="left">RealChildWindowFromPoint</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>z-order</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">send_to_back([rel_to_win])</td>
+<td align="left">move below of other windows</td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="even">
+<td align="left">bring_to_front([rel_to_win])</td>
+<td align="left">bring in front of other windows</td>
+<td align="left">SetWindowPos</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>painting</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">redraw()</td>
+<td align="left">redraw the window immediately</td>
+<td align="left">RedrawWindow</td>
+</tr>
+<tr class="odd">
+<td align="left">invalidate([RECT], [erase_bg])</td>
+<td align="left">invalidate the window or a subregion</td>
+<td align="left">InvalidateRect</td>
+</tr>
+<tr class="even">
+<td align="left">batch_update(func, args...)</td>
+<td align="left">run func() with redrawing desabled</td>
+<td align="left">SetRedraw/RedrawWindow</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>drag &amp; drop</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">dragging(POINT) -&gt; true|false</td>
+<td align="left">check if dragging</td>
+<td align="left">DragDetect</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>timers</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">settimer(seconds, handler, id)</td>
+<td align="left">set/reset a timer</td>
+<td align="left">SetTimer</td>
+</tr>
+<tr class="odd">
+<td align="left">stoptimer(id)</td>
+<td align="left">cancel a timer</td>
+<td align="left">KillTimer</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="events">Events</h3>
+<div class="small">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>lifetime</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">on_destroy()</td>
+<td align="left">before destroying</td>
+<td align="left">WM_DESTROY</td>
+</tr>
+<tr class="odd">
+<td align="left">on_destroyed()</td>
+<td align="left">after being destroyed</td>
+<td align="left">WM_NCDESTROY</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>movement</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">on_pos_changing(WINDOWPOS)</td>
+<td align="left">resizing (or changing state)</td>
+<td align="left">WM_WINDOWPOSCHANGING</td>
+</tr>
+<tr class="even">
+<td align="left">on_parent_resizing(WINDOWPOS)</td>
+<td align="left">parent is resizing</td>
+<td align="left">WM_WINDOWPOSCHANGING</td>
+</tr>
+<tr class="odd">
+<td align="left">on_pos_changed()</td>
+<td align="left">resized or state changed</td>
+<td align="left">WM_WINDOWPOSCHANGED</td>
+</tr>
+<tr class="even">
+<td align="left">on_moving()</td>
+<td align="left">moving</td>
+<td align="left">WM_MOVING</td>
+</tr>
+<tr class="odd">
+<td align="left">on_moved()</td>
+<td align="left">was moved</td>
+<td align="left">WM_MOVE</td>
+</tr>
+<tr class="even">
+<td align="left">on_resizing()</td>
+<td align="left">resizing</td>
+<td align="left">WM_SIZING</td>
+</tr>
+<tr class="odd">
+<td align="left">on_resized()</td>
+<td align="left">was resized</td>
+<td align="left">WM_SIZE</td>
+</tr>
+<tr class="even">
+<td align="left">on_begin_sizemove()</td>
+<td align="left">moving or resizing started</td>
+<td align="left">WM_ENTERSIZEMOVE</td>
+</tr>
+<tr class="odd">
+<td align="left">on_end_sizemove()</td>
+<td align="left">moving or resizing ended</td>
+<td align="left">WM_EXITSIZEMOVE</td>
+</tr>
+<tr class="even">
+<td align="left">on_focus()</td>
+<td align="left">was focused</td>
+<td align="left">WM_SETFOCUS</td>
+</tr>
+<tr class="odd">
+<td align="left">on_blur()</td>
+<td align="left">was unfocused</td>
+<td align="left">WM_KILLFOCUS</td>
+</tr>
+<tr class="even">
+<td align="left">on_enable()</td>
+<td align="left">was enabled</td>
+<td align="left">WM_ENABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">on_show()</td>
+<td align="left">was shown</td>
+<td align="left">WM_SHOWWINDOW</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>queries</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">on_help()</td>
+<td align="left">user pressed F1</td>
+<td align="left">WM_HELP</td>
+</tr>
+<tr class="even">
+<td align="left">on_set_cursor()</td>
+<td align="left">cursor changed</td>
+<td align="left">WM_SETCURSOR</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>mouse</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">on_mouse_move(x, y, btns)</td>
+<td align="left">mouse moved</td>
+<td align="left">WM_MOUSEMOVE</td>
+</tr>
+<tr class="odd">
+<td align="left">on_mouse_over(x, y, btns)</td>
+<td align="left">mouse entered the client area (*)</td>
+<td align="left">WM_MOUSEHOVER</td>
+</tr>
+<tr class="even">
+<td align="left">on_mouse_leave()</td>
+<td align="left">mouse left the client area (*)</td>
+<td align="left">WM_MOUSELEAVE</td>
+</tr>
+<tr class="odd">
+<td align="left">on_lbutton_double_click(x, y, btns)</td>
+<td align="left">left mouse button double-click</td>
+<td align="left">WM_LBUTTONDBLCLK</td>
+</tr>
+<tr class="even">
+<td align="left">on_lbutton_down(x, y, btns)</td>
+<td align="left">left mouse button down</td>
+<td align="left">WM_LBUTTONDOWN</td>
+</tr>
+<tr class="odd">
+<td align="left">on_lbutton_up(x, y, btns)</td>
+<td align="left">left mouse button up</td>
+<td align="left">WM_LBUTTONUP</td>
+</tr>
+<tr class="even">
+<td align="left">on_mbutton_double_click(x, y, btns)</td>
+<td align="left">middle mouse button double-click</td>
+<td align="left">WM_MBUTTONDBLCLK</td>
+</tr>
+<tr class="odd">
+<td align="left">on_mbutton_down(x, y, btns)</td>
+<td align="left">middle mouse button down</td>
+<td align="left">WM_MBUTTONDOWN</td>
+</tr>
+<tr class="even">
+<td align="left">on_mbutton_up(x, y, btns)</td>
+<td align="left">middle mouse button up</td>
+<td align="left">WM_MBUTTONUP</td>
+</tr>
+<tr class="odd">
+<td align="left">on_rbutton_double_click(x, y, btns)</td>
+<td align="left">right mouse button double-click</td>
+<td align="left">WM_RBUTTONDBLCLK</td>
+</tr>
+<tr class="even">
+<td align="left">on_rbutton_down(x, y, btns)</td>
+<td align="left">right mouse button down</td>
+<td align="left">WM_RBUTTONDOWN</td>
+</tr>
+<tr class="odd">
+<td align="left">on_rbutton_up(x, y, btns)</td>
+<td align="left">right mouse button up</td>
+<td align="left">WM_RBUTTONUP</td>
+</tr>
+<tr class="even">
+<td align="left">on_xbutton_double_click(x, y, btns, which)</td>
+<td align="left">other mouse button double-click</td>
+<td align="left">WM_XBUTTONDBLCLK</td>
+</tr>
+<tr class="odd">
+<td align="left">on_xbutton_down(x, y, btns, which)</td>
+<td align="left">other mouse button down</td>
+<td align="left">WM_XBUTTONDOWN</td>
+</tr>
+<tr class="even">
+<td align="left">on_xbutton_up(x, y, btns, which)</td>
+<td align="left">other mouse button up</td>
+<td align="left">WM_XBUTTONUP</td>
+</tr>
+<tr class="odd">
+<td align="left">on_mouse_wheel(x, y, btns, delta)</td>
+<td align="left">mouse wheel roll</td>
+<td align="left">WM_MOUSEWHEEL</td>
+</tr>
+<tr class="even">
+<td align="left">on_mouse_hwheel(x, y, btns, delta)</td>
+<td align="left">mouse horizontal wheel roll</td>
+<td align="left">WM_MOUSEHWHEEL</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>keyboard</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">on_key_down(VK_code, flags)</td>
+<td align="left">key down</td>
+<td align="left">WM_KEYDOWN</td>
+</tr>
+<tr class="odd">
+<td align="left">on_key_up(VK_code, flags)</td>
+<td align="left">key up</td>
+<td align="left">WM_KEYUP</td>
+</tr>
+<tr class="even">
+<td align="left">on_syskey_down(VK_code, flags)</td>
+<td align="left">syskey down</td>
+<td align="left">WM_SYSKEYDOWN</td>
+</tr>
+<tr class="odd">
+<td align="left">on_syskey_up(VK_code, flags)</td>
+<td align="left">syskey up</td>
+<td align="left">WM_SYSKEYUP</td>
+</tr>
+<tr class="even">
+<td align="left">on_key_down_char(utf8_char, flags)</td>
+<td align="left">key down char</td>
+<td align="left">WM_CHAR</td>
+</tr>
+<tr class="odd">
+<td align="left">on_syskey_down_char(utf8_char, flags)</td>
+<td align="left">syskey down char</td>
+<td align="left">WM_SYSCHAR</td>
+</tr>
+<tr class="even">
+<td align="left">on_dead_key_up_char(VK_code, flags)</td>
+<td align="left">dead key up char</td>
+<td align="left">WM_DEADCHAR</td>
+</tr>
+<tr class="odd">
+<td align="left">on_dead_syskey_down_char(VK_code, flags)</td>
+<td align="left">dead syskey down char</td>
+<td align="left">WM_SYSDEADCHAR</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>raw input</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">on_raw_input(RAWINPUT)</td>
+<td align="left">raw input event</td>
+<td align="left">WM_INPUT</td>
+</tr>
+<tr class="even">
+<td align="left">on_device_change(how, HRAWINPUT)</td>
+<td align="left">input device added/removed</td>
+<td align="left">WM_INPUT_DEVICE_CHANGE</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>system events</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">on_dpi_changed()</td>
+<td align="left">monitor's DPI changed</td>
+<td align="left">WM_DPICHANGED</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>painting</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">on_paint(hdc)</td>
+<td align="left">window needs repainting</td>
+<td align="left">WM_PAINT</td>
+</tr>
+</tbody>
+</table>
+<p>(*) call <code>TrackMouseEvent()</code> to receive these messages.</p>
+</div>
+<h2 id="windows">Windows</h2>
+<h3 id="hierarchy-1">Hierarchy</h3>
+<ul>
+<li><a href="/winapi.object">Object</a>
+<ul>
+<li><a href="/winapi.vobject">VObject</a>
+<ul>
+<li>[HandleList][winapi.handlelist]
+<ul>
+<li>Windows</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="properties-and-methods">Properties and methods</h3>
+<div class="small">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>field/method</strong></td>
+<td align="left"><strong>description</strong></td>
+<td align="left"><strong>reference</strong></td>
+</tr>
+<tr class="even">
+<td align="left">Windows.items -&gt; {HWND -&gt; win}</td>
+<td align="left">the HWND-&gt;window map</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Windows.active_window -&gt; win</td>
+<td align="left">get the active window</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Windows.foreground_window -&gt; win | nil</td>
+<td align="left">get the active window if the app is active</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Windows:window_at(POINT) -&gt; win | nil</td>
+<td align="left">get the window at a point</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Windows:map_point(to_win, POINT) -&gt; POINT</td>
+<td align="left">map a POINT to a window's space</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Windows:map_rect(to_win, RECT) -&gt; RECT</td>
+<td align="left">map a RECT to a window's space</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Windows.cursor_pos -&gt; POINT</td>
+<td align="left">current mouse position outside of events</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>NOTE:</strong> The active window goes nil when the app is deactivated, but if activate() is called on a window while the app is inactive, the window's active state will be set immediately, even if the window will not be activated (because the app is inactive). OTOH, the foreground window is always nil while the app is inactive, even after calling activate() on a window.</p>
+</blockquote>
+</div>
+<h2 id="the-message-loop">The message loop</h2>
+<div class="small">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><code>MessageLoop()</code></td>
+<td align="left">start the message loop</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ProcessMessages()</code></td>
+<td align="left">process pending messages (if any) and return</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>PostQuitMessage()</code></td>
+<td align="left">post a quit message to the message loop to stop it</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>NOTE:</strong> The message loop returns an exit code, so you can call it like this: <code>os.exit(MessageLoop())</code>.</p>
+</blockquote>
+</div>

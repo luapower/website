@@ -1,0 +1,135 @@
+<h2 id="local-sg-requiresg_cairo"><code>local SG = require'sg_cairo'</code></h2>
+<p>Rendering of cairo 2D scene graph objects.</p>
+<h3 id="sgnewsurfacecache---sg"><code>SG:new(surface[,cache]) -&gt; sg</code></h3>
+<p>Create a new scene graph renderer that can draw scene graph objects on a cairo surface. A cache object can be passed so you can share cached resources like fonts and images with other renderers, otherwise a private cache object will be created.</p>
+<h3 id="sgrenderobject"><code>sg:render(object)</code></h3>
+<p>Render a scene graph object on the cairo surface of the renderer.</p>
+<h3 id="sgpreloadobject"><code>sg:preload(object)</code></h3>
+<p>Preload a scene graph object. Loads images and fonts into the cache.</p>
+<h3 id="sgmeasureobject---x1y1x2y2"><code>sg:measure(object) -&gt; x1,y1,x2,y2</code></h3>
+<p>Compute the bounding box of the object in device coordinates. <em>Note that the box is wrong for strokes with width greater than 1 - this may be a cairo bug.</em></p>
+<h3 id="sghit_testx-y-object---object1..."><code>sg:hit_test(x, y, object) -&gt; {object1,...}</code></h3>
+<p>Hit-test a point on a scene graph. Returns all hit objects, from the outermost to innermost.</p>
+<h2 id="cairo-scene-graph-objects">Cairo scene graph objects</h2>
+<p>A scene graph object is a plain Lua table describing what is to be rendered. It can be a color, gradient, image, shape, group, svg or some other extended type. A group describes a list of objects of any type to be painted in order. A shape describes a path to be filled and/or stroked with an object of any type, including a group or another shape. Attributes describing space transforms, transparency, painting operator and visibility apply to all object types.</p>
+<p><em>N is number, S is string, true | false is boolean, CDATA is ffi cdata. The value in parens is the default value for the property. Missing values are replaced with defaults, not inherited, so that an object's style is context-independent, and only the transformation matrix and clipping area are contextual.</em></p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="ot">&lt;</span>object<span class="ot">&gt;</span> <span class="ot">=</span> <span class="ot">{</span>
+   <span class="ot">&lt;</span>color<span class="ot">&gt;</span> | <span class="ot">&lt;</span>gradient<span class="ot">&gt;</span> | <span class="ot">&lt;</span>image<span class="ot">&gt;</span> | <span class="ot">&lt;</span>shape<span class="ot">&gt;</span> | <span class="ot">&lt;</span>group<span class="ot">&gt;</span> | <span class="ot">&lt;</span>svg<span class="ot">&gt;</span> | <span class="ot">&lt;</span>extension<span class="ot">&gt;,</span>
+
+   absolute <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">),</span>
+   matrix <span class="ot">=</span> <span class="ot">{</span>a<span class="ot">,</span> b<span class="ot">,</span> c<span class="ot">,</span> d<span class="ot">,</span> e<span class="ot">,</span> f<span class="ot">}</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">),</span>
+   x <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> <span class="co">--translation x</span>
+   y <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> <span class="co">--translation y</span>
+   angle <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> <span class="co">--rotation angle in degrees</span>
+   cx <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> <span class="co">--x of center of rotation and scale</span>
+   cy <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> <span class="co">--y of center of rotation and scale</span>
+   sx <span class="ot">=</span> N <span class="ot">(</span><span class="dv">1</span><span class="ot">),</span> <span class="co">--x scale</span>
+   sy <span class="ot">=</span> N <span class="ot">(</span><span class="dv">1</span><span class="ot">),</span> <span class="co">--y scale</span>
+   scale <span class="ot">=</span> N <span class="ot">(</span><span class="dv">1</span><span class="ot">),</span>
+   skew_x <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span>
+   skew_y <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span>
+   transforms <span class="ot">=</span> <span class="ot">{</span>
+      <span class="ot">{</span><span class="st">&#39;matrix&#39;</span><span class="ot">,</span> a<span class="ot">,</span> b<span class="ot">,</span> c<span class="ot">,</span> d<span class="ot">,</span> e<span class="ot">,</span> f<span class="ot">}</span> |
+      <span class="ot">{</span><span class="st">&#39;translate&#39;</span><span class="ot">,</span> x<span class="ot">,</span> y <span class="ot">(</span><span class="dv">0</span><span class="ot">)}</span> |
+      <span class="ot">{</span><span class="st">&#39;rotate&#39;</span><span class="ot">,</span> angle<span class="ot">,</span> cx <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> cy <span class="ot">(</span><span class="dv">0</span><span class="ot">)}</span> |
+      <span class="ot">{</span><span class="st">&#39;scale&#39;</span><span class="ot">,</span> scale | sx<span class="ot">,</span> sy<span class="ot">}</span> |
+      <span class="ot">{</span><span class="st">&#39;skew&#39;</span><span class="ot">,</span> x<span class="ot">,</span> y<span class="ot">},</span>
+      <span class="ot">...</span>
+   <span class="ot">}</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">)</span>
+
+   alpha <span class="ot">=</span> N <span class="ot">(</span><span class="dv">1</span><span class="ot">),</span> <span class="co">--clamped to 0..1</span>
+
+   operator <span class="ot">=</span>
+      <span class="st">&#39;clear&#39;</span> | <span class="st">&#39;source&#39;</span> | <span class="st">&#39;over&#39;</span> | <span class="st">&#39;in&#39;</span> | <span class="st">&#39;out&#39;</span> | <span class="st">&#39;atop&#39;</span> | <span class="st">&#39;dest&#39;</span> | <span class="st">&#39;dest_over&#39;</span> | <span class="st">&#39;dest_in&#39;</span> | <span class="st">&#39;dest_out&#39;</span> |
+      <span class="st">&#39;dest_atop&#39;</span> | <span class="st">&#39;xor&#39;</span> | <span class="st">&#39;add&#39;</span> | <span class="st">&#39;saturate&#39;</span> | <span class="st">&#39;multiply&#39;</span> | <span class="st">&#39;screen&#39;</span> | <span class="st">&#39;overlay&#39;</span> | <span class="st">&#39;darken&#39;</span> |
+      <span class="st">&#39;lighten&#39;</span> | <span class="st">&#39;color_dodge&#39;</span> | <span class="st">&#39;color_burn&#39;</span> | <span class="st">&#39;hard_light&#39;</span> | <span class="st">&#39;soft_light&#39;</span> | <span class="st">&#39;difference&#39;</span> |
+      <span class="st">&#39;exclusion&#39;</span> | <span class="st">&#39;hsl_hue&#39;</span> | <span class="st">&#39;hsl_saturation&#39;</span> | <span class="st">&#39;hsl_color&#39;</span> | <span class="st">&#39;hsl_luminosity&#39;</span> <span class="ot">(</span>over<span class="ot">),</span>
+
+   hidden <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">),</span>
+
+   invalid <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">)</span> <span class="ot">(*),</span>
+   nocache <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">)</span> <span class="ot">(*),</span>
+<span class="ot">}</span>
+
+<span class="ot">(*)</span> cache control options apply to path<span class="ot">,</span> font<span class="ot">.</span>file<span class="ot">,</span> image<span class="ot">.</span>file<span class="ot">,</span> svg<span class="ot">.</span>file<span class="ot">,</span> <span class="kw">and</span> gradient nodes<span class="ot">.</span>
+
+<span class="ot">&lt;</span>color<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;color&#39;</span><span class="ot">,</span> r<span class="ot">,</span> g<span class="ot">,</span> b<span class="ot">,</span> a <span class="ot">(</span><span class="dv">1</span><span class="ot">)</span> <span class="co">--values are clamped to 0..1</span>
+
+<span class="ot">&lt;</span>gradient<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;gradient&#39;</span><span class="ot">,</span>
+   <span class="ot">&lt;</span>linear<span class="ot">-</span>gradient<span class="ot">&gt;</span> | <span class="ot">&lt;</span>radial<span class="ot">-</span>gradient<span class="ot">&gt;</span>
+
+   <span class="ot">&lt;</span>linear<span class="ot">-</span>gradient<span class="ot">&gt;</span> <span class="ot">=</span>
+   x1 <span class="ot">=</span> N<span class="ot">,</span> y1 <span class="ot">=</span> N<span class="ot">,</span> x2 <span class="ot">=</span> N<span class="ot">,</span> y2 <span class="ot">=</span> N<span class="ot">,</span>
+
+   <span class="ot">&lt;</span>radial<span class="ot">-</span>gradient<span class="ot">&gt;</span> <span class="ot">=</span>
+   x1 <span class="ot">=</span> N<span class="ot">,</span> y1 <span class="ot">=</span> N<span class="ot">,</span> x2 <span class="ot">=</span> N<span class="ot">,</span> y2 <span class="ot">=</span> N<span class="ot">,</span> r1 <span class="ot">=</span> N<span class="ot">,</span> r2 <span class="ot">=</span> N<span class="ot">,</span>
+
+   relative <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">),</span>
+   filter <span class="ot">=</span> <span class="st">&#39;fast&#39;</span> | <span class="st">&#39;good&#39;</span> | <span class="st">&#39;best&#39;</span> | <span class="st">&#39;nearest&#39;</span> | <span class="st">&#39;bilinear&#39;</span> | <span class="st">&#39;gaussian&#39;</span> <span class="ot">(</span>fast<span class="ot">),</span>
+   extend <span class="ot">=</span> <span class="st">&#39;none&#39;</span> | <span class="st">&#39;repeat&#39;</span> | <span class="st">&#39;reflect&#39;</span> | <span class="st">&#39;pad&#39;</span> <span class="ot">(</span>pad<span class="ot">)</span>
+
+<span class="ot">&lt;</span>image<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;image&#39;</span><span class="ot">,</span>
+   file <span class="ot">=</span> <span class="ot">{</span><span class="fu">type</span> <span class="ot">=</span> S <span class="ot">(</span>inferred from file extension<span class="ot">),</span> path <span class="ot">=</span> S | string <span class="ot">=</span> S | cdata <span class="ot">=</span> CDATA<span class="ot">,</span> size <span class="ot">=</span> N<span class="ot">},</span>
+   filter <span class="ot">=</span> <span class="st">&#39;fast&#39;</span> | <span class="st">&#39;good&#39;</span> | <span class="st">&#39;best&#39;</span> | <span class="st">&#39;nearest&#39;</span> | <span class="st">&#39;bilinear&#39;</span> | <span class="st">&#39;gaussian&#39;</span> <span class="ot">(</span>best<span class="ot">),</span>
+   extend <span class="ot">=</span> <span class="st">&#39;none&#39;</span> | <span class="st">&#39;repeat&#39;</span> | <span class="st">&#39;reflect&#39;</span> | <span class="st">&#39;pad&#39;</span> <span class="ot">(</span>none<span class="ot">),</span>
+
+<span class="ot">&lt;</span>shape<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;shape&#39;</span><span class="ot">,</span>
+   path <span class="ot">=</span> <span class="ot">&lt;</span>path_object<span class="ot">&gt;</span> <span class="ot">(</span>see the path module<span class="ot">),</span>
+
+   fill <span class="ot">=</span> <span class="ot">&lt;</span>object<span class="ot">&gt;</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">),</span>
+   fill_rule <span class="ot">=</span> <span class="st">&#39;nonzero&#39;</span> | <span class="st">&#39;evenodd&#39;</span> <span class="ot">(</span>nonzero<span class="ot">),</span>
+
+   stroke <span class="ot">=</span> <span class="ot">&lt;</span>object<span class="ot">&gt;</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">),</span>
+   line_dashes <span class="ot">=</span> <span class="ot">{</span>offset <span class="ot">=</span> N <span class="ot">(</span><span class="dv">0</span><span class="ot">),</span> N1<span class="ot">,...}</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">,</span> no dashes<span class="ot">)</span>
+   line_width <span class="ot">=</span> N <span class="ot">(</span><span class="dv">1</span><span class="ot">),</span>
+   line_cap <span class="ot">=</span> <span class="st">&#39;butt&#39;</span> | <span class="st">&#39;round&#39;</span> | <span class="st">&#39;square&#39;</span> <span class="ot">(</span>square<span class="ot">),</span>
+   line_join <span class="ot">=</span> <span class="st">&#39;miter&#39;</span> | <span class="st">&#39;round&#39;</span> | <span class="st">&#39;bevel&#39;</span> <span class="ot">(</span>miter<span class="ot">),</span>
+   miter_limit <span class="ot">=</span> N <span class="ot">(</span><span class="dv">4</span><span class="ot">),</span>
+
+   stroke_first <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span> <span class="ot">(</span><span class="kw">false</span><span class="ot">),</span>
+
+
+<span class="ot">&lt;</span>font<span class="ot">&gt;</span> <span class="ot">=</span> <span class="ot">{</span>
+   <span class="ot">&lt;</span>font<span class="ot">-</span>spec<span class="ot">&gt;</span> | <span class="ot">&lt;</span>font<span class="ot">-</span>file<span class="ot">&gt;</span>
+
+   <span class="ot">&lt;</span>font<span class="ot">-</span>spec<span class="ot">&gt;</span> <span class="ot">=</span>
+      family <span class="ot">=</span> S <span class="ot">(</span>Arial<span class="ot">),</span>
+      slant <span class="ot">=</span> <span class="st">&#39;normal&#39;</span> | <span class="st">&#39;italic&#39;</span> | <span class="st">&#39;oblique&#39;</span> <span class="ot">(</span>normal<span class="ot">),</span>
+      weight <span class="ot">=</span> <span class="st">&#39;normal&#39;</span> | <span class="st">&#39;bold&#39;</span> <span class="ot">(</span>normal<span class="ot">),</span>
+
+   <span class="ot">&lt;</span>font<span class="ot">-</span>file<span class="ot">&gt;</span> <span class="ot">=</span>
+      file <span class="ot">=</span> <span class="ot">{</span>
+         path <span class="ot">=</span> S<span class="ot">,</span>
+         load_options <span class="ot">=</span> <span class="ot">{</span> <span class="co">--default is false for all options</span>
+            default <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> no_scale <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> no_hinting <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span>
+            render <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> no_bitmap <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> vertical_layout <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span>
+            force_autohint <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> crop_bitmap <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> pedantic <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span>
+            ignore_global_advance_width <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> no_recurse <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span>
+            ignore_transform <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> monochrome <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span> linear_design <span class="ot">=</span> <span class="kw">true</span> | <span class="kw">false</span><span class="ot">,</span>
+            no_autohint <span class="ot">=</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span>
+         <span class="ot">}</span> <span class="ot">(</span><span class="kw">nil</span><span class="ot">,</span> all <span class="kw">false</span><span class="ot">)</span>
+      <span class="ot">},</span>
+
+   options <span class="ot">=</span> <span class="ot">{</span>
+      antialias <span class="ot">=</span> <span class="st">&#39;default&#39;</span> | <span class="st">&#39;none&#39;</span> | <span class="st">&#39;gray&#39;</span> | <span class="st">&#39;subpixel&#39;</span> | <span class="st">&#39;fast&#39;</span> | <span class="st">&#39;good&#39;</span> | <span class="st">&#39;best&#39;</span> <span class="ot">(</span>default<span class="ot">),</span>
+      subpixel_order <span class="ot">=</span> <span class="st">&#39;default&#39;</span> | <span class="st">&#39;rgb&#39;</span> | <span class="st">&#39;bgr&#39;</span> | <span class="st">&#39;vrgb&#39;</span> | <span class="st">&#39;vbgr&#39;</span> <span class="ot">(</span>default<span class="ot">),</span>
+      hint_style <span class="ot">=</span> <span class="st">&#39;default&#39;</span> | <span class="st">&#39;none&#39;</span> | <span class="st">&#39;slight&#39;</span> | <span class="st">&#39;medium&#39;</span> | <span class="st">&#39;full&#39;</span> <span class="ot">(</span>default<span class="ot">),</span>
+      hint_metrics <span class="ot">=</span> <span class="st">&#39;default&#39;</span> | <span class="st">&#39;off&#39;</span> | <span class="st">&#39;on&#39;</span> <span class="ot">(</span>default<span class="ot">),</span>
+   <span class="ot">},</span>
+   size <span class="ot">=</span> N <span class="ot">(</span><span class="dv">12</span><span class="ot">),</span>
+<span class="ot">}</span>
+
+<span class="ot">&lt;</span>svg<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;svg&#39;</span><span class="ot">,</span>
+   file <span class="ot">=</span> <span class="ot">{</span>path <span class="ot">=</span> S | string <span class="ot">=</span> S | cdata <span class="ot">=</span> CDATA<span class="ot">,</span> size <span class="ot">=</span> N | <span class="fu">read</span> <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="ot">-&gt;</span> <span class="ot">&lt;</span>S<span class="ot">,</span> size | <span class="kw">nil</span><span class="ot">&gt;},</span>
+
+<span class="ot">&lt;</span>group<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="st">&#39;group&#39;</span><span class="ot">,</span> <span class="ot">&lt;</span>object<span class="ot">&gt;,</span> <span class="ot">...</span>
+
+<span class="ot">&lt;</span>extension<span class="ot">&gt;</span> <span class="ot">=</span>
+   <span class="fu">type</span> <span class="ot">=</span> <span class="ot">&lt;</span>name<span class="ot">&gt;,</span> <span class="ot">...</span> <span class="ot">(</span>the object is drawn by invoking the render <span class="kw">function</span> sg<span class="ot">.</span>draw<span class="ot">[</span>name<span class="ot">])</span></code></pre>
+<p>See [path2] for how to specify path_objects.</p>

@@ -1,0 +1,97 @@
+<h2 id="local-libjpeg-requirelibjpeg"><code>local libjpeg = require'libjpeg'</code></h2>
+<p>A ffi binding for the <a href="http://libjpeg.sourceforge.net/">libjpeg</a> 6.2 API. Comes with <a href="http://www.libjpeg-turbo.org/">libjpeg-turbo</a> binaries.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>progressive loading</li>
+<li>partial loading</li>
+<li>fractional scaling</li>
+<li>multiple pixel formats:
+<ul>
+<li>rgb8, bgr8, rgba8, bgra8, argb8, abgr8</li>
+<li>rgbx8, bgrx8, xrgb8, xbgr8</li>
+<li>g8, ga8, ag8</li>
+<li>ycc8, ycck8, cmyk8</li>
+</ul></li>
+</ul>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>no loading and saving huge images, i.e. working with a few scanlines at a time (easy).</li>
+<li>jit is turned off because we can't call error() from a ffi callback called from C; and yet we must not return control to libjpeg on errors, and the only way to do that is to call error().</li>
+<li>the read callback cannot yield since it is called from C code. This means that reading data with coroutine-based socket schedulers is not an option. The workaround is to either bind the suspended I/O mode of libjpeg (easy), or to use threads and locking.</li>
+</ul>
+<h2 id="api">API</h2>
+<h3 id="libjpeg.loadoptions_t-filename-read---image"><code>libjpeg.load(options_t | filename | read) -&gt; image</code></h3>
+<p>Read and decode a JPEG image. <code>options_t</code> is a table containing at least the data source and possibly other options.</p>
+<h4 id="the-image-source">1. The image source:</h4>
+<ul>
+<li><code>path</code>: read data from a file.</li>
+<li><code>string</code>: read data from a string.</li>
+<li><code>cdata</code>, <code>size</code>: read data from a buffer of specified size.</li>
+<li><code>stream</code>: read data from an opened <code>FILE *</code> stream.</li>
+<li><code>read</code>: read data from a reader function of the form: <code>read() -&gt; cdata, size | string | nil</code></li>
+</ul>
+<h4 id="decoding-options">2. Decoding options:</h4>
+<ul>
+<li><code>accept.&lt;pixel_format&gt;: true/false</code> specify one or more accepted pixel formats (see above).</li>
+<li><code>accept.top_down</code>: true/false (default is true)</li>
+<li><code>accept.bottom_up</code>: true/false</li>
+<li><code>accept.padded</code>: true/false (default is false) - specify that the row stride should be a multiple of 4.</li>
+<li><code>scale_num</code>, <code>scale_denom</code>: scale down the image by the fraction scale_num/scale_denom. Currently, the only supported scaling ratios are M/8 with all M from 1 to 16, or any reduced fraction thereof (such as 1/2, 3/4, etc.) Smaller scaling ratios permit significantly faster decoding since fewer pixels need be processed and a simpler IDCT method can be used.</li>
+<li><code>dct_method</code>: 'accurate', 'fast', 'float' (default is 'accurate')</li>
+<li><code>fancy_upsampling</code>: true/false (default is false); use a fancier upsampling method.</li>
+<li><code>block_smoothing</code>: true/false (default is false); smooth out large pixels of early progression stages for progressive JPEGs.</li>
+<li><code>partial_loading</code>: true/false (default is true); display broken images partially or break with an error.</li>
+<li><code>header_only</code>: do not decode the image; return only the image header fields.</li>
+<li><code>render_scan</code>: a function to be called as <code>render_scan(image, is_last_scan, scan_number)</code> for each progressive scan of a multi-scan JPEG. It can used to implement progressive display of images.
+<ul>
+<li>also called once for single-scan images.</li>
+<li>also called on error, as <code>render_scan(nil, true, scan_number, error)</code>, where <code>scan_number</code> is the scan number that was supposed to be rendering next and <code>error</code> the error message.</li>
+</ul></li>
+<li><code>warning</code>: a function to be called as <code>warning(msg, level)</code> on non-fatal errors.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong>: Not all conversions are possible with libjpeg-turbo, so always check the image's <code>format</code> field to get the actual format. Use <a href="/bitmap">bitmap</a> to further convert the image if necessary.</p>
+</blockquote>
+<p>For more info on the decoding process and options read the <a href="http://sourceforge.net/p/libjpeg-turbo/code/HEAD/tree/trunk/libjpeg.txt">libjpeg-turbo doc</a>.</p>
+<h4 id="the-return-value">3. The return value:</h4>
+<p>The return value is a <a href="/bitmap">bitmap</a> with extra fields:</p>
+<ul>
+<li><code>file</code>: a table describing the source file, with the following attributes:
+<ul>
+<li><code>w</code>, <code>h</code>, <code>format</code>, <code>progressive</code>, <code>jfif</code>, <code>adobe</code>.</li>
+</ul></li>
+<li><code>partial</code>: true if the image was found to be truncated and it was partially loaded.</li>
+</ul>
+<p>NOTE:</p>
+<ul>
+<li>the number of bits per channel in the output bitmap is always 8.</li>
+<li>the bitmap fields are not present with the <code>header_only</code> option.</li>
+<li>unknown JPEG formats are loaded but the <code>format</code> field is missing.</li>
+</ul>
+<h3 id="libjpeg.saveoptions_t---string-chunks_t-nil"><code>libjpeg.save(options_t) -&gt; string | chunks_t | nil</code></h3>
+<p>Save a <a href="/bitmap">bitmap</a> as JPEG. <code>options_t</code> is a table containing at least the source bitmap and destination, and possibly other options.</p>
+<h4 id="the-source-bitmap">1. The source bitmap:</h4>
+<ul>
+<li><code>bitmap</code>: a <a href="/bitmap">bitmap</a> in an accepted format (see above).</li>
+</ul>
+<h4 id="the-output">2. The output:</h4>
+<ul>
+<li><code>path</code>: write data to a file.</li>
+<li><code>stream</code>: write data to an opened <code>FILE *</code> stream.</li>
+<li><code>chunks</code>: append data chunks to a list (which is also returned).</li>
+<li><code>write</code>: write data to a sink of the form: <code>write(buf, size)</code></li>
+<li><code>finish</code>: optional function to be called after all the data is written.</li>
+</ul>
+<p>If no output option is specified, the jpeg binary is returned as a Lua string.</p>
+<h4 id="encoding-options">3. Encoding options:</h4>
+<ul>
+<li><code>format</code>: output format (see list of supported formats above).</li>
+<li><code>quality</code>: 0..100 range. you know what that is.</li>
+<li><code>progressive</code>: true/false (default is false). make it progressive.</li>
+<li><code>dct_method</code>: 'accurate', 'fast', 'float' (default is 'accurate').</li>
+<li><code>optimize_coding</code>: optimize huffmann tables.</li>
+<li><code>smoothing</code>: 0..100 range. smoothing factor.</li>
+<li><code>bufsize</code>: internal buffer size (default is 4096).</li>
+</ul>
+<hr />
+<p>See also: <a href="/nanojpeg">nanojpeg</a></p>

@@ -1,0 +1,74 @@
+<p><warn>WORK IN PROGRESS / NOTHING TO SEE HERE (YET)</warn></p>
+<h2 id="local-codedit-requirecodedit"><code>local codedit = require'codedit'</code></h2>
+<p>Codedit is a source code editor engine written in Lua. Codedit exposes the logic of source code editing with all its intricacies in a set of highly compartimentalized APIs, making it easy to explore, understand and extend.</p>
+<p>Being made in pure Lua, it runs on all the platforms that Lua runs on. If, inside your Lua environment, you have the means to:</p>
+<ul>
+<li>display a character at certain coordinates</li>
+<li>display a filled rectangle at certain coordinates</li>
+<li>rectangle clipping</li>
+<li>process keyboard and mouse events</li>
+</ul>
+<p>then you can hook up codedit and add code editing capabilities to your app.</p>
+<p>Codedit comes with a minimalist code editor based on <a href="/cplayer">cplayer</a>.</p>
+<h2 id="highlights">Highlights</h2>
+<ul>
+<li>utf8-ready, using a small <a href="https://github.com/luapower/codedit/blob/master/codedit_str.lua">string module</a> over <a href="/utf8">utf8</a>.</li>
+<li>cross-platform: written in Lua and with no dependencies</li>
+<li><a href="https://github.com/luapower/cplayer/blob/master/cplayer/code_editor.lua">simple interface</a> for integrating with rendering and input APIs</li>
+<li>highly modular, with separate buffer, cursor, selection, view and controller objects, allowing multiple cursors and multiple selections.</li>
+</ul>
+<h2 id="features">Features</h2>
+<ul>
+<li><a href="/codedit_buffer">Buffers</a>
+<ul>
+<li><em>File format autodetection</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_detect.lua">code</a>)
+<ul>
+<li>loading files with mixed line endings</li>
+<li>detecting the most common line ending used in the file and using that when saving the file</li>
+</ul></li>
+<li><em>Normalization</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_normal.lua">code</a>)
+<ul>
+<li>removing spaces past end-of-line before saving</li>
+<li>removing empty lines at end-of-file before saving, or ensuring that the file ends with at least one empty line before saving</li>
+</ul></li>
+<li>undo/redo stack (<a href="https://github.com/luapower/codedit/blob/master/codedit_undo.lua">code</a>)</li>
+</ul></li>
+<li><em>Selections</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_selction.lua">code</a>)
+<ul>
+<li>block (column) selection mode (<a href="https://github.com/luapower/codedit/blob/master/codedit_blocksel.lua">code</a>)</li>
+<li>indent/outdent (also for block selections)</li>
+</ul></li>
+<li><em>Cursors</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_cursor.lua">code</a>)
+<ul>
+<li>insert and overwrite insert modes, with wide overwrite caret</li>
+<li>smart tabs: use tabs only when indenting, and use spaces inside the lines</li>
+<li>option to allow or restrict the cursor past end-of-line</li>
+<li>option to allow or restrict the cursor past end-of-file</li>
+<li>auto-indent: copy the indent of the line above when pressing enter</li>
+<li>moving through words</li>
+</ul></li>
+<li><em>Rendering</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_render.lua">code</a>)
+<ul>
+<li>syntax highlighting using <a href="http://foicica.com/scintillua/">scintillua</a> lexers</li>
+<li>simple rendering and measuring API for monospace fonts (<a href="https://github.com/luapower/codedit/blob/master/codedit_metrics.lua">code</a>)</li>
+<li>user-defined margins (<a href="https://github.com/luapower/codedit/blob/master/codedit_margin.lua">code</a>)
+<ul>
+<li>line numbers margin (<a href="https://github.com/luapower/codedit/blob/master/codedit_line_numbers.lua">code</a>)</li>
+</ul></li>
+</ul></li>
+<li><em>Controller</em> (<a href="https://github.com/luapower/codedit/blob/master/codedit_editor.lua">code</a>)
+<ul>
+<li>configurable key bindings and commands (<a href="https://github.com/luapower/codedit/blob/master/codedit_keys.lua">code</a>)</li>
+<li>simple clipboard API (stubbed to an in-process clipboard)</li>
+<li>scrolling, one line/char at a time or smooth scrolling (<a href="https://github.com/luapower/codedit/blob/master/codedit_scroll.lua">code</a>)</li>
+<li>selecting with the mouse</li>
+</ul></li>
+</ul>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>fixed char width (monospace fonts only)</li>
+<li>fixed line height</li>
+<li>no incremental repaint</li>
+<li>mixed line terminators are not preserved</li>
+</ul>
+<h2 id="usage">Usage</h2>

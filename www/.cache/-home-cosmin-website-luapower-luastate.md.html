@@ -1,0 +1,412 @@
+<h2 id="local-luastate-requireluastate"><code>local luastate = require'luastate'</code></h2>
+<p>A ffi binding to the Lua/LuaJIT C API, allowing the creation and manipulation of Lua states.</p>
+<h2 id="api">API</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>states</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">luastate.open() -&gt; state</td>
+<td align="left">create a new Lua state</td>
+</tr>
+<tr class="odd">
+<td align="left">state:close()</td>
+<td align="left">free the Lua state</td>
+</tr>
+<tr class="even">
+<td align="left">state:status() -&gt; 0 | err | C.LUA_YIELD</td>
+<td align="left">state runtime status</td>
+</tr>
+<tr class="odd">
+<td align="left">state:newthread() -&gt; state</td>
+<td align="left">create a new coroutine as a Lua state</td>
+</tr>
+<tr class="even">
+<td align="left">state:resume(...) -&gt; ok, ...</td>
+<td align="left">same as coroutine.resume()</td>
+</tr>
+<tr class="odd">
+<td align="left">state:resume_opt(opt, ...) -&gt; ok, ...</td>
+<td align="left">resume with options</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>compiler</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:openlibs([lib1, ...])</td>
+<td align="left">open standard libs (open all if no args given)</td>
+</tr>
+<tr class="even">
+<td align="left">state:loadbuffer(buf, sz, chunkname)</td>
+<td align="left">load a Lua chunk from a buffer</td>
+</tr>
+<tr class="odd">
+<td align="left">state:loadstring(s, name)</td>
+<td align="left">load a Lua chunk from a string</td>
+</tr>
+<tr class="even">
+<td align="left">state:loadfile(filename)</td>
+<td align="left">load a Lua chunk from a file</td>
+</tr>
+<tr class="odd">
+<td align="left">state:load(reader, data, chunkname)</td>
+<td align="left">load a Lua chunk from a reader function</td>
+</tr>
+<tr class="even">
+<td align="left">state:dofile(filename) -&gt; ok, ...</td>
+<td align="left">load and exec file</td>
+</tr>
+<tr class="odd">
+<td align="left">state:dostring(string) -&gt; ok, ...</td>
+<td align="left">load and exec string</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>stack / indices</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:abs_index() -&gt; i</td>
+<td align="left">absolute stack index</td>
+</tr>
+<tr class="even">
+<td align="left">state:gettop() -&gt; i</td>
+<td align="left">top stack index</td>
+</tr>
+<tr class="odd">
+<td align="left">state:settop(i)</td>
+<td align="left">set stack top index</td>
+</tr>
+<tr class="even">
+<td align="left">state:pop(n)</td>
+<td align="left">pop n positions from stack</td>
+</tr>
+<tr class="odd">
+<td align="left">state:checkstack(n)</td>
+<td align="left">assert that stack can grow at least n positions</td>
+</tr>
+<tr class="even">
+<td align="left">state:xmove(dst_thread, i)</td>
+<td align="left">move values between threads of the same top state</td>
+</tr>
+<tr class="odd">
+<td align="left">state:insert(i)</td>
+<td align="left">insert top element at i</td>
+</tr>
+<tr class="even">
+<td align="left">state:remove(i)</td>
+<td align="left">remove element at i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:replace(i)</td>
+<td align="left">replace element at i with top element</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>stack / read</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:type(i) -&gt; type</td>
+<td align="left">type at index (same as type())</td>
+</tr>
+<tr class="even">
+<td align="left">state:objlen(i) -&gt; n</td>
+<td align="left">string/table/userdata length</td>
+</tr>
+<tr class="odd">
+<td align="left">state:strlen(i) -&gt; n</td>
+<td align="left">string length</td>
+</tr>
+<tr class="even">
+<td align="left">state:toboolean(i) -&gt; true | false</td>
+<td align="left">get as boolean</td>
+</tr>
+<tr class="odd">
+<td align="left">state:tonumber(i) -&gt; n</td>
+<td align="left">get as number</td>
+</tr>
+<tr class="even">
+<td align="left">state:tolstring(i) -&gt; buf, sz</td>
+<td align="left">get as C string</td>
+</tr>
+<tr class="odd">
+<td align="left">state:tostring(i) -&gt; s</td>
+<td align="left">get as Lua string</td>
+</tr>
+<tr class="even">
+<td align="left">state:tothread(i) -&gt; state</td>
+<td align="left">get as Lua state</td>
+</tr>
+<tr class="odd">
+<td align="left">state:touserdata(i) -&gt; ptr</td>
+<td align="left">get as userdata</td>
+</tr>
+<tr class="even">
+<td align="left">state:topointer(i) -&gt; ptr</td>
+<td align="left">get as void* pointer</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>stack / read / tables</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:next(i) -&gt; true | false</td>
+<td align="left">pop k and push the next k, v at i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:gettable(i)</td>
+<td align="left">push t[k], where t at i and k at top</td>
+</tr>
+<tr class="even">
+<td align="left">state:getfield(i, k)</td>
+<td align="left">push t[k], where t at i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:rawget(i)</td>
+<td align="left">like gettable() but does raw access</td>
+</tr>
+<tr class="even">
+<td align="left">state:rawgeti(i, n)</td>
+<td align="left">push t[n], where t at i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:getmetatable(tname)</td>
+<td align="left">push metatable of <code>tname</code> from registry</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>stack / get / any value</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:get([i], [opt]) -&gt; v</td>
+<td align="left">get the value at i (default i = -1)</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>stack / write</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushnil()</td>
+<td align="left">push nil</td>
+</tr>
+<tr class="even">
+<td align="left">state:pushboolean(bool)</td>
+<td align="left">push a boolean</td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushinteger(n)</td>
+<td align="left">push an integer</td>
+</tr>
+<tr class="even">
+<td align="left">state:pushcclosure(cfunc, nupvalues)</td>
+<td align="left">push a lua_CFunction with upvalues</td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushcfunction(cfunc)</td>
+<td align="left">push a lua_CFunction</td>
+</tr>
+<tr class="even">
+<td align="left">state:pushlightuserdata(ptr)</td>
+<td align="left">push a lightuserdata</td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushlstring(buf, sz)</td>
+<td align="left">push a string buffer</td>
+</tr>
+<tr class="even">
+<td align="left">state:pushstring(s)</td>
+<td align="left">push a string</td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushthread(state)</td>
+<td align="left">push a coroutine</td>
+</tr>
+<tr class="even">
+<td align="left">state:pushvalue(i)</td>
+<td align="left">push value in stack at i</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>stack / write / tables</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:createtable(narr, nrec)</td>
+<td align="left">push a new empty table with preallocations</td>
+</tr>
+<tr class="odd">
+<td align="left">state:newtable()</td>
+<td align="left">push a new empty table</td>
+</tr>
+<tr class="even">
+<td align="left">state:settable(i)</td>
+<td align="left">t[k] = v, where t at i, v at top, k at top-1</td>
+</tr>
+<tr class="odd">
+<td align="left">state:setfield(i, k)</td>
+<td align="left">t[k] = v, where t at i, v at top</td>
+</tr>
+<tr class="even">
+<td align="left">state:rawset(i)</td>
+<td align="left">as settable() but does raw assignment</td>
+</tr>
+<tr class="odd">
+<td align="left">state:rawseti(i, n)</td>
+<td align="left">t[n] = v, where t at i, v at top</td>
+</tr>
+<tr class="even">
+<td align="left">state:setmetatable(i)</td>
+<td align="left">pop mt and setmetatable(t, mt), where t at i</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>stack / write / any value</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:push(v, [opt])</td>
+<td align="left">push a value to the top of the stack</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>interpreter</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:pushvalues(...)</td>
+<td align="left">push multiple values</td>
+</tr>
+<tr class="odd">
+<td align="left">state:pushvalues_opt(opt, ...)</td>
+<td align="left">push values with options</td>
+</tr>
+<tr class="even">
+<td align="left">state:popvalues(i) -&gt; ...</td>
+<td align="left">pop all values down to i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:popvalues_opt(opt, i) -&gt; ...</td>
+<td align="left">pop values with options</td>
+</tr>
+<tr class="even">
+<td align="left">state:pcall(...) -&gt; ok, ...</td>
+<td align="left">pop func and args and pcall it</td>
+</tr>
+<tr class="odd">
+<td align="left">state:call(...) -&gt; ...</td>
+<td align="left">pop func and args and call it</td>
+</tr>
+<tr class="even">
+<td align="left">state:pcall_opt(opt, ...) -&gt; ok, ...</td>
+<td align="left">pcall with options</td>
+</tr>
+<tr class="odd">
+<td align="left">state:call_opt(opt, ...) -&gt; ...</td>
+<td align="left">call with options</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>gc</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">state:gc(luastate.C.LUA_GC*, n)</td>
+<td align="left">control the garbage collector</td>
+</tr>
+<tr class="even">
+<td align="left">state:getgccount() -&gt; n</td>
+<td align="left">get the number of garbage items</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>macros</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:upvalueindex(i) -&gt; i</td>
+<td align="left">get upvalue pseudo-index</td>
+</tr>
+<tr class="odd">
+<td align="left">state:register(name, func)</td>
+<td align="left">set _G[name] = func</td>
+</tr>
+<tr class="even">
+<td align="left">state:setglobal(name)</td>
+<td align="left">pop v and set _G[name] = v</td>
+</tr>
+<tr class="odd">
+<td align="left">state:getglobal(name)</td>
+<td align="left">push _G[name]</td>
+</tr>
+<tr class="even">
+<td align="left">state:getregistry()</td>
+<td align="left">push the registry table</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>debug</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">state:getstack(level, dbg)-&gt;true|false</td>
+<td align="left">get debug info on stack level</td>
+</tr>
+<tr class="odd">
+<td align="left">state:getinfo(what, dbg)</td>
+<td align="left">get debug on function or invocation</td>
+</tr>
+<tr class="even">
+<td align="left">state:getlocal(dbg, n) -&gt; name</td>
+<td align="left">get local variable value and name</td>
+</tr>
+<tr class="odd">
+<td align="left">state:setlocal(dbg, n) -&gt; name</td>
+<td align="left">set value of local variable</td>
+</tr>
+<tr class="even">
+<td align="left">state:getupvalue(i, n) -&gt; name</td>
+<td align="left">get upvalue (and name) of func at i</td>
+</tr>
+<tr class="odd">
+<td align="left">state:setupvalue(i, n) -&gt; name</td>
+<td align="left">set upvalue of func at i (and get its name)</td>
+</tr>
+<tr class="even">
+<td align="left">state:sethook(hook, mask, count)-&gt;?</td>
+<td align="left">set hook function</td>
+</tr>
+<tr class="odd">
+<td align="left">state:gethook() -&gt; hook</td>
+<td align="left">return current hook function</td>
+</tr>
+<tr class="even">
+<td align="left">state:gethookmask() -&gt; mask</td>
+<td align="left">get current hook mask</td>
+</tr>
+<tr class="odd">
+<td align="left">state:gethookcount() -&gt; n</td>
+<td align="left">get current hook count</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>C</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">luastate.C</td>
+<td align="left">C namespace (i.e. the ffi clib object)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="api-notes">API Notes</h3>
+<p>Getting data out from a Lua state with <code>state:get()</code>:</p>
+<ul>
+<li>internal identity of tables is not preserved: duplicate keys and values are dereferenced; no attempt is made to detect cycles.</li>
+<li>the function for traversing tables is recursive so table depth is stack-bound.</li>
+<li>coroutines are extracted as cdata of type <code>lua_State*</code>.</li>
+<li>lightuserdata and userdata are extracted as <code>void*</code> pointers.</li>
+<li>cdata cannot be extracted (an error is raised if attempted).</li>
+<li>function upvalues are copied if the <code>opt</code> arg contains the character 'u'; all of the limitations above apply to copying upvalues as well.</li>
+</ul>
+<p>Pushing data into a Lua state with <code>state:push()</code>:</p>
+<ul>
+<li>internal identity of tables is not preserved: duplicate keys and values are dereferenced; no attempt is made to detect cycles.</li>
+<li>the function for traversing tables is recursive so table depth is stack-bound.</li>
+<li>lightuserdata, userdata, cdata and coroutines cannot be pushed (an error is raised if attempted).</li>
+<li>function upvalues are copied if the <code>opt</code> arg contains the character 'u'; all of the limitations above apply to copying upvalues as well.</li>
+</ul>

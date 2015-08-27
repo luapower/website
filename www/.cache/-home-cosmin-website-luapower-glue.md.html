@@ -1,0 +1,648 @@
+<h2 id="local-glue-requireglue"><code>local glue = require'glue'</code></h2>
+<h2 id="api-summary">API Summary</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>math</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.clamp(x, min, max)</td>
+<td align="left"><a href="#clamp">clamp x in range</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>varargs</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.pack(...) -&gt; t</td>
+<td align="left"><a href="#pack">pack varargs</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.unpack(t,[i][,j]) -&gt; ...</td>
+<td align="left"><a href="#unpack">unpack varargs</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>tables</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.count(t) -&gt; n</td>
+<td align="left"><a href="#count">number of keys in table</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.index(t) -&gt; dt</td>
+<td align="left"><a href="#index">switch keys with values</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.keys(t[,sorted|cmp]) -&gt; dt</td>
+<td align="left"><a href="#keys">make a list of all the keys</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.update(dt,t1,...) -&gt; dt</td>
+<td align="left"><a href="#update">merge tables - overwrites keys</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.merge(dt,t1,...) -&gt; dt</td>
+<td align="left"><a href="#merge">merge tables - no overwriting</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.sortedpairs(t[,cmp])-&gt; iterator<k,v></td>
+<td align="left"><a href="#sortedpairs">like pairs() but in key order</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.attr(t,k1[,v])[k2] = v</td>
+<td align="left"><a href="#attr">autofield pattern</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>lists</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.indexof(t) -&gt; dt</td>
+<td align="left"><a href="#indexof">scan array for value</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.extend(dt,t1,...) -&gt; dt</td>
+<td align="left"><a href="#extend">extend a list</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.append(dt,v1,...) -&gt; dt</td>
+<td align="left"><a href="#append">append non-nil values to a list</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.shift(t,i,n) -&gt; t</td>
+<td align="left"><a href="#shift">shift list elements</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.reverse(t) -&gt; t</td>
+<td align="left"><a href="#reverse">reverse list in place</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>strings</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.gsplit(s,sep[,plain]) -&gt; iterator<e[,captures...]></td>
+<td align="left"><a href="#gsplit">split a string by a pattern</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.trim(s) -&gt; s</td>
+<td align="left"><a href="#trim">remove padding</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.escape(s[,mode])-&gt; s</td>
+<td align="left"><a href="#escape">escape magic pattern characters</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.tohex(s|n[,upper]) -&gt; s</td>
+<td align="left"><a href="#tohex">string to hex</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.fromhex(s) -&gt; s</td>
+<td align="left"><a href="#fromhex">hex to string</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>iterators</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.collect([i,]iterator)-&gt; t</td>
+<td align="left"><a href="#collect">collect iterated values into a list</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>closures</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.pass(...) -&gt; ...</td>
+<td align="left"><a href="#pass">does nothing, returns back all arguments</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.memoize(f[,cache]) -&gt; f</td>
+<td align="left"><a href="#memoize">memoize pattern</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>metatables</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.inherit(t,parent) -&gt; t</td>
+<td align="left"><a href="#inherit">set or clear inheritance</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.autotable([t]) -&gt; t</td>
+<td align="left"><a href="#autotable">autotable pattern</a></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>i/o</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.fileexists(file) -&gt; true | false</td>
+<td align="left"><a href="#fileexists">check if a file exists and it's readable</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.readfile(file[,format][,open]) -&gt; s | nil, err</td>
+<td align="left"><a href="#readfile">read the contents of a file into a string</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.readpipe(cmd[,format][,open]) -&gt; s | nil, err</td>
+<td align="left"><a href="#readpipe">read the output of a command into a string</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.writefile(file,s[,format])</td>
+<td align="left"><a href="#writefile">write a string to a file</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>errors</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.assert(v,[message[,args...]]) -&gt; args</td>
+<td align="left"><a href="#assert">assert with error message formatting</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.unprotect(ok,result,...) -&gt; result,... | nil,result,...</td>
+<td align="left"><a href="#unprotect">unprotect a protected call</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.pcall(f,...) -&gt; true,... | false,traceback</td>
+<td align="left"><a href="#pcall">pcall with traceback</a> <em>(not for Lua 5.1)</em></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.fpcall(f,...) -&gt; result | nil,traceback</td>
+<td align="left"><a href="#fpcall">coding with finally and except</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.fcall(f,...) -&gt; result</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>modules</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.autoload(t, submodule) -&gt; t</td>
+<td align="left"><a href="#autoload">autoload table keys from submodules</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.autoload(t, key, module|loader) -&gt; t</td>
+<td align="left"><a href="#autoload">autoload table keys from submodules</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.bin</td>
+<td align="left"><a href="#bin">get the script's directory</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.luapath(path[,index[,ext]])</td>
+<td align="left"><a href="#luapath">insert a path in package.path</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.cpath(path[,index])</td>
+<td align="left"><a href="#cpath">insert a path in package.cpath</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>ffi</strong></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glue.malloc([ctype,]size) -&gt; cdata</td>
+<td align="left"><a href="#malloc-array">allocate an array using system's malloc</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.malloc(ctype) -&gt; cdata</td>
+<td align="left"><a href="#malloc-ctype">allocate a C type using system's malloc</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.free(cdata)</td>
+<td align="left"><a href="#free">free malloc'ed memory</a></td>
+</tr>
+<tr class="odd">
+<td align="left">glue.addr(ptr) -&gt; number | string</td>
+<td align="left"><a href="#addr">store pointer address in Lua value</a></td>
+</tr>
+<tr class="even">
+<td align="left">glue.ptr([ctype,]number|string) -&gt; ptr</td>
+<td align="left"><a href="#ptr">convert address to pointer</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="math">Math</h2>
+<h3 id="glue.clampx-min-max"><code id="clamp">glue.clamp(x, min, max)</code></h3>
+<p>Clamp a value in range. Implemented as <code>math.min(math.max(x, min), max)</code>.</p>
+<hr />
+<h2 id="varargs">Varargs</h2>
+<h3 id="glue.pack...---t"><code id="pack">glue.pack(...) -&gt; t</code></h3>
+<p>Pack varargs. Implemented as <code>n = select('#', ...), ...}</code>.</p>
+<h3 id="glue.unpacktij---..."><code id="unpack">glue.unpack(t,[i],[j]) -&gt; ...</code></h3>
+<p>Unpack varargs. Implemented as <code>unpack(t, i or 1, j or t.n or #t)</code>.</p>
+<hr />
+<h2 id="tables">Tables</h2>
+<h3 id="glue.countt---n"><code id="count">glue.count(t) -&gt; n</code></h3>
+<p>Count all the keys in a table.</p>
+<hr />
+<h3 id="glue.indext---dt"><code id="index">glue.index(t) -&gt; dt</code></h3>
+<p>Switch table keys with values.</p>
+<h4 id="examples">Examples</h4>
+<p>Extract a rfc850 date from a string. Use lookup tables for weekdays and months.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> weekdays <span class="ot">=</span> glue<span class="ot">.</span>index<span class="ot">{</span><span class="st">&#39;Sunday&#39;</span><span class="ot">,</span> <span class="st">&#39;Monday&#39;</span><span class="ot">,</span> <span class="st">&#39;Tuesday&#39;</span><span class="ot">,</span> <span class="st">&#39;Wednesday&#39;</span><span class="ot">,</span> <span class="st">&#39;Thursday&#39;</span><span class="ot">,</span> <span class="st">&#39;Friday&#39;</span><span class="ot">,</span> <span class="st">&#39;Saturday&#39;</span><span class="ot">}</span>
+<span class="kw">local</span> months <span class="ot">=</span> glue<span class="ot">.</span>index<span class="ot">{</span><span class="st">&#39;Jan&#39;</span><span class="ot">,</span> <span class="st">&#39;Feb&#39;</span><span class="ot">,</span> <span class="st">&#39;Mar&#39;</span><span class="ot">,</span> <span class="st">&#39;Apr&#39;</span><span class="ot">,</span> <span class="st">&#39;May&#39;</span><span class="ot">,</span> <span class="st">&#39;Jun&#39;</span><span class="ot">,</span> <span class="st">&#39;Jul&#39;</span><span class="ot">,</span> <span class="st">&#39;Aug&#39;</span><span class="ot">,</span> <span class="st">&#39;Sep&#39;</span><span class="ot">,</span> <span class="st">&#39;Oct&#39;</span><span class="ot">,</span> <span class="st">&#39;Nov&#39;</span><span class="ot">,</span> <span class="st">&#39;Dec&#39;</span><span class="ot">}</span>
+
+<span class="co">--weekday &quot;,&quot; SP 2DIGIT &quot;-&quot; month &quot;-&quot; 2DIGIT SP 2DIGIT &quot;:&quot; 2DIGIT &quot;:&quot; 2DIGIT SP &quot;GMT&quot;</span>
+<span class="co">--eg. Sunday, 06-Nov-94 08:49:37 GMT</span>
+<span class="kw">function</span> rfc850date<span class="ot">(</span>s<span class="ot">)</span>
+   <span class="kw">local</span> w<span class="ot">,</span>d<span class="ot">,</span>mo<span class="ot">,</span>y<span class="ot">,</span>h<span class="ot">,</span>m<span class="ot">,</span>s <span class="ot">=</span> s:match<span class="st">&#39;([A-Za-z]+), (%d+)%-([A-Za-z]+)%-(%d+) (%d+):(%d+):(%d+) GMT&#39;</span>
+   d<span class="ot">,</span>y<span class="ot">,</span>h<span class="ot">,</span>m<span class="ot">,</span>s <span class="ot">=</span> <span class="fu">tonumber</span><span class="ot">(</span>d<span class="ot">),</span><span class="fu">tonumber</span><span class="ot">(</span>y<span class="ot">),</span><span class="fu">tonumber</span><span class="ot">(</span>h<span class="ot">),</span><span class="fu">tonumber</span><span class="ot">(</span>m<span class="ot">),</span><span class="fu">tonumber</span><span class="ot">(</span>s<span class="ot">)</span>
+   w <span class="ot">=</span> <span class="fu">assert</span><span class="ot">(</span>weekdays<span class="ot">[</span>w<span class="ot">])</span>
+   mo <span class="ot">=</span> <span class="fu">assert</span><span class="ot">(</span>months<span class="ot">[</span>mo<span class="ot">])</span>
+   <span class="kw">if</span> y <span class="kw">then</span> y <span class="ot">=</span> y <span class="ot">+</span> <span class="ot">(</span>y <span class="ot">&gt;</span> <span class="dv">50</span> <span class="kw">and</span> <span class="dv">1900</span> <span class="kw">or</span> <span class="dv">2000</span><span class="ot">)</span> <span class="kw">end</span>
+   <span class="kw">return</span> <span class="ot">{</span>wday <span class="ot">=</span> w<span class="ot">,</span> day <span class="ot">=</span> d<span class="ot">,</span> year <span class="ot">=</span> y<span class="ot">,</span> month <span class="ot">=</span> mo<span class="ot">,</span> hour <span class="ot">=</span> h<span class="ot">,</span> <span class="fu">min</span> <span class="ot">=</span> m<span class="ot">,</span> sec <span class="ot">=</span> s<span class="ot">}</span>
+<span class="kw">end</span>
+
+<span class="kw">for</span> k<span class="ot">,</span>v <span class="kw">in</span> <span class="fu">pairs</span><span class="ot">(</span>rfc850date<span class="st">&#39;Sunday, 06-Nov-94 08:49:37 GMT&#39;</span><span class="ot">)</span> <span class="kw">do</span>
+   <span class="fu">print</span><span class="ot">(</span>k<span class="ot">,</span>v<span class="ot">)</span>
+<span class="kw">end</span></code></pre>
+<p>Output</p>
+<pre><code>day   6
+sec   37
+wday  1
+min   49
+year  1994
+month 11
+hour  8</code></pre>
+<p>Copy-paste a bunch of defines from a C header file and create an inverse lookup table to find the name of a value at runtime.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="co">--from ibase.h</span>
+info_end_codes <span class="ot">=</span> <span class="ot">{</span>
+   isc_info_end             <span class="ot">=</span> <span class="dv">1</span><span class="ot">,</span>  <span class="co">--normal ending</span>
+   isc_info_truncated       <span class="ot">=</span> <span class="dv">2</span><span class="ot">,</span>  <span class="co">--receiving buffer too small</span>
+   isc_info_error           <span class="ot">=</span> <span class="dv">3</span><span class="ot">,</span>  <span class="co">--error, check status vector</span>
+   isc_info_data_not_ready  <span class="ot">=</span> <span class="dv">4</span><span class="ot">,</span>  <span class="co">--data not available for some reason</span>
+   isc_info_svc_timeout     <span class="ot">=</span> <span class="dv">64</span><span class="ot">,</span> <span class="co">--timeout expired</span>
+<span class="ot">}</span>
+info_end_code_names <span class="ot">=</span> glue<span class="ot">.</span>index<span class="ot">(</span>info_end_codes<span class="ot">)</span>
+<span class="fu">print</span><span class="ot">(</span>info_end_code_names<span class="ot">[</span><span class="dv">64</span><span class="ot">])</span></code></pre>
+<p>Output</p>
+<pre><code>isc_info_svc_timeout</code></pre>
+<hr />
+<h3 id="glue.keystsortedcmp---dt"><code id="keys">glue.keys(t[,sorted|cmp]) -&gt; dt</code></h3>
+<p>Make a list of all the keys of <code>t</code>, optionally sorted.</p>
+<h4 id="examples-1">Examples</h4>
+<p>An API expects a list of things but you have them as keys in a table because you are indexing something on them.</p>
+<p>For instance, you have a table of the form <code>{socket = thread}</code> but <code>socket.select</code> wants a list of sockets.</p>
+<p>See also: <a href="#sortedpairs">glue.sortedpairs</a>.</p>
+<hr />
+<h3 id="glue.updatedtt1...---dt"><code id="update">glue.update(dt,t1,...) -&gt; dt</code></h3>
+<p>Update a table with elements of other tables, overwriting any existing keys.</p>
+<ul>
+<li>nil arguments are skipped.</li>
+</ul>
+<h4 id="examples-2">Examples</h4>
+<p>Create an options table by merging the options received as an argument (if any) over the default options.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> f<span class="ot">(</span>opts<span class="ot">)</span>
+   opts <span class="ot">=</span> glue<span class="ot">.</span>update<span class="ot">({},</span> default_opts<span class="ot">,</span> opts<span class="ot">)</span>
+<span class="kw">end</span></code></pre>
+<p>Shallow table copy:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">t <span class="ot">=</span> glue<span class="ot">.</span>update<span class="ot">({},</span> t<span class="ot">)</span></code></pre>
+<p>Static multiple inheritance:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">C <span class="ot">=</span> glue<span class="ot">.</span>update<span class="ot">({},</span> A<span class="ot">,</span> B<span class="ot">)</span> <span class="co">--#TODO: find real-world example of multiple inheritance</span></code></pre>
+<p>See also: <a href="#extend">glue.extend</a>, <a href="#inherit">glue.inherit</a>.</p>
+<hr />
+<h3 id="glue.mergedtt1...---dt"><code id="merge">glue.merge(dt,t1,...) -&gt; dt</code></h3>
+<p>Update a table with elements of other tables skipping on any existing keys.</p>
+<ul>
+<li>nil arguments are skipped.</li>
+</ul>
+<h4 id="examples-3">Examples</h4>
+<p>Normalize a data object with default values:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">glue<span class="ot">.</span>merge<span class="ot">(</span>t<span class="ot">,</span> defaults<span class="ot">)</span></code></pre>
+<p>See also: <a href="#update">glue.update</a>.</p>
+<hr />
+<h3 id="glue.sortedpairstcmp---iteratorkv"><code id="sortedpairs">glue.sortedpairs(t[,cmp]) -&gt; iterator&lt;k,v&gt;</code></h3>
+<p>Like pairs() but in key order.</p>
+<p>The implementation creates a temporary table to sort the keys in.</p>
+<p>See also: <a href="#keys">glue.keys</a>.</p>
+<hr />
+<h3 id="glue.attrt-k1k2-v"><code id="attr">glue.attr(t, k1)[k2] = v</code></h3>
+<p>Idiom for <code>t[k1][k2] = v</code> with auto-creating of <code>t[k1]</code> if not present. Useful for when an <a href="#autotable">autotable</a> is not wanted.</p>
+<hr />
+<h2 id="lists">Lists</h2>
+<h3 id="glue.indexofv-t---i"><code id="indexof">glue.indexof(v, t) -&gt; i</code></h3>
+<p>Scan an array (up to #t) for a value and if found, return the index.</p>
+<hr />
+<h3 id="glue.extenddtt1...---dt"><code id="extend">glue.extend(dt,t1,...) -&gt; dt</code></h3>
+<p>Extend the list with the elements of other lists.</p>
+<ul>
+<li>nil arguments are skipped.</li>
+<li>list elements are the ones from 1 to <code>#dt</code>.</li>
+</ul>
+<h4 id="uses">Uses</h4>
+<p>Accumulating values from multiple list sources.</p>
+<p>See also: <a href="#append">glue.append</a>, <a href="#update">glue.update</a>.</p>
+<hr />
+<h3 id="glue.appenddtv1...---dt"><code id="append">glue.append(dt,v1,...) -&gt; dt</code></h3>
+<p>Append non-nil arguments to a list.</p>
+<h4 id="uses-1">Uses</h4>
+<p>Appending an object to a flattened list of lists (eg. appending a path element to a 2d path).</p>
+<p>See also: <a href="#extend">glue.extend</a>, <a href="#update">glue.update</a>.</p>
+<hr />
+<h3 id="glue.shifttin---t"><code id="shift">glue.shift(t,i,n) -&gt; t</code></h3>
+<p>Shift all the list elements starting at index <code>i</code>, <code>n</code> positions to the left or further to the right.</p>
+<p>For a positive <code>n</code>, shift the elements further to the right, effectively creating room for <code>n</code> new elements at index <code>i</code>. When <code>n</code> is 1, the effect is the same as for <code>table.insert(t, i, t[i])</code>. The old values at index <code>i</code> to <code>i+n-1</code> are preserved, so <code>#t</code> still works after the shifting.</p>
+<p>For a negative <code>n</code>, shift the elements to the left, effectively removing the <code>n</code> elements at index <code>i</code>. When <code>n</code> is -1, the effect is the same as for <code>table.remove(t, i)</code>.</p>
+<h4 id="uses-2">Uses</h4>
+<p>Removing a portion of a list or making room for more elements inside the list.</p>
+<p>See also: <a href="#extend">glue.extend</a>.</p>
+<hr />
+<h3 id="glue.reverset---t"><code id="reverse">glue.reverse(t) -&gt; t</code></h3>
+<p>Reverse a list in-place and return the input arg.</p>
+<hr />
+<h2 id="strings">Strings</h2>
+<h3 id="glue.gsplitssepplain---iteratorecaptures..."><code id="gsplit">glue.gsplit(s,sep[,plain]) -&gt; iterator&lt;e[,captures...]&gt;</code></h3>
+<p>Split a string by a separator pattern (or plain string) and iterate over the elements.</p>
+<ul>
+<li>if sep is &quot;&quot; return the entire string in one iteration</li>
+<li>if s is &quot;&quot; return s in one iteration</li>
+<li>empty strings between separators are always returned, eg. <code>glue.gsplit(',', ',')</code> produces 2 empty strings</li>
+<li>captures are allowed in sep and they are returned after the element, except for the last element for which they don't match (by definition).</li>
+</ul>
+<h4 id="examples-4">Examples</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">for</span> s <span class="kw">in</span> glue<span class="ot">.</span>gsplit<span class="ot">(</span><span class="st">&#39;Spam eggs spam spam and ham&#39;</span><span class="ot">,</span> <span class="st">&#39;%s*spam%s*&#39;</span><span class="ot">)</span> <span class="kw">do</span>
+   <span class="fu">print</span><span class="ot">(</span><span class="st">&#39;&quot;&#39;</span><span class="ot">..</span>s<span class="ot">..</span><span class="st">&#39;&quot;&#39;</span><span class="ot">)</span>
+<span class="kw">end</span>
+
+<span class="ot">&gt;</span> <span class="st">&quot;Spam eggs&quot;</span>
+<span class="ot">&gt;</span> <span class="st">&quot;&quot;</span>
+<span class="ot">&gt;</span> <span class="st">&quot;and ham&quot;</span></code></pre>
+<hr />
+<h3 id="glue.trims---s"><code id="trim">glue.trim(s) -&gt; s</code></h3>
+<p>Remove whitespace (defined as Lua pattern <code>&quot;%s&quot;</code>) from the beginning and end of a string.</p>
+<hr />
+<h3 id="glue.escapesmode---pat"><code id="escape">glue.escape(s[,mode]) -&gt; pat</code></h3>
+<p>Escape magic characters of the string <code>s</code> so that it can be used as a pattern to string matching functions.</p>
+<ul>
+<li>the optional argument <code>mode</code> can have the value <code>&quot;*i&quot;</code> (for case insensitive), in which case each alphabetical character in <code>s</code> will also be escaped as <code>&quot;[aA]&quot;</code> so that it matches both its lowercase and uppercase variants.</li>
+<li>escapes embedded zeroes as the <code>%z</code> pattern.</li>
+</ul>
+<h4 id="uses-3">Uses</h4>
+<ul>
+<li>workaround for lack of pattern syntax for &quot;this part of a match is an arbitrary string&quot;</li>
+<li>workaround for lack of a case-insensitive flag in pattern matching functions</li>
+</ul>
+<hr />
+<h3 id="glue.tohexsnupper---s"><code id="tohex">glue.tohex(s|n[,upper]) -&gt; s</code></h3>
+<p>Convert a binary string or a Lua number to its hex representation.</p>
+<ul>
+<li>lowercase by default</li>
+<li>uppercase if the arg <code>upper</code> is truthy</li>
+<li>numbers must be in the unsigned 32 bit integer range</li>
+</ul>
+<p>See also: <a href="#fromhex">glue.fromhex</a>.</p>
+<hr />
+<h3 id="glue.fromhexs---s"><code id="fromhex">glue.fromhex(s) -&gt; s</code></h3>
+<p>Convert a hex string to its binary representation.</p>
+<p>See also: <a href="#tohex">glue.tohex</a>.</p>
+<hr />
+<h2 id="iterators">Iterators</h2>
+<h3 id="glue.collecti-iterator---t"><code id="collect">glue.collect([i, ]iterator) -&gt; t</code></h3>
+<p>Iterate an iterator and collect its i'th return value of every step into a list.</p>
+<ul>
+<li>i defaults to 1</li>
+</ul>
+<h4 id="examples-5">Examples</h4>
+<p>Implementation of <code>keys()</code> and <code>values()</code> in terms of <code>collect()</code></p>
+<pre class="sourceCode lua"><code class="sourceCode lua">keys <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>t<span class="ot">)</span> <span class="kw">return</span> glue<span class="ot">.</span>collect<span class="ot">(</span><span class="fu">pairs</span><span class="ot">(</span>t<span class="ot">))</span> <span class="kw">end</span>
+values <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>t<span class="ot">)</span> <span class="kw">return</span> glue<span class="ot">.</span>collect<span class="ot">(</span><span class="dv">2</span><span class="ot">,</span><span class="fu">pairs</span><span class="ot">(</span>t<span class="ot">))</span> <span class="kw">end</span></code></pre>
+<p>Collecting string matches:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">s <span class="ot">=</span> <span class="st">&#39;a,b,c,&#39;</span>
+t <span class="ot">=</span> glue<span class="ot">.</span>collect<span class="ot">(</span>s:gmatch<span class="st">&#39;(.-),&#39;</span><span class="ot">)</span>
+<span class="kw">for</span> i<span class="ot">=</span><span class="dv">1</span><span class="ot">,#</span>t <span class="kw">do</span> <span class="fu">print</span><span class="ot">(</span>t<span class="ot">[</span>i<span class="ot">])</span> <span class="kw">end</span>
+
+<span class="ot">&gt;</span> a
+<span class="ot">&gt;</span> b
+<span class="ot">&gt;</span> c</code></pre>
+<hr />
+<h2 id="closures">Closures</h2>
+<h3 id="glue.pass...---..."><code id="pass">glue.pass(...) -&gt; ...</code></h3>
+<p>The identity function. Does nothing, returns back all arguments.</p>
+<h4 id="uses-4">Uses</h4>
+<p>Default value for optional callback arguments:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> urlopen<span class="ot">(</span>url<span class="ot">,</span> callback<span class="ot">,</span> errback<span class="ot">)</span>
+   callback <span class="ot">=</span> callback <span class="kw">or</span> glue<span class="ot">.</span>pass
+   errback <span class="ot">=</span> errback <span class="kw">or</span> glue<span class="ot">.</span>pass
+   <span class="ot">...</span>
+   callback<span class="ot">()</span>
+<span class="kw">end</span></code></pre>
+<hr />
+<h3 id="glue.memoizef---f"><code id="memoize">glue.memoize(f) -&gt; f</code></h3>
+<p>Memoization for functions with any number of arguments and one return value. Supports nil and NaN args and retvals.</p>
+<p>Guarantees to only call the original function <em>once</em> for the same combination of arguments, with special attention to the vararg part of the function, if any. For instance, for a function <code>f(x, y, ...)</code>, calling <code>f(1)</code> is considered equal to calling <code>f(1, nil)</code>, but calling <code>f(1, nil)</code> is not equal to calling <code>f(1, nil, nil)</code>.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Memoization of vararg functions or functions with more than two arguments require the <a href="/tuple">tuple</a> module.</p>
+</blockquote>
+<hr />
+<h2 id="metatables">Metatables</h2>
+<h3 id="glue.inheritt-parent---t"><code id="inherit">glue.inherit(t, parent) -&gt; t</code></h3>
+<h3 id="glue.inheritt-nil---t"><code>glue.inherit(t, nil) -&gt; t</code></h3>
+<p>Set a table to inherit attributes from a parent table, or clear inheritance.</p>
+<p>If the table has no metatable (and inheritance has to be set, not cleared) make it one.</p>
+<h4 id="examples-6">Examples</h4>
+<p>Logging mixin:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">AbstractLogger <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({},</span> <span class="kw">function</span><span class="ot">(</span>t<span class="ot">,</span>k<span class="ot">)</span> <span class="fu">error</span><span class="ot">(</span><span class="st">&#39;abstract &#39;</span><span class="ot">..</span>k<span class="ot">)</span> <span class="kw">end</span><span class="ot">)</span>
+NullLogger <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({</span><span class="fu">log</span> <span class="ot">=</span> <span class="kw">function</span><span class="ot">()</span> <span class="kw">end</span><span class="ot">},</span> AbstractLogger<span class="ot">)</span>
+PrintLogger <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({</span><span class="fu">log</span> <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>self<span class="ot">,...)</span> <span class="fu">print</span><span class="ot">(...)</span> <span class="kw">end</span><span class="ot">},</span> AbstractLogger<span class="ot">)</span>
+
+HttpRequest <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({</span>
+   perform <span class="ot">=</span> <span class="kw">function</span><span class="ot">(</span>self<span class="ot">,</span> url<span class="ot">)</span>
+      self:<span class="fu">log</span><span class="ot">(</span><span class="st">&#39;Requesting&#39;</span><span class="ot">,</span> url<span class="ot">,</span> <span class="st">&#39;...&#39;</span><span class="ot">)</span>
+      <span class="ot">...</span>
+   <span class="kw">end</span>
+<span class="ot">},</span> NullLogger<span class="ot">)</span>
+
+LoggedRequest <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({</span><span class="fu">log</span> <span class="ot">=</span> PrintLogger<span class="ot">.</span>log<span class="ot">},</span> HttpRequest<span class="ot">)</span>
+
+LoggedRequest:perform<span class="st">&#39;http://lua.org/&#39;</span>
+
+<span class="ot">&gt;</span> Requesting   http:<span class="ot">//</span>lua<span class="ot">.</span>org<span class="ot">/</span>   <span class="ot">...</span></code></pre>
+<p>Defining a module in Lua 5.2</p>
+<pre class="sourceCode lua"><code class="sourceCode lua">_ENV <span class="ot">=</span> glue<span class="ot">.</span>inherit<span class="ot">({},</span>_G<span class="ot">)</span>
+<span class="ot">...</span></code></pre>
+<p>Hints:</p>
+<ul>
+<li>to get the effect of static (single or multiple) inheritance, use <a href="#update">glue.update</a>.</li>
+<li>when setting inheritance, you can pass in a function.</li>
+</ul>
+<hr />
+<h3 id="glue.autotablet---t"><code id="autotable">glue.autotable([t]) -&gt; t</code></h3>
+<p>Set a table to create/return missing keys as autotables.</p>
+<p>In the example below, <code>t.a</code>, <code>t.a.b</code>, <code>t.a.b.c</code> are created automatically as autotables.</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> t <span class="ot">=</span> autotable<span class="ot">()</span>
+t<span class="ot">.</span>a<span class="ot">.</span>b<span class="ot">.</span>c<span class="ot">.</span>d <span class="ot">=</span> <span class="st">&#39;hello&#39;</span></code></pre>
+<hr />
+<h2 id="io">I/O</h2>
+<h3 id="glue.fileexistsfile---true-false"><code id="fileexists">glue.fileexists(file) -&gt; true | false</code></h3>
+<p>Checks whether a file exists and it's available for reading.</p>
+<p>See also: <a href="#readfile">glue.readfile</a>.</p>
+<hr />
+<h3 id="glue.readfilefileformatopen---s-nil-err"><code id="readfile">glue.readfile(file[,format][,open]) -&gt; s | nil, err</code></h3>
+<p>Read the contents of a file into a string.</p>
+<ul>
+<li><code>format</code> can be <code>&quot;t&quot;</code> in which case the file will be read in text mode (default is binary mode).</li>
+<li><code>open</code> is the file open function which defaults to <code>io.open</code>.</li>
+</ul>
+<p>See also: <a href="#writefile">glue.writefile</a>, <a href="#fileexists">glue.fileexists</a>.</p>
+<hr />
+<h3 id="glue.readpipecmdformatopen---s-nil-err"><code id="readpipe">glue.readpipe(cmd[,format][,open]) -&gt; s | nil, err</code></h3>
+<p>Read the output of a command into a string. The options are the same as for <a href="#readfile">glue.readfile</a>.</p>
+<hr />
+<h3 id="glue.writefilefilestreadformat"><code id="writefile">glue.writefile(file,s|t|read[,format])</code></h3>
+<p>Write the contents of a string, table or reader to a file.</p>
+<ul>
+<li><code>format</code> can be <code>&quot;t&quot;</code> in which case the file will be written in text mode (default is binary mode).</li>
+<li><code>read</code> can be a function to draw strings or numbers from.</li>
+<li>if writing fails, the file is removed and an error is raised.</li>
+</ul>
+<p>See also: <a href="#readfile">glue.readfile</a>.</p>
+<hr />
+<h2 id="errors">Errors</h2>
+<h3 id="glue.assertvmessageformat_args..."><code id="assert">glue.assert(v[,message[,format_args...]])</code></h3>
+<p>Like <code>assert</code> but supports formatting of the error message using string.format.</p>
+<p>This is better than <code>assert(string.format(message, format_args...))</code> because it avoids creating the message string when the assertion is true.</p>
+<h4 id="example">Example</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua">glue<span class="ot">.</span>assert<span class="ot">(</span>depth <span class="ot">&lt;=</span> maxdepth<span class="ot">,</span> <span class="st">&#39;maximum depth %d exceeded&#39;</span><span class="ot">,</span> maxdepth<span class="ot">)</span></code></pre>
+<hr />
+<h3 id="glue.unprotectokresult...---result...-nilresult..."><code id="unprotect">glue.unprotect(ok,result,...) -&gt; result,... | nil,result,...</code></h3>
+<p>In Lua, API functions conventionally signal errors by returning nil and an error message instead of raising exceptions. In the implementation however, using assert() and error() is preferred to coding explicit conditional flows to cover exceptional cases. Use this function to convert error-raising functions to nil,err-returning functions:</p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">function</span> my_API_function<span class="ot">()</span>
+  <span class="kw">return</span> glue<span class="ot">.</span>unprotect<span class="ot">(</span><span class="fu">pcall</span><span class="ot">(</span><span class="kw">function</span><span class="ot">()</span>
+    <span class="ot">...</span>
+    <span class="fu">assert</span><span class="ot">(...)</span>
+    <span class="ot">...</span>
+    <span class="fu">error</span><span class="ot">(...)</span>
+    <span class="ot">...</span>
+    <span class="kw">return</span> result_value
+  <span class="kw">end</span><span class="ot">))</span>
+<span class="kw">end</span></code></pre>
+<hr />
+<h3 id="glue.pcallf...---true...-falseerror..n..traceback"><code id="pcall">glue.pcall(f,...) -&gt; true,... | false,error..'\n'..traceback</code></h3>
+<p>With Lua's pcall() you lose the stack trace, and with usual uses of pcall() you don't want that. This variant appends the traceback to the error message.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Lua 5.2 and LuaJIT only.</p>
+</blockquote>
+<hr />
+<h3 id="glue.fpcallf...---result-nilerror..n..traceback"><code id="fpcall">glue.fpcall(f,...) -&gt; result | nil,error..'\n'..traceback</code></h3>
+<h3 id="glue.fcallf...---result"><code>glue.fcall(f,...) -&gt; result</code></h3>
+<p>These constructs bring the ubiquitous try/finally/except idiom to Lua. The first variant returns nil,error when errors occur while the second re-raises the error.</p>
+<h4 id="example-1">Example</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> result <span class="ot">=</span> glue<span class="ot">.</span>fpcall<span class="ot">(</span><span class="kw">function</span><span class="ot">(</span>finally<span class="ot">,</span> except<span class="ot">,</span> <span class="ot">...)</span>
+  <span class="kw">local</span> temporary_resource <span class="ot">=</span> acquire_resource<span class="ot">()</span>
+  finally<span class="ot">(</span><span class="kw">function</span><span class="ot">()</span> temporary_resource:free<span class="ot">()</span> <span class="kw">end</span><span class="ot">)</span>
+  <span class="ot">...</span>
+  <span class="kw">local</span> final_resource <span class="ot">=</span> acquire_resource<span class="ot">()</span>
+  except<span class="ot">(</span><span class="kw">function</span><span class="ot">()</span> final_resource:free<span class="ot">()</span> <span class="kw">end</span><span class="ot">)</span>
+  <span class="ot">...</span> code that might <span class="kw">break</span> <span class="ot">...</span>
+  <span class="kw">return</span> final_resource
+<span class="kw">end</span><span class="ot">,</span> <span class="ot">...)</span></code></pre>
+<hr />
+<h2 id="modules">Modules</h2>
+<h3 id="glue.autoloadt-submodules---t"><code id="autoload">glue.autoload(t, submodules) -&gt; t</code></h3>
+<h3 id="glue.autoloadt-key-moduleloader---t"><code>glue.autoload(t, key, module|loader) -&gt; t</code></h3>
+<p>Assign a metatable to <code>t</code> such that when a missing key is accessed, the module said to contain that key is require'd automatically.</p>
+<p>The <code>submodules</code> argument is a table of form <code>{key = module_name | load_function}</code> specifying the corresponding Lua module (or load function) that make each key available to <code>t</code>. The alternative syntax allows specifying the key - submodule associations one by one.</p>
+<h4 id="motivation">Motivation</h4>
+<p>Module autoloading allows you to split the implementation of a module in many submodules containing optional, self-contained functionality, without having to make this visible in the user API. This effectively separates how you split your APIs from how you split the implementation, allowing you to change the way the implementation is split at a later time while keeping the API intact.</p>
+<h4 id="example-2">Example</h4>
+<p><strong>main module (foo.lua):</strong></p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> <span class="kw">function</span> bar<span class="ot">()</span> <span class="co">--function implemented in the main module</span>
+  <span class="ot">...</span>
+<span class="kw">end</span>
+
+<span class="co">--create and return the module table</span>
+<span class="kw">return</span> glue<span class="ot">.</span>autoload<span class="ot">({</span>
+   <span class="ot">...</span>
+   bar <span class="ot">=</span> bar<span class="ot">,</span>
+<span class="ot">},</span> <span class="ot">{</span>
+   baz <span class="ot">=</span> <span class="st">&#39;foo_extra&#39;</span><span class="ot">,</span> <span class="co">--autoloaded function, implemented in module foo_extra</span>
+<span class="ot">})</span></code></pre>
+<p><strong>submodule (foo_extra.lua):</strong></p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> foo <span class="ot">=</span> require<span class="st">&#39;foo&#39;</span>
+
+<span class="kw">function</span> foo<span class="ot">.</span>baz<span class="ot">(...)</span>
+  <span class="ot">...</span>
+<span class="kw">end</span></code></pre>
+<p><strong>in usage:</strong></p>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> foo <span class="ot">=</span> require<span class="st">&#39;foo&#39;</span>
+
+foo<span class="ot">.</span>baz<span class="ot">(...)</span> <span class="co">-- foo_extra was now loaded automatically</span></code></pre>
+<hr />
+<h3 id="glue.bin"><code id="bin">glue.bin</code></h3>
+<p>Get the script's directory. This allows finding files in the script's directory regardless of the directory that Lua is started in.</p>
+<p>For executables created with <a href="/bundle">bundle</a>, this is the executable's directory.</p>
+<h4 id="example-3">Example</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> foobar <span class="ot">=</span> glue<span class="ot">.</span>readfile<span class="ot">(</span>glue<span class="ot">.</span>bin <span class="ot">..</span> <span class="st">&#39;/&#39;</span> <span class="ot">..</span> file_near_this_script<span class="ot">)</span></code></pre>
+<h4 id="caveats">Caveats</h4>
+<p>This only works if glue itself can already be found and required (chicken/egg problem). Also, the path is relative to the current directory, so this stops working if the current directory is changed.</p>
+<hr />
+<h3 id="glue.luapathpathindexext"><code id="luapath">glue.luapath(path[,index[,ext]])</code></h3>
+<p>Insert a Lua search pattern in <code>package.path</code> such that <code>require</code> will be able to load Lua modules from that path. The optional <code>index</code> arg specifies the insert position (default is 1, that is, before all existing paths; can be negative, to start counting from the end; can be the string 'after', which is the same as 0). The optional <code>ext</code> arg specifies the file extension to use (default is &quot;lua&quot;).</p>
+<hr />
+<h3 id="glue.cpathpathindex"><code id="cpath">glue.cpath(path[,index])</code></h3>
+<p>Insert a Lua search pattern in <code>package.cpath</code> such that <code>require</code> will be able to load Lua/C modules from that path. The <code>index</code> arg has the same meaning as with <code>glue.luapath</code>.</p>
+<h4 id="example-4">Example</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua">glue<span class="ot">.</span>luapath<span class="ot">(</span>glue<span class="ot">.</span>bin<span class="ot">)</span>
+glue<span class="ot">.</span>cpath<span class="ot">(</span>glue<span class="ot">.</span>bin<span class="ot">)</span>
+
+require<span class="st">&#39;foo&#39;</span> <span class="co">--looking for `foo` in the same directory as the running script first</span></code></pre>
+<hr />
+<h2 id="ffi">FFI</h2>
+<h3 id="glue.mallocctypesize---cdata"><code id="malloc-array">glue.malloc([ctype,]size) -&gt; cdata</code></h3>
+<p>Allocate a <code>ctype[size]</code> array with system's malloc. Useful for allocating larger chunks of memory without hitting the default allocator's 2 GB limit.</p>
+<ul>
+<li>the returned cdata has the type <code>ctype(&amp;)[size]</code> so ffi.sizeof(cdata) returns the correct size.</li>
+<li><code>ctype</code> defaults to <code>char</code>.</li>
+<li>failure to allocate results in error.</li>
+<li>the memory is freed when the cdata gets collected or with <code>glue.free()</code>.</li>
+</ul>
+<p><strong>REMEMBER!</strong> Just like with <code>ffi.new</code>, casting the result cdata further will get you <em>weak references</em> to the allocated memory. To transfer ownership of the memory, use <code>ffi.gc(original, nil); ffi.gc(pointer, glue.free)</code>.</p>
+<blockquote>
+<p><strong>NOTE</strong>: LuaJIT only.</p>
+</blockquote>
+<blockquote>
+<p><strong>CAVEAT</strong>: For primitive types, you must specify a size, or glue.free() will not work!</p>
+</blockquote>
+<h3 id="glue.mallocctype---cdata"><code id="malloc-ctype">glue.malloc(ctype) -&gt; cdata</code></h3>
+<p>Allocate a <code>ctype</code> with system's malloc. The result has the type <code>ctype&amp;</code>.</p>
+<h3 id="glue.freecdata"><code id="free">glue.free(cdata)</code></h3>
+<p>Free malloc'ed memory.</p>
+<h4 id="example-5">Example</h4>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> data <span class="ot">=</span> glue<span class="ot">.</span>malloc<span class="ot">(</span><span class="dv">100</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>ffi<span class="ot">.</span>sizeof<span class="ot">(</span>data<span class="ot">)</span> <span class="ot">==</span> <span class="dv">100</span><span class="ot">)</span>
+glue<span class="ot">.</span>free<span class="ot">(</span>data<span class="ot">)</span>
+
+<span class="kw">local</span> data <span class="ot">=</span> glue<span class="ot">.</span>malloc<span class="ot">(</span><span class="st">&#39;int&#39;</span><span class="ot">,</span> <span class="dv">100</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>ffi<span class="ot">.</span>sizeof<span class="ot">(</span>data<span class="ot">)</span> <span class="ot">==</span> <span class="dv">100</span> <span class="ot">*</span> ffi<span class="ot">.</span>sizeof<span class="st">&#39;int&#39;</span><span class="ot">)</span>
+glue<span class="ot">.</span>free<span class="ot">(</span>data<span class="ot">)</span>
+
+<span class="kw">local</span> data <span class="ot">=</span> glue<span class="ot">.</span>malloc<span class="ot">(</span><span class="st">&#39;struct S&#39;</span><span class="ot">)</span>
+<span class="fu">assert</span><span class="ot">(</span>ffi<span class="ot">.</span>typeof<span class="ot">(</span>data<span class="ot">)</span> <span class="ot">==</span>
+<span class="fu">assert</span><span class="ot">(</span>ffi<span class="ot">.</span>sizeof<span class="ot">(</span>data<span class="ot">)</span> <span class="ot">==</span> ffi<span class="ot">.</span>sizeof<span class="st">&#39;struct S&#39;</span><span class="ot">)</span>
+glue<span class="ot">.</span>free<span class="ot">(</span>data<span class="ot">)</span></code></pre>
+<h3 id="glue.addrptr---number-string"><code id="addr">glue.addr(ptr) -&gt; number | string</code></h3>
+<p>Convert the address of a pointer into a Lua number (or possibly string on 64bit platforms). This is useful for:</p>
+<ul>
+<li>hashing on pointer values (i.e. using pointers as table keys)</li>
+<li>moving pointers in and out of Lua states when using <a href="/luastate">luastate</a></li>
+</ul>
+<h3 id="glue.ptrctypenumberstring---ptr"><code id="ptr">glue.ptr([ctype,]number|string) -&gt; ptr</code></h3>
+<p>Convert an address value stored as a Lua number (or possibly string on 64bit platforms) to a cdata pointer, optionally specifying a ctype for the pointer (defaults to <code>void*</code>).</p>
+<hr />
+<h2 id="tips">Tips</h2>
+<p>String functions are also in the <code>glue.string</code> table. You can extend the Lua <code>string</code> namespace:</p>
+<pre><code>glue.update(string, glue.string)</code></pre>
+<p>so you can use them as string methods:</p>
+<pre><code>s = s:trim()</code></pre>
+<h2 id="keywords">Keywords</h2>
+<p><em>for syntax highlighting</em></p>
+<p>glue.clamp, glue.pack, glue.unpack, glue.count, glue.index, glue.keys, glue.update, glue.merge, glue.sortedpairs, glue.attr, glue.indexof, glue.extend, glue.append, glue.shift, glue.reverse, glue.gsplit, glue.trim, glue.escape, glue.tohex, glue.fromhex, glue.collect, glue.pass, glue.memoize, glue.inherit, glue.autotable, glue.fileexists, glue.readfile, glue.readpipe, glue.writefile, glue.assert, glue.unprotect, glue.pcall, glue.fpcall, glue.fcall, glue.autoload, glue.bin, glue.luapath, glue.cpath, glue.malloc, glue.free, glue.addr, glue.ptr</p>
+<h2 id="design">Design</h2>
+<p><a href="/glue_design">glue_design</a></p>

@@ -1,0 +1,83 @@
+<h2 id="scope">Scope</h2>
+<p>Windows, common controls and dialogs, message loop, system APIs, OpenGL and cairo.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>UTF8 Lua strings everywhere (also works with wide char buffers)</li>
+<li>all calls are error-checked</li>
+<li>memory management (managing ownership; allocation of in/out buffers)</li>
+<li>flags can be passed as <code>'FLAG1 FLAG2'</code></li>
+<li>counting from 1 everywhere</li>
+<li>object system with virtual properties (<code>win.title = 'hello'</code> sets the title)</li>
+<li>anchor-based layout model for all controls</li>
+<li>binding helpers for easy binding of new and future APIs</li>
+<li>cairo and OpenGL widgets.</li>
+</ul>
+<h2 id="hello-world">Hello World</h2>
+<pre class="sourceCode lua"><code class="sourceCode lua"><span class="kw">local</span> winapi <span class="ot">=</span> require<span class="st">&#39;winapi&#39;</span>
+require<span class="st">&#39;winapi.windowclass&#39;</span>
+
+<span class="kw">local</span> win <span class="ot">=</span> winapi<span class="ot">.</span>Window<span class="ot">{</span>
+   w <span class="ot">=</span> <span class="dv">500</span><span class="ot">,</span>                <span class="co">--all these are &quot;initial fields&quot;</span>
+   h <span class="ot">=</span> <span class="dv">300</span><span class="ot">,</span>
+   title <span class="ot">=</span> <span class="st">&#39;Lua rulez&#39;</span><span class="ot">,</span>
+   autoquit <span class="ot">=</span> <span class="kw">true</span><span class="ot">,</span>        <span class="co">--this is to quit app when the window is closed</span>
+   visible <span class="ot">=</span> <span class="kw">false</span><span class="ot">,</span>        <span class="co">--this field is from BaseWindow</span>
+<span class="ot">}</span>
+
+<span class="kw">function</span> win:on_close<span class="ot">()</span>    <span class="co">--this is an event handler</span>
+   print<span class="st">&#39;Bye&#39;</span>
+<span class="kw">end</span>
+
+<span class="fu">print</span><span class="ot">(</span>win<span class="ot">.</span>title<span class="ot">)</span>           <span class="co">--this is how to read the value of a property</span>
+win<span class="ot">.</span>title <span class="ot">=</span> <span class="st">&#39;Lua rulez!&#39;</span>   <span class="co">--this is how to set the value of a property</span>
+win:show<span class="ot">()</span>                 <span class="co">--this is a method call</span>
+
+<span class="fu">os.exit</span><span class="ot">(</span>winapi<span class="ot">.</span>MessageLoop<span class="ot">())</span> <span class="co">--start the message loop</span></code></pre>
+<h2 id="demos">Demos</h2>
+<p>Check out <a href="https://github.com/luapower/winapi/blob/master/winapi_demo.lua">winapi_demo</a> to see all the controls in action.</p>
+<p>Also, many modules can be run as standalone scripts, which will showcase their functionality, so there's lots of little demos there too.</p>
+<h2 id="documentation">Documentation</h2>
+<h3 id="architecture">Architecture</h3>
+<ul>
+<li><a href="/winapi_design">winapi_design</a> - hi-level overview of the library</li>
+<li><a href="/winapi_binding">winapi_binding</a> - how the binding works, aka developer documentation</li>
+<li><a href="/winapi_history">winapi_history</a> - the reasoning behind various design decisions</li>
+</ul>
+<h3 id="classes">Classes</h3>
+<ul>
+<li><a href="/winapi.object">Object</a> - objects
+<ul>
+<li><a href="/winapi.vobject">VObject</a> - objects with virtual properties
+<ul>
+<li><a href="/winapi.basewindowclass">BaseWindow</a> - base class for top-level windows and controls
+<ul>
+<li><a href="/winapi.windowclass">Window</a> - final class for top level windows</li>
+<li><a href="/winapi.controlclass">Control</a> - base class for controls
+<ul>
+<li><a href="/winapi.basebuttonclass">BaseButton</a> - base class for buttons
+<ul>
+<li><a href="/winapi.buttonclass">Button</a> - push-buttons</li>
+<li><a href="/winapi.checkboxclass">CheckBox</a> - checkboxes</li>
+<li><a href="/winapi.radiobuttonclass">RadioButton</a> - radio buttons</li>
+<li><a href="/winapi.groupboxclass">GroupBox</a> - group boxes</li>
+</ul></li>
+<li><a href="/winapi.editclass">Edit</a> - edit boxes</li>
+<li><a href="/winapi.comboboxclass">ComboBox</a> - combo boxes and drop-down lists</li>
+<li>[ListBox][winapi.listboxclass] - list boxes</li>
+<li>[ListView][winapi.listviewclass] - list views</li>
+<li>[TabControl][winapi.tabcontrolclass] - tab bars</li>
+<li>[Toolbar][winapi.toolbarclass] - toolbars</li>
+<li>[Panel][winapi.menuclass] - custom frameless windows</li>
+<li><a href="/winapi.wglpanel">WGLPanel</a> - <a href="/opengl">OpenGL</a> panel</li>
+<li>[CairoPanel][winapi.cairopanel] - <a href="/cairo">cairo</a> panel</li>
+</ul></li>
+</ul></li>
+<li>[Menu][winapi.menuclass] - menus and menu bars</li>
+<li>[NotifyIcon][winapi.notifyiconclass] - system tray icons</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="functions">Functions</h3>
+<p>The &quot;proc&quot; layer is documented in the code, including API quirks and empirical knowledge, so do check out the source code.</p>
+<h2 id="modules">Modules</h2>
+<p>{{module_list}}</p>
