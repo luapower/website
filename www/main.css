@@ -772,4 +772,5 @@ warn {
 .doc .caption {
 	font-size: 80%;
 	color: #999;
+	margin: 0;
 }
