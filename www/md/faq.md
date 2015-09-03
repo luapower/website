@@ -22,15 +22,15 @@ dependency), the build toolchain is specified for each platform and
 contains only easy-to-get open source components, so building binaries
 is no longer a hit-or-miss experience.
 
-Luapower solves all the problems that package managers are supposed to solve
-(and more), but with none of the bureaucracy that is usually imposed
-on module writers. With luapower you don't have to write manifest files to
-describe your packages, you don't have to declare dependencies (except in a
-few rare cases), you don't have to learn a new build system, or perform any
-packaging steps, or even move code out of version control, ever.
+Luapower solves the problem of package management without the bureaucracy
+that is usually imposed on module writers.
+With luapower you don't have to write manifest files to describe packages,
+you don't have to declare dependencies (except in a few rare cases),
+you don't have to learn a new build system, or perform any packaging steps,
+or even move code out of version control, ever.
 
 Modules don't need to be "installed" out of version control in order to
-create a proper runtime. You can make changes directly on your deployments,
+create a proper runtime. You can make changes directly on deployments,
 and you can push/pull changes between deployments and even create pull
 requests to upstream without moving files around. There's no runtime
 overhead either, as there's no need for a custom module loader.
@@ -227,7 +227,7 @@ Because I [don't support][against ip] copyright law.
 Go to the [luapower forum](/forum) and ask away.
 There's no such thing as a stupid question there, any discussion is welcome.
 Incidentally, that is also the place where you can share your plans
-for world domination, so go and introduce yourself now!
+for world domination, so go introduce yourself!
 
 ## How do I report bugs?
 
