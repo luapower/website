@@ -6,10 +6,12 @@ tagline: questions & answers
 ## What is luapower?
 
 Luapower is a free and open source module distribution for
-[LuaJIT](http://luajit.org/luajit.html), the just-in-time compiler
-of the [Lua programming language](http://lua.org/about.html).
-More than that, it is a way of deploying and sharing Lua modules.
-It focuses on simplicity and portability, and staying out of your way.
+[LuaJIT](http://luajit.org/luajit.html) and a system for deploying
+and sharing Lua modules.
+
+Luapower's goal is to turn LuaJIT into a powerful cross-platform development
+environment, brick by brick. A platform that you can imagine building
+the next Illustrator or the next Firefox on.
 
 ## What is different about it?
 
@@ -251,7 +253,7 @@ I'm [Cosmin Apreutesei][cosmin], a programmer from Bucharest.
 ## Where are you going with this?
 
 My goal is to create a cross-platform environment for creating
-the next generation of desktop apps that run close-to-identically
+the next generation desktop apps that run close-to-identically
 on every platform, with pixel-perfect vector-graphics including
 text shaping and rendering, complex interactivity beyond standard
 widget systems, peer-to-peer communication, a multi-threading/multi-process
