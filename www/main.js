@@ -270,12 +270,10 @@ $(function() {
 	})
 
 	// find local back-references to all headers which have an id
-	$('.doc').find('h1,h2,h3,h4').each(function() {
+	$('.doc').find('h1,h2,h3,h4').find('[id]').each(function() {
 		var id = $(this).attr('id')
-		if (id) {
-			var text = $(this).text()
-			$('.doc:contains("'+text+'")').attr('href', '#'+id)
-		}
+		var text = $(this).find('code').text()
+s		$('.doc code:contains('+text+')').attr('href', '#'+id)
 	})
 
 	// make all images zoomable
