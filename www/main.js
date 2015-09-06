@@ -104,7 +104,7 @@ $(function() {
 
 	// make doc nav follow scroll
 	var top0 = nav.offset().top
-	if (nav.height() + 10 < $(window).height()) // fits the window completely
+	//if (nav.height() + 10 < $(window).height()) // fits the window completely
 		$(window).scroll(function() {
 			if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
 				// reached footer
