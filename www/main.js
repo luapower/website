@@ -116,7 +116,7 @@ $(function() {
 					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
 				} else {
 					// keep selection in the middle
-					var seltop = nav.offset().top - nav.find('.selected').offset().top
+					var seltop = nav.find('.selected').offset().top - nav.offset().top
 					var top = 0 - (seltop - $(window).height() / 2)
 					console.log(seltop, $(window).height() / 2, top)
 					nav.css('position', 'absolute').css('bottom', '').css('top', top)
