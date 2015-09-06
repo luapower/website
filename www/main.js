@@ -104,32 +104,36 @@ $(function() {
 
 	// make doc nav follow scroll
 	var top0 = nav.offset().top
-	//if (nav.height() + 10 < $(window).height()) // fits the window completely
-		$(window).scroll(function() {
-			if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
-				// reached footer
-				var h = parseInt($('.main').css('padding-bottom'), 10) - 40
-				nav.css('position', 'absolute').css('top', '').css('bottom', h)
-			} else if (top0 - $(window).scrollTop() < 10) {
-				if (nav.height() + 10 < $(window).height()) {
-					// fits the window completely: fixate to the window.
-					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-				} else {
-					// doesn't fit the window: keep the current selection in the middle of the window.
-					var seltop = nav.find('.selected').offset().top - nav.offset().top
-					var top = 0 - (seltop - $(window).height() / 2)
-					console.log(seltop, $(window).height() / 2, top)
-					if (top < 0) {
-						nav.css('position', 'fixed').css('bottom', '').css('top', top)
-					} else {
-						nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-					}
-				}
+	$(window).scroll(function() {
+		if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
+			// reached the footer. fixate the bottom to the footer.
+			var h = parseInt($('.main').css('padding-bottom'), 10) - 40
+			nav.css('position', 'absolute').css('top', '').css('bottom', h)
+		} else if (top0 - $(window).scrollTop() < 10) {
+			if (nav.height() + 10 < $(window).height()) {
+				// fits the window completely: fixate to the window.
+				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
 			} else {
-				// stay in original position
-				nav.css('position', 'absolute').css('top', '').css('bottom', '')
+				// doesn't fit the window: keep the current selection in the middle of the window.
+				var seltop = nav.find('.selected').offset().top - nav.offset().top
+				var top = 0 - (seltop - $(window).height() / 2)
+				if (top < 0) {
+					// we're in the middle of the nav: make the first selection follows the middle of the screen.
+					nav.css('position', 'fixed').css('bottom', '').css('top', top)
+				} else if (top + nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
+					// reached the footer. fixate the bottom to the footer.
+					var h = parseInt($('.main').css('padding-bottom'), 10) - 40
+					nav.css('position', 'absolute').css('top', '').css('bottom', h)
+				} else
+					// we're before the middle of the nav.
+					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
+				}
 			}
-		})
+		} else {
+			// stay in original position
+			nav.css('position', 'absolute').css('top', '').css('bottom', '')
+		}
+	})
 
 	function check_size() {
 		var w = $(window).width()
