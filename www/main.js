@@ -109,7 +109,7 @@ $(function() {
 		// compute the vertical space (min_y, max_y) that we have available for the nav.
 		var min_y = Math.max(20, top0 - scrolltop)
 		var win_h = $(window).height()
-		var max_y = Math.min(win_h, $('.footer').offset().top - scrolltop - 10)
+		var max_y = Math.min(win_h, $('.footer').offset().top - scrolltop - 30)
 		var max_h = max_y - min_y
 		// find out where we would want to put the nav.
 		var nav_h = nav.height()
