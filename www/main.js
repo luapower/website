@@ -118,12 +118,14 @@ $(function() {
 				var seltop = nav.find('.selected').offset().top - nav.offset().top
 				var top = 0 - (seltop - $(window).height() / 2)
 				if (top < 0) {
-					// we're in the middle of the nav: make the first selection follows the middle of the screen.
-					nav.css('position', 'fixed').css('bottom', '').css('top', top)
-				} else if (top + nav.height() + 20 < $('.footer').offset().top) {
-					// there's a gap to the footer. fixate the bottom to the footer.
-					var h = parseInt($('.main').css('padding-bottom'), 10) - 40
-					nav.css('position', 'absolute').css('top', '').css('bottom', h)
+					if (top + nav.height() + 20 < $('.footer').offset().top) {
+						// there's a gap to the footer. fixate the bottom to the footer.
+						var h = parseInt($('.main').css('padding-bottom'), 10) - 40
+						nav.css('position', 'absolute').css('top', '').css('bottom', h)
+					} else {
+						// we're in the middle of the nav: make the first selection follows the middle of the screen.
+						nav.css('position', 'fixed').css('bottom', '').css('top', top)
+					}
 				} else {
 					// we're before the middle of the nav.
 					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
