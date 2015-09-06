@@ -273,9 +273,12 @@ $(function() {
 	$('.doc').find('h1,h2,h3,h4').each(function() {
 		var id = $(this).attr('id')
 		if (id) {
-			var text = $(this).find('code').text()
-			if (text)
-				$('.doc code:contains("'+text+'")').attr('href', '#'+id)
+			var text = $(this).find('code').text().toLowerCase()
+			if (text) {
+				$('.doc code')
+					.filter(function() { return $(this).text().toLowerCase() == text; })
+					.href('#'+id)
+			}
 		}
 	})
 
