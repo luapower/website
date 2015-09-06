@@ -282,8 +282,7 @@ $(function() {
 							return $(this).text().toLowerCase() == text
 						})
 						.each(function() {
-							$(this).attr('href', '#'+id)
-							console.log($(this))
+							$(this).replaceWith('<a href="#'+id+'">'+$(this).html()+'</a>')
 						})
 				}
 			})
