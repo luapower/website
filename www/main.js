@@ -124,7 +124,7 @@ $(function() {
 					// reached the footer. fixate the bottom to the footer.
 					var h = parseInt($('.main').css('padding-bottom'), 10) - 40
 					nav.css('position', 'absolute').css('top', '').css('bottom', h)
-				} else
+				} else {
 					// we're before the middle of the nav.
 					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
 				}
