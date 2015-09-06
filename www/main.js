@@ -274,8 +274,8 @@ $(function() {
 		var id = $(this).attr('id')
 		if (id) {
 			var text = $(this).find('code').text()
-			console.log($(this), text)
-			$('.doc code:contains('+text+')').attr('href', '#'+id)
+			if (text)
+				$('.doc code:contains("'+text+'")').attr('href', '#'+id)
 		}
 	})
 
