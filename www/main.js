@@ -278,10 +278,13 @@ $(function() {
 				if (text) {
 					console.log(text)
 					$('.doc code')
-						.filter(function() { console.log('---', $(this).text().toLowerCase()); return $(this).text().toLowerCase() == text; })
+						.filter(function() {
+							console.log('---', $(this).text().toLowerCase())
+							return $(this).text().toLowerCase() == text
+						})
 						.attr('href', '#'+id)
 				}
-			}
+			})
 		}
 	})
 
