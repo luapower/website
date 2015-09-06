@@ -111,15 +111,19 @@ $(function() {
 				var h = parseInt($('.main').css('padding-bottom'), 10) - 40
 				nav.css('position', 'absolute').css('top', '').css('bottom', h)
 			} else if (top0 - $(window).scrollTop() < 10) {
-				// follow scroll
-				if (nav.height() + 10 < $(window).height()) { // fits the window completely
+				if (nav.height() + 10 < $(window).height()) {
+					// fits the window completely: fixate to the window.
 					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
 				} else {
-					// keep selection in the middle
+					// doesn't fit the window: keep the current selection in the middle of the window.
 					var seltop = nav.find('.selected').offset().top - nav.offset().top
 					var top = 0 - (seltop - $(window).height() / 2)
 					console.log(seltop, $(window).height() / 2, top)
-					nav.css('position', 'absolute').css('bottom', '').css('top', top)
+					if (top < 0) {
+						nav.css('position', 'fixed').css('bottom', '').css('top', top)
+					else {
+						nav.css('position', 'fixed').css('bottom', '').css('top', 10)
+					}
 				}
 			} else {
 				// stay in original position
