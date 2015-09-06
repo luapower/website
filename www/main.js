@@ -273,7 +273,7 @@ $(function() {
 	$('.doc').find('h1,h2,h3,h4').find('[id]').each(function() {
 		var id = $(this).attr('id')
 		var text = $(this).find('code').text()
-s		$('.doc code:contains('+text+')').attr('href', '#'+id)
+		$('.doc code:contains('+text+')').attr('href', '#'+id)
 	})
 
 	// make all images zoomable
