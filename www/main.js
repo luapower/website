@@ -270,7 +270,7 @@ $(function() {
 	})
 
 	// find local back-references to all headers which have an id
-	$('.doc').find('h1,h2,h3,h4').find('[id]').each(function() {
+	$('.doc').find('h1,h2,h3,h4').has('[id]').each(function() {
 		var id = $(this).attr('id')
 		var text = $(this).find('code').text()
 		console.log($(this), text)
