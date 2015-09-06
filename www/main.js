@@ -273,12 +273,14 @@ $(function() {
 	$('.doc').find('h1,h2,h3,h4').each(function() {
 		var id = $(this).attr('id')
 		if (id) {
-			var text = $(this).find('code').text().toLowerCase()
-			if (text) {
-				console.log(text)
-				$('.doc code')
-					.filter(function() { return $(this).text().toLowerCase() == text; })
-					.attr('href', '#'+id)
+			$(this).find('code').each(function() {
+				var text = $(this).text().toLowerCase()
+				if (text) {
+					console.log(text)
+					$('.doc code')
+						.filter(function() { console.log('---', $(this).text().toLowerCase()); return $(this).text().toLowerCase() == text; })
+						.attr('href', '#'+id)
+				}
 			}
 		}
 	})
