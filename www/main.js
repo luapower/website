@@ -277,12 +277,12 @@ $(function() {
 				var text = $(this).text().toLowerCase()
 				if (text) {
 					console.log(text)
-					$('.doc code')
+					$('.doc code:not([id])')
 						.filter(function() {
 							return $(this).text().toLowerCase() == text
 						})
 						.each(function() {
-							$(this).replaceWith('<a href="#'+id+'">'+$(this).html()+'</a>')
+							$(this).replaceWith('<a href="#'+id+'"><code>'+$(this).html()+'</code></a>')
 						})
 				}
 			})
