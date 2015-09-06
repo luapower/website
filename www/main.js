@@ -263,7 +263,7 @@ $(function() {
 	fix_external_links()
 
 	// make headings clickable
-	$('.doc').find('h1,h2,h3,h4').each(function()
+	$('.doc').find('h1,h2,h3,h4').each(function() {
 		$(this).attr('href', location.pathname +
 			(location.search ? '?' + location.search : '') +
 				'#' + $(this).attr('id'))
