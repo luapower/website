@@ -113,9 +113,14 @@ $(function() {
 			} else if (top0 - $(window).scrollTop() < 10) {
 				// follow scroll
 				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-			} else {
+			} else if (nav.height() + 10 < $(window).height()) // fits the window completely
 				// stay in original position
 				nav.css('position', 'absolute').css('top', '').css('bottom', '')
+			} else {
+				// keep selection in the middle
+				var seltop = nav.find('.selected').first().offset().top
+				var top = 0 - (seltop - $(window).height() / 2)
+				nav.css('position', 'absolute').css('bottom', '').css('top', top)
 			}
 		})
 
