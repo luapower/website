@@ -277,7 +277,7 @@ $(function() {
 			if (text) {
 				$('.doc code')
 					.filter(function() { return $(this).text().toLowerCase() == text; })
-					.href('#'+id)
+					.attr('href', '#'+id)
 			}
 		}
 	})
