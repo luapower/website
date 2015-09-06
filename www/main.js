@@ -113,7 +113,7 @@ $(function() {
 			} else if (top0 - $(window).scrollTop() < 10) {
 				// follow scroll
 				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-			} else if (nav.height() + 10 < $(window).height()) // fits the window completely
+			} else if (nav.height() + 10 < $(window).height()) { // fits the window completely
 				// stay in original position
 				nav.css('position', 'absolute').css('top', '').css('bottom', '')
 			} else {
