@@ -77,7 +77,7 @@ $(function() {
 	})
 	nav.html(t.join(''))
 
-	// activate doc nav links
+	// activate the doc nav links
 	nav.on('click', 'a', function(e) {
 		e.preventDefault()
 		var i = $(this).parent().attr('idx')
@@ -102,38 +102,23 @@ $(function() {
 			})
 		.scrollSpy()
 
-	// make doc nav follow scroll
+	// make the doc nav follow the scroll.
 	var top0 = nav.offset().top
 	$(window).scroll(function() {
-		if (nav.height() + 20 > $('.footer').offset().top - $(window).scrollTop()) {
-			// reached the footer. fixate the bottom to the footer.
-			var h = parseInt($('.main').css('padding-bottom'), 10) - 40
-			nav.css('position', 'absolute').css('top', '').css('bottom', h)
-		} else if (top0 - $(window).scrollTop() < 10) {
-			if (nav.height() + 10 < $(window).height()) {
-				// fits the window completely: fixate to the window.
-				nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-			} else {
-				// doesn't fit the window: keep the current selection in the middle of the window.
-				var seltop = nav.find('.selected').offset().top - nav.offset().top
-				var top = 0 - (seltop - $(window).height() / 2)
-				if (top < 0) {
-					if (top + nav.height() + 20 < $(window).height()) {
-						// there's a gap to the bottom of the screen. fixate the bottom to the window.
-						nav.css('position', 'fixed').css('bottom', '').css('top', $(window).height() - 20 - nav.height())
-					} else {
-						// we're in the middle of the nav: make the first selection follows the middle of the screen.
-						nav.css('position', 'fixed').css('bottom', '').css('top', top)
-					}
-				} else {
-					// we're before the middle of the nav.
-					nav.css('position', 'fixed').css('bottom', '').css('top', 10)
-				}
-			}
-		} else {
-			// stay in original position
-			nav.css('position', 'absolute').css('top', '').css('bottom', '')
-		}
+		var scrolltop = $(window).scrollTop()
+		// compute the vertical space (min_y, max_y) that we have available for the nav.
+		var min_y = Math.max(20, top0 - scrolltop)
+		var win_h = $(window).height()
+		var max_y = Math.min(win_h, $('.footer').offset().top - scrolltop - 10)
+		var max_h = max_y - min_y
+		// find out where we would want to put the nav.
+		var nav_h = nav.height()
+		var sel_h = nav.find('.selected').offset().top - nav.offset().top
+		var rel_y = h < max_h ? 0 : 0 - sel_h + max_h/2
+		// constrain the wanted offset so that the nav fully encloses the available space.
+		var rel_y = Math.min(rel_y, 0)
+		var rel_y = Math.max(rel_y, max_h - nav_h)
+		nav.css('position', 'fixed').css('bottom', '').css('top', min_y + rel_y)
 	})
 
 	function check_size() {
