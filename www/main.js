@@ -269,10 +269,13 @@ $(function() {
 				'#' + $(this).attr('id')
 	})
 
-	// bind enter key for the search input
-	$('.search_input').keydown(function(e) {
-		if (e.which == 13)
-			location = '/grep/'+encodeURIComponent($(this).val())
+	// find local back-references to all headers which have an id
+	$('.doc').find('h1,h2,h3,h4').each(function() {
+		var id = $(this).attr('id')
+		if (id) {
+			var text = $(this).text()
+			$('.doc:contains("'+text+'")').attr('href', '#'+id)
+		}
 	})
 
 	// make all images zoomable
