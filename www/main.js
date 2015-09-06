@@ -263,30 +263,27 @@ $(function() {
 	fix_external_links()
 
 	// make headings clickable
-	$('.doc').find('h1,h2,h3,h4').click(function() {
-		location = location.pathname +
+	$('.doc').find('h1,h2,h3,h4').each(function()
+		$(this).attr('href', location.pathname +
 			(location.search ? '?' + location.search : '') +
-				'#' + $(this).attr('id')
+				'#' + $(this).attr('id'))
 	})
 
-	// find local back-references to all headers which have an id
-	$('.doc').find('h1,h2,h3,h4').each(function() {
+	// create links on all back-references to all code headers
+	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var id = $(this).attr('id')
-		if (id) {
-			$(this).find('code').each(function() {
-				var text = $(this).text().toLowerCase()
-				if (text) {
-					console.log(text)
-					$('.doc code:not([id])')
-						.filter(function() {
-							return $(this).text().toLowerCase() == text
-						})
-						.each(function() {
-							$(this).replaceWith('<a href="#'+id+'"><code>'+$(this).html()+'</code></a>')
-						})
-				}
-			})
-		}
+		$(this).find('code').each(function() {
+			var text = $(this).text()
+			if (text) {
+				$('.doc code:not([id])')
+					.filter(function() {
+						return $(this).text() == text
+					})
+					.each(function() {
+						$(this).replaceWith('<a href="#'+id+'"><code>'+$(this).html()+'</code></a>')
+					})
+			}
+		})
 	})
 
 	// make all images zoomable
