@@ -120,7 +120,7 @@ $(function() {
 				if (top < 0) {
 					if (top + nav.height() + 20 < $('.footer').offset().top) {
 						// there's a gap to the bottom of the screen. fixate the bottom to the window.
-						nav.css('position', 'fixed').css('top', '').css('bottom', $(window).height() - 20)
+						nav.css('position', 'fixed').css('bottom', '').css('top', $(window).height() - 20 - nav.height())
 					} else {
 						// we're in the middle of the nav: make the first selection follows the middle of the screen.
 						nav.css('position', 'fixed').css('bottom', '').css('top', top)
