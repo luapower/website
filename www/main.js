@@ -275,6 +275,7 @@ $(function() {
 		if (id) {
 			var text = $(this).find('code').text().toLowerCase()
 			if (text) {
+				console.log(text)
 				$('.doc code')
 					.filter(function() { return $(this).text().toLowerCase() == text; })
 					.attr('href', '#'+id)
