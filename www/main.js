@@ -264,7 +264,7 @@ $(function() {
 
 	// make headings clickable
 	$('.doc').find('h1,h2,h3,h4').each(function() {
-		$(this).attr('href', location.pathname +
+		$(this).wrap('<a></a>').parent().attr('href', location.pathname +
 			(location.search ? '?' + location.search : '') +
 				'#' + $(this).attr('id'))
 	})
@@ -280,7 +280,7 @@ $(function() {
 						return $(this).text() == text
 					})
 					.each(function() {
-						$(this).replaceWith('<a href="#'+id+'"><code>'+$(this).html()+'</code></a>')
+						$(this).wrap('<a></a>').parent().attr('href', '#'+id)
 					})
 			}
 		})
