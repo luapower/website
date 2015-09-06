@@ -118,7 +118,7 @@ $(function() {
 				var seltop = nav.find('.selected').offset().top - nav.offset().top
 				var top = 0 - (seltop - $(window).height() / 2)
 				if (top < 0) {
-					if (top + nav.height() + 20 < $('.footer').offset().top) {
+					if (top + nav.height() + 20 < $(window).height()) {
 						// there's a gap to the bottom of the screen. fixate the bottom to the window.
 						nav.css('position', 'fixed').css('bottom', '').css('top', $(window).height() - 20 - nav.height())
 					} else {
