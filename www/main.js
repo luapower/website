@@ -121,7 +121,7 @@ $(function() {
 					console.log(seltop, $(window).height() / 2, top)
 					if (top < 0) {
 						nav.css('position', 'fixed').css('bottom', '').css('top', top)
-					else {
+					} else {
 						nav.css('position', 'fixed').css('bottom', '').css('top', 10)
 					}
 				}
