@@ -279,10 +279,12 @@ $(function() {
 					console.log(text)
 					$('.doc code')
 						.filter(function() {
-							console.log('---', $(this).text().toLowerCase())
 							return $(this).text().toLowerCase() == text
 						})
-						.attr('href', '#'+id)
+						.each(function() {
+							$(this).attr('href', '#'+id)
+							console.log($(this))
+						})
 				}
 			})
 		}
