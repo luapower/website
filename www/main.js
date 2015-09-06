@@ -120,7 +120,7 @@ $(function() {
 					var top = 0 - (seltop - $(window).height() / 2)
 					nav.css('position', 'absolute').css('bottom', '').css('top', top)
 				}
-			} else
+			} else {
 				// stay in original position
 				nav.css('position', 'absolute').css('top', '').css('bottom', '')
 			}
