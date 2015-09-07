@@ -88,7 +88,7 @@ $(function() {
 		var s = h.html().trim()
 		if (h.has('code').length) {
 			// cut the args part from API declarations
-			s = h.find('code').html().trim().replace(/\(.*?\)/, '()')
+			s = h.find('code').html().trim().replace(/\(.*?\).*/, '()')
 			// skip the "require..." headings
 			if (h.html().indexOf('require\'') >= 0)
 				return
