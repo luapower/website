@@ -113,7 +113,10 @@ $(function() {
 		var max_h = max_y - min_y
 		// find out where we would want to put the nav.
 		var nav_h = nav.height()
-		var sel_h = nav.find('.selected').offset().top - nav.offset().top
+		var sel = nav.find('.selected')
+		var sel_h1 = sel.first() .offset().top - nav.offset().top
+		var sel_h2 = sel.last()  .offset().top - nav.offset().top
+		var sel_h = (sel_h1 + sel_h2) / 2
 		var rel_y = h < max_h ? 0 : 0 - sel_h + max_h/2
 		// constrain the wanted offset so that the nav fully encloses the available space.
 		var rel_y = Math.min(rel_y, 0)
