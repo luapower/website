@@ -322,6 +322,7 @@ $(function() {
 			var target = text && t[text]
 			if (target) {
 				target.wrap('<a></a>').parent().attr('href', '#'+id)
+				t[text] = null
 			}
 		})
 	})
