@@ -306,7 +306,7 @@ $(function() {
 	$('.doc code').each(function() {
 		var self = $(this)
 		if (!self.parent().attr('id')) {
-			var text = self.text()
+			var text = self.html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
 			if (text) t[text] = self
 		}
 	})
@@ -314,7 +314,7 @@ $(function() {
 		var self = $(this)
 		var id = self.attr('id')
 		self.find('code').each(function() {
-			var text = $(this).text()
+			var text = $(this).html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
 			var target = text && t[text]
 			if (target) {
 				target.wrap('<a></a>').parent().attr('href', '#'+id)
