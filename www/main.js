@@ -95,7 +95,7 @@ $(function() {
 		}
 		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
 			' style="padding-left: '+((level-2)*1.5+.5)+'em; '+
-			//(parent_idx ? 'display: none;' : '')+
+			(parent_idx ? 'display: none;' : '')+
 			'" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
 		i++
@@ -118,14 +118,14 @@ $(function() {
 				var i = $(this).attr('idx')
 				var d = nav.find('[idx='+i+']')
 				d.addClass('selected')
-				//nav.find('[parent_idx="'+i+'"]').show()
+				nav.find('[parent_idx="'+i+'"]').show()
 			})
 		.on('scrollSpy:exit',
 			function() {
 				var i = $(this).attr('idx')
 				var d = nav.find('[idx='+i+']')
 				d.removeClass('selected')
-				//nav.find('[parent_idx="'+i+'"]').hide()
+				nav.find('[parent_idx="'+i+'"]').hide()
 			})
 		.scrollSpy()
 
@@ -146,8 +146,8 @@ $(function() {
 		var sel_h = (sel_h1 + sel_h2) / 2
 		var rel_y = h < max_h ? 0 : 0 - sel_h + max_h/2
 		// constrain the wanted offset so that the nav fully encloses the available space.
-		var rel_y = Math.min(rel_y, 0)
 		var rel_y = Math.max(rel_y, max_h - nav_h)
+		var rel_y = Math.min(rel_y, 0)
 		nav.css('position', 'fixed').css('bottom', '').css('top', min_y + rel_y)
 	})
 
