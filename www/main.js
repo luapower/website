@@ -316,8 +316,8 @@ $(function() {
 			var text = $(this).text()
 			var target = text && t[text]
 			if (target) {
-				console.log(target)
 				$(target).wrap('<a></a>').parent().attr('href', '#'+id)
+				$(target).html('xxxxxxxx')
 			}
 		})
 	})
