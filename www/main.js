@@ -302,20 +302,17 @@ $(function() {
 	})
 
 	// create links on all back-references to all code headers
+	var t = {}
+	$('.doc code:not([id])').each(function()
+		t[$(this).text()] = $(this)
+	})
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
-		return;
 		var id = $(this).attr('id')
 		$(this).find('code').each(function() {
 			var text = $(this).text()
-			if (text) {
-				$('.doc code:not([id])')
-					.filter(function() {
-						return $(this).text() == text
-					})
-					.each(function() {
-						$(this).wrap('<a></a>').parent().attr('href', '#'+id)
-					})
-			}
+			var target = t[text]
+			if (target)
+				target.wrap('<a></a>').parent().attr('href', '#'+id)
 		})
 	})
 
