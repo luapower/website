@@ -308,6 +308,9 @@ $(function() {
 		var text = self.text()
 		if (text) t[text] = self[0]
 	})
+	for (k in t) {
+		$(t[k]).html('xxxxx')
+	}
 	console.log(t)
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var self = $(this)
