@@ -60,7 +60,6 @@ $(function() {
 	var parents = []
 	h.each(function() {
 		var h = $(this)
-		var s = h.html().trim()
 		var level = parseInt(h.prop('tagName').match(/\d/))
 
 		// find the parent header
@@ -71,11 +70,14 @@ $(function() {
 			if (parent_level < level) {
 				parents.push(h)
 				parent_idx = parent_h.attr('idx')
+			} else {
+				parents.pop()
 			}
 		} else {
 			parents.push(h)
 		}
 
+		var s = h.html().trim()
 		if (h.has('code').length) {
 			// cut the args part from API declarations
 			s = h.find('code').html().trim().replace(/\(.*/, '')
