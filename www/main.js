@@ -303,6 +303,7 @@ $(function() {
 
 	// create links on all back-references to all code headers
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
+		return;
 		var id = $(this).attr('id')
 		$(this).find('code').each(function() {
 			var text = $(this).text()
