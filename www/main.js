@@ -33,8 +33,6 @@ $(function() {
 	var nav = $('#docnav')
 	if(!doc.length || !nav.length) return
 
-	return;
-
 	// wrap content sections (heading + everything till next heading) into divs
 	doc.find('h4').each(function() {
 		$(this).nextUntil('h4,h3,h2,h1,enddoc').andSelf().wrapAll('<div></div>')
