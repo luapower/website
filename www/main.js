@@ -63,7 +63,7 @@ $(function() {
 		var h = $(this)
 		var level = parseInt(h.prop('tagName').match(/\d/))
 
-		// find the parent header
+		// find the parent index
 		var parent_idx
 		if (levels.length > 0) {
 			var parent_level = levels[levels.length-1]
@@ -83,6 +83,7 @@ $(function() {
 		}
 		levels.push(level)
 		idxs.push(i)
+		parent_idx = parent_idx || ''
 
 		var s = h.html().trim()
 		if (h.has('code').length) {
