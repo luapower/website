@@ -303,7 +303,7 @@ $(function() {
 
 	// create links on all back-references to all code headers
 	var t = {}
-	$('.doc code:not([id])').each(function()
+	$('.doc code:not([id])').each(function() {
 		t[$(this).text()] = $(this)
 	})
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
