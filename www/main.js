@@ -309,7 +309,7 @@ $(function() {
 			var text = self.html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
 			if (text)
 				if (t[text])
-					t[text].append(self)
+					t[text].add(self)
 				else
 					t[text] = self
 		}
