@@ -63,7 +63,7 @@ $(function() {
 		var level = parseInt(h.prop('tagName').match(/\d/))
 
 		// find the parent header
-		var parent_idx = '0'
+		var parent_idx = ''
 		if (parents.length > 0) {
 			var parent_h = parents[parents.length-1]
 			var parent_level = parseInt(parent_h.prop('tagName').match(/\d/))
@@ -73,11 +73,10 @@ $(function() {
 				parents.pop()
 				parents.push(h)
 			}
-			parent_idx = parent_h.parent().attr('idx')
+			parent_idx = parent_h.parent().parent().attr('idx')
 		} else {
 			parents.push(h)
 		}
-		console.log(level, parent_idx)
 
 		var s = h.html().trim()
 		if (h.has('code').length) {
@@ -91,7 +90,6 @@ $(function() {
 			' style="padding-left: '+((level-2)*1.5+.5)+
 			'em" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
-		lastlevel = level
 		i++
 	})
 	nav.html(t.join(''))
