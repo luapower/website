@@ -67,11 +67,13 @@ $(function() {
 		if (parents.length > 0) {
 			var parent_h = parents[parents.length-1]
 			var parent_level = parseInt(parent_h.prop('tagName').match(/\d/))
+			console.log(parent_level, level)
 			if (parent_level < level) {
 				parents.push(h)
 				parent_idx = parent_h.attr('idx')
-			} else {
+			} else if (parent_level > level) {
 				parents.pop()
+				parents.push(h)
 			}
 		} else {
 			parents.push(h)
