@@ -302,27 +302,36 @@ $(function() {
 	})
 
 	// create links on all back-references to all code headers
-	var t = {}
+	var t1 = {} // exact match
+	var t2 = {} // fuzzy match (without args and retval, just the name)
 	$('.doc code').each(function() {
 		var self = $(this)
 		if (!self.parent().attr('id')) {
-			var text = self.html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
-			if (text)
-				if (t[text])
-					t[text] = t[text].add(self)
-				else
-					t[text] = self
+			var s1 = self.html().trim()
+			if (s1) {
+				t1[s1] = t1[s1] ? t1[s1].add(self) : self
+				var s2 = s1.replace(/\(.*?\).*/, '()') // strip arg lists
+				t2[s2] = t2[s2] ? t2[s2].add(self) : self
+			}
 		}
 	})
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var self = $(this)
 		var id = self.attr('id')
 		self.find('code').each(function() {
-			var text = $(this).html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
-			var target = text && t[text]
-			if (target) {
-				target.wrap('<a></a>').parent().attr('href', '#'+id)
-				t[text] = null
+			var s1 = $(this).html().trim()
+			if (s1) {
+				var s2 = s1.replace(/\(.*?\).*/, '()') // strip arg lists
+				var target1 = t1[s1]
+				var target2 = t2[s2]
+				if (target1) { // perfect match
+					target1.wrap('<a></a>').parent().attr('href', '#'+id)
+					t1[s1] = null
+					t2[s2] = null // assume no more fuzzy back refs?
+				} else if (target2) { // fuzzy match
+					target2.wrap('<a></a>').parent().attr('href', '#'+id)
+					t2[s2] = null
+				}
 			}
 		})
 	})
