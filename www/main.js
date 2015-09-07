@@ -306,7 +306,7 @@ $(function() {
 	$('.doc code:not([id])').each(function() {
 		var self = $(this)
 		var text = self.text()
-		if (text) t[text] = self
+		if (text) t[text] = self[0]
 	})
 	console.log(t)
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
@@ -315,8 +315,10 @@ $(function() {
 		self.find('code').each(function() {
 			var text = $(this).text()
 			var target = text && t[text]
-			if (target)
+			if (target) {
+				console.log(target)
 				$(target).wrap('<a></a>').parent().attr('href', '#'+id)
+			}
 		})
 	})
 
