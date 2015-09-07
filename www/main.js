@@ -57,10 +57,23 @@ $(function() {
 	//if (h.length > 200) // still too many entries. cut the h3's too
 	//	h = doc.find('h1,h2')
 
+	var parents = []
 	h.each(function() {
 		var h = $(this)
 		var s = h.html().trim()
 		var level = parseInt(h.prop('tagName').match(/\d/))
+
+		// find the parent header
+		var parent_idx
+		if (parents.length > 0) {
+			var parent_h = parents[parents.length-1]
+			var parent_level = parseInt(parent_h.prop('tagName').match(/\d/))
+			if (parent_level < level) {
+				parents.push(h)
+				parent_idx = parent_h.attr('idx')
+			}
+		}
+
 		if (h.has('code').length) {
 			// cut the args part from API declarations
 			s = h.find('code').html().trim().replace(/\(.*/, '')
@@ -70,7 +83,7 @@ $(function() {
 		}
 		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
 			' style="padding-left: '+((level-2)*1.5+.5)+
-			'em" idx='+i+'><a>'+s+'</a></div>')
+			'em" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
 		lastlevel = level
 		i++
