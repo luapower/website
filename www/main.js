@@ -303,14 +303,13 @@ $(function() {
 
 	// create links on all back-references to all code headers
 	var t = {}
-	$('.doc code:not([id])').each(function() {
+	$('.doc code').each(function() {
 		var self = $(this)
-		var text = self.text()
-		if (text) t[text] = self[0]
+		if (!self.parent().attr('id')) {
+			var text = self.text()
+			if (text) t[text] = self
+		}
 	})
-	for (k in t) {
-		$(t[k]).html('xxxxx')
-	}
 	console.log(t)
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var self = $(this)
@@ -319,8 +318,7 @@ $(function() {
 			var text = $(this).text()
 			var target = text && t[text]
 			if (target) {
-				$(target).wrap('<a></a>').parent().attr('href', '#'+id)
-				$(target).html('xxxxxxxx')
+				target.wrap('<a></a>').parent().attr('href', '#'+id)
 			}
 		})
 	})
