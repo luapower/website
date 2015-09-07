@@ -77,6 +77,7 @@ $(function() {
 		} else {
 			parents.push(h)
 		}
+		print(level, parent_idx)
 
 		var s = h.html().trim()
 		if (h.has('code').length) {
