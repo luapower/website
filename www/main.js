@@ -64,7 +64,7 @@ $(function() {
 		var level = parseInt(h.prop('tagName').match(/\d/))
 
 		// find the parent header
-		var parent_idx
+		var parent_idx = ''
 		if (parents.length > 0) {
 			var parent_h = parents[parents.length-1]
 			var parent_level = parseInt(parent_h.prop('tagName').match(/\d/))
@@ -72,6 +72,8 @@ $(function() {
 				parents.push(h)
 				parent_idx = parent_h.attr('idx')
 			}
+		} else {
+			parents.push(h)
 		}
 
 		if (h.has('code').length) {
