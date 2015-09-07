@@ -315,9 +315,8 @@ $(function() {
 		self.find('code').each(function() {
 			var text = $(this).text()
 			var target = text && t[text]
-			console.log('>>', text, target)
 			if (target)
-				target.wrap('<a></a>').parent().attr('href', '#'+id)
+				$(target).wrap('<a></a>').parent().attr('href', '#'+id)
 		})
 	})
 
