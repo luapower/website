@@ -70,11 +70,11 @@ $(function() {
 			console.log(parent_level, level)
 			if (parent_level < level) {
 				parents.push(h)
-				parent_idx = parent_h.parent().attr('idx')
 			} else if (parent_level > level) {
 				parents.pop()
 				parents.push(h)
 			}
+			parent_idx = parent_h.parent().attr('idx')
 		} else {
 			parents.push(h)
 		}
