@@ -382,7 +382,7 @@ warn {
 	border-radius: 4px;
 }
 .downloads_home .download_btn span, .downloads_home .download_btn i {
-	text-shadow: 2px 2px 0px #020;
+	text-shadow: 2px 2px 1px #020;
 }
 
 .package_list {
