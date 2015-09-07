@@ -308,12 +308,14 @@ $(function() {
 		var text = self.text()
 		if (text) t[text] = self
 	})
+	console.log(text)
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var self = $(this)
 		var id = self.attr('id')
 		self.find('code').each(function() {
 			var text = $(this).text()
 			var target = text && t[text]
+			console.log('>>', text)
 			if (target)
 				target.wrap('<a></a>').parent().attr('href', '#'+id)
 		})
