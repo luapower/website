@@ -69,8 +69,6 @@ $(function() {
 			var parent_level = levels[levels.length-1]
 			if (parent_level < level) { // child
 				parent_idx = idxs[idxs.length-1]
-				levels.push(level)
-				idxs.push(i)
 			} else if (parent_level > level) { // parent
 				levels.pop()
 				idxs.pop()
@@ -81,14 +79,10 @@ $(function() {
 				levels.pop()
 				idxs.pop()
 				parent_idx = idxs[idxs.length-1]
-				levels.push(level)
-				idxs.push(i)
 			}
-		} else { // root
-			levels.push(level)
-			idxs.push(i)
-			parent_idx = ''
 		}
+		levels.push(level)
+		idxs.push(i)
 
 		var s = h.html().trim()
 		if (h.has('code').length) {
