@@ -304,13 +304,16 @@ $(function() {
 	// create links on all back-references to all code headers
 	var t = {}
 	$('.doc code:not([id])').each(function() {
-		t[$(this).text()] = $(this)
+		var self = $(this)
+		var text = self.text()
+		if (text) t[text] = self
 	})
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
-		var id = $(this).attr('id')
-		$(this).find('code').each(function() {
+		var self = $(this)
+		var id = self.attr('id')
+		self.find('code').each(function() {
 			var text = $(this).text()
-			var target = t[text]
+			var target = text && t[text]
 			if (target)
 				target.wrap('<a></a>').parent().attr('href', '#'+id)
 		})
