@@ -94,8 +94,9 @@ $(function() {
 				return
 		}
 		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
-			' style="padding-left: '+((level-2)*1.5+.5)+
-			'em" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
+			' style="padding-left: '+((level-2)*1.5+.5)+'em; '+
+			(parent_idx ? 'display: none;' : '')+
+			'" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
 		i++
 	})
