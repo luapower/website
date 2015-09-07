@@ -307,7 +307,11 @@ $(function() {
 		var self = $(this)
 		if (!self.parent().attr('id')) {
 			var text = self.html().trim().replace(/\(.*?\).*/, '()') // strip arg lists
-			if (text) t[text] = self
+			if (text)
+				if (t[text])
+					t[text].append(self)
+				else
+					t[text] = self
 		}
 	})
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
