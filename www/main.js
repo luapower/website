@@ -33,6 +33,8 @@ $(function() {
 	var nav = $('#docnav')
 	if(!doc.length || !nav.length) return
 
+	return;
+
 	// wrap content sections (heading + everything till next heading) into divs
 	doc.find('h4').each(function() {
 		$(this).nextUntil('h4,h3,h2,h1,enddoc').andSelf().wrapAll('<div></div>')
@@ -52,10 +54,10 @@ $(function() {
 	var i = 0
 
 	var h = doc.find('h1,h2,h3,h4')
-	if (h.length > 200) // too many entries. cut the h4s
+	if (h.length > 400) // too many entries. cut the h4s
 		h = doc.find('h1,h2,h3')
-	//if (h.length > 200) // still too many entries. cut the h3's too
-	//	h = doc.find('h1,h2')
+	if (h.length > 400) // still too many entries. cut the h3's too
+		h = doc.find('h1,h2')
 
 	var levels = []
 	var idxs = []
