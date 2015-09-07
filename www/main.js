@@ -57,25 +57,37 @@ $(function() {
 	//if (h.length > 200) // still too many entries. cut the h3's too
 	//	h = doc.find('h1,h2')
 
-	var parents = []
+	var levels = []
+	var idxs = []
 	h.each(function() {
 		var h = $(this)
 		var level = parseInt(h.prop('tagName').match(/\d/))
 
 		// find the parent header
-		var parent_idx = ''
-		if (parents.length > 0) {
-			var parent_h = parents[parents.length-1]
-			var parent_level = parseInt(parent_h.prop('tagName').match(/\d/))
-			if (parent_level < level) {
-				parents.push(h)
-			} else if (parent_level > level) {
-				parents.pop()
-				parents.push(h)
+		var parent_idx
+		if (levels.length > 0) {
+			var parent_level = levels[levels.length-1]
+			if (parent_level < level) { // child
+				parent_idx = idxs[idxs.length-1]
+				levels.push(level)
+				idxs.push(i)
+			} else if (parent_level > level) { // parent
+				levels.pop()
+				idxs.pop()
+				levels.pop()
+				idxs.pop()
+				parent_idx = idxs[idxs.length-1]
+			} else { // sibling
+				levels.pop()
+				idxs.pop()
+				parent_idx = idxs[idxs.length-1]
+				levels.push(level)
+				idxs.push(i)
 			}
-			parent_idx = parent_h.parent().parent().attr('idx')
-		} else {
-			parents.push(h)
+		} else { // root
+			levels.push(level)
+			idxs.push(i)
+			parent_idx = ''
 		}
 
 		var s = h.html().trim()
