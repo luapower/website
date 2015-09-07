@@ -117,12 +117,14 @@ $(function() {
 				var i = $(this).attr('idx')
 				var d = nav.find('[idx='+i+']')
 				d.addClass('selected')
+				nav.find('[parent_idx="'+i+'"]').show()
 			})
 		.on('scrollSpy:exit',
 			function() {
 				var i = $(this).attr('idx')
 				var d = nav.find('[idx='+i+']')
 				d.removeClass('selected')
+				nav.find('[parent_idx="'+i+'"]').hide()
 			})
 		.scrollSpy()
 
