@@ -310,7 +310,6 @@ $(function() {
 			if (text) t[text] = self
 		}
 	})
-	console.log(t)
 	$('.doc').find('h1,h2,h3,h4').filter('[id]').each(function() {
 		var self = $(this)
 		var id = self.attr('id')
