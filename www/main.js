@@ -93,8 +93,9 @@ $(function() {
 			if (h.html().indexOf('require\'') >= 0)
 				return
 		}
-		t.push('<div '+(s.match(/\=\s*require/)?'class=hidden':'')+
-			' style="padding-left: '+((level-2)*1.5+.5)+'em; '+
+		t.push('<div class="'+
+			(s.match(/\=\s*require/) ? 'hidden' : '')+
+			' navlevel'+level+' style="'+
 			(parent_idx ? 'display: none;' : '')+
 			'" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
