@@ -572,9 +572,9 @@ warn {
 	color: #999;
 }
 
-#docnav .navlevel2 { padding-left: 0.5em; }
-#docnav .navlevel3 { padding-left: 2.0em; font-size: 90%; }
-#docnav .navlevel4 { padding-left: 3.5em; font-size: 80%; }
+#docnav .navlevel2 { padding-left: 0.5em; font-size: 90%; }
+#docnav .navlevel3 { padding-left: 2.0em; font-size: 80%; }
+#docnav .navlevel4 { padding-left: 3.5em; font-size: 70%; }
 
 /* selected link in the left navbar showing the available docs */
 .selected_doc { position: relative; }
