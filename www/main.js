@@ -95,7 +95,7 @@ $(function() {
 		}
 		t.push('<div class="'+
 			(s.match(/\=\s*require/) ? 'hidden' : '')+
-			' navlevel'+level+' style="'+
+			' navlevel'+level+'" style="'+
 			(parent_idx ? 'display: none;' : '')+
 			'" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
 		h.parent().attr('idx', i)
