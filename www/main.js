@@ -69,11 +69,11 @@ $(function() {
 			var parent_level = levels[levels.length-1]
 			if (parent_level < level) { // child
 				parent_idx = idxs[idxs.length-1]
-			} else if (parent_level > level) { // parent
-				levels.pop()
-				idxs.pop()
-				levels.pop()
-				idxs.pop()
+			} else if (parent_level > level) { // parent (one or more levels up)
+				for (var i = 0; i <= parent_level - level; i++) {
+					levels.pop()
+					idxs.pop()
+				}
 				parent_idx = idxs[idxs.length-1]
 			} else { // sibling
 				levels.pop()
