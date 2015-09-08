@@ -48,42 +48,19 @@ $(function() {
 	})
 
 	// build the doc nav
-	var t = []
-	var i = 0
-
 	var h = doc.find('h1,h2,h3,h4')
 	if (h.length > 400) // too many entries. cut the h4s
 		h = doc.find('h1,h2,h3')
 	if (h.length > 400) // still too many entries. cut the h3's too
 		h = doc.find('h1,h2')
-
-	var levels = []
-	var idxs = []
+	var t = []
+	var idx = 1
+	var idxs = [] // actually a map {level -> last_index}
 	h.each(function() {
 		var h = $(this)
 		var level = parseInt(h.prop('tagName').match(/\d/))
-
-		// find the parent index
-		var parent_idx
-		if (levels.length > 0) {
-			var parent_level = levels[levels.length-1]
-			if (parent_level < level) { // child
-				parent_idx = idxs[idxs.length-1]
-			} else if (parent_level > level) { // parent (one or more levels up)
-				for (var i = 0; i <= parent_level - level; i++) {
-					levels.pop()
-					idxs.pop()
-				}
-				parent_idx = idxs[idxs.length-1]
-			} else { // sibling
-				levels.pop()
-				idxs.pop()
-				parent_idx = idxs[idxs.length-1]
-			}
-		}
-		levels.push(level)
-		idxs.push(i)
-		parent_idx = parent_idx || ''
+		var parent_idx = idxs[level-1] || ''
+		idxs[level] = idx
 
 		var s = h.html().trim()
 		if (h.has('code').length) {
@@ -98,8 +75,9 @@ $(function() {
 			' navlevel'+level+'" style="'+
 			(parent_idx ? 'display: none;' : '')+
 			'" idx='+i+' parent_idx='+parent_idx+'><a>'+s+'</a></div>')
-		h.parent().attr('idx', i)
-		i++
+		h.parent().attr('idx', idx)
+
+		idx++
 	})
 	nav.html(t.join(''))
 
