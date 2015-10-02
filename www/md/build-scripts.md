@@ -60,6 +60,9 @@ because we want to build both static and dynamic versions the libraries.
   * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
   * `-stdlib=libc++ -mmacosx-version-min=10.7` : for all C++ libraries on OSX
   * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)
+  * `-fno-exceptions`            : avoid linking to libstdc++ if the code doesn't use exceptions
+  * `-fno-rtti`                  : make the binary smaller if the code doesn't use dynamic_cast or typeid
+  * `-fvisibility=hidden`        : make the symbol table smaller if the code is explicit about exports
 
 __IMPORTANT__: The order in which `-l` options appear is significant!
 Always place all object files _and_ all dependent libraries _before_
