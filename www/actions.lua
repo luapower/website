@@ -190,6 +190,8 @@ local function action_docfile(docfile)
 	data.tagline = dtags.tagline
 	data.doc_mtime = nil --TODO: use git on the website repo
 	data.doc_mtime_ago = data.doc_mtime and timeago(data.doc_mtime)
+	data.edit_link = string.format(
+		'https://github.com/luapower/website/edit/master/www/md/%s', docfile)
 	app.out(render_main('doc.html', data))
 end
 
@@ -769,6 +771,7 @@ local function package_info(pkg, doc)
 	t.doc_path = doc_path
 	t.title = title
 	t.tagline = tagline
+	t.edit_link = on_github and doc_path and origin_url..'/edit/master/'..doc_path
 
 	--sidebar
 	t.icons = package_icons(package_type, platforms)
@@ -1085,27 +1088,6 @@ local function action_home()
 		end
 		table.insert(data.cats, {cat = cat.name, packages = t})
 	end
-
-	--[[
-	--TODO: remove this if it turns out that we don't need the daily bundles anymore.
-	local t = {}
-	data.download_buttons = t
-	for _,pl in ipairs{'mingw32', 'linux32', 'osx32', 'mingw64', 'linux64', 'osx64'} do
-		local ext = pl:find'linux' and '.tar.gz' or '.zip'
-		local name = pl..ext
-		local file = 'luapower-'..name
-		local size = lfs.attributes(app.wwwpath('files/'..file), 'size')
-		local size = string.format('%d MB', size / 1024 / 1024)
-		if size then
-			table.insert(t, {
-				platform = pl,
-				file = file,
-				name = name,
-				size = size,
-			})
-		end
-	end
-	]]
 
 	local file = 'files/luapower-all.zip'
 	local size = lfs.attributes(app.wwwpath(file), 'size')
