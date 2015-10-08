@@ -193,7 +193,7 @@ local function action_docfile(docfile)
 	data.doc_mtime_ago = mtime and timeago(mtime)
 	data.edit_link = string.format(
 		'https://github.com/luapower/website/edit/master/www/md/%s',
-			(docfile:match('/([^/]+)')))
+			(docfile:match('/([^/]+)$')))
 	app.out(render_main('doc.html', data))
 end
 
