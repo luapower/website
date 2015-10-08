@@ -460,16 +460,6 @@ warn {
 	font-size: 90%;
 }
 
-.rotate90 {
-	/* for firefox, safari, chrome, etc. */
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	/* for ie */
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-	/* for opera */
-	-o-transform: rotate(-90deg);
-}
-
 /* package page ----------------------------------------------------------- */
 
 .action_links {
