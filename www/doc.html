@@ -22,6 +22,9 @@
 				<br>
 				<p class="small gray" style="float: right">
 					{{#doc_mtime_ago}}updated: <b>{{doc_mtime_ago}}</b>{{/doc_mtime_ago}}
+					{{#edit_link}}
+					| <a href="{{edit_link}}">Edit on GitHub</a>
+					{{/edit_link}}
 				</p>
 				<!--enddoc is needed for spyscroll docnav-->
 				<enddoc></enddoc>
