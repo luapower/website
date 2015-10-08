@@ -31,10 +31,6 @@
 						<a href="/{{package}}" class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}"><i class="fa fa-file-text-o"></i> documentation</a>
 						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}"><i class="fa fa-info-circle"></i> package info</a>
 						<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
-						{{#edit_link}}
-						<br>
-						<a class=github_label href="{{edit_link}}">Edit on GitHub</a>
-						{{/edit_link}}
 					</td>
 				</tr>
 			</table>
@@ -615,6 +611,9 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 							time="{{doc_mtime}}"
 							reltime="{{doc_mtime_ago}}">{{doc_mtime_ago}}</b>
 					{{/doc_mtime_ago}}
+					{{#edit_link}}
+					| <a href="{{edit_link}}">Edit on GitHub</a>
+					{{/edit_link}}
 				</p>
 				<!--enddoc is needed for spyscroll docnav-->
 				<enddoc></enddoc>
