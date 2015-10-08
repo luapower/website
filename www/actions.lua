@@ -188,8 +188,9 @@ local function action_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
-	data.doc_mtime = format_date(lfs.attributes(docfile, 'mtime')) --TODO: use git on the website repo
-	data.doc_mtime_ago = data.doc_mtime and timeago(data.doc_mtime)
+	local mtime = lfs.attributes(docfile, 'mtime') --TODO: use git on the website repo
+	data.doc_mtime = format_date(mtime)
+	data.doc_mtime_ago = mtime and timeago(mtime)
 	data.edit_link = string.format(
 		'https://github.com/luapower/website/edit/master/www/md/%s',
 			(docfile:match('/([^/]+)')))
