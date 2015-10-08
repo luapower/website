@@ -606,13 +606,14 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				<br>
 				<p class="small gray" style="float: right">
 					{{#doc_mtime_ago}}
-					Last updated:
+						Last updated:
 						<b class="time"
 							time="{{doc_mtime}}"
 							reltime="{{doc_mtime_ago}}">{{doc_mtime_ago}}</b>
 					{{/doc_mtime_ago}}
 					{{#edit_link}}
-					| <a href="{{edit_link}}">Edit on GitHub</a>
+						{{#doc_mtime_ago}} | {{/doc_mtime_ago}}
+						<a href="{{edit_link}}">Edit on GitHub</a>
 					{{/edit_link}}
 				</p>
 				<!--enddoc is needed for spyscroll docnav-->
