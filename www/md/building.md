@@ -29,10 +29,17 @@ tagline:  how to build binaries
  [luapower.com/files](http://luapower.com/files)
  (but please report broken links anyway)
 
-## Building on Win32 for Win32
+## Building on Windows
+
+On 32bit systems use:
 
 	cd csrc/<package>
 	sh build-mingw32.sh
+
+On 64bit systems use:
+
+	cd csrc/<package>
+	sh build-mingw64.sh
 
 These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order)
 are in your PATH.
@@ -44,10 +51,11 @@ Here's MSYS, which you can use on both 32bit and 64bit systems:
 Here's the MinGW-w64 package used to build the current luapower stack:
 
 [mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
+[mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
 
 Additional tools needed by a few special packages.
 The build scripts assume these are in your PATH too.
-Use them on 64bit systems too.
+Use them on both 32bit and 64bit systems.
 
 ----
 [nasm 2.11 (for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
@@ -57,29 +65,14 @@ Use them on 64bit systems too.
 The resulted binaries are linked to msvcrt.dll and should be compatible
 down to Windows XP SP3.
 
-## Building on Win64 for Win64
-
-	cd csrc/<package>
-	sh build-mingw64.sh
-
-These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order)
-are in your PATH.
-
-Here's the MinGW-w64 package used to build the current luapower stack:
-
-[mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
-
-The resulted binaries are linked to msvcrt.dll and should be compatible
-down to Windows XP x64 SP2.
-
 ## Building on Linux (x86 native)
 
-On x86:
+On 32bit systems:
 
 	cd csrc/<package>
 	sh build-linux32.sh
 
-On x64:
+On 64bit systems:
 
 	cd csrc/<package>
 	sh build-linux64.sh
