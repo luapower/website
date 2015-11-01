@@ -5,12 +5,12 @@ tagline:  how to build binaries
 
 ## What you need to know first
 
- * Building is based on trivial [shell scripts][build-scripts] 
+ * Building is based on trivial [shell scripts][build-scripts]
  that invoke gcc directly (no makefiles).
  * Each supported package/platform/arch combination has a separate build
  script in `csrc/<package>/build-<platform>.sh`.
  * C sources are included so you can start right away.
- * Dependent packages are listed on the website (under the section 
+ * Dependent packages are listed on the website (under the section
  "Binary Dependencies") and in `csrc/<package>/WHAT`. Build those first.
  * The only sure way to get a binary on the first try is to use the exact
  toolchain as described here for each platform.
@@ -18,14 +18,14 @@ tagline:  how to build binaries
  * For building Lua/C modules you need [lua-headers].
  * For building Lua/C modules on Windows you also need [luajit].
  * You will get both dynamic libraries (stripped) and static libraries.
- * libgcc and libstdc++ will be statically linked, except on OSX which 
+ * libgcc and libstdc++ will be statically linked, except on OSX which
  doesn't support that and where libc++ is used.
  * Binaries on Windows are linked to msvcrt.dll.
  * Lua/C modules on Windows are linked to lua51.dll (which is why you need luajit).
  * OSX libs set their install_name to `@rpath/<libname>.dylib`
  * the luajit exe on OSX sets `@rpath` to `@loader_path`
  * the luajit exe on Linux sets `rpath` to `$ORIGIN`
- * all listed tools are mirrored at 
+ * all listed tools are mirrored at
  [luapower.com/files](http://luapower.com/files)
  (but please report broken links anyway)
 
@@ -34,15 +34,20 @@ tagline:  how to build binaries
 	cd csrc/<package>
 	sh build-mingw32.sh
 
-These scripts assume that both MSYS and MinGW bin dirs (in this order)
-are in your PATH. Here's the MinGW-w64 package used to build 
-the current luapower stack:
+These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order)
+are in your PATH.
+
+Here's MSYS, which you can use on both 32bit and 64bit systems:
+
+[MSYS-20111123 (32bit)](http://sourceforge.net/projects/mingw-w64/files/External%20binary%20packages%20%28Win64%20hosted%29/MSYS%20%2832-bit%29/MSYS-20111123.zip/download)
+
+Here's the MinGW-w64 package used to build the current luapower stack:
 
 [mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
 
 Additional tools needed by a few special packages.
 The build scripts assume these are in your PATH too.
-Use them on 64bit Windows too.
+Use them on 64bit systems too.
 
 ----
 [nasm 2.11 (for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
@@ -58,8 +63,9 @@ down to Windows XP SP3.
 	sh build-mingw64.sh
 
 These scripts assume that both MSYS and MinGW-w64 bin dirs (in this order)
-are in your PATH. Here's the MinGW-w64 package used to build
-the current luapower stack:
+are in your PATH.
+
+Here's the MinGW-w64 package used to build the current luapower stack:
 
 [mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
 
@@ -127,7 +133,7 @@ Current OSX builds are based on clang 6.0 (LLVM 3.5svn) and are done
 on an OSX 10.9 using OSX SDK 10.10.
 
 The generated binaries are compatible down to OSX 10.6 for both 32bit
-and 64bit, except for C++ libraries which link to libc++ which is 
+and 64bit, except for C++ libraries which link to libc++ which is
 OSX 10.7+.
 
 > NOTE: For Lion and above users, Apple provides a package called

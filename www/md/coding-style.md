@@ -90,7 +90,7 @@ Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooB
   * `v` is for values that are passed around
   * `x` is for generic math quantities
   * `s` is for strings
-  * `c` is for chars
+  * `c` is for 1-char strings
   * `f` and `func` are for functions
   * `o` is for objects
   * `ret` is for return values
@@ -102,13 +102,13 @@ Use Lua's naming conventions `foo_bar` and `foobar` instead of `FooBar` or `fooB
   * `err` is for errors
   * `t0` or `t_` is for avoiding a name clash with `t`
 
-### Abreviations
+### Abbreviations
 
 Abbreviations are ok, just don't forget to document them when they first appear in the code. Short names are mnemonic and you can juggle more of them in your head at the same time, and they're indicative of a deeply understood problem: you're not being lazy for using them.
 
 ## Comments
 
-Assume your readers already know Lua so try not to teach that to them (it would show that you're really trying to teach yourself). But don't tell them that the code "speaks for itself" either because it doesn't. Take time to document the tricky parts of the code. If there's an underlying narrative on how you solved a problem, take time to document that too. Don't worry about how long that is, people love stories. And in fact the high-level overview, how everything is put together is more important than the nitty-gritty details and too often missing.
+Assume your readers already know Lua so try not to teach that to them (it would show that you're really trying to teach it to yourself). But don't tell them that the code "speaks for itself" either because it doesn't. Take time to document the tricky parts of the code. If there's an underlying narrative on how you solved a problem, take time to document that too. Don't worry about how long that is, people love stories. And in fact the high-level overview, how everything is put together is _much more important_ than the nitty-gritty details and it's too often missing.
 
 ## Syntax
 
@@ -125,7 +125,7 @@ Put cdefs in a separate `foo_h.lua` file because it may contain types that other
 
 Add a comment on top of your `foo_h.lua` file describing the origin (which files? which version?) and process (cpp? by hand?) used for generating the file. This adds confidence that the C API is complete and up-to-date and can hint a maintainer on how to upgrade the definitions.
 
-Call `ffi.load()` without paths, custom names or version numbers to keep the module away from any decision regarding how and where the library is to be found. This allows for more freedom on how to deploy libraries.
+Call `ffi.load()` without paths, custom names or version numbers to keep the module away from any decisions regarding how and where the library is to be found. This allows for more freedom on how to deploy libraries.
 
 ## Code patterns
 
@@ -154,5 +154,5 @@ emulating bool()							`not not x`													`x and true or false`
 
 ## Strict mode
 
-Use `require'strict'` when developing, but make sure to remove it before publishing your code to avoid breaking other people's code.
+Use `require'strict'` when developing, but make sure to __remove it__ before publishing your code to avoid breaking other people's code.
 

@@ -159,7 +159,7 @@ Ideally, your module has:
 
   * __distinction__ - focused problem domain
   * __completeness__ - exhaustive of the problem domain
-  * __API documentation__ - that can be browsed online
+  * __API documentation__ - so it can be browsed online
   * __test and/or demo__ - so it can be seen to work
   * __a non-viral license__ - so it doesn't impose restrictions on _other_ modules
 
