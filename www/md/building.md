@@ -50,8 +50,10 @@ Here's MSYS, which you can use on both 32bit and 64bit systems:
 
 Here's the MinGW-w64 package used to build the current luapower stack:
 
+----
 [mingw-w64 4.9.2 (32bit, posix threads, SJLJ exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/i686-4.9.2-release-posix-sjlj-rt_v4-rev2.7z)
 [mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
+----
 
 Additional tools needed by a few special packages.
 The build scripts assume these are in your PATH too.
