@@ -29,7 +29,7 @@ tagline:  how to build binaries
  [luapower.com/files](http://luapower.com/files)
  (but please report broken links anyway)
 
-## Building on Windows
+## Building on Windows for Windows
 
 On 32bit systems use:
 
@@ -67,7 +67,7 @@ Use them on both 32bit and 64bit systems.
 The resulted binaries are linked to msvcrt.dll and should be compatible
 down to Windows XP SP3.
 
-## Building on Linux (x86 native)
+## Building on Linux for Linux
 
 On 32bit systems:
 
