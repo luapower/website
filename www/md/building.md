@@ -154,8 +154,8 @@ support cross-compilation. If you get errors, check the scripts
 to see if they are written to invoke `x86_64-apple-darwin11-gcc`
 and family.
 
-[osxcross](https://github.com/tpoechtrager/osxcross)
-[pre-built osxcross](http://luapower.com/files/osxcross.tgz)
+[osxcross]: https://github.com/tpoechtrager/osxcross
+[pre-built osxcross]: http://luapower.com/files/osxcross.tgz
 
 ## Building with mgit
 
