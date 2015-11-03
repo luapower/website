@@ -137,6 +137,26 @@ developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
 
+## Building on Linux for OSX
+
+__NOTE:__ This is experimental, lightly tested and not available
+for all packages (but available for most).
+
+You can build for OSX on a Linux box using the [osxcross] cross-compiler.
+You can build osxcross (both clang and gcc) yourself (you need the
+OSX 10.7 SDK for that) or you can use a [pre-built osxcross]
+that was compiled on and is known to work on an x64 Ubuntu 14.04 LTS.
+
+To use the cross-compiler, just add the `osxcross/target/bin` dir
+to your PATH and run the same `build-osxXX.sh` scripts that you
+would run for a native OSX build. Remember: not all packages
+support cross-compilation. If you get errors, check the scripts
+to see if they are written to invoke `x86_64-apple-darwin11-gcc`
+and family.
+
+[osxcross](https://github.com/tpoechtrager/osxcross)
+[pre-built osxcross](http://luapower.com/files/osxcross.tgz)
+
 ## Building with mgit
 
 	./mgit build <package>
