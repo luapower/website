@@ -134,7 +134,9 @@ To get a shell into the VMs, use:
 	sudo lxc-attach -n u10_32     # get a shell into the 32bit Ubuntu 10 VM
 	sudo lxc-attach -n u10_64     # get a shell into the 64bit Ubuntu 10 VM
 
-Once inside, use the same instructions for Ubuntu 10 above.
+Once inside, use the same instructions for Ubuntu 10 above. To get
+the compiled binaries out of the VMs check out `/var/lib/lxc/u10_XX/rootfs`
+which is where the VMs' root filesystems are.
 
 ## Building on OSX for OSX
 
