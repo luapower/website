@@ -151,8 +151,6 @@ is called "foo"), add a new file called `bob.baseurl` in which you write
 _`https://github.com/bob/`_ and a file called `foo.origin` in which you write
 _`bob`_ and send a pull request.
 
-You can do that from github directly, just click on the "+" sign.
-
 Note that luapower users will always pull the package directly from your
 repository, so it's important that your repository remains accessible
 at its url, and that you don't destroy its history, in case users might
