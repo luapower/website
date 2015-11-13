@@ -145,10 +145,11 @@ again, add your package origins to it, push, then send a pull request:
 All that jazz just to add two files to a repository on github is pretty
 ridiculous, I know. We programmers have such low standards. So just click
 on the "+" sign [here](https://github.com/luapower/luapower-repos/tree/master/.mgit)
-and (continuing to assume that your github username is "bob" and your package
+(which will automatically make a fork of luapower-repos to your account) and
+(continuing to assume that your github username is "bob" and your package
 is called "foo"), add a new file called `bob.baseurl` in which you write
-`https://github.com/bob/` and a file called `foo.origin` in which you write
-`bob` and send a pull request.
+_`https://github.com/bob/`_ and a file called `foo.origin` in which you write
+_`bob`_ and send a pull request.
 
 You can do that from github directly, just click on the "+" sign.
 
