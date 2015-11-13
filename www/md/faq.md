@@ -57,7 +57,7 @@ This results in a self-contained, version-controled,
 run-everywhere, build-anytime LuaJIT installation in which packages can
 be added, removed, upgraded and downgraded at will.
 
-Check out the [philosophy] page more insight on these choices.
+Check out the [philosophy] page more insight into these choices.
 
 ## OK, how do I put one together?
 
