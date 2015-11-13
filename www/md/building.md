@@ -115,6 +115,22 @@ we might have to bump up the backwards-compatibility claim up to GLIBC 2.11.
 Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that
 can run on that system might be too old for us.
 
+### Running Ubuntu 10 on Ubuntu 14
+
+An easy and runtime-cheap way to get Ubuntu 10 environments
+for 32bit and 64bit on an Ubuntu 14 machine is with LXC:
+
+	$ sudo apt-get install lxc
+	$ sudo lxc-create -n u10_64 -t ubuntu -- -r lucid
+	$ sudo lxc-create -n u10_32 -t ubuntu -- -r lucid -a i386
+	$ sudo lxc-start  -n u10_64 -d
+	$ sudo lxc-start  -n u10_32 -d
+	$ sudo lxc-attach -n u10_32
+	root@u10_32:/# exit
+	$ sudo lxc-attach -n u10_64
+	root@u10_64:/# exit
+	$ _
+
 ## Building on OSX for OSX
 
 	cd csrc/<package>
