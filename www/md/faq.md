@@ -57,7 +57,9 @@ This results in a self-contained, version-controled,
 run-everywhere, build-anytime LuaJIT installation in which packages can
 be added, removed, upgraded and downgraded at will.
 
-## OK, how do I install it?
+Check out the [philosophy] page more insight on these choices.
+
+## OK, how do I put one together?
 
 The best way is with [multigit][luapower-git],
 which keeps everything under version control at all times, making it easy
@@ -214,7 +216,7 @@ separate branches, except for packages tagged `dev`).
 
 > __Tip:__ To clone package foo at tag point r5 (which indicates the
 5th release), do `mgit clone foo=r5`. To clone the same package at a known
-commit point, do `mgit clone foo=r5-2-a43cf7' or just `mgit clone foo=a43cf7'.
+commit point, do `mgit clone foo=r5-2-a43cf7` or just `mgit clone foo=a43cf7`.
 
 ## Why is your code in Public Domain?
 

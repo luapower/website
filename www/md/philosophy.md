@@ -73,14 +73,15 @@ cloning git repositories.
 One of the great barriers to getting involved in projects online is the
 friction that our collaboration tools inflict on us. This goes for anything
 from correcting a typo on wikipedia to submitting a patch to the Linux kernel.
-Github is just one way to lower that barrier in the realm of programming.
+Although far from perfect, Github is one solid way to lower that barrier
+for code-based projects.
 
 Another way of looking at it is Alan Kay's idea of symmetric authoring
 and consumption, which says that you have to be able to edit and share back
 what you consume on the spot. The combination of a code editor and a VCS
 is the closest we have today to that idea as far as coding goes.
 It's not much, but it's definitely better than most package managers
-which copy modules out of the git tree.
+which copy modules out of the git tree or create junk files on your tree.
 
 Deploying code exclusively via git does away with the dichotomy between
 module writer and module consumer, opening the way for more collaboration.
@@ -97,7 +98,7 @@ just adding an extra argument to a function is a compatibility-breaking
 change, because you can't assume that your function isn't already called
 with extra arguments in existing code, arguments which the previous version
 of your function discarded, but the current version doesn't.
-With semantic versioning you have three choices here: either
+With semantic versioning you have three choices in this case: either
 a) increment the major version now, b) wait until more changes
 accumulate to warrant a major version bump, or c) lie, and increment
 the minor version instead. None of these are particularly good options.
@@ -105,17 +106,18 @@ the minor version instead. None of these are particularly good options.
 ## NO DIRECTORIES
 
 This may be a hard sell but I stand by it. Directories are evil. Not so
-much because of semantics (hierarchical classification systems are evil),
+much because of semantics (i.e. hierarchies, which by definition only
+present a single perspective of a system),
 but because of the tools we use (file browsers, code editors, IDEs, command
 line) suck at working with them. You don't have instant search in most of them
-(sublime text excepted), but you have to "navigate" them instead (this is
+(Sublime Text excepted), but instead you have to _navigate_ them (this is
 true for GUIs and it's true for the command line as well). Also, one of the
 major reasons for directory hierarchies is structuring information for humans
-to consume in the learning phase. In the case of a module distribution, the
+to consume _in the learning phase_. In the case of a module distribution, the
 structure of a package is the same for all packages. Thus the juxtaposition
 of files from many modules doesn't make things less organized. If you feel
 uneasy about a long flat list of files, try `./git -all make-hardlinks`
-and inspect the contents of packages from the `_git` directory.
+and inspect the contents of packages from the `.mgit` directory.
 
 Philosophy aside, having all the modules in the same directory is the way
 `require()` works by default, which means there's no need to add a custom
@@ -130,7 +132,7 @@ my deployment targets.
 
 ## BUILD SYSTEM
 
-People love build systems. I for one hate them and I think for the most part
+People _love_ build systems. I for one hate them and I think for the most part
 that they are unnecessary. For me, the success rate for going from
 `make` to `dll` on the first try has always been pretty lousy.
 Building with simple gcc scripts is much more transparent,
@@ -168,13 +170,15 @@ consume. For production, this means plain-text with good support for tables
 (invaluable for tech docs of any kind), and a markup format independent of
 any wiki engine, web framework or hosting provider (incidentally, the
 git-flavored markdown fails on both the independence aspect and table
-support). I went with pandoc here because it has the best table support
+support). I went with [pandoc] on this because it has the best table support
 I've seen, and you can even write custom writers in Lua (and filters in any
 language that can read and write json). It also supports a variety of markup
 formats for input, which could come in handy for aggregating 3rd party docs
 into the website. Which brings me to the consumption part: docs should start
 with a quick-ref table listing the entire API. Chances are you'll rarely look
 beyond that table once you get past the initial learning curve for that API.
+
+[pandoc]: http://pandoc.org
 
 ## FREEDOM
 
@@ -188,6 +192,6 @@ but they cannot be meaningfully expressed without delving into
 the history of IP law, politics and philosophy even, so I'll not expand
 on that here (even though this _is_ the philosophy section).
 If you feel like opening up that can of worms for yourself,
-try to research an answer to the following practical question:
+try to research an answer to the following _practical_ question:
 Who is the copyright holder of the output of preprocessing a copyrighted
 C header file?
