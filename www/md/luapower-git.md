@@ -5,24 +5,13 @@ tagline: git-based workflow for luapower
 
 ## What
 
-Managing packages with [multigit](https://github.com/capr/multigit),
+Managing luapower with [multigit](https://github.com/capr/multigit),
 the tool for working with overlaid git repositories.
 
-## Why not plain git?
+## How
 
-Because luapower packages need to be overlaid over the same directory, and
-there's just no git-clone option to do that - you need to type in a few more
-git commands, and multigit does just that. Another reason is keeping
-a list of all known packages so that they can be managed as a collection
-(i.e. clone all, pull all, etc.). And then, there's a handy set of git
-commands for working with overlaid repos (show modified files across
-all repos, etc.).
-
-## Getting packages
-
-First, we clone multigit. Then we clone the luapower-repos meta-package
-which contains the current list of luapower packages.
-Finally, we clone the packages:
+First, clone multigit. Then clone the luapower-repos meta-package
+which contains the current list of packages. Finally, clone the packages:
 
 <div class="shell_btn"></div>
 <div class=unix_shell>
@@ -44,12 +33,24 @@ a) change luapower's base url in multigit with
 b) configure git to replace urls on-the-fly with
 `git config --global url."ssh://git@github.com/luapower/".insteadOf https://github.com/luapower/`
 
-> __Tip:__ Add mgit to your PATH so you can type `mgit` instead of `./mgit`.
-You won't have to clone luapower into the multigit directory either.
-On Linux and OSX you can do that with: `sudo ln -s /path/to/mgit/mgit /usr/local/bin/`
+> __Tip:__ Add multigit to your PATH so you can type `mgit` instead of
+`./mgit`. Then won't have to clone luapower into the same directory where
+you cloned multigit and you will be able to use multigit for other things
+too. On Linux and OSX you can do this with:
+`sudo ln -s /path/to/multigit/mgit /usr/local/bin/`.
 
-After all packages are cloned, your luapower directory should 
+After all the packages are cloned, your luapower directory should
 look like [this](/files/luapower/).
+
+## Why not use plain git?
+
+Because luapower packages need to be overlaid over the same directory, and
+there's just no git-clone option to do that - you need to type in a few more
+git commands, and multigit does just that. Another reason is keeping
+[a list of all known packages](https://github.com/luapower/luapower-repos/tree/master/.mgit)
+so that they can be managed as a collection (i.e. clone all, pull all, etc.).
+And then, there's a handy set of git commands for working with overlaid repos
+(show modified files across all repos, etc.).
 
 ## Managing packages
 
@@ -85,7 +86,7 @@ into your tree:
 	mgit clone https://github.com/bob/foo https://github.com/bob/bar
 </div>
 
-Say you don't want to type the full url all the time:
+You don't have to type the full url all the time:
 
 <div class="shell_btn"></div>
 <div class="unix_shell">
@@ -127,8 +128,8 @@ package with the [luapower] command.
 
 Publishing your package to luapower.com is just a matter of sending
 a pull request on the [luapower-repos](https://github.com/luapower/luapower-repos)
-package with your additions. So you have to fork luapower-repos, re-clone it,
-add your package origins to it, push, then send a pull request:
+package with your additions. So you have to fork luapower-repos, clone it
+again, add your package origins to it, push, then send a pull request:
 
 	$ mgit remove luapower-repos
 	$ mgit clone https://github.com/you/luapower-repos
@@ -140,6 +141,16 @@ add your package origins to it, push, then send a pull request:
 	[luapower-repos]$ git push                     # push
 	[luapower-repos]$ exit                         # exit the git subshell
 	$ _
+
+All that jazz just to add two files to a repository on github is pretty
+ridiculous, I know. We programmers have such low standards. So just click
+on the "+" sign [here](https://github.com/luapower/luapower-repos/tree/master/.mgit)
+and (continuing to assume that your github username is "bob" and your package
+is called "foo"), add a new file called `bob.baseurl` in which you write
+`https://github.com/bob/` and a file called `foo.origin` in which you write
+`bob` and send a pull request.
+
+You can do that from github directly, just click on the "+" sign.
 
 Note that luapower users will always pull the package directly from your
 repository, so it's important that your repository remains accessible
