@@ -120,6 +120,7 @@ can run on that system might be too old for us.
 An easy and runtime-cheap way to get Ubuntu 10 environments
 for 32bit and 64bit on an Ubuntu 14 machine is with LXC:
 
+	sudo apt-get update
 	sudo apt-get install lxc
 	sudo lxc-create -n u10_64 -t ubuntu -- -r lucid
 	sudo lxc-create -n u10_32 -t ubuntu -- -r lucid -a i386
@@ -129,14 +130,13 @@ for 32bit and 64bit on an Ubuntu 14 machine is with LXC:
 	sudo lxc-start -n u10_32 -d
 	sudo lxc-ls --running         # should print: u10_64 u10_32
 
-To get a shell into the VMs, use:
+To get a shell into a container, type:
 
-	sudo lxc-attach -n u10_32     # get a shell into the 32bit Ubuntu 10 VM
-	sudo lxc-attach -n u10_64     # get a shell into the 64bit Ubuntu 10 VM
+	sudo lxc-attach -n u10_64
 
 Once inside, use the same instructions for Ubuntu 10 above. To get
 the compiled binaries out of the VMs check out `/var/lib/lxc/u10_XX/rootfs`
-which is where the VMs' root filesystems are.
+which is where the containers' root filesystems are.
 
 ## Building on OSX for OSX
 
