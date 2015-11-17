@@ -116,7 +116,7 @@ major reasons for directory hierarchies is structuring information for humans
 to consume _in the learning phase_. In the case of a module distribution, the
 structure of a package is the same for all packages. Thus the juxtaposition
 of files from many modules doesn't make things less organized. If you feel
-uneasy about a long flat list of files, try `mgit -all make-hardlinks`
+uneasy about a long flat list of files, try `mgit --all make-hardlinks`
 and inspect the contents of packages from the `.mgit` directory.
 
 Philosophy aside, having all the modules in the same directory is the way
