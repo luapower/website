@@ -41,8 +41,8 @@ C libs must also include their source code, build scripts and binaries:
 
 	csrc/foo/*                           C sources
 	csrc/foo/WHAT                        WHAT file (see below)
-	csrc/foo/build-<platform>.sh         [build scripts][build-scripts]
-	bin/<platform>/*.dll|.so|.dylib|.a   [binaries][build-scripts]
+	csrc/foo/build-<platform>.sh         build scripts
+	bin/<platform>/*.dll|.so|.dylib|.a   binaries
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
@@ -75,7 +75,7 @@ document for it, a single doc matching the package name would suffice.
 
 The WHAT file is for packages that have a C component (i.e. Lua/C, C
 and Lua+ffi packages that bind on 3rd-party libs), and it's used to describe
-that C component. Pure Lua packages don't need a WHAT file. It should look
+that C component (pure Lua packages don't need a WHAT file). It should look
 like this:
 
 	cairo 1.12.16 from http://cairographics.org/releases/ (MPL/LGPL license)
@@ -110,11 +110,11 @@ Example:
 
 ### The code
 
-Check out the [coding-style].
+Check out the info on [coding style][coding-style].
 
 ### The build scripts
 
-Check out the [guideline][build-scripts].
+Check out the info on [build scripts][build-scripts].
 
 ### The License
 
