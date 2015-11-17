@@ -7,17 +7,13 @@ tagline: how to create luapower packages
 
 There are 5 types of luapower packages:
 
-  * __Lua module__: written in Lua, compatible with LuaJIT2, Lua 5.1
-  and optionally Lua 5.2.
-  * __Lua/C module__: written in C using the Lua C API, compatible with
-  LuaJIT 2.x, Lua 5.1 and optionally Lua 5.2.
-  * __Lua+ffi module__: written in Lua using the LuaJIT ffi extension,
-  compatible with LuaJIT 2.x and optionally with luaffi; the C library
-  it binds to is included in the package in source and binary form.
-  * __C module__: binary dependency or support library for other module;
-  source and binary included.
+  * __Lua module__: written in Lua
+  * __Lua/C module__: written in C using the Lua C API (*)
+  * __Lua+ffi module__: written in Lua using the LuaJIT ffi extension (*)
+  * __C module__: binary dependency or support library for other module (*)
   * __other__: none of the above: media/support files, etc.
 
+(*) binaries and C source code included.
 
 ### TL;dr: Template packages
 
