@@ -40,8 +40,8 @@ overhead either, as there's no need for a custom module loader.
 Luapower is a dead simple idea: it puts [luajit] and a bunch
 of modules in separate repositories [on github](https://github.com/luapower),
 and it allows you to clone them back together _over the same directory_
-(git can do that with the `--git-dir` option, which
-we wrap in a [script][luapower-git] for typing comfort).
+(git can do that with the `--git-dir` option, which was wrapped
+in a [script][luapower-git] for typing comfort).
 The files in the repos are [laid out][get-involved] such that when
 cloned overlaid like that, the result is a self-contained, runnable
 luajit installation. Binaries for all platforms are included directly

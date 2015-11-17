@@ -214,4 +214,4 @@ is already loaded, and C++11 libs (eg. terra) need to link to
 libc++ anyway. OTOH, libc++ is 10.7+, so this means leaving 10.6 users
 in the cold, unless you ship libc++ for them (and only load it for them).
 Because the [objc] binding requires OSX 10.7+ anyway (for reasons unrelated
-to C++), we chose to drop 10.6 support altogether and stick with libc++.
+to C++), I chose to drop 10.6 support altogether and stick with libc++.
