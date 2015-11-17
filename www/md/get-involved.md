@@ -7,11 +7,15 @@ tagline: how to create luapower packages
 
 There are 5 types of luapower packages:
 
-  * __Lua module__: written in Lua, compatible with LuaJIT2, Lua 5.1 and optionally Lua 5.2
-  * __Lua/C module__: written in C using the Lua C API, compatible with LuaJIT2, Lua 5.1 and optionally Lua 5.2
-  * __Lua+ffi module__: written in Lua using the LuaJIT ffi extension, compatible with LuaJIT2
-  and optionally with Lua ffi; the C library it binds to is included in the package in source and binary form
-  * __C module__: binary dependency or support library for other module; source and binary included
+  * __Lua module__: written in Lua, compatible with LuaJIT2, Lua 5.1
+  and optionally Lua 5.2.
+  * __Lua/C module__: written in C using the Lua C API, compatible with
+  LuaJIT 2.x, Lua 5.1 and optionally Lua 5.2.
+  * __Lua+ffi module__: written in Lua using the LuaJIT ffi extension,
+  compatible with LuaJIT 2.x and optionally with luaffi; the C library
+  it binds to is included in the package in source and binary form.
+  * __C module__: binary dependency or support library for other module;
+  source and binary included.
   * __other__: none of the above: media/support files, etc.
 
 
@@ -33,21 +37,12 @@ There are 5 types of luapower packages:
 	foo_bar.md            submodule doc: optional, for large submodules
 	.mgit/foo.exclude     the .gitignore file: optional, see below
 
-C libs & Lua/C libs have additional files:
+C libs must also include their source code, build scripts and binaries:
 
-	csrc/foo/*                       C sources
-	csrc/foo/WHAT                    WHAT file (see below)
-	csrc/foo/build-<platform>.sh     build scripts (*)
-	bin/mingw{32,64}/foo.dll         C library
-	bin/linux{32,64}/libfoo.so       C library
-	bin/osx{32,64}/libfoo.dylib      C library
-	bin/mingw{32,64}/clib/foo.dll    Lua/C library
-	bin/linux{32,64}/clib/foo.so     Lua/C library
-	bin/osx{32,64}/clib/foo.so       Lua/C library
-
-(*) one script for each platform that your package supports, among
-the following: mingw32, mingw64, linux32, linux64, osx32, osx64 (so
-`build-mingw32.sh`, etc.).
+	csrc/foo/*                           C sources
+	csrc/foo/WHAT                        WHAT file (see below)
+	csrc/foo/build-<platform>.sh         [build scripts][build-scripts]
+	bin/<platform>/*.dll|.so|.dylib|.a   [binaries][build-scripts]
 
 These conventions allow packages to be safely unzipped over a common
 directory and the result look sane, and it makes it possible to extract
@@ -78,9 +73,10 @@ document for it, a single doc matching the package name would suffice.
 
 ### The WHAT file
 
-The WHAT file is for packages that have a C component (i.e. Lua+ffi,
-Lua/C and C packages), and it's used to describe that C component. Pure Lua
-packages don't need a WHAT file. It should look like this:
+The WHAT file is for packages that have a C component (i.e. Lua/C, C
+and Lua+ffi packages that bind on 3rd-party libs), and it's used to describe
+that C component. Pure Lua packages don't need a WHAT file. It should look
+like this:
 
 	cairo 1.12.16 from http://cairographics.org/releases/ (MPL/LGPL license)
 	requires: pixman, freetype, zlib, libpng
@@ -118,12 +114,11 @@ Check out the [coding-style].
 
 ### The build scripts
 
-Write a build script for each supported platform.
-Check out the [guideline][build-scripts] for how to do that.
+Check out the [guideline][build-scripts].
 
 ### The License
 
-__NOTE:__ This only concerns Lua modules that are not `Public Domain`.
+__NOTE:__ This only concerns Lua modules that are _not in Public Domain_.
 
   * add `license: ...` to the header of your main doc
   * put the full license file in csrc/foo/LICENSE|COPYING[.*]

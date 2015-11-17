@@ -5,12 +5,49 @@ tagline: how to write build scripts for multiple platforms
 
 The build scripts assume the [luapower toolchain][building].
 This means that the same gcc/g++ frontend is used on every platform,
-which greatly simplifies the writing of the scripts.
+which greatly reduces what you need to know for writing them.
+
+## Build scripts
+
+Create a separate script for each supported platform:
+
+	csrc/foo/build-mingw32.sh
+	csrc/foo/build-mingw64.sh
+	csrc/foo/build-linux32.sh
+	csrc/foo/build-linux64.sh
+	csrc/foo/build-osx32.sh
+	csrc/foo/build-osx64.sh
+
+Use only relative paths in the scripts. Build scripts must be run
+from their own directory so use `../../bin/<platform>` to reference
+the output directory.
+
+## Build output
+
+The build scripts must generate binaries as follows:
+
+	bin/mingw{32,64}/foo.dll          C library, Windows
+	bin/mingw{32,64}/foo.a            C library, Windows, static version
+	bin/mingw{32,64}/clib/foo.dll     Lua/C library, Windows
+	bin/mingw{32,64}/foo.a            Lua/C library, Windows, static version
+	bin/linux{32,64}/libfoo.so        C library, Linux
+	bin/linux{32,64}/libfoo.a         C library, Linux, static version
+	bin/linux{32,64}/clib/foo.so      Lua/C library, Linux
+	bin/linux{32,64}/libfoo.a         Lua/C library, Linux, static version
+	bin/osx{32,64}/libfoo.dylib       C library, OSX
+	bin/osx{32,64}/libfoo.a           C library, OSX, static version
+	bin/osx{32,64}/clib/foo.so        Lua/C library, OSX
+	bin/osx{32,64}/libfoo.a           Lua/C library, OSX, static version
+
+> So prefix everything with `lib` except for Windows and except for dynamic
+Lua/C libs; on OSX use `.dylib` for C libs but use `.so` for dynamic Lua/C
+libs; put dynamic Lua/C libs in the `clib` subdirectory but put static Lua/C
+libs in the platform directory along with the normal C libs.
+
+## Building with GCC
 
 Building with gcc is a 2-step process, compilation and linking,
 because we want to build both static and dynamic versions the libraries.
-
-## Building with GCC
 
 ### Compiling with gcc/g++
 
