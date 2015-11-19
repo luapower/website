@@ -342,5 +342,16 @@ $(function() {
 	if (location.pathname == '/faq')
 		$('.faq_btn').css({'background-color': '#e4741f'}).find('a').css('color', '#fff')
 
+	// bind enter key for the search input
+	$('.search_input').keydown(function(e) {
+		if (e.which == 13)
+			location = '/grep/'+encodeURIComponent($(this).val())
+	})
+
+	// bind click on search icon
+	$('.search_icon').click(function() {
+			location = '/grep/'+encodeURIComponent($('.search_input').val())
+	})
+
 })
 
