@@ -65,9 +65,14 @@ $(function() {
 	var t = []
 	var idx = 1
 	var idxs = [] // actually a map {level -> last_index}
+	var parent_level = 0
 	h.each(function() {
 		var h = $(this)
 		var level = parseInt(h.prop('tagName').match(/\d/))
+		if (level) // heading
+			parent_level = level
+		else // API section
+			level = parent_level + 1
 		var parent_idx = idxs[level-1] || ''
 		idxs[level] = idx
 
