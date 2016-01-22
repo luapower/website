@@ -727,7 +727,7 @@ warn {
 }
 
 /* hack: use <strong> in a table means a header */
-.doc td > strong {
+.doc td > strong, .doc td > div > strong {
 	font-size: 120%;
 	margin-top: 6px;
 	display: inline-block;
