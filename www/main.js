@@ -48,7 +48,7 @@ $(function() {
 	})
 
 	// wrap API sections
-	var apis = doc.find('.doc td > strong')
+	var apis = doc.find('td > strong')
 	apis.each(function() {
 		$(this).wrapAll('<div></div>')
 	})
