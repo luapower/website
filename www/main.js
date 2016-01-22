@@ -47,9 +47,18 @@ $(function() {
 		$(this).nextUntil('h1,enddoc').andSelf().wrapAll('<div></div>')
 	})
 
+	// wrap API sections
+	var apis = doc.find('.doc td > strong')
+	apis.each(function() {
+		$(this).wrapAll('<div></div>')
+	})
+
 	// build the doc nav
-	var h = doc.find('h1,h2,h3,h4')
-	if (h.length > 400) // too many entries. cut the h4s
+	var heads = doc.find('h1,h2,h3,h4')
+	var h = heads.add(apis)
+	if (h.length > 400) // too many entries. cut the apis
+		h = heads
+	if (h.length > 400) // still too many entries. cut the h4's too
 		h = doc.find('h1,h2,h3')
 	if (h.length > 400) // still too many entries. cut the h3's too
 		h = doc.find('h1,h2')
