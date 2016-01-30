@@ -97,11 +97,15 @@ an API really is. Note that in any language, and Lua is no exception,
 just adding an extra argument to a function is a compatibility-breaking
 change, because you can't assume that your function isn't already called
 with extra arguments in existing code, arguments which the previous version
-of your function discarded, but the current version doesn't.
+of your function discarded, but the current version does not.
 With semantic versioning you have three choices in this case: either
 a) increment the major version now, b) wait until more changes
 accumulate to warrant a major version bump, or c) lie, and increment
 the minor version instead. None of these are particularly good options.
+
+Also note that semver is a [technical solution to a social problem][semver].
+
+[semver]: http://www.brandonbloom.name/blog/2013/06/19/semver/
 
 ## NO DIRECTORIES
 
