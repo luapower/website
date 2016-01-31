@@ -726,6 +726,10 @@ warn {
 	line-height: 160%;
 }
 
+.doc table code {
+	font-size: 80%;
+}
+
 .doc td {
 	padding: 2px;
 	vertical-align: top;
