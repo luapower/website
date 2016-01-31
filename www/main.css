@@ -721,8 +721,13 @@ warn {
 	border-bottom: 1px solid;
 }
 
+.doc table {
+	font-size: 90%;
+	line-height: 160%;
+}
+
 .doc td {
-	padding: 4px;
+	padding: 2px;
 	vertical-align: top;
 }
 
