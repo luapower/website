@@ -34,7 +34,7 @@ b) configure git to replace urls on-the-fly with
 `git config --global url."ssh://git@github.com/luapower/".insteadOf https://github.com/luapower/`
 
 > __Tip:__ Add multigit to your PATH so you can type `mgit` instead of
-`./mgit`. Then won't have to clone luapower into the same directory where
+`./mgit`. Then you won't have to clone luapower into the same directory where
 you cloned multigit and you will be able to use multigit for other things
 too. On Linux and OSX you can do this with:
 `sudo ln -s /path/to/multigit/mgit /usr/local/bin/`.
