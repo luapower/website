@@ -34,7 +34,7 @@ _sharing it_ from the beginning.
 
 Doing away with packaging encourages publishing smaller and more focused
 modules individually, rather than bundling unrelated modules together into
-kitchen-sink-style libraries, only because the effort of creating and
+kitchen-sink-style libraries only because the effort of creating and
 maintaining individual tiny packages would be too great.
 
 ## PORTABLE
