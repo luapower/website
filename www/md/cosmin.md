@@ -14,12 +14,11 @@ Bucharest, RO
 
 <div style="text-align: justify">
 I learned to program in 5^th^ grade on a Z80, and later on on a 486 and
-never stopped since. I got my first paying job at 17 when I wrote an online
-shop in php.
+never stopped since. I got my first paying job when I was 17 when I wrote 
+an online shop in php.
 
-I write my code in Lua when I can, in Python and Javascript when I can't,
-and in Java, C++, C# and ObjC when I get paid. Sometimes I meet people
-who use C for everything, and then I move on.
+I code mostly in Lua, Python, C and Javascript, and sometimes in Java, C++, 
+C# and ObjC.
 
 In the past I did a lot of Delphi in smokey apartment-sized companies full
 of smart people, and then more Delphi in mall-sized corporations full of
@@ -36,11 +35,11 @@ the output of my current research interests, which include vector graphics,
 GUIs, and p2p networks (I secretly dream of [putting them
 all together](https://www.youtube.com/watch?v=yJDv-zdhzMY) one day).
 
-I am a market anarchist and a philosopher. I value peaceful parenting and
-animal welfare and I owe my current education to Ayn Rand, Stefan Molyneux,
-Ludwig Von Mises, Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander,
-Douglas Engelbart and others.
+I value voluntary interactions, peaceful parenting and animal welfare and 
+I owe my current education to Ayn Rand, Stefan Molyneux, Ludwig Von Mises, 
+Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander 
+and Douglas Engelbart.
 
 ----
-April 3, 2015
+April 20, 2016
 </div>
