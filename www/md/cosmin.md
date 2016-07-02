@@ -20,10 +20,9 @@ an online shop in php.
 I code mostly in Lua, Python, C and Javascript, and sometimes in Java, C++, 
 C# and ObjC.
 
-In the past I did a lot of Delphi in smokey apartment-sized companies full
-of smart people, and then more Delphi in mall-sized corporations full of
-marketing droids and a one-hour commute. I even worked in a php farm for one
-month.
+In the past I did a lot of Delphi in smokey apartment-sized companies
+and then more Delphi in mall-sized corporations with a one-hour commute
+(I also worked in a php farm for one month).
 
 My last punching-card job was at [SellerEngine](http://sellerengine.com/)
 where I developed products for large amazon sellers.
@@ -36,10 +35,10 @@ GUIs, and p2p networks (I secretly dream of [putting them
 all together](https://www.youtube.com/watch?v=yJDv-zdhzMY) one day).
 
 I value voluntary interactions, peaceful parenting and animal welfare and 
-I owe my current education to Ayn Rand, Stefan Molyneux, Ludwig Von Mises, 
+I owe my current (mis)education to Ayn Rand, Stefan Molyneux, Ludwig Von Mises, 
 Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander 
 and Douglas Engelbart.
 
 ----
-April 20, 2016
+July 02, 2016
 </div>
