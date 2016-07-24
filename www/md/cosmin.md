@@ -4,7 +4,7 @@ tagline:  Cosmin Apreutesei
 ---
 
 <div style="float: right; margin-left: 20px; margin-bottom: 20px; text-align: left">
-<div style="width: 280px;"><img src="/md/cosmin.jpg">
+<div style="width: 260px;"><img src="/md/cosmin.jpg">
 <br>
 <a href="mailto:cosmin.apreutesei@gmail.com">cosmin.apreutesei@gmail.com</a>
 <br>
