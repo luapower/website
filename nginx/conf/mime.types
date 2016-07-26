@@ -13,4 +13,5 @@ types {
     application/pdf                       pdf;
     application/zip                       zip;
     application/x-gzip                    gz;
+    audio/mpeg                            mp3;
 }

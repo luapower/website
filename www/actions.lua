@@ -168,7 +168,7 @@ local function render_docfile(infile)
 		local s2 = md_refs()
 		local tmpfile = os.tmpname()
 		glue.writefile(tmpfile, s1..'\n\n'..s2)
-		local cmd = 'pandoc --tab-stop=3 -r markdown -w html '..
+		local cmd = 'pandoc --tab-stop=3 -r markdown+definition_lists -w html '..
 			tmpfile..' > '..outfile
 		os.execute(cmd)
 		os.remove(tmpfile)
