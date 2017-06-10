@@ -19,6 +19,6 @@ for pkg in $(mgit ls); do
 	mgit - $pkg pull | check && cc $pkg && "Updated: $pkg."
 done
 
-cd "$(dirname "$0")" && git pull | check && "Updated: website."
+cd ~/website && git pull | check && "Updated: website."
 
 [ "$REPOS_UPDATED" ] && cc_all
