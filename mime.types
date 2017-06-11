@@ -17,5 +17,6 @@ types {
     application/x-xz                      xz;
     application/x-bz2                     bz2;
     text/plain                            sh;
+    application/x-tar                     tar;
     audio/mpeg                            mp3;
 }
