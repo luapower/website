@@ -1,3 +1,3 @@
-cd "$(dirname "$0")"
-~/ngx-stop
-~/ngx-start
+cd "$(dirname "$0")" || exit 1
+./ngx-stop
+./ngx-start
