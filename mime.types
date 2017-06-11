@@ -14,5 +14,8 @@ types {
     application/zip                       zip;
     application/x-gzip                    gz;
     application/x-gzip                    tgz;
+    application/x-xz                      xz;
+    application/x-bz2                     bz2;
+    text/plain                            sh;
     audio/mpeg                            mp3;
 }
