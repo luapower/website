@@ -10,7 +10,7 @@ cd "$(dirname "$0")" || die "Could not cd to \"$(dirname "$0")\"."
 OPENRESTY_DIR="$PWD/openresty"; [ -d "$OPENRESTY_DIR" ] || die "Directory \"$OPENRESTY_DIR\" not found."
 LUAPOWER_DIR="$PWD/luapower";   [ -d "$LUAPOWER_DIR" ]  || die "Directory \"$LUAPOWER_DIR\" not found."
 WWW_DIR="$PWD/www";             [ -d "$WWW_DIR" ]       || die "Directory \"$WWW_DIR\" not found."
-NGINX_CONF="$PWD/nginx/conf/nginx.conf"; [ -f "$NGINX_CONF" ] || die "File \"$NGINX_CONF\" not found."
+NGINX_CONF="$PWD/nginx/nginx.conf"; [ -f "$NGINX_CONF" ] || die "File \"$NGINX_CONF\" not found."
 
 which pandoc >/dev/null || echo "WARNING: Pandoc not installed. Documentation will not be visible."
 
