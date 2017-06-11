@@ -1,5 +1,6 @@
 
 types {
+    text/plain                            txt;
     text/html                             html htm shtml;
     text/css                              css;
     image/gif                             gif;
