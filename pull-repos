@@ -4,8 +4,6 @@
 
 cd "$(dirname "$0")/luapower" || exit 1
 
-cc() { wget -qO- https://luapower.com/$pkg/cc; }
-cc_all() { wget -qO- https://luapower.com/clear_cache; }
 check() { grep -q -v 'Already up-to-date.'; }
 
 mgit luapower-repos pull | check && REPOS_UPDATED=1
@@ -16,9 +14,9 @@ UNCLONED="$(mgit ls-uncloned)"
 [ "$UNCLONED" ] && "There are still uncloned repos: $UNCLONED."
 
 for pkg in $(mgit ls); do
-	mgit - $pkg pull | check && cc $pkg && "Updated: $pkg."
+	mgit - $pkg pull | check && ./clear-cache $pkg && "Updated: $pkg."
 done
 
 cd .. && git pull | check && "Updated: website."
 
-[ "$REPOS_UPDATED" ] && cc_all
+[ "$REPOS_UPDATED" ] && ./clear-cache
