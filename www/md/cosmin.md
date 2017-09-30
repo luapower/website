@@ -36,8 +36,8 @@ all together](https://www.youtube.com/watch?v=yJDv-zdhzMY) one day).
 
 I value voluntary interactions, peaceful parenting and animal welfare and 
 I owe my current (mis)education to Ayn Rand, Stefan Molyneux, Ludwig Von Mises, 
-Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander 
-and Douglas Engelbart.
+Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander, Douglas Engelbart
+and Jordan B. Peterson.
 
 ----
 July 02, 2016
