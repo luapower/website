@@ -139,6 +139,31 @@ developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
 
+## Building with multigit
+
+	./mgit build <package>
+
+which is implemented as:
+
+	cd csrc/<package> && ./build-<current-platform>.sh
+
+## Building packages in order
+
+You can use [luapower] so that for any package or list of packages
+(or for all installed packages) you will get the full list of packages
+that need to be compiled _in the right order_, including
+all the dependencies:
+
+	./luapower build-order pkg1,...|--all [platform]
+
+Again, you can use mgit to leverage that and actually build the packages:
+
+	./mgit build-all pkg1,...|--all [platform]
+
+To build all installed packages on the current platform, run:
+
+	./mgit build-all --all
+
 ## Other (unsupported) ways of building
 
 ### Running Ubuntu 10 on Ubuntu 14
@@ -186,29 +211,4 @@ and family.
 
 [osxcross]: https://github.com/tpoechtrager/osxcross
 [pre-built osxcross]: http://luapower.com/files/osxcross.tgz
-
-## Building with multigit
-
-	./mgit build <package>
-
-which is implemented as:
-
-	cd csrc/<package> && ./build-<current-platform>.sh
-
-## Building packages in order
-
-You can use [luapower] so that for any package or list of packages
-(or for all installed packages) you will get the full list of packages
-that need to be compiled _in the right order_, including
-all the dependencies:
-
-	./luapower build-order pkg1,...|--all [platform]
-
-Again, you can use mgit to leverage that and actually build the packages:
-
-	./mgit build-all pkg1,...|--all [platform]
-
-To build all installed packages on the current platform, run:
-
-	./mgit build-all --all
 
