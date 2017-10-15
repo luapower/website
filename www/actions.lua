@@ -1151,11 +1151,11 @@ function action.github(...)
 	if not app.POST then return end
 	local repo = app.POST.repository.name
 	if not repo then return end
-	if repo == 'website' or lp.installed_packages()[repo] then
+	if repo == 'website' then
+		os.execute'git pull'
+	elseif lp.installed_packages()[repo] then
 		os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
-		if repo ~= 'website' then
-			lp.update_db(repo) --TODO: this is blocking the server!!!
-		end
+		lp.update_db(repo) --TODO: this is blocking the server!!!
 	end
 end
 
