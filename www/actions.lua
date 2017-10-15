@@ -188,7 +188,7 @@ local function action_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
-	local mtime = lfs.attributes(docfile, 'mtime') --TODO: use git on the website repo
+	local mtime = lfs.attributes(docfile, 'mtime')
 	data.doc_mtime = format_date(mtime)
 	data.doc_mtime_ago = mtime and timeago(mtime)
 	data.edit_link = string.format(
@@ -1151,9 +1151,12 @@ function action.github(...)
 	if not app.POST then return end
 	local repo = app.POST.repository.name
 	if not repo then return end
-	if not lp.installed_packages()[repo] then return end
-	os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
-	lp.update_db(repo) --TODO: this is blocking the server!!!
+	if repo == 'website' or lp.installed_packages()[repo] then
+		os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
+		if repo ~= 'website' then
+			lp.update_db(repo) --TODO: this is blocking the server!!!
+		end
+	end
 end
 
 --dependency lister for git clone --------------------------------------------
