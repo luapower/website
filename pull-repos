@@ -2,7 +2,8 @@
 # pull all repos and invalidate the cache on the ones that were updated.
 # to be added as an hourly cron job.
 
-cd "$(dirname "$0")/luapower" || exit 1
+PWD0="$(dirname "$0")"
+cd "$PWD0/luapower" || exit 1
 
 check() { grep -q -v 'Already up-to-date.'; }
 
@@ -14,9 +15,9 @@ UNCLONED="$(mgit ls-uncloned)"
 [ "$UNCLONED" ] && "There are still uncloned repos: $UNCLONED."
 
 for pkg in $(mgit ls); do
-	mgit - $pkg pull | check && ./clear-cache $pkg && "Updated: $pkg."
+	mgit - $pkg pull | check && "$PWD0/clear-cache" $pkg && "Updated: $pkg."
 done
 
-cd .. && git pull | check && "Updated: website."
+cd "$PWD0" && git pull | check && "Updated: website."
 
 [ "$REPOS_UPDATED" ] && ./clear-cache
