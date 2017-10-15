@@ -139,7 +139,7 @@ developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
 
-## Other ways of building
+## Other (unsupported) ways of building
 
 ### Running Ubuntu 10 on Ubuntu 14
 
