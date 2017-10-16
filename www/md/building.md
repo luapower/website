@@ -98,13 +98,14 @@ down to GLIBC 2.7:
 Here's the complete procedure on a fresh Ubuntu 10.04:
 
 	sudo sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
-	sudo apt-get update
+	sudo apt-get update 
+	sudo apt-get install -y python-software-properties
 	sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 	sudo apt-get update
-	sudo apt-get install gcc-4.8 g++-4.8
+	sudo apt-get install -y gcc-4.8 g++-4.8
 	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
 	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
-	sudo apt-get install nasm cmake
+	sudo apt-get install -y nasm cmake
 
 The current luapower stack is built this way and it's the only supported way
 to build it.
@@ -116,6 +117,31 @@ have a newer implementation on that version of glibc. In the future,
 we might have to bump up the backwards-compatibility claim up to GLIBC 2.11.
 Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that
 can run on that system might be too old for us.
+
+### Running Ubuntu 10 on Ubuntu 14
+
+An easy and runtime-cheap way to get Ubuntu 10 environments for 32bit and 
+64bit on an Ubuntu 14 machine is with LXC:
+
+	sudo apt-get update
+	sudo apt-get install -y lxc
+	export MIRROR="http://old-releases.ubuntu.com/ubuntu"
+	export SECURITY_MIRROR="$MIRROR"
+	sudo -E lxc-create -n u10_64 -t ubuntu -- -r lucid
+	sudo -E lxc-create -n u10_32 -t ubuntu -- -r lucid -a i386
+	sudo rm /var/lib/lxc/u10_64/rootfs/dev/shm    # hack to make it work
+	sudo rm /var/lib/lxc/u10_32/rootfs/dev/shm    # hack to make it work
+	sudo lxc-start -n u10_64 -d
+	sudo lxc-start -n u10_32 -d
+	sudo lxc-ls --running         # should print: u10_64 u10_32
+
+To get a shell into a container, type:
+
+	sudo lxc-attach -n u10_64
+
+Once inside, use the same instructions for Ubuntu 10 above. To get
+the compiled binaries out of the VMs check out `/var/lib/lxc/u10_XX/rootfs`
+which is where the containers' root filesystems are.
 
 ## Building on OSX for OSX
 
@@ -138,6 +164,26 @@ OSX 10.7+.
 developer site (free registration required). You can _try_ to build
 luapower with it. If you do, please report back on your experience
 and maybe we'll make this a supported toolchain.
+
+## Building on Linux for OSX
+
+__NOTE:__ This is experimental, lightly tested and not available
+for all packages (but available for most).
+
+You can build for OSX on a Linux box using the [osxcross] cross-compiler.
+You can build osxcross (both clang and gcc) yourself (you need the
+OSX 10.7 SDK for that) or you can use a [pre-built osxcross]
+that was compiled on and is known to work on an x64 Ubuntu 14.04 LTS.
+
+To use the cross-compiler, just add the `osxcross/target/bin` dir
+to your PATH and run the same `build-osxXX.sh` scripts that you
+would run for a native OSX build. Remember: not all packages
+support cross-compilation. If you get errors, check the scripts
+to see if they are written to invoke `x86_64-apple-darwin11-gcc`
+and family.
+
+[osxcross]: https://github.com/tpoechtrager/osxcross
+[pre-built osxcross]: http://luapower.com/files/osxcross.tgz
 
 ## Building with multigit
 
@@ -163,52 +209,3 @@ Again, you can use mgit to leverage that and actually build the packages:
 To build all installed packages on the current platform, run:
 
 	./mgit build-all --all
-
-## Other (unsupported) ways of building
-
-### Running Ubuntu 10 on Ubuntu 14
-
-__NOTE:__ This method doesn't work anymore because Ubuntu 10 containers were
-removed from the official repository.
-
-An easy and runtime-cheap way to get Ubuntu 10 environments
-for 32bit and 64bit on an Ubuntu 14 machine is with LXC:
-
-	sudo apt-get update
-	sudo apt-get install lxc
-	sudo lxc-create -n u10_64 -t ubuntu -- -r lucid
-	sudo lxc-create -n u10_32 -t ubuntu -- -r lucid -a i386
-	sudo rm /var/lib/lxc/u10_64/rootfs/dev/shm    # hack to make it work
-	sudo rm /var/lib/lxc/u10_32/rootfs/dev/shm    # hack to make it work
-	sudo lxc-start -n u10_64 -d
-	sudo lxc-start -n u10_32 -d
-	sudo lxc-ls --running         # should print: u10_64 u10_32
-
-To get a shell into a container, type:
-
-	sudo lxc-attach -n u10_64
-
-Once inside, use the same instructions for Ubuntu 10 above. To get
-the compiled binaries out of the VMs check out `/var/lib/lxc/u10_XX/rootfs`
-which is where the containers' root filesystems are.
-
-### Building on Linux for OSX
-
-__NOTE:__ This is experimental, lightly tested and not available
-for all packages (but available for most).
-
-You can build for OSX on a Linux box using the [osxcross] cross-compiler.
-You can build osxcross (both clang and gcc) yourself (you need the
-OSX 10.7 SDK for that) or you can use a [pre-built osxcross]
-that was compiled on and is known to work on an x64 Ubuntu 14.04 LTS.
-
-To use the cross-compiler, just add the `osxcross/target/bin` dir
-to your PATH and run the same `build-osxXX.sh` scripts that you
-would run for a native OSX build. Remember: not all packages
-support cross-compilation. If you get errors, check the scripts
-to see if they are written to invoke `x86_64-apple-darwin11-gcc`
-and family.
-
-[osxcross]: https://github.com/tpoechtrager/osxcross
-[pre-built osxcross]: http://luapower.com/files/osxcross.tgz
-
