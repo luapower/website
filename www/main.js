@@ -367,5 +367,10 @@ $(function() {
 			location = '/grep/'+encodeURIComponent($('.search_input').val())
 	})
 
+	// show wrapping on <pre> items
+	$('.doc pre code').each(function() {
+		$(this).html('<div>'+$(this).html().replace(/\n/g, '</div><div>')+'</div>')
+	})
+
 })
 

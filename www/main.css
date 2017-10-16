@@ -697,6 +697,11 @@ warn {
 	padding-bottom: 2px;
 }
 
+.doc pre code > div {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
 /* make headings appear clickable */
 .doc h1, .doc h2, .doc h3, .doc h4 { cursor: pointer; }
 
