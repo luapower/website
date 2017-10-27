@@ -264,3 +264,5 @@ if not ... then
 	--test_if_tree()
 
 end
+
+return cbrowser
