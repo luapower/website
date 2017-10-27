@@ -133,7 +133,9 @@ wait = ngx.thread.wait
 
 --action API -----------------------------------------------------------------
 
-glue.update(actions.app, {
+luapower.config('luapower_dir', config'luapower_dir') --setup luapower
+
+local api = {
 	setmime = setmime,
 	out = out,
 	print = print,
@@ -142,11 +144,17 @@ glue.update(actions.app, {
 	grep_enabled = true,
 	sleep = sleep,
 	connect = connect,
-})
-
-luapower.config('luapower_dir', config'luapower_dir') --setup luapower
+}
+glue.update(actions.app, api)
 
 function run()
+
+	if config'reload_actions' then
+		package.loaded.actions = nil
+		actions = require'actions'
+		glue.update(actions.app, api)
+	end
+
 	--init global and request contexts
 	local oldindex = __index
 	__index = __index._G -- _G is replaced on each request
