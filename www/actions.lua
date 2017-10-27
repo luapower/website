@@ -6,7 +6,7 @@ local pp = require'pp'
 local lfs = require'lfs'
 local tuple = require'tuple'
 local zip = require'minizip'
-local lustache = require'lustache'
+local mustache = require'mustache'
 local grep = require'grep'
 local cbrowser = require'cbrowser'
 
@@ -39,14 +39,13 @@ end
 
 --rendering
 
+local function get_partial(_, name)
+	return readwwwfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
+end
 local function render(name, data, env)
-	lustache.renderer:clear_cache()
-	local function get_partial(_, name)
-		return readwwwfile(name:gsub('_(%w+)$', '.%1')) --'name_ext' -> 'name.ext'
-	end
 	local template = readwwwfile(name)
 	env = setmetatable(env or {}, {__index = get_partial})
-	return (lustache:render(template, data, env))
+	return mustache.render(template, data, env)
 end
 
 local function render_main(name, data, env)
@@ -1034,11 +1033,12 @@ local function action_package(pkg, doc, what)
 			t.doc_html = render_docfile(path)
 
 			--add any widgets
-			t.doc_html = t.doc_html:gsub('{{([^}]+)}}', function(name)
+			local function getwidget(name)
 				local widget = widgets[name]
-				if not widget then return '' end
-				return widget(pkg)
-			end)
+				return widget and widget(pkg)
+			end
+			local view = setmetatable({}, {__index = getwidget})
+			t.doc_html = mustache.render(t.doc_html, view)
 
 			local mtime = lp.git_file_time(pkg, t.doc_path)
 			if mtime then
@@ -1093,10 +1093,105 @@ local function action_home()
 
 	local file = 'files/luapower-all.zip'
 	local size = lfs.attributes(app.wwwpath(file), 'size')
-	local size = string.format('%d MB', size / 1024 / 1024)
+	local size = size and string.format('%d MB', size / 1024 / 1024) or '&nbsp;'
 	data.all_download_size = size
 
 	app.out(render_main('home.html', data))
+end
+
+--recursive lfs.dir()
+function ls_dir(p0, each)
+	assert(p0)
+	local function rec(p)
+		local dp = p0 .. (p and '/' .. p or '')
+		for f in lfs.dir(dp) do
+			if f ~= '.' and f ~= '..' then
+				local mode = lfs.attributes(dp .. '/' .. f, 'mode')
+				local pf = p and p .. '/' .. f or f
+				if each(f, pf, mode) and mode == 'directory' then
+					rec(pf)
+				end
+			end
+		end
+		each(nil, nil, 'up')
+	end
+	rec()
+end
+
+function action.tree()
+	local files = {}
+	local root = {path = '', has_files = true, files = {}, dir = false}
+
+	local dir = root
+	ls_dir(lp.powerpath(), function(filename, path, mode)
+		if mode == 'up' then
+			dir = dir.dir
+		elseif mode == 'directory' then
+			if path == 'csrc' then
+			elseif path == 'media' then
+			elseif path:find'^%.mgit/[^/]+/.git$' then
+			elseif path:find'^bin/[^/]+/include$' then
+			else
+				local node = {path = path, dir = dir, has_files = false, files = {}}
+				table.insert(dir.files, node)
+				dir = node
+				return true --recurse
+			end
+		else
+			local node = {path = path, dir = dir, has_files = false, files = false}
+			table.insert(dir.files, node)
+			files[path] = node
+		end
+	end)
+
+	for package in pairs(lp.installed_packages()) do
+		for path in pairs(lp.tracked_files(package)) do
+			local info = files[path]
+			if info then
+				info.package = package
+				info.tracked = true
+			end
+		end
+	end
+
+	local ftype = lp.file_types()
+	for path, info in pairs(files) do
+		info.type = ftype[path]
+	end
+
+	local function rec(node, each)
+		each(node)
+		if node.files then
+			for i, node in ipairs(node.files) do
+				rec(node, each)
+			end
+		end
+	end
+
+	local function cmp(node1, node2)
+		local is_dir1 = node1.files and true
+		local is_dir2 = node2.files and true
+		if is_dir1 == is_dir2 then --both dirs or files, compare their names
+			return node1.path < node2.path
+		else
+			return is_dir1 > is_dir2 --dirs come first
+		end
+	end
+	rec(root, function(node)
+		node.dir = nil
+		table.sort(node, cmp)
+	end)
+
+	local p0
+	rec(root, function(node)
+		if node.package == p0 then
+			node.package = nil
+		else
+			p0 = node.package
+		end
+	end)
+
+	app.out(render_main('tree.html', root))
 end
 
 --status page ----------------------------------------------------------------
@@ -1155,19 +1250,7 @@ function action.github(...)
 		os.execute'git pull'
 	elseif lp.installed_packages()[repo] then
 		os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
-		lp.update_db(repo) --TODO: this is blocking the server!!!
-	end
-end
-
---dependency lister for git clone --------------------------------------------
-
-action['deps.txt'] = function(pkg)
-	app.setmime'txt'
-	local deps = lp.package_requires_packages_for(
-		'module_requires_loadtime_all', pkg, nil, true)
-	for k in glue.sortedpairs(deps) do
-		app.out(k)
-		app.out'\n'
+		lp.clear_cache(repo)
 	end
 end
 
@@ -1175,7 +1258,6 @@ end
 
 function action.clear_cache(package)
 	app.setmime'txt'
-	lustache.renderer:clear_cache()
 	lp.clear_cache(package)
 	lp.unload_db()
 	app.out('cache cleared for '..(package or 'all')..'\n')
@@ -1268,14 +1350,14 @@ end
 --action dispatch ------------------------------------------------------------
 
 function action.default(s, ...)
-	local hs = s and s:match'^(.-)%.html$'
+	local hs = s and s:match'^(.-)%.html$' or s
 	if not s then
 		return action_home()
-	elseif lp.installed_packages()[hs or s] then
-		return action_package(hs or s, nil, ...)
-	elseif lp.docs()[hs or s] then
-		local pkg = lp.doc_package(hs or s)
-		return action_package(pkg, hs or s, ...)
+	elseif lp.installed_packages()[hs] then
+		return action_package(hs, nil, ...)
+	elseif lp.docs()[hs] then
+		local pkg = lp.doc_package(hs)
+		return action_package(pkg, hs, ...)
 	elseif s:find'%.rockspec$' then
 		local pkg = s:match'^(.-)%.rockspec$'
 		if not lp.installed_packages()[pkg] then
@@ -1283,7 +1365,7 @@ function action.default(s, ...)
 		end
 		action_rockspec(pkg)
 	else
-		local docfile = www_docfile(hs or s)
+		local docfile = www_docfile(hs)
 		if docfile then
 			return action_docfile(docfile, ...)
 		else

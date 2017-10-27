@@ -1,0 +1,18 @@
+<style>
+.untracked {
+	color: red;
+}
+</style>
+<table>
+	{{#files}}
+	<tr>
+		<td><a href="/{{package}}">{{package}}</a></td>
+		<td class="{{^tracked}}untracked{{/tracked}}">
+			{{path}}
+			<br>
+			{{>tree_html}}
+		</td>
+		<td>{{type}}</td>
+	</tr>
+	{{/files}}
+</table>
