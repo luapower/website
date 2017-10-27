@@ -169,7 +169,7 @@ The luapower website is composed of:
   list of packages to be cloned with multigit.
   * [luapower], a Lua module for collecting package metadata.
   * [website][website-src], an [open-resty]-based app, with
-  very simple css, lustache-based templates and table-based layout.
+  very simple css, mustache-based templates and table-based layout.
   * [pandoc], for converting the docs to html.
   * a bunch of Windows, Linux and OSX machines set up to collect package
   dependency information and run automated tests.
