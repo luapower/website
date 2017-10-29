@@ -20,8 +20,5 @@ local function try_call(func, ...)
 	return pass(xpcall(func, debug.traceback, ...))
 end
 
-package.loaded.app = nil
-package.loaded.actions = nil
-
 local app = try_call(require, 'app')
 try_call(app.run)

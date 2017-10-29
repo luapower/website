@@ -1,5 +1,4 @@
 --actions: the bulk of the web app.
-package.loaded.cbrowser = nil
 local glue = require'glue'
 local lp = require'luapower'
 local pp = require'pp'
@@ -9,6 +8,7 @@ local zip = require'minizip'
 local mustache = require'mustache'
 local grep = require'grep'
 local cbrowser = require'cbrowser'
+local cjson = require'cjson'
 
 --in our current setup, the dependency db must be updated manually.
 lp.config('auto_update_db', false)
@@ -1100,7 +1100,7 @@ local function action_home()
 end
 
 --recursive lfs.dir()
-function ls_dir(p0, each)
+local function ls_dir(p0, each)
 	assert(p0)
 	local function rec(p)
 		local dp = p0 .. (p and '/' .. p or '')
@@ -1118,9 +1118,9 @@ function ls_dir(p0, each)
 	rec()
 end
 
-function action.tree()
+local tree_json = lp.memoize(function()
 	local files = {}
-	local root = {path = '', has_files = true, files = {}, dir = false}
+	local root = {file = 'luapower', files = {}, dir = false}
 
 	local dir = root
 	ls_dir(lp.powerpath(), function(filename, path, mode)
@@ -1132,13 +1132,13 @@ function action.tree()
 			elseif path:find'^%.mgit/[^/]+/.git$' then
 			elseif path:find'^bin/[^/]+/include$' then
 			else
-				local node = {path = path, dir = dir, has_files = false, files = {}}
+				local node = {file = filename, dir = dir, files = {}}
 				table.insert(dir.files, node)
 				dir = node
 				return true --recurse
 			end
 		else
-			local node = {path = path, dir = dir, has_files = false, files = false}
+			local node = {file = filename, dir = dir, files = false}
 			table.insert(dir.files, node)
 			files[path] = node
 		end
@@ -1172,14 +1172,16 @@ function action.tree()
 		local is_dir1 = node1.files and true
 		local is_dir2 = node2.files and true
 		if is_dir1 == is_dir2 then --both dirs or files, compare their names
-			return node1.path < node2.path
+			return node1.file < node2.file
 		else
-			return is_dir1 > is_dir2 --dirs come first
+			return is_dir1 --dirs come first
 		end
 	end
 	rec(root, function(node)
 		node.dir = nil
-		table.sort(node, cmp)
+		if node.files then
+			table.sort(node.files, cmp)
+		end
 	end)
 
 	local p0
@@ -1191,7 +1193,16 @@ function action.tree()
 		end
 	end)
 
-	app.out(render_main('tree.html', root))
+	return cjson.encode(root)
+end)
+
+action['tree.json'] = function()
+	app.setmime'json'
+	app.out(tree_json())
+end
+
+function action.tree()
+	app.out(render_main('tree.html', {}))
 end
 
 --status page ----------------------------------------------------------------

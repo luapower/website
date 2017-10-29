@@ -77,7 +77,7 @@ end
 
 --output API -----------------------------------------------------------------
 
-local outbuf = {}
+local outbuf
 
 function out(s)
 	outbuf[#outbuf+1] = tostring(s)
@@ -148,13 +148,6 @@ local api = {
 glue.update(actions.app, api)
 
 function run()
-
-	if config'reload_actions' then
-		package.loaded.actions = nil
-		actions = require'actions'
-		glue.update(actions.app, api)
-	end
-
 	--init global and request contexts
 	local oldindex = __index
 	__index = __index._G -- _G is replaced on each request
@@ -171,6 +164,7 @@ function run()
 		table.remove(ARGS, 1)
 	end
 	--find and run the action
+	outbuf = {}
 	local handler = actions.action[act]
 	handler(unpack(ARGS))
 	ngx.print(table.concat(outbuf))

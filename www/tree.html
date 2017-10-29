@@ -2,17 +2,106 @@
 .untracked {
 	color: red;
 }
+.filename {
+	position: relative;
+	cursor: pointer;
+}
+.filename::before {
+	position: relative;
+	left: -20px;
+}
+.closed > .filename::before {
+	content: '+';
+}
+.open > .filename::before {
+	content: '-';
+}
+.dir {
+	color: white;
+}
+.package td {
+	color: white;
+	text-weight: bold;
+	border-top: 1px solid white;
+}
+#tree th {
+	text-align: left;
+}
 </style>
-<table>
-	{{#files}}
-	<tr>
-		<td><a href="/{{package}}">{{package}}</a></td>
-		<td class="{{^tracked}}untracked{{/tracked}}">
-			{{path}}
-			<br>
-			{{>tree_html}}
-		</td>
-		<td>{{type}}</td>
-	</tr>
-	{{/files}}
-</table>
+<div id=tree></div>
+<script>
+
+function set_open_children(id, visible) {
+	var children = $('*[parent_id='+id+']')
+	children.toggle(visible).filter('.open')
+		.each(function() {
+			set_open_children($(this).attr('id'), visible)
+		})
+}
+
+function set_dir(id, open) {
+	var dir = $('#'+id)
+	if (open === undefined)
+		open = dir.hasClass('closed')
+	var children = $('*[parent_id='+id+']')
+	if (open) {
+		dir.addClass('open').removeClass('closed')
+		children.toggle(true)
+		set_open_children(id, true)
+	} else {
+		dir.addClass('closed').removeClass('open')
+		children.toggle(false)
+		set_open_children(id, false)
+	}
+}
+
+var nextid = 1
+function render_node(node, table, parent_id, level) {
+	var id = nextid++
+	var tr = $('<tr/>').attr('id', id).attr('parent_id', parent_id).hide()
+
+	var td_filename = $('<td/>').addClass('filename').html(node.file)
+		.width(200-20*level)
+		.css({'padding-left': 20*level+'px'})
+	var td_package = $('<td/>')
+	td_package.html(node.package)
+	if (node.package)
+		tr.addClass('package')
+	var td_descr = $('<td/>').html('')
+	tr.append(td_filename, td_package, td_descr)
+	table.append(tr)
+	if (node.files) {
+		tr.addClass('dir')
+		tr.addClass('closed')
+		td_filename.click(function(e) {
+			set_dir(id)
+			e.preventDefault()
+		})
+		for(var i = 0; i < node.files.length; i++) {
+			render_node(node.files[i], table, id, level+1)
+		}
+	}
+}
+
+function render_tree(root) {
+	var table = $('<table id=tree><tr>'+
+		'<th>File</th>'+
+		'<th>Package</th>'+
+		'<th>Description</th>'+
+		'</tr></table>')
+	render_node(root, table, 0, 0)
+	$('#tree').replaceWith(table)
+	table.find(':first-child').show()
+	set_dir(1, true)
+}
+
+$(function() {
+
+	$.ajax('/tree.json', {
+		success: function(data) {
+			render_tree(data)
+		}
+	})
+
+})
+</script>
