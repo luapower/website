@@ -28,14 +28,18 @@
 #tree .selected {
 	background-color: #444;
 }
-
 #tree .filter_btn, #tree .filter_btn i {
 	color: #9999ff;
 	cursor: pointer;
 }
-
 #tree .filter_btn i {
 	margin-left: 4px;
+}
+#tree .description {
+	color: #ccc;
+}
+#tree .important {
+	color: yellow;
 }
 </style>
 <script type=x-template id=tree_template>
@@ -140,7 +144,7 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 			.append(a_package)
 	}
 
-	var td_descr = $('<td/>')
+	var td_descr = $('<td class=description></td>')
 		.html(node.descr)
 
 	tr.append(td_filename, td_package, td_descr)
