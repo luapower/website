@@ -23,8 +23,8 @@ There are 5 types of luapower packages:
 
 ### Directory layout
 
-__TIP:__ You can now [browse the whole source tree](/tree) online where
-every file and directory gets a description.
+__NEW:__ You can now [browse the whole source tree](/tree) online where
+each file and directory is described!
 
 	foo.lua               main module
 	foo_bar.lua           submodule, for small packages
