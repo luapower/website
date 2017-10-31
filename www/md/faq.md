@@ -199,9 +199,14 @@ and maturity, usually in that order.
 
 ## Where's the package database?
 
-There isn't one. Package information is computed on-the-fly
-using the [luapower] module (which also has a command-line interface,
-so check it out).
+Package information is computed on-the-fly using the [luapower] module
+(which is also what drives this website), except for module dependency
+information which has to be computed for each platform on that respective 
+platform (because not all modules have the exact same dependency list
+on all platforms, and because for some modules we have to actually try
+and load the module to know if the platform is supported or not).
+That dependency information is stored in [luapower_db] and it's updated 
+automatically every time a module changes.
 
 ## How is versioning maintained?
 
