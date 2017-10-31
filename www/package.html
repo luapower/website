@@ -185,8 +185,13 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#source_url}}
 							<a href="{{source_url}}">{{module}}</a>
 						{{/source_url}}
+						{{#source_urls}}
+							<a href="{{source_url}}">{{module}} ({{platform}})</a>
+						{{/source_urls}}
 						{{^source_url}}
+							{{^source_urls}}
 							<span>{{module}}</span>
+							{{/source_urls}}
 						{{/source_url}}
 					</td>
 					<td valign=top>
@@ -326,8 +331,14 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{#source_url}}
 							<a href="{{source_url}}">{{module}}</a>
 						{{/source_url}}
+						{{#source_urls}}
+							<a href="{{source_url}}">{{module}} ({{platform}})</a>
+							<br>
+						{{/source_urls}}
 						{{^source_url}}
+							{{^source_urls}}
 							<span>{{module}}</span>
+							{{/source_urls}}
 						{{/source_url}}
 					</td>
 					<td valign=top>

@@ -101,7 +101,7 @@ function widgets.module_list(package)
 	local cat0
 	_'<table width=100%%>'
 	for i,t in ipairs(t) do
-		local path = lp.modules(package)[t.module]
+		local path = tostring(lp.modules(package)[t.module])
 		local docpath = lp.docs(package)[t.module]
 
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or 'other'
@@ -883,7 +883,17 @@ local function package_info(pkg, doc)
 		local mtags = lp.module_tags(pkg, mod)
 		mt.lang = mtags.lang
 
-		mt.source_url = source_url(pkg, path, mod)
+		if type(path) == 'table' then
+			mt.source_urls = {}
+			for plat, path in pairs(path) do
+				table.insert(mt.source_urls, {
+					platform = plat,
+					source_url = source_url(pkg, path, mod),
+				})
+			end
+		else
+			mt.source_url = source_url(pkg, path, mod)
+		end
 
 		local mplatforms = lp.module_platforms(mod, pkg)
 
@@ -1033,7 +1043,7 @@ local function action_package(pkg, doc, what)
 			t.doc_html = render_docfile(path)
 
 			--add any widgets
-			local function getwidget(name)
+			local function getwidget(_, name)
 				local widget = widgets[name]
 				return widget and widget(pkg)
 			end
@@ -1099,6 +1109,8 @@ local function action_home()
 	app.out(render_main('home.html', data))
 end
 
+--annotated tree -------------------------------------------------------------
+
 --recursive lfs.dir()
 local function ls_dir(p0, each)
 	assert(p0)
@@ -1120,45 +1132,51 @@ end
 
 local tree_json = lp.memoize(function()
 	local files = {}
-	local root = {file = 'luapower', files = {}, dir = false}
+	local root = {
+		file = 'luapower',
+		descr = 'The luapower tree',
+		files = {},
+		dir = false,
+	}
 
+	--list all files and dirs recursively, regardless of git tracking
 	local dir = root
 	ls_dir(lp.powerpath(), function(filename, path, mode)
 		if mode == 'up' then
 			dir = dir.dir
+		elseif path:find'csrc/[^/]+/[^/]+/' then
+		elseif path:find'^%.mgit/[^/]+/%.git/' then
+		elseif path:find'^bin/[^/]+/include$' then
 		elseif mode == 'directory' then
-			if path == 'csrc' then
-			elseif path == 'media' then
-			elseif path:find'^%.mgit/[^/]+/.git$' then
-			elseif path:find'^bin/[^/]+/include$' then
-			else
-				local node = {file = filename, dir = dir, files = {}}
-				table.insert(dir.files, node)
-				dir = node
-				return true --recurse
-			end
+			local node = {file = filename, dir = dir, files = {}}
+			table.insert(dir.files, node)
+			dir = node
+			node.descr = lp.path_description(path..'/')
+			return true --recurse
 		else
-			local node = {file = filename, dir = dir, files = false}
+			local node = {file = filename, dir = dir}
 			table.insert(dir.files, node)
 			files[path] = node
+			node.descr = lp.path_description(path)
 		end
 	end)
 
-	for package in pairs(lp.installed_packages()) do
-		for path in pairs(lp.tracked_files(package)) do
-			local info = files[path]
-			if info then
-				info.package = package
-				info.tracked = true
-			end
+	--assign package to all tracked files
+	for path, package in pairs(lp.tracked_files()) do
+		local node = files[path]
+		if node then
+			node.package = package
+			node.tracked = true
 		end
 	end
 
-	local ftype = lp.file_types()
-	for path, info in pairs(files) do
-		info.type = ftype[path]
+	--set file type for icons
+	local ftype = lp.file_typqes()
+	for path, node in pairs(files) do
+		node.type = ftype[path]
 	end
 
+	--recursive node iterator
 	local function rec(node, each)
 		each(node)
 		if node.files then
@@ -1168,6 +1186,8 @@ local tree_json = lp.memoize(function()
 		end
 	end
 
+	--sort files in each folder by name, with subfolders first
+	--and remove the dir key to avoid recursion when serializing.
 	local function cmp(node1, node2)
 		local is_dir1 = node1.files and true
 		local is_dir2 = node2.files and true
@@ -1184,11 +1204,13 @@ local tree_json = lp.memoize(function()
 		end
 	end)
 
+	--set show_package flag for grouping by package
 	local p0
 	rec(root, function(node)
 		if node.package == p0 then
-			node.package = nil
+			node.show_package = false
 		else
+			node.show_package = true
 			p0 = node.package
 		end
 	end)
