@@ -1171,7 +1171,7 @@ local tree_json = lp.memoize(function()
 	end
 
 	--set file type for icons
-	local ftype = lp.file_typqes()
+	local ftype = lp.file_types()
 	for path, node in pairs(files) do
 		node.type = ftype[path]
 	end
