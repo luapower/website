@@ -129,12 +129,12 @@ luaffi already, but you would have to check that out yourself.
 
 ## But can I browse them too?
 
-Yes (but not in Windows).
-Create hard links with `mgit --all make-hardlinks` and you will get
-hard links in the `.mgit` directory for every package. Now they're separate
-and you can list them and check their size, and even edit them and commit
-the changes. Remember to run that command again if you add or delete
-files though.
+You can [browse the whole tree online](/tree). Alternatively, you can 
+create hard links with `mgit --all make-hardlinks` (not for Windows) 
+and you will get hard links in the `.mgit` directory for every package. 
+Now they're separate and you can list them and check their size, and 
+even edit them and commit the changes. Remember to run that command 
+again if you add or delete files though.
 
 ## How do I fix a package?
 
