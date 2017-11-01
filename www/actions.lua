@@ -1179,7 +1179,7 @@ local path_match = {
 
 	'^bin/([^/]+)/clib/$', 'All Lua/C modules compiled for <b>{1}</b>',
 	'^bin/([^/]+)/clib/(.-)%.a$', 'Lua/C module <b>{2}</b> compiled statically for <b>{1}</b>',
-	'^bin/([^/]+)/clib/(.-)/$', 'Submodules of Lua/C module <b>{2}</b> compiled statically for <b>{1}</b>',
+	'^bin/([^/]+)/clib/(.-)/$', 'Submodules of Lua/C module <b>{2}</b> compiled for <b>{1}</b>',
 	'^bin/([^/]+)/clib/(.-)%.so$', 'Lua/C module <b>{2}</b> compiled dynamically for <b>{1}</b>',
 
 	'^bin/([^/]+)/lua/$', 'All pure-Lua modules that are <b>{1}</b>-specific',
