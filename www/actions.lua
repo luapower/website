@@ -11,8 +11,8 @@ local cbrowser = require'cbrowser'
 local cjson = require'cjson'
 
 --in our current setup, the dependency db must be updated manually.
-lp.config('auto_update_db', false)
-lp.config('allow_update_db_locally', false)
+lp.auto_update_db = false
+lp.allow_update_db_locally = false
 
 local action = {} --action table: {action_name = action_handler}
 local app = {} --HTTP API (to be set at runtime by the loader of this module)
@@ -106,7 +106,9 @@ function widgets.module_list(package)
 
 		local cat = t.name and t.name:match'^(.-)/[^/]+$' or 'other'
 		if cat ~= cat0 then
-			_(' <tr><td colspan=2><strong>%s</strong></td><td class="gray small" style="vertical-align: bottom">last updated</td></tr>', cat)
+			_(' <tr><td colspan=2><strong>%s</strong></td>'..
+				'<td class="gray small" style="vertical-align: bottom">'..
+				'last updated</td></tr>', cat)
 			cat0 = cat
 		end
 
@@ -118,15 +120,18 @@ function widgets.module_list(package)
 
 		local tagline = lp.module_tagline(package, t.module)
 
-		local doclink = docpath and string.format(' [<a href="/%s">doc</a>]', t.module) or ''
+		local doclink = docpath and
+			string.format(' [<a href="/%s">doc</a>]', t.module) or ''
 
 		_' <tr>'
 			_ '  <td class=nowrap>'
-			_('   <a href="%s/blob/master/%s?ts=3">%s</a>%s', origin_url, path, t.module, doclink)
+			_('   <a href="%s/blob/master/%s?ts=3">%s</a>%s',
+				origin_url, path, t.module, doclink)
 			_ '  </td><td>'
 			_('   %s', tagline or '')
 			_ '  </td><td class=nowrap>'
-			_('   <span class=time time="%s" reltime="%s">%s</span>', t.mtime, t.mtime_ago, t.mtime_ago)
+			_('   <span class=time time="%s" reltime="%s">%s</span>',
+				t.mtime, t.mtime_ago, t.mtime_ago)
 			_ '  </td>'
 		_' </tr>'
 	end
@@ -232,11 +237,15 @@ local function source_url(pkg, path, mod)
 end
 
 local os_list = {'mingw', 'linux', 'osx'}
-local platform_list = {'mingw32', 'mingw64', 'linux32', 'linux64', 'osx32', 'osx64'}
+local platform_list = {
+	'mingw32', 'mingw64',
+	'linux32', 'linux64',
+	'osx32'  , 'osx64'  ,
+}
 local os_platforms = {
 	mingw = {'mingw32', 'mingw64'},
 	linux = {'linux32', 'linux64'},
-	osx   = {'osx32', 'osx64'},
+	osx   = {'osx32'  , 'osx64'  },
 }
 
 --create a custom-ordered list of possible platforms.
@@ -306,7 +315,8 @@ local function extract_common_keys(maps, all_key)
 	for place, items in pairs(maps) do
 		for item, val in pairs(items) do
 			nt[item] = (nt[item] or 0) + 1
-			tt[item] = tt[item] or val --val of 'all' is the val of the first item.
+			--val of 'all' is the val of the first item.
+			tt[item] = tt[item] or val
 		end
 	end
 	--extract items found in all places
@@ -339,7 +349,8 @@ local function extract_common_keys_aot(maps, all_key)
 	for place, items in pairs(maps) do
 		for item, val in pairs(items) do
 			nt[item] = (nt[item] or 0) + 1
-			tt[item] = tt[item] or val --val of 'all' is the val of the first item.
+			--val of 'all' is the val of the first item.
+			tt[item] = tt[item] or val
 		end
 	end
 	--check to see if all items were extracted
@@ -408,9 +419,12 @@ local function package_icons(ptype, platforms, small)
 	local pt = glue.keys(platforms, true)
 	table.insert(st, tostring(((has_lua or has_ffi) and #pt == 0)
 		and 100 or #pt)) --portable vs cross-platform
-	table.insert(st, has_ffi and 1 or has_lua and 2 or 0) --Lua vs Lua+ffi vs others
-	table.insert(st, ptype) --type, just to sort others predictably too
-	glue.extend(st, pt) --platforms, just to group the same combinations together
+	--Lua vs Lua+ffi vs others
+	table.insert(st, has_ffi and 1 or has_lua and 2 or 0)
+	--type, just to sort others predictably too
+	table.insert(st, ptype)
+	--platforms, just to group the same combinations together
+	glue.extend(st, pt)
 	local ss = table.concat(st, ';')
 
 	return t, ss
@@ -452,6 +466,58 @@ local function mdep_list(mdeps) --module dependency list
 	return modules
 end
 
+local function packages_of(dep_func, mod, pkg, platform)
+	local t = {}
+	for mod in pairs(dep_func(mod, pkg, platform)) do
+		local dpkg = lp.module_package(mod)
+		if dpkg and dpkg ~= pkg then --exclude self
+			t[dpkg] = true
+		end
+	end
+	return t
+end
+
+local function packages_of_many(dep_func, mod, pkg, platform)
+	local t = {}
+	for mod in pairs(mod) do
+		glue.update(t, packages_of(dep_func, mod, pkg, platform))
+	end
+	return t
+end
+
+local function packages_of_all(dep_func, _, pkg, platform)
+	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
+end
+
+local function all_module_deps(pkg, platforms)
+	local t = {}
+	for platform in pairs(platforms) do
+		t[platform] = {}
+		for mod in pairs(lp.modules(pkg)) do
+			glue.update(t[platform],
+				lp.module_requires_loadtime_all(mod, pkg, platform))
+		end
+	end
+	return t
+end
+
+local function package_dep_maps(pkg, platforms)
+	local pts = {}
+	for platform in pairs(platforms) do
+		local pt = {}
+		pts[platform] = pt
+		local pext = packages_of_all(lp.module_requires_loadtime_ext, nil, pkg, platform)
+		local pall = packages_of_all(lp.module_requires_loadtime_all, nil, pkg, platform)
+		glue.update(pext, lp.bin_deps(pkg, platform))
+		glue.update(pall, lp.bin_deps_all(pkg, platform))
+		for p in pairs(pall) do
+			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+		end
+	end
+	return pts
+end
+
+
 local function package_bin_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
@@ -471,8 +537,10 @@ local function package_rev_dep_maps(pkg, platforms)
 	for platform in pairs(platforms) do
 		local pt = {}
 		pts[platform] = pt
-		local pext = packages_of_all(lp.module_required_loadtime, pkg, platform)
-		local pall = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
+		local pext = packages_of_all(
+			lp.module_required_loadtime, nil, pkg, platform)
+		local pall = packages_of_all(
+			lp.module_required_loadtime_all, nil, pkg, platform)
 		glue.update(pext, lp.rev_bin_deps(pkg, platform))
 		glue.update(pall, lp.rev_bin_deps_all(pkg, platform))
 		for p in pairs(pall) do
@@ -495,10 +563,14 @@ end
 local function module_package_dep_maps(pkg, mod, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
-		local pext = packages_of(lp.module_requires_loadtime_ext, mod, pkg, platform)
-		local pall = packages_of(lp.module_requires_loadtime_all, mod, pkg, platform)
-		glue.update(pext, filter(lp.bin_deps(pkg, platform), lp.module_platforms(mod, pkg)))
-		glue.update(pall, filter(lp.bin_deps_all(pkg, platform), lp.module_platforms(mod, pkg)))
+		local pext = packages_of(
+			lp.module_requires_loadtime_ext, mod, pkg, platform)
+		local pall = packages_of(
+			lp.module_requires_loadtime_all, mod, pkg, platform)
+		glue.update(pext, filter(lp.bin_deps(pkg, platform),
+			lp.module_platforms(mod, pkg)))
+		glue.update(pall, filter(lp.bin_deps_all(pkg, platform),
+			lp.module_platforms(mod, pkg)))
 		local pt = {}
 		for p in pairs(pall) do
 			pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
@@ -511,7 +583,8 @@ end
 local function module_runtime_package_dep_maps(pkg, mod, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
-		local pdeps = packages_of(lp.module_requires_runtime, mod, pkg, platform)
+		local pdeps = packages_of(
+			lp.module_requires_runtime, mod, pkg, platform)
 		local pt = {}
 		for p in pairs(pdeps) do
 			pt[p] = {kind = 'direct'}
@@ -568,7 +641,10 @@ local function package_dep_lists(pdeps)
 	for _,platform in ipairs(ext_platform_list) do
 		local pdeps = pdeps[platform]
 		if pdeps then
-			local icon = platform ~= 'all' and platform ~= 'common' and platform or nil
+			local icon =
+				platform ~= 'all'
+				and platform ~= 'common'
+				and platform or nil
 			local text = not icon and platform or nil
 			table.insert(t, {
 				icon = icon,
@@ -585,7 +661,10 @@ local function module_dep_lists(mdeps)
 	for _,platform in ipairs(ext_platform_list) do
 		local mdeps = mdeps[platform]
 		if mdeps then
-			local icon = platform ~= 'all' and platform ~= 'common' and platform or nil
+			local icon =
+				platform ~= 'all'
+				and platform ~= 'common'
+				and platform or nil
 			local text = not icon and platform or nil
 			table.insert(t, {
 				icon = icon,
@@ -639,7 +718,7 @@ local function package_info(pkg, doc)
 	local all_platforms =
 		next(platforms)
 			and platforms
-			or glue.update({}, lp.config'platforms')
+			or glue.update({}, lp.supported_platforms)
 	local master_time = lp.git_master_time(pkg)
 	local license = lp.license(pkg)
 	local ctags = lp.what_tags(pkg) or {}
@@ -647,7 +726,10 @@ local function package_info(pkg, doc)
 	local on_github = origin_url:find'github%.com'
 	local git_version = lp.git_version(pkg)
 	local git_tag = lp.git_tag(pkg)
-	local released = git_tag and git_tag ~= '' and git_tag ~= 'dev' --tag "dev" is not a release
+	local released =
+		git_tag
+		and git_tag ~= ''
+		and git_tag ~= 'dev' --tag "dev" is not a release
 	local git_tags = lp.git_tags(pkg)
 	local doc = doc or pkg
 	local docs = lp.docs(pkg)
@@ -668,7 +750,8 @@ local function package_info(pkg, doc)
 
 	--download / "Changes since..."
 	t.git_tag = git_tag
-	t.changes_url = released and on_github and string.format('%s/compare/%s...master', origin_url, git_tag)
+	t.changes_url = released and on_github and
+		string.format('%s/compare/%s...master', origin_url, git_tag)
 
 	--download / releases
 	t.git_tags = {}
@@ -683,7 +766,8 @@ local function package_info(pkg, doc)
 				reltime = timeago(mtime),
 				changes_text = prevtag and 'Changes...' or 'Files...',
 				changes_url = on_github and (prevtag
-					and string.format('%s/compare/%s...%s', origin_url, prevtag, tag)
+					and string.format('%s/compare/%s...%s',
+						origin_url, prevtag, tag)
 					or string.format('%s/tree/%s', origin_url, tag)),
 			})
 		end
@@ -698,8 +782,11 @@ local function package_info(pkg, doc)
 		end
 	end
 	if not next(t.platforms) then
-		local runtime = package_type == 'Lua+ffi' and 'LuaJIT' or package_type == 'Lua' and 'Lua'
-		table.insert(t.platforms, {name = runtime and 'all '..runtime..' platforms'})
+		local runtime =
+			package_type == 'Lua+ffi' and 'LuaJIT'
+			or package_type == 'Lua' and 'Lua'
+		table.insert(t.platforms,
+			{name = runtime and 'all '..runtime..' platforms'})
 	end
 
 	--package info / docs
@@ -721,7 +808,10 @@ local function package_info(pkg, doc)
 	t.doc_path = doc_path
 	t.title = title
 	t.tagline = tagline
-	t.edit_link = on_github and doc_path and origin_url..'/edit/master/'..doc_path
+	t.edit_link =
+		on_github
+		and doc_path
+		and origin_url..'/edit/master/'..doc_path
 
 	--sidebar
 	t.icons = package_icons(package_type, platforms)
@@ -730,7 +820,11 @@ local function package_info(pkg, doc)
 	t.mtime = format_time(master_time)
 	t.mtime_ago = timeago(master_time)
 	t.license = license
-	t.c_name = ctags.realname and ctags.realname ~= pkg and ctags.realname or nil
+	t.c_name =
+		ctags.realname
+		and ctags.realname ~= pkg
+		and ctags.realname
+		or nil
 	t.c_version = ctags.version
 	t.c_url = ctags.url
 
@@ -1176,7 +1270,7 @@ end
 
 function action.status()
 	local statuses = {}
-	for platform, server in glue.sortedpairs(lp.config'servers') do
+	for platform, server in glue.sortedpairs(lp.servers) do
 		local ip, port = unpack(server)
 		local t = {platform = platform, ip = ip, port = port}
 		local rlp, err = lp.connect(platform, nil, app.connect)

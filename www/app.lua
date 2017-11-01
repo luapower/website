@@ -133,7 +133,7 @@ wait = ngx.thread.wait
 
 --action API -----------------------------------------------------------------
 
-luapower.config('luapower_dir', config'luapower_dir') --setup luapower
+luapower.luapower_dir = config'luapower_dir' --setup luapower
 
 local api = {
 	setmime = setmime,
