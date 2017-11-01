@@ -172,7 +172,8 @@ local function render_docfile(infile)
 		local s2 = md_refs()
 		local tmpfile = os.tmpname()
 		glue.writefile(tmpfile, s1..'\n\n'..s2)
-		local cmd = 'pandoc --tab-stop=3 -r markdown+definition_lists -w html '..
+		local cmd =
+			'pandoc --tab-stop=3 -r markdown+definition_lists -w html '..
 			tmpfile..' > '..outfile
 		os.execute(cmd)
 		os.remove(tmpfile)
@@ -506,8 +507,10 @@ local function package_dep_maps(pkg, platforms)
 	for platform in pairs(platforms) do
 		local pt = {}
 		pts[platform] = pt
-		local pext = packages_of_all(lp.module_requires_loadtime_ext, nil, pkg, platform)
-		local pall = packages_of_all(lp.module_requires_loadtime_all, nil, pkg, platform)
+		local pext = packages_of_all(lp.module_requires_loadtime_ext,
+			nil, pkg, platform)
+		local pall = packages_of_all(lp.module_requires_loadtime_all,
+			nil, pkg, platform)
 		glue.update(pext, lp.bin_deps(pkg, platform))
 		glue.update(pall, lp.bin_deps_all(pkg, platform))
 		for p in pairs(pall) do
@@ -1150,6 +1153,105 @@ end
 
 --annotated tree -------------------------------------------------------------
 
+--general path breakdown
+------------------------------------------------------------------------------
+
+local path_match = {
+
+	'^luajit$', '<b class=important>LuaJIT loader for Linux and OSX<b>',
+	'^luajit32$', '<b class=important>LuaJIT 32bit mode loader for Linux and OSX<b>',
+	'^luajit.cmd$', '<b class=important>LuaJIT loader for Windows<b>',
+	'^luajit32.cmd$', '<b class=important>LuaJIT 32bit loader for Windows<b>',
+
+	'^MGIT_DIR/$', 'Multigit directory (contains all .git directories)',
+	'^MGIT_DIR/([^/]+)/$', 'Contains the .git directory for package <b>{1}</b>',
+	'^MGIT_DIR/([^/]+)/%.git/$', '.git directory for package <b>{1}</b>',
+	'^MGIT_DIR/([^/]+)%.exclude$', 'Git ignore file for package <b>{1}</b>',
+	'^MGIT_DIR/([^/]+)%.origin$', 'Multigit origin file for package <b>{1}</b>',
+	'^MGIT_DIR/([^/]+).baseurl$', 'Multigit baseurl file for origin <b>{1}</b>',
+
+	'^bin/$', 'All binaries for all packages & all platforms',
+	'^bin/([^/]+)/$', 'All binaries compiled for <b>{1}</b>',
+
+	'^bin/([^/]+)/luajit$', 'LuaJIT wrapper for <b>{1}</b>',
+	'^bin/([^/]+)/luajit-bin$', 'LuaJIT executable for <b>{1}</b>',
+	'^bin/([^/]+)/luajit.exe$', 'LuaJIT executable for <b>{1}</b>',
+
+	'^bin/([^/]+)/clib/$', 'All Lua/C modules compiled for <b>{1}</b>',
+	'^bin/([^/]+)/clib/(.-)%.a$', 'Lua/C module <b>{2}</b> compiled statically for <b>{1}</b>',
+	'^bin/([^/]+)/clib/(.-)/$', 'Submodules of Lua/C module <b>{2}</b> compiled statically for <b>{1}</b>',
+	'^bin/([^/]+)/clib/(.-)%.so$', 'Lua/C module <b>{2}</b> compiled dynamically for <b>{1}</b>',
+
+	'^bin/([^/]+)/lua/$', 'All pure-Lua modules that are <b>{1}</b>-specific',
+	'^bin/([^/]+)/lua/(.-)/$', 'Submodules of <b>{2}</b> that are <b>{1}</b>-specific',
+	'^bin/([^/]+)/lua/(.-)%.lua', 'Lua module <b>{2}</b> (<b>{1}</b>-specific)',
+
+	'^bin/([^/]+)/lib(.-)%.a$', 'C library <b>{2}</b> compiled statically for <b>{1}</b>',
+	'^bin/([^/]+)/(.-)%.a$', 'C library <b>{2}</b> compiled statically for <b>{1}</b>',
+
+	'^bin/([^/]+)/lib(.-)%.so$', 'C library <b>{2}</b> compiled dynamically for <b>{1}</b>',
+	'^bin/([^/]+)/lib(.-)%.dylib$', 'C library <b>{2}</b> compiled dynamically for <b>{1}</b>',
+	'^bin/([^/]+)/(.-)%.dll$', 'C library <b>{2}</b> compiled dynamically for <b>{1}</b>',
+
+	'^bin/([^/]+)/.-/$', 'Some files needed for <b>PACKAGE</b>',
+	'^bin/([^/]+)/', 'Some file needed for <b>PACKAGE</b>',
+
+	'^csrc/$', 'All C source files and build scripts for all packages',
+	'^csrc/(PACKAGE)/$', 'C sources & build scripts for <b>{1}</b>',
+	'^csrc/(PACKAGE)/WHAT$', 'WHAT file for <b>{1}</b>',
+	'^csrc/(PACKAGE)/LICENSE$', 'License file for <b>{1}</b>',
+	'^csrc/(PACKAGE)/COPYING', 'License file for <b>{1}</b>',
+	'^csrc/(PACKAGE)/build%-(.-)%.sh$', 'Build script for compiling <b>{1}</b> on <b>{2}</b>',
+	'^csrc/(PACKAGE)/build.sh$', 'Build script for compiling <b>{1}</b> on all platforms',
+	'^csrc/(PACKAGE)/.-%.[ch]$', 'C source file for <b>{1}</b>',
+	'^csrc/(PACKAGE).-/$', 'Source files for <b>{1}</b>',
+	'^csrc/(PACKAGE)', 'Some source file for <b>{1}</b>',
+
+	'^media/$', 'All input data for tests and demos for all packages',
+	'^media/.-/$', 'Data files for package <b>PACKAGE</b>',
+	'^media/.-[^/]$', 'Data file for package <b>PACKAGE</b>',
+
+	'^([^%.]+)/$', 'Submodules of <b>{1}</b>',
+	'(.-)_h%.lua$', 'FFI cdefs for <b>{1}</b>',
+	'(.-)_test%.lua$', 'Test script for <b>{1}</b>',
+	'(.-)_demo%.lua$', 'Demo app for <b>{1}</b>',
+	'(.-)_app%.lua$', 'Lua app called <b>{1}</b>',
+	'(.-)%.lua$', 'Lua module <b>{1}</b>',
+	'(.-)%.dasl$', 'Lua/DynASM module <b>{1}</b>',
+	'(.-)%.md$', 'Documentation for <b>{1}</b>',
+	'%.sh$', 'Some shell script needed for <b>PACKAGE</b>',
+
+}
+local function pass(format, ...)
+	if not ... then return end
+	local t = glue.pack(...)
+	return format:gsub('{(%d)}', function(n)
+		return t[tonumber(n)]:gsub('^csrc/', ''):gsub('/', '.')
+	end)
+end
+local path_description = lp.memoize(function(path, package)
+	for i=1,#path_match,2 do
+		local patt, format = path_match[i], path_match[i+1]
+		patt = patt:gsub('MGIT_DIR', lp.mgitpath())
+		if patt:find'PACKAGE' then
+			if package then
+				patt = patt:gsub('PACKAGE', package)
+			else
+				goto skip
+			end
+		elseif format:find'PACKAGE' then
+			if package then
+				format = format:gsub('PACKAGE', package)
+			else
+				goto skip
+			end
+		end
+		local s = pass(format, path:match(patt))
+		if s then return s end
+		::skip::
+	end
+end)
+
 --recursive lfs.dir()
 local function ls_dir(p0, each)
 	assert(p0)
@@ -1170,63 +1272,51 @@ local function ls_dir(p0, each)
 end
 
 local tree_json = lp.memoize(function()
-	local files = {}
 	local root = {
 		file = 'luapower',
 		descr = 'The luapower tree',
 		files = {},
 		dir = false,
+		path = '/',
 	}
 
-	--list all files and dirs recursively, regardless of git tracking
+	--list all files and dirs recursively and add info to tracked files.
 	local dir = root
 	ls_dir(lp.powerpath(), function(filename, path, mode)
 		if mode == 'up' then
 			dir = dir.dir
-		elseif path:find'csrc/[^/]+/[^/]+/' then
-		elseif path:find'^%.mgit/[^/]+/%.git/' then
-		elseif path:find'^bin/[^/]+/include$' then
+		elseif path:find'^%.mgit/[^/]+/%.git/' then --skip this huge dir
 		elseif mode == 'directory' then
-			local node = {file = filename, dir = dir, files = {}}
-			table.insert(dir.files, node)
-			dir = node
-			node.descr = lp.path_description(path..'/')
-			return true --recurse
+			if not path:find'csrc/[^/]+/[^/]+' then --don't dive in here
+				local node = {file = filename, dir = dir, files = {},
+					path = path..'/'}
+				table.insert(dir.files, node)
+				dir = node
+				return true --recurse
+			end
 		else
-			local node = {file = filename, dir = dir}
+			local node = {file = filename, dir = dir, path = path}
+			node.package = lp.tracked_files()[path]
+			node.type = lp.file_types()[path]
 			table.insert(dir.files, node)
-			files[path] = node
-			node.descr = lp.path_description(path)
 		end
 	end)
 
-	--assign package to all tracked files
-	for path, package in pairs(lp.tracked_files()) do
-		local node = files[path]
-		if node then
-			node.package = package
-			node.tracked = true
-		end
-	end
-
-	--set file type for icons
-	local ftype = lp.file_types()
-	for path, node in pairs(files) do
-		node.type = ftype[path]
-	end
-
-	--recursive node iterator
+	--recursive node iterator (depth-first)
 	local function rec(node, each)
-		each(node)
 		if node.files then
 			for i, node in ipairs(node.files) do
 				rec(node, each)
 			end
 		end
+		each(node)
 	end
 
 	--sort files in each folder by name, with subfolders first
-	--and remove the dir key to avoid recursion when serializing.
+	--also remove the dir key to avoid recursion when serializing.
+	--also set package if all the files inside are of the same package.
+	--also set package=true for dirs containing files from multiple packages.
+	--also set show_package flag for grouping by package.
 	local function cmp(node1, node2)
 		local is_dir1 = node1.files and true
 		local is_dir2 = node2.files and true
@@ -1238,20 +1328,38 @@ local tree_json = lp.memoize(function()
 	end
 	rec(root, function(node)
 		node.dir = nil
-		if node.files then
-			table.sort(node.files, cmp)
+		if not node.files then --not a dir
+			return
+		end
+		table.sort(node.files, cmp)
+		local p0
+		for i=1,#node.files do
+			local p1 = node.files[i].package
+			if p1 and p0 and p1 ~= p0 then
+				node.package = true --contains multiple packages
+				break
+			elseif p1 and not p0 then
+				p0 = p1
+				node.package = p1
+			end
+		end
+		if node.package then
+			local p0
+			for i=1,#node.files do
+				local file = node.files[i]
+				local p1 = file.package
+				if p1 and p1 ~= p0 then
+					file.show_package = true
+					p0 = p1
+				end
+			end
 		end
 	end)
 
-	--set show_package flag for grouping by package
-	local p0
 	rec(root, function(node)
-		if node.package == p0 then
-			node.show_package = false
-		else
-			node.show_package = true
-			p0 = node.package
-		end
+		local package = node.package ~= true and node.package or nil
+		node.descr = path_description(node.path, package)
+		node.path = nil
 	end)
 
 	return cjson.encode(root)

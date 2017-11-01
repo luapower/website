@@ -122,6 +122,8 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 
 	if (node.package)
 		tr.attr('package', node.package)
+	else
+		tr.addClass('untracked')
 
 	trs.push(tr)
 
@@ -136,13 +138,20 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 			.css({'padding-left': 20*level+'px'})
 
 	var td_package = $('<td/>')
-	var a_package = $('<a/>').html(node.package)
-	if (node.show_package) {
-		tr.addClass('show_package')
-		td_package
-			.addClass('package_td')
-			.append(a_package)
-	}
+	if (node.package) {
+		var a_package = $('<a/>')
+			.html(node.package === true ?  '' : node.package)
+			.click(function(e) {
+				exec('/tree/' + $(this).html())
+			})
+		if (node.show_package) {
+			tr.addClass('show_package')
+			td_package
+				.addClass('package_td')
+				.append(a_package)
+		}
+	} else
+		td_package.html('untracked')
 
 	var td_descr = $('<td class=description></td>')
 		.html(node.descr)
@@ -153,10 +162,6 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 		openclose_dir(id)
 		select_node(id)
 		e.preventDefault()
-	})
-
-	a_package.click(function(e) {
-		exec('/tree/' + $(this).html())
 	})
 
 	if (node.files) {
