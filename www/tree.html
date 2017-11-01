@@ -106,6 +106,7 @@ function select_node(id) {
 }
 
 var nextid
+var icons = {sh: 'fa-cog', cmd: 'fa-cog'}
 
 function create_node(node, parent_id, level, filter, open_dirs, trs) {
 
@@ -127,9 +128,17 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 
 	trs.push(tr)
 
+	var ext = node.file.match('\.([^.]+)$')[1]
 	var icon =
 		$('<i class=fa></i>')
-			.addClass(node.files ? 'fa-folder-o' : 'fa-file-o')
+			.addClass(
+				node.files ?
+					'fa-folder-o' :
+					(node.type == 'module' || node.type == 'script' ?
+						'fa-code' :
+						(node.type == 'doc' ?
+							'fa-book' :
+							(icons[ext] || 'fa-file-o'))))
 
 	var td_filename =
 		$('<td class=filename></td>')

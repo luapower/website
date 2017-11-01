@@ -1153,9 +1153,6 @@ end
 
 --annotated tree -------------------------------------------------------------
 
---general path breakdown
-------------------------------------------------------------------------------
-
 local path_match = {
 
 	'^luajit$', '<b class=important>LuaJIT loader for Linux and OSX<b>',
@@ -1289,6 +1286,8 @@ local tree_json = lp.memoize(function()
 		path = '/',
 	}
 
+	local mod_paths = glue.index(lp.modules())
+
 	--list all files and dirs recursively and add info to tracked files.
 	local dir = root
 	ls_dir(lp.powerpath(), function(filename, path, mode)
@@ -1310,6 +1309,10 @@ local tree_json = lp.memoize(function()
 			local node = {file = filename, dir = dir, path = path}
 			node.package = lp.tracked_files()[path]
 			node.type = lp.file_types()[path]
+			local mod = mod_paths[path]
+			if mod then
+				node.title = lp.module_tagline(mod, node.package)
+			end
 			table.insert(dir.files, node)
 		end
 	end)
