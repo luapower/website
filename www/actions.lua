@@ -1209,7 +1209,7 @@ local path_match = {
 
 	'^media/$', 'All input data for tests and demos for all packages',
 	'^media/.-/$', 'Data files for package <b>PACKAGE</b>',
-	'^media/.-[^/]$', 'Data file for package <b>PACKAGE</b>',
+	'^media/.-', 'Data file for package <b>PACKAGE</b>',
 
 	'^([^%.]+)/$', 'Submodules of <b>{1}</b>',
 	'(.-)_h%.lua$', 'FFI cdefs for <b>{1}</b>',
