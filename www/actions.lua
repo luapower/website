@@ -1287,7 +1287,10 @@ local tree_json = lp.memoize(function()
 			dir = dir.dir
 		elseif path:find'^%.mgit/[^/]+/%.git/' then --skip this huge dir
 		elseif mode == 'directory' then
-			if not path:find'csrc/[^/]+/[^/]+' then --don't dive in here
+			if not (
+				path:find'^csrc/[^/]+/[^/]+'
+				or path:find'^%.git'
+			then --don't dive in here
 				local node = {file = filename, dir = dir, files = {},
 					path = path..'/'}
 				table.insert(dir.files, node)
