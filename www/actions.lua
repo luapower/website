@@ -1290,7 +1290,7 @@ local tree_json = lp.memoize(function()
 			if not (
 				path:find'^csrc/[^/]+/[^/]+'
 				or path:find'^%.git'
-			then --don't dive in here
+			) then --don't dive in here
 				local node = {file = filename, dir = dir, files = {},
 					path = path..'/'}
 				table.insert(dir.files, node)
