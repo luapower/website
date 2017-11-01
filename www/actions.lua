@@ -1209,7 +1209,7 @@ local path_match = {
 
 	'^media/$', 'All input data for tests and demos for all packages',
 
-	'^media/www/$', 'Web asserts (screenshots, etc.)',
+	'^media/www/$', 'Web asserts (screenshots, etc.) for all packages',
 	'^media/www/.-/', 'Web asserts for <b>PACKAGE</b>',
 	'^media/www/', 'Some web asset for <b>PACKAGE</b>',
 	'^media/www/.-/', 'Some web asserts',
