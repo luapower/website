@@ -1208,8 +1208,13 @@ local path_match = {
 	'^csrc/(PACKAGE)', 'Some source file for <b>{1}</b>',
 
 	'^media/$', 'All input data for tests and demos for all packages',
+
 	'^media/www/$', 'Web asserts (screenshots, etc.)',
-	'^media/www/', 'Web asserts (screenshots, etc.)',
+	'^media/www/.-/', 'Web asserts for <b>PACKAGE</b>',
+	'^media/www/', 'Some web asset for <b>PACKAGE</b>',
+	'^media/www/.-/', 'Some web asserts',
+	'^media/www/', 'Some web asset',
+
 	'^media/.-/$', 'Data files for package <b>PACKAGE</b>',
 	'^media/.-', 'Data file for package <b>PACKAGE</b>',
 	'^media/.-/$', 'Some data files',
