@@ -1208,8 +1208,12 @@ local path_match = {
 	'^csrc/(PACKAGE)', 'Some source file for <b>{1}</b>',
 
 	'^media/$', 'All input data for tests and demos for all packages',
+	'^media/www/$', 'Web asserts (screenshots, etc.)',
+	'^media/www/', 'Web asserts (screenshots, etc.)',
 	'^media/.-/$', 'Data files for package <b>PACKAGE</b>',
 	'^media/.-', 'Data file for package <b>PACKAGE</b>',
+	'^media/.-/$', 'Some data files',
+	'^media/.-', 'Some data file',
 
 	'^([^%.]+)/$', 'Submodules of <b>{1}</b>',
 	'(.-)_h%.lua$', 'FFI cdefs for <b>{1}</b>',
