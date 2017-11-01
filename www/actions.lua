@@ -452,57 +452,6 @@ local function mdep_list(mdeps) --module dependency list
 	return modules
 end
 
-local function packages_of(dep_func, mod, pkg, platform)
-	local t = {}
-	for mod in pairs(dep_func(mod, pkg, platform)) do
-		local dpkg = lp.module_package(mod)
-		if dpkg and dpkg ~= pkg then --exclude self
-			t[dpkg] = true
-		end
-	end
-	return t
-end
-
-local function packages_of_many(dep_func, mod, pkg, platform)
-	local t = {}
-	for mod in pairs(mod) do
-		glue.update(t, packages_of(dep_func, mod, pkg, platform))
-	end
-	return t
-end
-
-local function packages_of_all(dep_func, _, pkg, platform)
-	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
-end
-
-local function all_module_deps(pkg, platforms)
-	local t = {}
-	for platform in pairs(platforms) do
-		t[platform] = {}
-		for mod in pairs(lp.modules(pkg)) do
-			glue.update(t[platform],
-				lp.module_requires_loadtime_all(mod, pkg, platform))
-		end
-	end
-	return t
-end
-
-local function package_dep_maps(pkg, platforms)
-	local pts = {}
-	for platform in pairs(platforms) do
-		local pt = {}
-		pts[platform] = pt
-		local pext = packages_of_all(lp.module_requires_loadtime_ext, nil, pkg, platform)
-		local pall = packages_of_all(lp.module_requires_loadtime_all, nil, pkg, platform)
-		glue.update(pext, lp.bin_deps(pkg, platform))
-		glue.update(pall, lp.bin_deps_all(pkg, platform))
-		for p in pairs(pall) do
-			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
-		end
-	end
-	return pts
-end
-
 local function package_bin_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
@@ -522,8 +471,8 @@ local function package_rev_dep_maps(pkg, platforms)
 	for platform in pairs(platforms) do
 		local pt = {}
 		pts[platform] = pt
-		local pext = packages_of_all(lp.module_required_loadtime, nil, pkg, platform)
-		local pall = packages_of_all(lp.module_required_loadtime_all, nil, pkg, platform)
+		local pext = packages_of_all(lp.module_required_loadtime, pkg, platform)
+		local pall = packages_of_all(lp.module_required_loadtime_all, pkg, platform)
 		glue.update(pext, lp.rev_bin_deps(pkg, platform))
 		glue.update(pall, lp.rev_bin_deps_all(pkg, platform))
 		for p in pairs(pall) do
@@ -986,10 +935,6 @@ local function package_info(pkg, doc)
 		t.has_load_errors = t.has_load_errors or mt.module_has_load_errors
 	end
 	t.has_modules = glue.count(t.modules, 1) > 0
-
-
-	local all_package_deps = package_dep_maps(pkg, all_platforms)
-	local all_module_deps = all_module_deps(pkg, all_platforms)
 
 	--script list
 	t.scripts = {}
