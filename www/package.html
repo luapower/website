@@ -681,16 +681,6 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						{{^package_deps}}
 						<span class=smallnote>none</span>
 						{{/package_deps}}
-						<script>
-							// prevent icons from showing up alone at the end of the line.
-							$('.deps_sidebar .platform_icon').each(function() {
-								$(this)
-									.css({'display': 'inline', 'margin-right': '4px'})
-									.add($(this).next())        // +
-									.add($(this).next().next()) // first text
-									.wrapAll('<span class=nowrap></span>')
-							})
-						</script>
 					</td>
 				</tr>
 				<tr>
@@ -708,6 +698,16 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						<span class=smallnote>none</span>
 						{{/package_rdeps}}
 					</td>
+					<script>
+						// prevent icons from showing up alone at the end of the line.
+						$('.deps_sidebar .platform_icon').each(function() {
+							$(this)
+								.css({'display': 'inline', 'margin-right': '4px'})
+								.add($(this).next())        // +
+								.add($(this).next().next()) // first text
+								.wrapAll('<span class=nowrap></span>')
+						})
+					</script>
 				</tr>
 			</table>
 			<br>
