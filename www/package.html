@@ -28,8 +28,13 @@
 						<h4 class=tight>{{tagline}}</h4>
 					</td>
 					<td valign=top align=right class=action_links>
-						<a href="/{{package}}" class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}"><i class="fa fa-file-text-o"></i> documentation</a>
-						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}"><i class="fa fa-info-circle"></i> package info</a>
+						<a href="/{{package}}"
+							class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}">
+								<i class="fa fa-file-text-o"></i> documentation</a>
+						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}">
+							<i class="fa fa-info-circle"></i> package info</a>
+						<a href="/tree/{{package}}" class="nowrap">
+							<i class="fa fa-files-o"></i> browse files</a>
 						<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
 					</td>
 				</tr>

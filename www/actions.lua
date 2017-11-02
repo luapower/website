@@ -490,18 +490,6 @@ local function packages_of_all(dep_func, _, pkg, platform)
 	return packages_of_many(dep_func, lp.modules(pkg), pkg, platform)
 end
 
-local function all_module_deps(pkg, platforms)
-	local t = {}
-	for platform in pairs(platforms) do
-		t[platform] = {}
-		for mod in pairs(lp.modules(pkg)) do
-			glue.update(t[platform],
-				lp.module_requires_loadtime_all(mod, pkg, platform))
-		end
-	end
-	return t
-end
-
 local function package_dep_maps(pkg, platforms)
 	local pts = {}
 	for platform in pairs(platforms) do
