@@ -549,7 +549,6 @@ warn {
 		font-size: 13px;
 		table-layout: fixed; /* overflow content instead of widening the table */
 }
-.infobar td { padding-right: 0.5em; }
 .infobar td { padding-top: 4px; padding-bottom: 4px; }
 .infobar tr + tr { border-top: 1px solid; }
 

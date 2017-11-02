@@ -21,24 +21,21 @@
 			{{/download}}{{/info}}
 		</td>
 		<td valign=top>
-			<table width=100%>
-				<tr>
-					<td valign=top>
-						<h1 class=tight>{{title}}</h1>
-						<h4 class=tight>{{tagline}}</h4>
-					</td>
-					<td valign=top align=right class=action_links>
-						<a href="/{{package}}"
-							class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}">
-								<i class="fa fa-file-text-o"></i> documentation</a>
-						<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}">
-							<i class="fa fa-info-circle"></i> package info</a>
-						<a href="/tree/{{package}}" class="nowrap">
-							<i class="fa fa-files-o"></i> browse files</a>
-						<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
-					</td>
-				</tr>
-			</table>
+			<div style="position: relative; width: 100%">
+				<div style="position: absolute; width: 100%; text-align: right;" class=action_links>
+					<span style="float: left; width: 100px">&nbsp;</span>
+					<a href="/{{package}}"
+						class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}">
+							<i class="fa fa-file-text-o"></i> documentation</a>
+					<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}">
+						<i class="fa fa-info-circle"></i> package info</a>
+					<a href="/tree/{{package}}" class="nowrap">
+						<i class="fa fa-files-o"></i> browse files</a>
+					<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
+				</div>
+				<h1 class=tight>{{title}}</h1>
+				<h4 class=tight>{{tagline}}</h4>
+			</div>
 			<br>
 
 			<!-- download =================================================== -->
@@ -674,17 +671,26 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				<tr>
 					<td align=left valign=top colspan=2>
 						<span class="gray requires_label">Requires:</span>
-						<span style="white-space: normal">
+						<span style="white-space: normal" class=deps_sidebar>
 						{{#package_deps}}
-							{{#icon}}<span class="gray icon-{{icon}}"></span>{{/icon}}
+							{{#icon}}<span class="gray platform_icon icon-{{icon}}"></span>{{/icon}}
 							{{#packages}}
 								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
 							{{/packages}}
 						{{/package_deps}}
-						</span>
 						{{^package_deps}}
 						<span class=smallnote>none</span>
 						{{/package_deps}}
+						<script>
+							// prevent icons from showing up alone at the end of the line.
+							$('.deps_sidebar .platform_icon').each(function() {
+								$(this)
+									.css({'display': 'inline', 'margin-right': '4px'})
+									.add($(this).next())        // +
+									.add($(this).next().next()) // first text
+									.wrapAll('<span class=nowrap></span>')
+							})
+						</script>
 					</td>
 				</tr>
 				<tr>
