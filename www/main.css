@@ -790,3 +790,14 @@ warn {
 	color: #999;
 	margin: 0;
 }
+
+/* tree ------------------------------------------------------------------- */
+
+#tree .untracked     { color: red; }
+#tree .show_package  { border-top: 1px solid; }
+#tree .package_td    { text-weight: bold; }
+#tree th             { text-align: left; }
+#tree tr             { cursor: pointer; }
+#tree .fa            { width: 20px; }
+#tree .filter_btn, #tree .filter_btn i { cursor: pointer; }
+#tree .filter_btn i  { margin-left: 4px; }

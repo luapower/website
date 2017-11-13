@@ -1,47 +1,3 @@
-<style>
-#tree .untracked {
-	color: red;
-}
-#tree .dir .filename {
-	color: white;
-}
-#tree .empty_dir .filename {
-	color: white;
-}
-#tree .show_package {
-	border-top: 1px solid #444;
-}
-#tree .package_td {
-	color: white;
-	text-weight: bold;
-}
-#tree th {
-	text-align: left;
-}
-#tree .filename {
-	cursor: pointer;
-}
-#tree .fa {
-	width: 20px;
-	color: #ccc;
-}
-#tree .selected {
-	background-color: #444;
-}
-#tree .filter_btn, #tree .filter_btn i {
-	color: #9999ff;
-	cursor: pointer;
-}
-#tree .filter_btn i {
-	margin-left: 4px;
-}
-#tree .description {
-	color: #ccc;
-}
-#tree .important {
-	color: yellow;
-}
-</style>
 <script type=x-template id=tree_template>
 <table id=tree width=100%>
 </tr>
@@ -167,7 +123,7 @@ function create_node(node, parent_id, level, filter, open_dirs, trs) {
 
 	tr.append(td_filename, td_package, td_descr)
 
-	td_filename.click(function(e) {
+	tr.click(function(e) {
 		openclose_dir(id)
 		select_node(id)
 		e.preventDefault()

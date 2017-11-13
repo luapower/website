@@ -68,3 +68,12 @@ a .package_cat_name:hover, a .package_cat_name:visited:hover { color: #fff; }
 .doc .sourceCode .fu { color: #FFFFFF; } /*  FunctionTok */
 .doc .sourceCode .re { }                 /*  RegionMarkerTok */
 .doc .sourceCode .er { color: #FF0000; } /*  ErrorTok */
+
+#tree .dir .filename { color: white; }
+#tree .empty_dir .filename { color: white; }
+#tree .show_package  { border-color: #444; }
+#tree .fa            { color: #ccc; }
+#tree .selected      { background-color: #444; }
+#tree .filter_btn, #tree .filter_btn i { color: #9999ff; }
+#tree .description   { color: #ccc; }
+#tree .important     { color: yellow; }
