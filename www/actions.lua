@@ -1433,6 +1433,7 @@ function action.github(...)
 		os.execute'git pull'
 	elseif lp.installed_packages()[repo] then
 		os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
+		os.execute(lp.git(repo, 'pull --tags')) --TODO: this is blocking the server!!!
 		lp.clear_cache(repo)
 	end
 end
