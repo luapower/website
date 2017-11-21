@@ -1,6 +1,6 @@
 <table width=100%>
 	<tr>
-		<td valign=top width=110 style="padding-right: 20px;">
+		<td valign=top width=110 style="padding-right: 20px;" class="leftside nowrap">
 			{{^info}}{{^download}}
 			<div style="min-height: 2em">
 			{{#docs}}
@@ -22,15 +22,15 @@
 		</td>
 		<td valign=top>
 			<div style="position: relative; width: 100%">
-				<div style="position: absolute; width: 100%; text-align: right;" class=action_links>
-					<span style="float: left; width: 100px">&nbsp;</span>
+				<div class=action_links>
+					<span style="float: left; width: 180px">&nbsp;</span>
 					<a href="/{{package}}"
 						class="nowrap {{^info}}{{^download}}selected_link{{/download}}{{/info}}">
-							<i class="fa fa-file-text-o"></i> documentation</a>
+							<i class="fa fa-file-text-o"></i> docs</a>
 					<a href="/{{package}}/info" class="nowrap {{#info}}selected_link{{/info}}">
-						<i class="fa fa-info-circle"></i> package info</a>
+						<i class="fa fa-info-circle"></i> info</a>
 					<a href="/tree/{{package}}" class="nowrap">
-						<i class="fa fa-files-o"></i> browse files</a>
+						<i class="fa fa-files-o"></i> files</a>
 					<a href="/{{package}}/download" class="nowrap download_link {{#download}}selected_link{{/download}}"><i class="fa fa-download"></i> download</a>
 				</div>
 				<h1 class=tight>{{title}}</h1>

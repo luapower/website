@@ -60,13 +60,13 @@
 					<td width=50 align=center valign=middle>
 						<a href="/forum/" class="external_link" target="_blank">Forum</a>
 					</td>
-					<td align=right valign=middle style="padding-right: 1em;">
+					<td align=right valign=middle>
 						{{#github_url}}
 							<a class=github_label href="{{github_url}}">{{github_title}}<i class="github_icon fa fa-github"></i></a>
 						{{/github_url}}
 					</td>
 					{{#grep_enabled}}
-					<td align=left valign=middle width=190>
+					<td align=left valign=middle width=190 class=rightside>
 						<input class=search_input type=text value="{{{search}}}" placeholder="grep in sources">
 						<div class="fa fa-search search_icon"></div>
 					</td>
@@ -101,7 +101,7 @@
 		</tr>
 		<tr>
 			<td valign=top align=left width=300 class=nowrap>
-				<a href="/faq">FAQ</a><br>
+				<a href="/faq" class=faq_btn>FAQ</a><br>
 				<a href="/philosophy">Philosophy</a><br>
 			</td>
 			<td valign=top align=left width=300 class=nowrap>

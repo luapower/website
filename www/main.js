@@ -32,6 +32,7 @@ $(function() {
 	var doc = $('.doc')
 	var nav = $('#docnav')
 	if(!doc.length || !nav.length) return
+	if(nav.is(':hidden') || nav.parents(':hidden').length) return
 
 	// wrap content sections (heading + everything till next heading) into divs
 	doc.find('h4').each(function() {
@@ -143,14 +144,6 @@ $(function() {
 		var rel_y = Math.min(rel_y, 0)
 		nav.css('position', 'fixed').css('bottom', '').css('top', min_y + rel_y)
 	})
-
-	function check_size() {
-		var w = $(window).width()
-		$('.rightside').toggle(w > 745)
-	}
-	$(window).resize(check_size)
-	check_size()
-
 })
 
 // infotips ------------------------------------------------------------------
@@ -251,10 +244,12 @@ $(function() {
 	var win = navigator.userAgent.indexOf('Windows') >= 0
 
 	$('.shell_btn').html(
-		'<a switch_for=".windows_shell" class="shell_switch' + (!win ? ' disabled"' : '"') + '>' +
+		'<a switch_for=".windows_shell" class="shell_switch' +
+				(!win ? ' disabled"' : '"') + '>' +
 			'<span class="icon-mingw"></span>' +
 		'</a>' +
-		'<a switch_for=".unix_shell" class="shell_switch' + (!win ? '"' : ' disabled"') + '>' +
+		'<a switch_for=".unix_shell" class="shell_switch' +
+				(!win ? '"' : ' disabled"') + '>' +
 			'<span class="icon-linux"></span>' +
 			'<span class="icon-osx"></span>' +
 		'</a>')
@@ -264,10 +259,12 @@ $(function() {
 		$('.unix_shell, .windows_shell').hide()
 		var switch_for = $(this).attr('switch_for')
 		$(switch_for).show()
-		$('.shell_btn .shell_switch[switch_for="'+switch_for+'"]').removeClass('disabled')
+		$('.shell_btn .shell_switch[switch_for="'+switch_for+'"]')
+			.removeClass('disabled')
 	})
 
-	$('.shell_btn .shell_switch[switch_for=".'+(win ? 'windows' : 'unix')+'_shell"]').click()
+	$('.shell_btn .shell_switch[switch_for=".'+
+		(win ? 'windows' : 'unix')+'_shell"]').click()
 
 })
 
@@ -354,7 +351,8 @@ $(function() {
 
 	// make faq button red when on faq page
 	if (location.pathname == '/faq')
-		$('.faq_btn').css({'background-color': '#e4741f'}).find('a').css('color', '#fff')
+		$('.faq_btn').css({'background-color': '#e4741f'})
+			.find('a').css('color', '#fff')
 
 	// bind enter key for the search input
 	$('.search_input').keydown(function(e) {
@@ -369,12 +367,22 @@ $(function() {
 
 	// show wrapping on <pre> items
 	$('.doc pre code').each(function() {
-		$(this).html('<div>'+$(this).html().replace(/\n/g, '</div><div>')+'</div>')
+		$(this).html('<div>'+$(this).html()
+			.replace(/\n/g, '</div><div>')+'</div>')
 	})
 
 	// indent API paragraphs
 	$('.doc a > h3 > code').parent().parent().parent()
 		.find('>p,>ul,>blockquote').css({'margin-left': '2em'})
+
+	// remove left and right-side bars if the window width is too narrow
+	function check_size() {
+		var w = $(window).width()
+		$('.rightside').toggle(w > 745)
+		$('.leftside').toggle(w > 680)
+	}
+	$(window).resize(check_size)
+	check_size()
 
 })
 

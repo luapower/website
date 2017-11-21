@@ -225,6 +225,7 @@ warn {
 	position: relative;
 	top: 1px;
 	white-space: nowrap;
+	margin-right: 0.5em;
 }
 
 .lights_icon {
@@ -238,7 +239,7 @@ warn {
 
 .github_label {
 	position: relative;
-	margin-right: 20px;
+	padding-right: 0.5em;
 	white-space: nowrap;
 }
 
@@ -470,10 +471,15 @@ warn {
 
 .action_links {
 	font-size: 13px;
+	white-space: nowrap;
+	padding-right: 2em;
+	position: absolute;
+	width: 100%;
+	text-align: right;
 }
 
 .action_links a + a {
-	margin-left: 0.5em;
+	margin-left: 0.6em;
 }
 
 .action_links a:hover i, .download:hover i {
@@ -494,6 +500,8 @@ warn {
 
 .rightside {
 	width: 190px;
+	min-width: 190px;
+	padding-left: 2.5em;
 }
 
 .dep_matrix th {
@@ -662,7 +670,7 @@ warn {
 /* document --------------------------------------------------------------- */
 
 .doc {
-	padding-right: 40px;
+	padding-right: 0.5em;
 }
 
 .doc dt {
