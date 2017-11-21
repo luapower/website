@@ -1,6 +1,5 @@
 
 body { background-color: #fff; color: #000; }
-.body_wrapper {}
 
 strong { font-weight: 800; }
 
@@ -50,7 +49,8 @@ a .package_cat_name:hover, a .package_cat_name:visited:hover { color: #000; }
 	border-top-color: #ccc;
 	border-bottom-color: #ccc;
 }
-.doc code { background-color: #eee; } .doc h2 code, .doc h3 code { background-color: inherit; }
+.doc code { background-color: #eee; }
+.doc h2 code, .doc h3 code { background-color: inherit; }
 .doc pre { background-color: #eee; }
 .doc th, .doc td strong { color: #000; }
 
