@@ -372,5 +372,9 @@ $(function() {
 		$(this).html('<div>'+$(this).html().replace(/\n/g, '</div><div>')+'</div>')
 	})
 
+	// indent API paragraphs
+	$('.doc a > h3 > code').parent().parent().parent()
+		.find('>p,>ul,>blockquote').css({'margin-left': '2em'})
+
 })
 
