@@ -106,8 +106,6 @@ h4 {
 	margin-bottom: 10px;
 }
 
-h2 + ul, h2 + p, h2 + pre { margin-top: 10px; }
-h3 + ul, h3 + p, h3 + pre, h3 + div h4 { margin-top: 10px; }
 h2 + div h3 { margin-top: 20px; }
 h2 + table { margin-top: 30px; }
 
@@ -123,7 +121,7 @@ pre {
 	white-space: pre-wrap;
 }
 
-code {
+p code {
 	margin-left: 0.2em;
 	margin-right: 0.2em;
 }
@@ -710,11 +708,6 @@ warn {
 	padding-bottom: 2px;
 }
 
-.doc pre code > div {
-    padding-left: 1em;
-    text-indent: -1em;
-}
-
 /* make headings appear clickable */
 .doc h1, .doc h2, .doc h3, .doc h4 { cursor: pointer; }
 
@@ -724,6 +717,15 @@ warn {
 .doc pre code,
 .doc td code {
 	font-weight: normal;
+}
+
+.doc pre > code > div {
+	padding-left: 1em;
+	text-indent: -1em;
+}
+
+.doc .indent {
+	margin-left: 2em;
 }
 
 .doc th {

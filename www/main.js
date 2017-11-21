@@ -362,18 +362,18 @@ $(function() {
 
 	// bind click on search icon
 	$('.search_icon').click(function() {
-			location = '/grep/'+encodeURIComponent($('.search_input').val())
+		location = '/grep/'+encodeURIComponent($('.search_input').val())
 	})
 
 	// show wrapping on <pre> items
-	$('.doc pre code').each(function() {
+	$('.doc pre > code').each(function() {
 		$(this).html('<div>'+$(this).html()
 			.replace(/\n/g, '</div><div>')+'</div>')
 	})
 
 	// indent API paragraphs
-	$('.doc a > h3 > code').parent().parent().parent()
-		.find('>p,>ul,>blockquote').css({'margin-left': '2em'})
+	$('.doc a > h3 > code').parent().parent()
+		.nextUntil('a > h2, a > h3', 'p, ul, blockquote').addClass('indent')
 
 	// remove left and right-side bars if the window width is too narrow
 	function check_size() {
