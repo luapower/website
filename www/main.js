@@ -32,7 +32,7 @@ $(function() {
 	var doc = $('.doc')
 	var nav = $('#docnav')
 	if(!doc.length || !nav.length) return
-	if(nav.is(':hidden') || nav.parents(':hidden').length) return
+	if(nav.parents(':hidden').length) return
 
 	// wrap content sections (heading + everything till next heading) into divs
 	doc.find('h4').each(function() {
