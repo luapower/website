@@ -699,6 +699,14 @@ local function package_dep_matrix(pdeps)
 	return depmat, depmat_names
 end
 
+local function package_note(pkg, note)
+	if not note then
+		local ver = lp.git_version(pkg)
+		note = ver:find'^dev%-' and 'WIP' or nil
+	end
+	return note
+end
+
 local function package_info(pkg, doc)
 
 	local t = {package = pkg}
@@ -830,7 +838,7 @@ local function package_info(pkg, doc)
 				table.insert(ct.packages, {
 					package = package.name,
 					selected = package.name == pkg,
-					note = package.note,
+					note = package_note(package.name, package.note),
 				})
 			end
 		end
@@ -1111,8 +1119,8 @@ local function action_home()
 			t.mtime = format_time(mtime)
 			t.mtime_ago = timeago(mtime)
 			t.license = lp.license(pkg)
-			table.insert(pt, t)
 			t.hot = math.abs(os.difftime(os.time(), mtime)) < 3600 * 24 * 7
+			table.insert(pt, t)
 		end
 	end
 	data.github_title = 'github.com/luapower'
@@ -1127,9 +1135,7 @@ local function action_home()
 		local t = {}
 		for i, pkg in ipairs(cat.packages) do
 			local pt = pkgmap[pkg.name]
-			if pt then
-				pt.note = pkg.note
-			end
+			pt.note = package_note(pkg.name, pkg.note)
 			table.insert(t, pt)
 		end
 		table.insert(data.cats, {cat = cat.name, packages = t})
