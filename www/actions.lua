@@ -1127,7 +1127,9 @@ local function action_home()
 		local t = {}
 		for i, pkg in ipairs(cat.packages) do
 			local pt = pkgmap[pkg.name]
-			pt.note = pkg.note
+			if pt then
+				pt.note = pkg.note
+			end
 			table.insert(t, pt)
 		end
 		table.insert(data.cats, {cat = cat.name, packages = t})
