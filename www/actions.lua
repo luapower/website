@@ -828,8 +828,9 @@ local function package_info(pkg, doc)
 			ct.packages = {}
 			for i, package in ipairs(cat.packages) do
 				table.insert(ct.packages, {
-					package = package,
-					selected = package == pkg,
+					package = package.name,
+					selected = package.name == pkg,
+					note = package.note,
 				})
 			end
 		end
@@ -1125,7 +1126,8 @@ local function action_home()
 	for i, cat in ipairs(lp.cats()) do
 		local t = {}
 		for i, pkg in ipairs(cat.packages) do
-			local pt = pkgmap[pkg]
+			local pt = pkgmap[pkg.name]
+			pt.note = pkg.note
 			table.insert(t, pt)
 		end
 		table.insert(data.cats, {cat = cat.name, packages = t})
