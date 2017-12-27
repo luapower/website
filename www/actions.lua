@@ -755,6 +755,12 @@ local function package_info(pkg, doc)
 	--download / releases
 	t.git_tags = {}
 	if released then
+		for i,tag in ipairs(git_tags) do
+			if tag == 'dev' then
+				table.remove(git_tags, i)
+				break
+			end
+		end
 		for i=#git_tags,1,-1 do
 			local tag = git_tags[i]
 			local prevtag = git_tags[i-1]
