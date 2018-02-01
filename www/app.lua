@@ -3,9 +3,7 @@
 --provides a hi-level web API and dispatches URIs to individual actions.
 
 local glue = require'glue'
-local lfs = require'lfs'
 local pp = require'pp'
-local ffi = require'ffi'
 local actions = require'actions'
 local luapower = require'luapower'
 local cjson = require'cjson'

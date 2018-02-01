@@ -2,7 +2,7 @@
 local glue = require'glue'
 local lp = require'luapower'
 local pp = require'pp'
-local lfs = require'lfs'
+local fs = require'fs'
 local tuple = require'tuple'
 local zip = require'minizip'
 local mustache = require'mustache'
@@ -26,8 +26,8 @@ local function readwwwfile(name)
 end
 
 local function older(file1, file2)
-	local mtime1 = lfs.attributes(file1, 'modification')
-	local mtime2 = lfs.attributes(file2, 'modification')
+	local mtime1 = fs.attr(file1, 'mtime')
+	local mtime2 = fs.attr(file2, 'mtime')
 	if not mtime1 then return true end
 	if not mtime2 then return false end
 	return mtime1 < mtime2
@@ -156,7 +156,7 @@ local function md_refs()
 	for doc in pairs(lp.docs()) do
 		addref(doc)
 	end
-	for file in lfs.dir(app.wwwpath'md') do
+	for file in fs.dir(app.wwwpath'md') do
 		if file:find'%.md$' then
 			addref(file:match'^(.-)%.md$')
 		end
@@ -183,7 +183,7 @@ end
 
 local function www_docfile(doc)
 	local docfile = app.wwwpath('md/'..doc..'.md')
-	if not lfs.attributes(docfile, 'mtime') then return end
+	if not fs.attr(docfile, 'mtime') then return end
 	return docfile
 end
 
@@ -193,7 +193,7 @@ local function action_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
 	data.title = dtags.title
 	data.tagline = dtags.tagline
-	local mtime = lfs.attributes(docfile, 'mtime')
+	local mtime = fs.attr(docfile, 'mtime')
 	data.doc_mtime = format_date(mtime)
 	data.doc_mtime_ago = mtime and timeago(mtime)
 	data.edit_link = string.format(
@@ -1148,7 +1148,7 @@ local function action_home()
 	end
 
 	local file = 'files/luapower-all.zip'
-	local size = lfs.attributes(app.wwwpath(file), 'size')
+	local size = fs.attr(app.wwwpath(file), 'size')
 	local size = size and string.format('%d MB', size / 1024 / 1024) or '&nbsp;'
 	data.all_download_size = size
 
@@ -1262,18 +1262,15 @@ local path_description = lp.memoize(function(path, package)
 	end
 end)
 
---recursive lfs.dir()
+--recursive fs.dir()
 local function ls_dir(p0, each)
 	assert(p0)
 	local function rec(p)
 		local dp = p0 .. (p and '/' .. p or '')
-		for f in lfs.dir(dp) do
-			if f ~= '.' and f ~= '..' then
-				local mode = lfs.attributes(dp .. '/' .. f, 'mode')
-				local pf = p and p .. '/' .. f or f
-				if each(f, pf, mode) and mode == 'directory' then
-					rec(pf)
-				end
+		for f, d in fs.dir(dp) do
+			local pf = p and p .. '/' .. f or f
+			if each(f, pf, d:type()) and d:type() == 'dir' then
+				rec(pf)
 			end
 		end
 		each(nil, nil, 'up')
@@ -1294,11 +1291,11 @@ local tree_json = lp.memoize(function()
 
 	--list all files and dirs recursively and add info to tracked files.
 	local dir = root
-	ls_dir(lp.powerpath(), function(filename, path, mode)
-		if mode == 'up' then
+	ls_dir(lp.powerpath(), function(filename, path, ftype)
+		if ftype == 'up' then
 			dir = dir.dir
 		elseif path:find'^%.mgit/[^/]+/%.git/' then --skip this huge dir
-		elseif mode == 'directory' then
+		elseif ftype == 'dir' then
 			if not (
 				path:find'^csrc/[^/]+/[^/]+'
 				or path:find'^%.git'
