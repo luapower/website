@@ -101,6 +101,7 @@ local function grep(s0, maxmatches)
 			for mod, file in pairs(lp.modules(pkg)) do
 				--exclude built-in modules and binary files
 				if file ~= true and lp.module_tags(pkg, mod).lang ~= 'C' then
+					file = tostring(file)
 					local res = grepfile(s0, file, maxmatches)
 					mn = mn + 1
 					n = n + res.matchcount
