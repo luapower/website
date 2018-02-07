@@ -1269,7 +1269,7 @@ local function ls_dir(p0, each)
 		local dp = p0 .. (p and '/' .. p or '')
 		for f, d in fs.dir(dp) do
 			local pf = p and p .. '/' .. f or f
-			if each(f, pf, d:is'dir') then
+			if each(f, pf, d:attr'type') and d:is'dir' then
 				rec(pf)
 			end
 		end
