@@ -32,7 +32,7 @@ img {
 
 table {
 	border-spacing: 0;
-   border-collapse: collapse;
+	border-collapse: collapse;
 }
 
 a {
@@ -750,6 +750,7 @@ warn {
 
 .doc td {
 	padding: 2px;
+	padding-right: 1em;
 	vertical-align: top;
 }
 
