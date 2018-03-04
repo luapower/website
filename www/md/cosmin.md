@@ -32,7 +32,4 @@ My most significant project to date is luapower, the place which gets most of
 the output of my current research interests, which include vector graphics,
 GUIs, and p2p networks (I secretly dream of [putting them
 all together](https://www.youtube.com/watch?v=yJDv-zdhzMY) one day).
-
-----
-July 02, 2016
 </div>
