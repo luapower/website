@@ -13,9 +13,8 @@ Bucharest, RO
 </div>
 
 <div style="text-align: justify">
-I learned to program in 5^th^ grade on a Z80, and later on on a 486 and
-never stopped since. I got my first paying job when I was 17 when I wrote 
-an online shop in php.
+I learned to program in 5^th^ grade on a Z80, and later on on a 486.
+I got my first paying job when I was 17 when I wrote an online shop in php.
 
 I code mostly in Lua, Python, C and Javascript, and sometimes in Java, C++, 
 C# and ObjC.
@@ -25,7 +24,7 @@ and then more Delphi in mall-sized corporations with a one-hour commute
 (I also worked in a php farm for one month).
 
 My last punching-card job was at [SellerEngine](http://sellerengine.com/)
-where I developed products for large amazon sellers.
+where I developed products for large Amazon sellers.
 
 I currently live in Bucharest, and work as a freelancer.
 
@@ -33,11 +32,6 @@ My most significant project to date is luapower, the place which gets most of
 the output of my current research interests, which include vector graphics,
 GUIs, and p2p networks (I secretly dream of [putting them
 all together](https://www.youtube.com/watch?v=yJDv-zdhzMY) one day).
-
-I value voluntary interactions, peaceful parenting and animal welfare and 
-I owe my current (mis)education to Ayn Rand, Stefan Molyneux, Ludwig Von Mises, 
-Robert P. Murphy, Frank Lloyd Wright, Christopher Alexander, Douglas Engelbart
-and Jordan B. Peterson.
 
 ----
 July 02, 2016
