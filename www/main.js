@@ -368,7 +368,7 @@ $(function() {
 	// show wrapping on <pre> items
 	$('.doc pre > code').each(function() {
 		$(this).html('<div>'+$(this).html()
-			.replace(/\n/g, '</div><div>')+'</div>')
+			.replace(/\n/g, '</div>\n<div>')+'</div>')
 	})
 
 	// indent API paragraphs
