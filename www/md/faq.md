@@ -94,7 +94,7 @@ under version control too:
 	./mgit myrepo remote add origin https://github.com/myuser/myrepo
 	./mgit push -u origin/master
 
-> On Windows, type `mgit ...` instead of `./mgit`.
+> On Windows, the command is `mgit` instead of `./mgit`.
 
 ## You mean I have to mix my code with yours? That's gross!
 
