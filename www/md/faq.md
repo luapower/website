@@ -85,14 +85,16 @@ to the luapower directory, among all the other Lua files in there. To run
 a script type `./luajit myscript.lua` (that is `luajit myscript.lua`
 on Windows) from inside the luapower directory (you can also [bundle] your
 app into a self-contained executable and run that). If you downloaded 
-luapower with [luapower-git][multigit], it's a good idea to keep your files
+luapower with [multigit][luapower-git], it's a good idea to keep your files
 under version control too:
 
-	mgit init myrepo
-	mgit add -f myscript.lua
-	mgit commit -m "my first commit"
-	mgit myrepo remote add origin https://github.com/myuser/myrepo
-	mgit push -u origin/master
+	./mgit init myrepo
+	./mgit add -f myscript.lua
+	./mgit commit -m "my first commit"
+	./mgit myrepo remote add origin https://github.com/myuser/myrepo
+	./mgit push -u origin/master
+
+> On Windows, type `mgit ...` instead of `./mgit`.
 
 ## You mean I have to mix my code with yours? That's gross!
 
@@ -100,7 +102,7 @@ This idea of mixing your code with someone
 else's can be appalling at first (especially since it's pretty crowded
 in there already), but if you keep your app files with git they will be
 tracked separately of everything else so you're not really mixing 
-anything git-wise, but the real upside is that you get to put any file
+anything git-wise. The upside is that you get to put any file
 anywhere (you can add a font to media/fonts or a binary dependency to 
 bin/mingw64/somelib.dll), basically extending luapower just as you would
 extend an OOP class: in git, your "overrides" stay separate, but at runtime
