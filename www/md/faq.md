@@ -68,14 +68,33 @@ and even make deployments.
 
 ## But git sucks, can I skip it?
 
-Git does indeed suck (to some). If you want to avoid it,
-you can download the packages from the website directly.
+Git does indeed suck (to some). If you want to avoid git or you don't care
+about downloading all that history, you can download the packages from
+the website directly.
 [Getting luajit](/luajit/download) and the modules that you need and
 unzipping them over a common directory is enough to create a runnable
 LuaJIT installation that is self-contained and portable, meaning it will
 run the included luajit command from any directory and on any platform.
 The downside is that updating and removing modules must be done
 manually too.
+
+## I got luapower, how do I make an app with it?
+
+This is where it gets weird. Luapower is supposed to be self-contained, 
+so you have to add your scripts to the luapower directory, among all the 
+other Lua files in there. This idea of mixing your code with someone 
+else's can be appalling at first (especially since it's pretty crowded
+in there already), but if you keep your app files with git they will be
+tracked separately of everything else so you're not really mixing 
+anything git-wise, but the real upside is that you get to put any file
+anywhere (you can add a font to media/fonts or a binary dependency to 
+bin/mingw64/somelib.dll), basically extending luapower just as you would
+extend an OOP class: in git, your "overrides" stay separate, but at runtime
+they mix together with the base class. A Linux installation works the same
+way with packages spreading their files to their appropriate locations in
+the root filesystem. Of course, you can always just add the luapower 
+directory to your LUA_PATH and keep it separated from your own stuff 
+(but please use LuaJIT 2.1 if you use your own runtime).
 
 ## What platforms does it run on?
 
