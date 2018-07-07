@@ -7,6 +7,8 @@ die() { echo "$@" >&2; exit 1; }
 # everything is done relative to this script's parent dir.
 cd "$(dirname "$0")" || die "Could not cd to \"$(dirname "$0")\"."
 
+# TODO: stop using realpath as it's not a default program in Ubuntu!!!
+
 OPENRESTY_DIR="$(realpath -s "$PWD/../openresty")"; [ -d "$OPENRESTY_DIR" ] || die "Directory \"$OPENRESTY_DIR\" not found."
 LUAPOWER_DIR="$(realpath -s "$PWD/../luapower")";   [ -d "$LUAPOWER_DIR" ]  || die "Directory \"$LUAPOWER_DIR\" not found."
 WWW_DIR="$PWD/www";             [ -d "$WWW_DIR" ]       || die "Directory \"$WWW_DIR\" not found."
