@@ -734,11 +734,10 @@ local function package_info(pkg, doc)
 	local docs = lp.docs(pkg)
 	local doc_path = docs[doc]
 	local title = doc
-	local tagline
+	local tagline = lp.module_tagline(pkg, doc)
 	if doc_path then
 		local dtags = lp.doc_tags(pkg, doc)
 		title = dtags.title
-		tagline = lp.module_tagline(pkg, pkg)
 	end
 	local package_cat = lp.package_cat(pkg)
 
@@ -809,9 +808,8 @@ local function package_info(pkg, doc)
 	t.has_docs = #t.docs > 0
 
 	--doc page
-	t.title = doc
+	t.title = title or doc
 	t.doc_path = doc_path
-	t.title = title
 	t.tagline = tagline
 	t.edit_link =
 		on_github
