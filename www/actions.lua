@@ -738,7 +738,7 @@ local function package_info(pkg, doc)
 	if doc_path then
 		local dtags = lp.doc_tags(pkg, doc)
 		title = dtags.title
-		tagline = dtags.tagline
+		tagline = lp.module_tagline(pkg, pkg)
 	end
 	local package_cat = lp.package_cat(pkg)
 
@@ -1115,8 +1115,7 @@ local function action_home()
 			t.type = lp.package_type(pkg)
 			t.platforms = lp.platforms(pkg)
 			t.icons, t.platform_string = package_icons(t.type, t.platforms, true)
-			local dtags = lp.doc_tags(pkg, pkg)
-			t.tagline = dtags and dtags.tagline
+			t.tagline = lp.module_tagline(pkg, pkg)
 			local cat = lp.package_cat(pkg)
 			t.cat = cat and cat.name
 			t.version = lp.git_version(pkg)
@@ -1312,7 +1311,7 @@ local tree_json = lp.memoize(function()
 			node.type = lp.file_types()[path]
 			local mod = mod_paths[path]
 			if mod then
-				node.title = lp.module_tagline(mod, node.package)
+				node.title = lp.module_tagline(node.package, mod)
 			end
 			table.insert(dir.files, node)
 		end
@@ -1472,7 +1471,7 @@ end
 local function action_rockspec(pkg)
 	pkg = pkg:match'^luapower%-([%w_]+)'
 	local dtags = lp.doc_tags(pkg, pkg)
-	local tagline = dtags and dtags.tagline or pkg
+	local tagline = lp.module_tagline(pkg, pkg)
 	local homepage = 'http://luapower.com/'..pkg
 	local license = lp.license(pkg)
 	local pext = package_deps(lp.module_requires_loadtime_ext, pkg, platform)
