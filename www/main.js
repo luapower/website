@@ -376,7 +376,7 @@ $(function() {
 
 	// indent API paragraphs
 	$('.doc a > h3 > code').parent().parent()
-		.nextUntil('a > h2, a > h3', 'p, ul, blockquote').addClass('indent')
+		.nextUntil('a > h2, a > h3', 'p, ul, blockquote, table').addClass('indent')
 
 	// remove left and right-side bars if the window width is too narrow
 	function check_size() {
