@@ -11,11 +11,8 @@ which greatly reduces what you need to know for writing them.
 
 Create a separate script for each supported platform:
 
-	csrc/foo/build-mingw32.sh
 	csrc/foo/build-mingw64.sh
-	csrc/foo/build-linux32.sh
 	csrc/foo/build-linux64.sh
-	csrc/foo/build-osx32.sh
 	csrc/foo/build-osx64.sh
 
 Use only relative paths in the scripts. Build scripts must be run
@@ -26,18 +23,18 @@ the output directory.
 
 The build scripts must generate binaries as follows:
 
-	bin/mingw{32,64}/foo.dll          C library, Windows
-	bin/mingw{32,64}/foo.a            C library, Windows, static version
-	bin/mingw{32,64}/clib/foo.dll     Lua/C library, Windows
-	bin/mingw{32,64}/foo.a            Lua/C library, Windows, static version
-	bin/linux{32,64}/libfoo.so        C library, Linux
-	bin/linux{32,64}/libfoo.a         C library, Linux, static version
-	bin/linux{32,64}/clib/foo.so      Lua/C library, Linux
-	bin/linux{32,64}/libfoo.a         Lua/C library, Linux, static version
-	bin/osx{32,64}/libfoo.dylib       C library, OSX
-	bin/osx{32,64}/libfoo.a           C library, OSX, static version
-	bin/osx{32,64}/clib/foo.so        Lua/C library, OSX
-	bin/osx{32,64}/libfoo.a           Lua/C library, OSX, static version
+	bin/mingw64/foo.dll               C library, Windows
+	bin/mingw64/foo.a                 C library, Windows, static version
+	bin/mingw64/clib/foo.dll          Lua/C library, Windows
+	bin/mingw64/foo.a                 Lua/C library, Windows, static version
+	bin/linux64/libfoo.so             C library, Linux
+	bin/linux64/libfoo.a              C library, Linux, static version
+	bin/linux64/clib/foo.so           Lua/C library, Linux
+	bin/linux64/libfoo.a              Lua/C library, Linux, static version
+	bin/osx64/libfoo.dylib            C library, OSX
+	bin/osx64/libfoo.a                C library, OSX, static version
+	bin/osx64/clib/foo.so             Lua/C library, OSX
+	bin/osx64/libfoo.a                Lua/C library, OSX, static version
 
 > So prefix everything with `lib` except for Windows and except for dynamic
 Lua/C libs; on OSX use `.dylib` for C libs but use `.so` for dynamic Lua/C
@@ -83,8 +80,8 @@ because we want to build both static and dynamic versions the libraries.
 
   * `-shared`                    : create a shared library
   * `-s`                         : strip debug and private symbols (not for OSX)
-  * `-o <output-file>`           : output file path (eg. `-o ../../bin/mingw32/z.dll`)
-  * `-L<dir>`                    : search path for library dependencies (eg. `-L../../bin/mingw32`)
+  * `-o <output-file>`           : output file path (eg. `-o ../../bin/mingw64/z.dll`)
+  * `-L<dir>`                    : search path for library dependencies (eg. `-L../../bin/mingw64`)
   * `-l<libname>`                : library dependency (eg. `-lz` looks for `z.dll`/`libz.so`/`libz.dylib` or `libz.a`)
   * `-static-libstdc++`          : link libstdc++ statically (for C++ libraries; not for OSX)
   * `-static-libgcc`             : link the GCC runtime library statically (for C and C++ libraries; not for OSX)
@@ -116,11 +113,11 @@ at runtime. The OSX linker doesn't support `-s`, but you can use `strip`:
 
 	strip -x foo.dylib
 
-### Example: compile and link lpeg 0.10 for linux32
+### Example: compile and link lpeg 0.10 for linux64
 
-	gcc -c -O2 lpeg.c -I. -I../lua
-	gcc -shared -s -static-libgcc -o ../../bin/linux32/clib/lpeg.so
-	ar rcs ../../bin/linux32/static/liblpeg.so
+	gcc -c -O2 lpeg.c -fPIC -I. -I../lua
+	gcc -shared -s -static-libgcc -o ../../bin/linux64/clib/lpeg.so
+	ar rcs ../../bin/linux64/static/liblpeg.so
 
 In some cases it's going to be more complicated than that.
 

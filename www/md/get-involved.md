@@ -53,7 +53,7 @@ In order to appear on the website, docs should start with a yaml header:
 
 	---
 	tagline: foobars
-	platforms: mingw32, mingw64
+	platforms: linx64, mingw64
 	license: MIT
 	---
 
@@ -86,7 +86,7 @@ The first line should contain "`<name> <version> from <browse-url>
 are any. After the first two lines and an empty line, you can type in
 additional notes, whatever, they aren't parsed. In the rare case that a
 dependency is only available on some platforms, specify the platforms after
-the dependency name like this: `pthread (mingw32 mingw64)`.
+the dependency name like this: `pthread (linux64 mingw64)`.
 
 The WHAT file can also be used to describe Lua modules that are developed
 outside of luapower (eg. [lexer]).

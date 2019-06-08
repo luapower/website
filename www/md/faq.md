@@ -80,11 +80,11 @@ manually too.
 
 ## I got luapower, how do I make an app with it?
 
-Luapower is supposed to be self-contained, so you have to add your scripts 
-to the luapower directory, among all the other Lua files in there. To run 
+Luapower is supposed to be self-contained, so you have to add your scripts
+to the luapower directory, among all the other Lua files in there. To run
 a script type `./luajit myscript.lua` (that is `luajit myscript.lua`
 on Windows) from inside the luapower directory (you can also [bundle] your
-app into a self-contained executable and run that). If you downloaded 
+app into a self-contained executable and run that). If you downloaded
 luapower with [multigit][luapower-git], it's a good idea to keep your files
 under version control too:
 
@@ -98,25 +98,25 @@ under version control too:
 
 ## You mean I have to mix my code with yours? That's gross!
 
-This idea of mixing your code with someone 
+This idea of mixing your code with someone
 else's can be appalling at first (especially since it's pretty crowded
 in there already), but if you keep your app files with git they will be
-tracked separately of everything else so you're not really mixing 
+tracked separately of everything else so you're not really mixing
 anything git-wise. The upside is that you get to put any file
-anywhere (you can add a font to media/fonts or a binary dependency to 
+anywhere (you can add a font to media/fonts or a binary dependency to
 bin/mingw64/somelib.dll), basically extending luapower just as you would
 extend an OOP class: in git, your "overrides" stay separate, but at runtime
 they mix together with the base class. A Linux installation works the same
 way with packages spreading their files to their appropriate locations in
-the root filesystem. Of course, you can always just add the luapower 
-directory to your LUA_PATH and keep it separated from your own stuff 
+the root filesystem. Of course, you can always just add the luapower
+directory to your LUA_PATH and keep it separated from your own stuff
 (but please use LuaJIT 2.1 if you use your own runtime).
 
 ## What platforms does it run on?
 
-  * Windows XP SP3+ / Windows XP x64 SP2+
-  * Linux on x86 with GLIBC 2.7+, 32bit and 64bit (Debian 5+, Ubuntu 8.04+, etc.)
-  * OSX 10.7+, 32bit and 64bit
+  * Windows 7 x64 SP2+
+  * Linux on x86 with GLIBC 2.7+, 64bit only (Debian 5+, Ubuntu 8.04+, etc.)
+  * OSX 10.7+, 64bit only
 
 ## How do I compile the binaries?
 
@@ -164,11 +164,11 @@ luaffi already, but you would have to check that out yourself.
 
 ## But can I browse them too?
 
-You can [browse the whole tree online](/tree). Alternatively, you can 
-create hard links with `mgit --all make-hardlinks` (not for Windows) 
-and you will get hard links in the `.mgit` directory for every package. 
-Now they're separate and you can list them and check their size, and 
-even edit them and commit the changes. Remember to run that command 
+You can [browse the whole tree online](/tree). Alternatively, you can
+create hard links with `mgit --all make-hardlinks` (not for Windows)
+and you will get hard links in the `.mgit` directory for every package.
+Now they're separate and you can list them and check their size, and
+even edit them and commit the changes. Remember to run that command
 again if you add or delete files though.
 
 ## How do I fix a package?
@@ -236,11 +236,11 @@ and maturity, usually in that order.
 
 Package information is computed on-the-fly using the [luapower] module
 (which is also what drives this website), except for module dependency
-information which has to be computed for each platform on that respective 
+information which has to be computed for each platform on that respective
 platform (because not all modules have the exact same dependency list
 on all platforms, and because for some modules we have to actually try
 and load the module to know if the platform is supported or not).
-That dependency information is stored in [luapower_db] and it's updated 
+That dependency information is stored in [luapower_db] and it's updated
 automatically every time a module changes.
 
 ## How is versioning maintained?
