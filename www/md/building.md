@@ -39,32 +39,31 @@ are in your PATH.
 
 Here's MSYS:
 
-[MSYS-20111123](http://sourceforge.net/projects/mingw-w64/files/External%20binary%20packages%20%28Win64%20hosted%29/MSYS%20%2832-bit%29/MSYS-20111123.zip/download)
+[MSYS-2019-05-24](https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20190524.tar.xz/download)
+
+You also need to install `make`: from the msys2 shell, type: `pacman -S make`.
 
 Here's the MinGW-w64 package used to build the current luapower stack:
 
 ----
-[mingw-w64 4.9.2 (64bit, posix threads, SEH exception model)](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/x86_64-4.9.2-release-posix-seh-rt_v4-rev2.7z)
+[MinGW-W64 GCC-8.1.0 (64bit, posix threads, SEH exception model)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z)
 ----
 
 Additional tools needed by a few special packages.
 The build scripts assume these are in your PATH too.
 
 ----
-[nasm 2.11 (for libjpeg-turbo)](http://www.nasm.us/pub/nasm/releasebuilds/2.11/win32/nasm-2.11-win32.zip)
-[cmake 2.8.12.2 (for libjpeg-turbo)](http://www.cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip)
+[nasm 2.14.02 (for libjpeg-turbo)](https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip)
+[cmake 3.14.5 (for libjpeg-turbo and llvm)](https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-win64-x64.zip)
 ----
 
 The resulted binaries are linked to msvcrt.dll and should be compatible
-down to Windows XP SP3.
+down to Windows 7.
 
 ## Building on Linux for Linux
 
 	cd csrc/<package>
 	sh build-linux64.sh
-
-> Careful not to mix them up, or you'll get the wrong binaries in the wrong
-directory.
 
 In general, to get binaries that will work on older Linuxes, you want to
 build on the _oldest_ Linux that you care to support, but use
