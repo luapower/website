@@ -1044,7 +1044,7 @@ local function package_info(pkg, doc)
 		st.path = path
 		st.source_url = source_url(pkg, path, mod)
 
-		local mts = glue.update({}, lp.module_requires_parsed(mod))
+		local mts = glue.update({}, lp.module_requires_runtime(mod))
 		local pts = {}
 		for mod in pairs(mts) do
 			local pkg = lp.module_package(mod)
