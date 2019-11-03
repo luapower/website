@@ -58,9 +58,7 @@ because we want to build both static and dynamic versions the libraries.
   * `-D<name>=<value>`           : set a `#define` with a value
   * `-U<name>`                   : unset `#define`
   * `-fpic` or `-fPIC`           : generate position-independent code (required for linux64)
-  * `-DWINVER=0x501`             : Windows: set API level to Windows XP
-  * `-DWINVER=0x502`             : Windows: set API level to Windows XP SP2
-  * `-mmacosx-version-min=10.6`  : OSX: set API level to 10.6
+  * `-DWINVER=0x601`             : Windows: set API level to Windows 7
   * `-mmacosx-version-min=10.7`  : OSX: set API level to 10.7
   * `-D_XOPEN_SOURCE=700`        : Linux: set API level to X/Open 7 (POSIX 2008)
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
