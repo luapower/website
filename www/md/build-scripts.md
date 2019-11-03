@@ -63,7 +63,6 @@ because we want to build both static and dynamic versions the libraries.
   * `-mmacosx-version-min=10.6`  : OSX: set API level to 10.6
   * `-mmacosx-version-min=10.7`  : OSX: set API level to 10.7
   * `-D_XOPEN_SOURCE=700`        : Linux: set API level to X/Open 7 (POSIX 2008)
-  * `-arch i386`                 : OSX: create 32bit x86 binaries
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-include _memcpy.h`         : Linux on x64: fix the memcpy@GLIBC_2.14 disaster (*)
   * `-U_FORTIFY_SOURCE`          : Linux: preserve compatibility with GLIBC 2.7
@@ -83,10 +82,10 @@ because we want to build both static and dynamic versions the libraries.
   * `-o <output-file>`           : output file path (eg. `-o ../../bin/mingw64/z.dll`)
   * `-L<dir>`                    : search path for library dependencies (eg. `-L../../bin/mingw64`)
   * `-l<libname>`                : library dependency (eg. `-lz` looks for `z.dll`/`libz.so`/`libz.dylib` or `libz.a`)
+  * `-Wl,--no-undefined`         : do not allow unresolved symbols in the output library.
   * `-static-libstdc++`          : link libstdc++ statically (for C++ libraries; not for OSX)
   * `-static-libgcc`             : link the GCC runtime library statically (for C and C++ libraries; not for OSX)
   * `-pthread`                   : enable pthread support (not for Windows)
-  * `-arch i386`                 : OSX: create 32bit x86 binaries
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
   * `-mmacosx-version-min=10.6`  : set OSX 10.6 API level; for C++ it also means link to libstdc++
