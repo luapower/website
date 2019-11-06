@@ -719,6 +719,7 @@ local function package_info(pkg, doc)
 			and platforms
 			or glue.update({}, lp.supported_platforms)
 	local master_time = lp.git_master_time(pkg)
+	local author = lp.author(pkg)
 	local license = lp.license(pkg)
 	local ctags = lp.what_tags(pkg) or {}
 	local origin_url = lp.git_origin_url(pkg)
@@ -822,6 +823,7 @@ local function package_info(pkg, doc)
 	t.version = git_version
 	t.mtime = format_time(master_time)
 	t.mtime_ago = timeago(master_time)
+	t.author = author
 	t.license = license
 	t.c_name =
 		ctags.realname

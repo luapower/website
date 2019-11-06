@@ -656,6 +656,11 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						<span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span>
 					</td>
 				</tr>
+				{{#author}}
+				<tr>
+					<td align=left class="gray">Author: </td><td align=left>{{author}}</td>
+				</tr>
+				{{/author}}
 				<tr>
 					<td align=left class="gray">License: </td><td align=left>{{license}}</td>
 				</tr>
