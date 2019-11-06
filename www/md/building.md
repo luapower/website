@@ -41,20 +41,12 @@ Here's MSYS:
 
 [MSYS-2019-05-24](https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20190524.tar.xz/download)
 
-You also need to install `make`: from the msys2 shell, type: `pacman -S make`.
+You also need to install make, nasm and cmake: from the msys2 shell, type: `pacman -S make nasm cmake`.
 
 Here's the MinGW-w64 package used to build the current luapower stack:
 
 ----
 [MinGW-W64 GCC-8.1.0 (64bit, posix threads, SEH exception model)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z)
-----
-
-Additional tools needed by a few special packages.
-The build scripts assume these are in your PATH too.
-
-----
-[nasm 2.14.02 (for libjpeg-turbo)](https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip)
-[cmake 3.14.5 (for libjpeg-turbo and llvm)](https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-win64-x64.zip)
 ----
 
 The resulted binaries are linked to msvcrt.dll and should be compatible
