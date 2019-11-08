@@ -820,6 +820,7 @@ local function package_info(pkg, doc)
 	for name in glue.sortedpairs(docheaders) do
 		table.insert(t.docs, {
 			name = name,
+			shortname = name:gsub('^'..glue.esc(pkg)..'[%._]', ''),
 			path = name,
 			selected = name == doc,
 		})
