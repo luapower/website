@@ -182,8 +182,7 @@ local function render_docfile(infile)
 end
 
 local function render_docheader(h, doc)
-	if not h.doc then return 'No doc for '..doc end
-	return '<p class=code>'..h.doc..'</p>'
+	return h.doc and '<p class=code>'..h.doc..'</p>'
 end
 
 local function www_docfile(doc)
@@ -1105,7 +1104,8 @@ local function action_package(pkg, doc, what)
 				t.doc_mtime = format_date(mtime)
 				t.doc_mtime_ago = timeago(mtime)
 			end
-		elseif doc then
+		else
+			local doc = doc or pkg
 			local h = lp.docheaders()[doc]
 			t.doc_html = h and render_docheader(h, doc)
 		end
@@ -1555,7 +1555,6 @@ end
 
 function action.default(s, ...)
 	local hs = s and s:match'^(.-)%.html$' or s
-	app.out('"'..hs..'" ' .. type(lp.docheaders()[hs]))
 	if not s then
 		return action_home()
 	elseif lp.installed_packages()[hs] then
