@@ -817,13 +817,15 @@ local function package_info(pkg, doc)
 		})
 	end
 	--package info / docheaders
-	for name in glue.sortedpairs(docheaders) do
-		table.insert(t.docs, {
-			name = name,
-			shortname = name:gsub('^'..glue.esc(pkg)..'[%._]', ''),
-			path = name,
-			selected = name == doc,
-		})
+	for name, h in glue.sortedpairs(docheaders) do
+		if h.doc then
+			table.insert(t.docs, {
+				name = name,
+				shortname = name:gsub('^'..glue.esc(pkg)..'[%._]', ''),
+				path = name,
+				selected = name == doc,
+			})
+		end
 	end
 
 	t.has_docs = #t.docs > 0
