@@ -1555,7 +1555,7 @@ end
 
 function action.default(s, ...)
 	local hs = s and s:match'^(.-)%.html$' or s
-	app.out('"'..hs..'"', type(lp.docheaders()[hs]))
+	app.out('"'..hs..'" ' .. type(lp.docheaders()[hs]))
 	if not s then
 		return action_home()
 	elseif lp.installed_packages()[hs] then
