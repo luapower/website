@@ -181,8 +181,8 @@ local function render_docfile(infile)
 	return glue.readfile(outfile)
 end
 
-local function render_docheader(h)
-	if not h or not h.doc then return 'No doc.' end
+local function render_docheader(h, doc)
+	if not h or not h.doc then return 'No doc for '..doc end
 	return '<p class=code>'..h.doc..'</p>'
 end
 
@@ -1107,7 +1107,7 @@ local function action_package(pkg, doc, what)
 			end
 		else
 			local h = lp.module_header(pkg, doc)
-			t.doc_html = render_docheader(h)
+			t.doc_html = render_docheader(h, doc)
 		end
 	end
 	app.out(render_main('package.html', t))
