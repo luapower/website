@@ -186,7 +186,7 @@ local function render_docheader(pkg, mod, h)
 	local url = lp.git_origin_url(pkg)
 	local path = tostring(lp.modules(pkg)[mod])
 	return '<pre>'..h.doc..'</pre>More documentation is embedded in the '..
-		_('<a href="%s/blob/master/%s?ts=3">source code.</a>', url, path)
+		string.format('<a href="%s/blob/master/%s?ts=3">source code.</a>', url, path)
 end
 
 local function www_docfile(doc)
