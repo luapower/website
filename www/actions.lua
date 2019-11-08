@@ -816,6 +816,7 @@ local function package_info(pkg, doc)
 			selected = name == doc,
 		})
 	end
+
 	--package info / docheaders
 	for name, h in glue.sortedpairs(docheaders) do
 		if h.doc then
