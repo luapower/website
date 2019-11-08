@@ -181,8 +181,12 @@ local function render_docfile(infile)
 	return glue.readfile(outfile)
 end
 
-local function render_docheader(h, doc)
-	return h.doc and '<pre>'..h.doc..'</pre>'
+local function render_docheader(pkg, h)
+	if not h.doc then return end
+	local url = lp.git_origin_url(pkg)
+	local path = tostring(lp.modules(package)[t.module])
+	return '<pre>'..h.doc..'</pre>More documentation is embedded in the '..
+		_('<a href="%s/blob/master/%s?ts=3">source code.</a>', url, path)
 end
 
 local function www_docfile(doc)
@@ -1107,7 +1111,7 @@ local function action_package(pkg, doc, what)
 		else
 			local doc = doc or pkg
 			local h = lp.docheaders()[doc]
-			t.doc_html = h and render_docheader(h, doc)
+			t.doc_html = h and render_docheader(pkg, h)
 		end
 	end
 	app.out(render_main('package.html', t))
