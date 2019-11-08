@@ -182,6 +182,7 @@ local function render_docfile(infile)
 end
 
 local function render_docheader(h)
+	if not h or not h.doc then return 'No doc.' end
 	return '<p class=code>'..h.doc..'</p>'
 end
 
@@ -1106,9 +1107,7 @@ local function action_package(pkg, doc, what)
 			end
 		else
 			local h = lp.module_header(pkg, doc)
-			if h and h.doc then
-				t.doc_html = render_docheader(h)
-			end
+			t.doc_html = render_docheader(h)
 		end
 	end
 	app.out(render_main('package.html', t))
