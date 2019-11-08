@@ -187,7 +187,7 @@ local function render_docheader(pkg, mod, h)
 	local path = tostring(lp.modules(pkg)[mod])
 	return '<pre>'..h.doc..'</pre><p> See the '..
 		string.format('<a href="%s/blob/master/%s?ts=3">source code</a>', url, path)
-		..' for more info</p>'
+		..' for more info.</p>'
 end
 
 local function www_docfile(doc)
