@@ -1107,7 +1107,7 @@ local function action_package(pkg, doc, what)
 			end
 		else
 			local h = lp.docheaders()[doc]
-			t.doc_html = h and render_docheader(h, doc)
+			t.doc_html = h and render_docheader(h, doc) or 'nothing for '..doc
 		end
 	end
 	app.out(render_main('package.html', t))
