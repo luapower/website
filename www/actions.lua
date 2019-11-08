@@ -182,7 +182,7 @@ local function render_docfile(infile)
 end
 
 local function render_docheader(h, doc)
-	return h.doc and '<p class=code>'..h.doc..'</p>'
+	return h.doc and '<pre>'..h.doc..'</pre>'
 end
 
 local function www_docfile(doc)
