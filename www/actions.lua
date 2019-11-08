@@ -181,6 +181,10 @@ local function render_docfile(infile)
 	return glue.readfile(outfile)
 end
 
+local function render_docheader(h)
+	return '<p class=code>'..h.doc..'</p>'
+end
+
 local function www_docfile(doc)
 	local docfile = app.wwwpath('md/'..doc..'.md')
 	if not fs.attr(docfile, 'mtime') then return end
@@ -1099,6 +1103,11 @@ local function action_package(pkg, doc, what)
 			if mtime then
 				t.doc_mtime = format_date(mtime)
 				t.doc_mtime_ago = timeago(mtime)
+			end
+		else
+			local h = lp.module_header(pkg, doc)
+			if h and h.doc then
+				t.doc_html = render_docheader(h)
 			end
 		end
 	end
