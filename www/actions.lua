@@ -1106,7 +1106,7 @@ local function action_package(pkg, doc, what)
 				t.doc_mtime_ago = timeago(mtime)
 			end
 		else
-			local h = lp.module_header(pkg, doc)
+			local h = lp.docheaders()[doc]
 			t.doc_html = render_docheader(h, doc)
 		end
 	end
@@ -1561,6 +1561,9 @@ function action.default(s, ...)
 		return action_package(hs, nil, ...)
 	elseif lp.docs()[hs] then
 		local pkg = lp.doc_package(hs)
+		return action_package(pkg, hs, ...)
+	elseif lp.docheaders()[hs] then
+		local pkg = lp.module_package(hs)
 		return action_package(pkg, hs, ...)
 	elseif s:find'%.rockspec$' then
 		local pkg = s:match'^(.-)%.rockspec$'
