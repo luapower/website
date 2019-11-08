@@ -1555,6 +1555,7 @@ end
 
 function action.default(s, ...)
 	local hs = s and s:match'^(.-)%.html$' or s
+	app.out(hs, lp.docheaders()[hs])
 	if not s then
 		return action_home()
 	elseif lp.installed_packages()[hs] then
@@ -1563,7 +1564,6 @@ function action.default(s, ...)
 		local pkg = lp.doc_package(hs)
 		return action_package(pkg, hs, ...)
 	elseif lp.docheaders()[hs] then
-		app.out(hs, lp.docheaders()[hs])
 		local pkg = lp.module_package(hs)
 		return action_package(pkg, hs, ...)
 	elseif s:find'%.rockspec$' then
