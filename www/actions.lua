@@ -742,6 +742,7 @@ local function package_info(pkg, doc)
 	local git_tags = lp.git_tags(pkg)
 	local doc = doc or pkg
 	local docs = lp.docs(pkg)
+	local docheaders = lp.docheaders(pkg)
 	local doc_path = docs[doc]
 	local title = doc
 	local tagline = lp.module_tagline(pkg, doc)
@@ -815,6 +816,15 @@ local function package_info(pkg, doc)
 			selected = name == doc,
 		})
 	end
+	--package info / docheaders
+	for name in glue.sortedpairs(docheaders) do
+		table.insert(t.docs, {
+			name = name,
+			path = name,
+			selected = name == doc,
+		})
+	end
+
 	t.has_docs = #t.docs > 0
 
 	--doc page
