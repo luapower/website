@@ -177,13 +177,13 @@ cd luapower
 	<tbody>
 		{{#packages}}
 		<tr>
-			<td>{{type}}</td>
-			<td><a href="/{{name}}">{{name}}</a></td>
+			<td nowrap>{{type}}</td>
+			<td nowrap><a href="/{{name}}">{{name}}</a></td>
 			<td>{{tagline}}</td>
-			<td>{{version}}</td>
-			<td>
+			<td nowrap>{{version}}</td>
+			<td nowrap>
 				<span class=hidden>{{mtimestamp}}</span> <!--always sort by timestamp-->
-				<span nowrap class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span></td>
+				<span class=time time="{{mtime}}" reltime="{{mtime_ago}}"></span></td>
 			<td class=nowrap>
 				<span class=hidden>{{platform_string}}</span>
 				{{#icons}}<span class="icon icon-{{name}} {{disabled}} {{invisible}}"></span>{{/icons}}
