@@ -1151,6 +1151,7 @@ local function action_home()
 			t.mtime = format_time(mtime)
 			t.mtime_ago = timeago(mtime)
 			t.license = lp.license(pkg)
+			t.license_short = t.license:lower() == 'public domain' and 'P.D.' or t.license
 			t.hot = math.abs(os.difftime(os.time(), mtime)) < 3600 * 24 * 7
 			table.insert(pt, t)
 		end
