@@ -711,7 +711,7 @@ end
 local function package_note(pkg, note)
 	if not note then
 		local ver = lp.git_version(pkg)
-		note = ver:find'^dev%-' and 'WIP' or nil
+		note = (ver:find'^dev%-' or not ver:find'%-') and 'WIP' or nil
 	end
 	return note
 end
