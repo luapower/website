@@ -16,8 +16,7 @@ Bucharest, RO
 I learned to program in 5^th^ grade on a Z80, and later on on a 486.
 I got my first paying job when I was 17 when I wrote an online shop in php.
 
-I code mostly in Lua, Python, C and Javascript, and sometimes in Java, C++, 
-C# and ObjC.
+I code mostly in Lua, Python, C, Javascript and Terra.
 
 In the past I did a lot of Delphi in smokey apartment-sized companies
 and then more Delphi in mall-sized corporations with a one-hour commute

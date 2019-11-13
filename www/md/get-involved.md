@@ -5,9 +5,10 @@ tagline: how to create luapower packages
 
 ## Anatomy of a package
 
-There are 5 types of luapower packages:
+There are 6 types of luapower packages:
 
   * __Lua module__: written in Lua
+  * __Terra module__: written in Terra
   * __Lua/C module__: written in C using the Lua C API (*)
   * __Lua+ffi module__: written in Lua using the LuaJIT ffi extension (*)
   * __C module__: binary dependency or support library for other module (*)

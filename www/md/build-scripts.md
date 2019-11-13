@@ -87,8 +87,7 @@ because we want to build both static and dynamic versions the libraries.
   * `-pthread`                   : enable pthread support (not for Windows)
   * `-arch x86_64`               : OSX: create 64bit x86 binaries
   * `-undefined dynamic_lookup`  : for Lua/C modules on OSX (don't link them to luajit!)
-  * `-mmacosx-version-min=10.6`  : set OSX 10.6 API level; for C++ it also means link to libstdc++
-  * `-mmacosx-version-min=10.7`  : set OSX 10.7 API level; for C++ it also means link to libc++
+  * `-mmacosx-version-min=10.9`  : set OSX 10.9 API level
   * `-install_name @rpath/<libname>.dylib` : for OSX, to help the dynamic linker find the library near the exe
   * `-stdlib=libc++ -mmacosx-version-min=10.7` : for all C++ libraries on OSX
   * `-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic` : statically link the winpthread library (for C++ libraries on mingw64)

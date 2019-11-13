@@ -57,9 +57,15 @@ down to Windows 7.
 	cd csrc/<package>
 	sh build-linux64.sh
 
+The current luapower stack is built on an **Ubuntu 18.04 x64 Desktop**
+and it's the only supported way to build it. If you need binaries for older
+Linuxes, keep reading.
+
+## Building for older Linuxes
+
 In general, to get binaries that will work on older Linuxes, you want to
 build on the _oldest_ Linux that you care to support, but use
-the _newest_ gcc that you can install on that system. In particular,
+the _newest_ GCC that you can install on that system. In particular,
 if you link against GLIBC 2.14+ your binary will not be backwards compatible
 with an older GLIBC (google "memcpy glibc 2.14" to see the drama).
 
@@ -82,16 +88,12 @@ Here's the complete procedure on a fresh Ubuntu 10.04:
 	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
 	sudo apt-get install -y nasm cmake
 
-The current luapower stack is built this way and it's the only supported way
-to build it.
-
 Note that the above setup contains EGLIBC 2.11 so it's not guaranteed that
 _anything_ you compile on it will be compatible down to GLIBC 2.7. It just
 so happens that the _current_ luapower libraries don't use any symbols that
-have a newer implementation on that version of glibc. In the future,
-we might have to bump up the backwards-compatibility claim up to GLIBC 2.11.
-Compiling on Ubuntu 8.04 might solve the issue but the newest gcc that
-can run on that system might be too old for us.
+have a newer implementation on that version of glibc. Compiling on Ubuntu 8.04
+might solve the issue but the newest gcc that can run on that system is too
+old.
 
 ### Running Ubuntu 10 on Ubuntu 14
 
@@ -120,17 +122,9 @@ which is where the containers' root filesystems are.
 	cd csrc/<package>
 	sh build-osx64.sh
 
-Current OSX builds are based on clang 6.0 (LLVM 3.5svn) and are done
-on an OSX 10.9 using OSX SDK 10.10.
+Current OSX builds are based are done on an OSX 10.2 using OSX SDK 10.12.
 
-The generated binaries are compatible down to OSX 10.6 except for C++
-libraries which link to libc++ which is OSX 10.7+.
-
-> NOTE: For Lion and above users, Apple provides a package called
-"Command Line Tools for Xcode" which can be downloaded from Apple's
-developer site (free registration required). You can _try_ to build
-luapower with it. If you do, please report back on your experience
-and maybe we'll make this a supported toolchain.
+The generated binaries are compatible down to OSX 10.9.
 
 ## Building on Linux for OSX
 

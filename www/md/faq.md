@@ -6,27 +6,29 @@ tagline: questions & answers
 ## What is luapower?
 
 Luapower is a free and open source module distribution for
-[LuaJIT](http://luajit.org/luajit.html) and a system for deploying
-and sharing Lua modules.
+[LuaJIT](http://luajit.org/luajit.html), [Terra](http://terralang.org)
+and [OpenResty](http://openresty.org) and a system for deploying and sharing
+Lua modules.
 
 Luapower's goal is to turn LuaJIT into a powerful cross-platform development
-environment, brick by brick. A platform that you can imagine building
-the next Illustrator or the next Firefox on.
+environment, brick by brick.
 
 ## What is different about it?
 
-Luapower works on all major desktop systems, old and new, out-of-the-box.
-Backward-compatible binaries are included for all platforms, including Linux.
-C sources are always included (there's no such thing as an external
-dependency), the build toolchain is specified for each platform and
-contains only easy-to-get open source components, so building binaries
+Luapower works on all major desktop systems out-of-the-box. Binaries are
+included for all platforms, including Linux.
+
+C sources are always included. There's no such thing as an external dependency
+and the build toolchain is specified for each platform, so building binaries
 is no longer a hit-or-miss experience.
 
-Luapower solves the problem of package management without the bureaucracy
-that is usually imposed on module writers.
-With luapower you don't have to write manifest files to describe packages,
-you don't have to declare dependencies (except in a few rare cases),
-you don't have to learn a new build system, or perform any packaging steps,
+The build toolchain contains only easy-to-get open source components (no need
+to install Visual Studio) and you don't have to learn a new build ssystem
+because luapower uses only simple bash scripts to build everything.
+
+Luapower tracks dependencies between modules automatically so you don't have
+to write manifest files to describe packages, you don't have to declare
+dependencies (except in a few rare cases) or perform any packaging steps,
 or even move code out of version control, ever.
 
 Modules don't need to be "installed" out of version control in order to
@@ -35,9 +37,9 @@ and you can push/pull changes between deployments and even create pull
 requests to upstream without moving files around. There's no runtime
 overhead either, as there's no need for a custom module loader.
 
-## Just the facts please
+## How does it do that?
 
-Luapower is a dead simple idea: it puts [luajit] and a bunch
+Luapower is a simple idea: it puts [luajit] and a bunch
 of modules in separate repositories [on github](https://github.com/luapower),
 and it allows you to clone them back together _over the same directory_
 (git can do that with the `--git-dir` option, which was wrapped
@@ -112,15 +114,19 @@ the root filesystem. Of course, you can always just add the luapower
 directory to your LUA_PATH and keep it separated from your own stuff
 (but please use LuaJIT 2.1 if you use your own runtime).
 
-## What platforms does it run on?
+## What are the oldest platforms that it is guaranteed to run on?
 
-  * Windows 7 x64 SP2+
-  * Linux on x86 with GLIBC 2.7+, 64bit only (Debian 5+, Ubuntu 8.04+, etc.)
-  * OSX 10.7+, 64bit only
+  * Windows 7 x64 SP2
+  * Ubuntu 18 64bit (i.e. EGLIBC 2.27)
+  * OSX 10.12
+
+That being said, OSX binaries are built with OSX 10.9 compatiblity, and many
+Linux binaries do support older GLIBC versions, however this is neither tested
+nor supported.
 
 ## How do I compile the binaries?
 
-Luapower uses simple shell scripts to build everything. There's no build
+Luapower uses shell scripts to build everything. There's no build
 system, no makefiles, and no need to specify where to look for dependencies
 in the host system, because all dependencies are available as luapower
 packages as well. The build scripts are in the `csrc` directory for each
@@ -252,7 +258,7 @@ is the hash prefix of the last commit. This way versioning is unambiguous,
 not prone to human error, and doesn't require maintenance. For every
 incompatible API change, the major version gets bumped. The HEAD is kept
 compatible across all libraries (incompatible development happens in
-separate branches, except for packages tagged `dev`).
+separate branches, except for new modules that nobody depends on).
 
 > __Tip:__ To clone package foo at tag point r5 (which indicates the
 5th release), do `mgit clone foo=r5`. To clone the same package at a known
@@ -294,19 +300,17 @@ I'm [Cosmin Apreutesei][cosmin], a programmer from Bucharest.
 
 ## Where are you going with this?
 
-My goal is to create a cross-platform environment for creating
-the next generation desktop apps that run close-to-identically
-on every platform, with pixel-perfect vector-graphics including
-text shaping and rendering, complex interactivity beyond standard
-widget systems, peer-to-peer communication, a multi-threading/multi-process
-architecture, and fine-grained access to communication peripherals
-like webcams and pen tablets.
+My goal is to create a cross-platform environment for creating desktop apps
+that run close-to-identically on every platform, with pixel-perfect
+vector-graphics including text shaping and rendering, complex interactivity
+beyond standard widget systems, peer-to-peer communication, a
+multi-threading/multi-process architecture, and fine-grained access to
+communication peripherals like webcams and pen tablets.
 
-This requires a large number of high-quality packages with
-extensive APIs that are well below the "scripting" level of abstraction.
-Achieving this in an open source environment requires a model for development
-and collaboration with lower friction and a higher level of specificity
-than what current module distributions provide.
+This requires a large number of high-quality packages with extensive APIs
+that are well below the "scripting" level of abstraction. Achieving this in
+an open source environment requires a model for development and collaboration
+with lower friction and a higher level of specificity than what current
+module distributions provide.
 
 Luapower is an attempt to create that model.
-
