@@ -19,7 +19,7 @@ local function grepfile(s0, file, maxmatches)
 	for line, s in ipairs(lines) do
 		local col0 = 1
 		while true do
-			if #matches >= maxmatches then
+			if #matches >= (maxmatches or 1/0) then
 				limited = true
 				break
 			end
@@ -125,6 +125,12 @@ local function grep(s0, maxmatches)
 		matchcount = n,
 		matchcount_limited = limited,
 	}
+end
+
+if not ... then
+	local lp = require'luapower'
+	local t = grep'x'
+	print(t.docs_searched + t.modules_searched)
 end
 
 return grep
