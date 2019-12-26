@@ -154,7 +154,7 @@ end
 local function render_docfile(infile)
 	local outfile = '.cache/'..escape_filename(infile)..'.html'
 	if older(outfile, infile) then
-		local s1 = glue.readfile(infile)
+		local s1 = glue.readfile(wwwpath(infile))
 		local s2 = md_refs()
 		local tmpfile = os.tmpname()
 		glue.writefile(tmpfile, s1..'\n\n'..s2)
@@ -175,13 +175,9 @@ local function render_docheader(pkg, mod, h)
 		..' for more info.</p>'
 end
 
-local function www_docdir(doc)
-	return wwwpath'md'
-end
-
 local function www_docfile(doc)
-	local docfile = www_docdir()..'/'..doc..'.md'
-	if not fs.is(docfile) then return end
+	local docfile = 'md/'..doc..'.md'
+	if not fs.is(wwwpath(docfile)) then return end
 	return docfile
 end
 
@@ -197,19 +193,19 @@ local function action_docfile(doc)
 	t.doc_mtime_ago = mtime and timeago(mtime)
 	t.edit_link = string.format('https://github.com/luapower/website/edit/master/luapower-www/md/%s.md', doc)
 	t.docs = {}
-	for file in fs.dir(www_docdir()) do
+	for file in fs.dir(wwwpath'md') do
 		if not file then break end
 		local name = file:match'(.-)%.md$'
 		if name then
 			table.insert(t.docs, {
 				shortname = name,
 				name = name,
-				path = www_docdir()..'/'..file,
 				source_url = string.format('https://github.com/luapower/website/blob/master/luapower-www/md/%s.md?ts=3', doc),
 				selected = name == doc,
 			})
 		end
 	end
+	table.sort(t.docs, function(a, b) return a.name < b.name end)
 	out(render_main('doc', t))
 end
 
