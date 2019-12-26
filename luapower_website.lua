@@ -725,6 +725,10 @@ local function package_info(pkg, doc)
 	local docs = lp.docs(pkg)
 	local docheaders = lp.docheaders(pkg)
 	local doc_path = docs[doc]
+	if not doc_path and glue.count(docs) == 1 then
+		doc = next(docs)
+		doc_path = docs[doc]
+	end
 	local title = doc
 	local tagline = lp.module_tagline(pkg, doc)
 	if doc_path then
