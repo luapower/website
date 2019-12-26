@@ -175,25 +175,42 @@ local function render_docheader(pkg, mod, h)
 		..' for more info.</p>'
 end
 
+local function www_docdir(doc)
+	return wwwpath'md'
+end
+
 local function www_docfile(doc)
-	local docfile = 'md/'..doc..'.md'
-	if not fs.attr(docfile, 'mtime') then return end
+	local docfile = www_docdir()..'/'..doc..'.md'
+	if not fs.is(docfile) then return end
 	return docfile
 end
 
-local function action_docfile(docfile)
-	local data = {}
-	data.doc_html = render_docfile(docfile)
+local function action_docfile(doc)
+	local t = {}
+	local docfile = www_docfile(doc)
+	t.doc_html = render_docfile(docfile)
 	local dtags = lp.docfile_tags(docfile)
-	data.title = dtags.title
-	data.tagline = dtags.tagline
+	t.title = dtags.title
+	t.tagline = dtags.tagline
 	local mtime = fs.attr(docfile, 'mtime')
-	data.doc_mtime = format_date(mtime)
-	data.doc_mtime_ago = mtime and timeago(mtime)
-	data.edit_link = string.format(
-		'https://github.com/luapower/website/edit/master/www/md/%s',
-			(docfile:match('/([^/]+)$')))
-	out(render_main('doc', data))
+	t.doc_mtime = format_date(mtime)
+	t.doc_mtime_ago = mtime and timeago(mtime)
+	t.edit_link = string.format('https://github.com/luapower/website/edit/master/luapower-www/md/%s.md', doc)
+	t.docs = {}
+	for file in fs.dir(www_docdir()) do
+		if not file then break end
+		local name = file:match'(.-)%.md$'
+		if name then
+			table.insert(t.docs, {
+				shortname = name,
+				name = name,
+				path = www_docdir()..'/'..file,
+				source_url = string.format('https://github.com/luapower/website/blob/master/luapower-www/md/%s.md?ts=3', doc),
+				selected = name == doc,
+			})
+		end
+	end
+	out(render_main('doc', t))
 end
 
 --package info ---------------------------------------------------------------
@@ -1695,9 +1712,8 @@ local function default_action(s, ...)
 			return action_rockspec(pkg)
 		end
 	else
-		local docfile = www_docfile(hs)
-		if docfile then
-			return action_docfile(docfile, ...)
+		if www_docfile(hs) then
+			return action_docfile(hs, ...)
 		end
 	end
 	http_error(404, 'Not found')

@@ -1,7 +1,13 @@
 <table width=100%>
 	<tr>
 		<td valign=top width=110 style="padding-right: 20px;">
-		&nbsp;
+			<div style="min-height: 2em">
+			{{#docs}}
+				{{#selected}}<span class=selected_doc>{{shortname}}</span>{{/selected}}
+				{{^selected}}<a href="/{{name}}">{{shortname}}</a>{{/selected}}
+				<br>
+			{{/docs}}
+			</div>
 		</td>
 		<td>
 			<table width=100%>

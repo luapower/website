@@ -1,6 +1,7 @@
 ---
 title:    luapower
 tagline:  Lua, JIT, batteries
+
 ---
 
 ![](luapower.png)
