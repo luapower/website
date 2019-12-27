@@ -1581,13 +1581,11 @@ end
 
 function action.github(...)
 	if not method'post' then return end
-	local repo = post'repository' and json(post'repository').name
+	local repo = post'repository' and post'repository'.name
 	if not repo then return end
-	if repo == 'website' then
-		os.execute'git pull'
-	elseif lp.installed_packages()[repo] then
-		os.execute(lp.git(repo, 'pull')) --TODO: this is blocking the server!!!
-		os.execute(lp.git(repo, 'pull --tags')) --TODO: this is blocking the server!!!
+	if lp.installed_packages()[repo] then
+		lp.git(repo, 'pull') --TODO: this is blocking the server!!!
+		lp.git(repo, 'pull --tags') --TODO: this is blocking the server!!!
 		lp.clear_cache(repo)
 	end
 end
