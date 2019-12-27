@@ -1,2 +1,1 @@
 ./luapower-nginx -s stop
-rm -rf /run/user/`id -u`/luapower
