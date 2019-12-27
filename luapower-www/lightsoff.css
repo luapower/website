@@ -1,6 +1,9 @@
 
 body { background: #151515; color: #bbb; }
 
+body::-webkit-scrollbar-track { background: #222; }
+body::-webkit-scrollbar-thumb { background-color: #444; border: 3px solid #222; }
+
 strong { font-weight: 600; }
 
 a, h1, h2, h3, h4 { color: #fff; } #docnav a { color: #bbb; }

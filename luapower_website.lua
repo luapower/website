@@ -8,6 +8,8 @@ local lp = require'luapower'
 local fs = require'fs'
 local tuple = require'tuple'
 
+lp.persistent_cache = config('luapower_persistent_cache', false)
+
 --in our current setup, the dependency db must be updated manually.
 lp.auto_update_db = false
 lp.allow_update_db_locally = false
@@ -1253,7 +1255,7 @@ local function pass(format, ...)
 		return t[tonumber(n)]:gsub('^csrc/', ''):gsub('/', '.')
 	end)
 end
-local path_description = lp.memoize(function(path, package)
+local path_description = lp.memoize('path_description', function(path, package)
 	for i=1,#path_match,2 do
 		local patt, format = path_match[i], path_match[i+1]
 		patt = patt:gsub('MGIT_DIR', lp.mgitpath())
@@ -1292,7 +1294,7 @@ local function ls_dir(p0, each)
 	rec()
 end
 
-local tree_json = lp.memoize(function()
+local tree_json = lp.memoize('tree_json', function()
 	local root = {
 		file = 'luapower',
 		descr = 'The luapower tree',

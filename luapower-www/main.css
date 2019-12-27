@@ -65,6 +65,9 @@ hr {
 .gray a, .gray a:visited { color: #ccc; }
 .smallnote { color: #999; }
 
+body::-webkit-scrollbar { width: 12px; }
+body::-webkit-scrollbar-thumb { border-radius: 6px; }
+
 /* fonts and line spacings ------------------------------------------------ */
 
 body {
