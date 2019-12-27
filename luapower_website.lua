@@ -244,34 +244,23 @@ local function source_url(pkg, path, mod)
 	end
 end
 
-local os_list = {'mingw', 'linux', 'osx'}
-local platform_list = {
-	'mingw32', 'mingw64',
-	'linux32', 'linux64',
-	'osx32'  , 'osx64'  ,
-}
-local os_platforms = {
-	mingw = {'mingw32', 'mingw64'},
-	linux = {'linux32', 'linux64'},
-	osx   = {'osx32'  , 'osx64'  },
-}
+local os_list          = lp.supported_os_list
+local os_platform_list = lp.supported_os_platform_list
+local platform_list    = lp.supported_platform_list
 
 --create a custom-ordered list of possible platforms.
 local ext_platform_list = {'all', 'common'}
 for _,os in ipairs(os_list) do
 	table.insert(ext_platform_list, os)
-	glue.extend(ext_platform_list, os_platforms[os])
+	glue.extend(ext_platform_list, os_platform_list[os])
 end
 
 local platform_icon_titles = {
 	mingw   = 'Windows',
-	mingw32 = '32bit Windows',
 	mingw64 = '64bit Windows',
 	linux   = 'Linux',
-	linux32 = '32bit Linux',
 	linux64 = '64bit Linux',
 	osx     = 'OS X',
-	osx32   = '32bit OS X',
 	osx64   = '64bit OS X',
 }
 
@@ -381,7 +370,7 @@ local function platform_maps(maps, all_key, aot)
 	--combine platforms per OS
 	for _,os in ipairs(os_list) do
 		local t = {}
-		for _,platform in ipairs(os_platforms[os]) do
+		for _,platform in ipairs(os_platform_list[os]) do
 			t[platform] = maps[platform]
 			maps[platform] = nil
 		end
@@ -1632,9 +1621,9 @@ local function action_rockspec(pkg)
 	end
 	local plat = {}
 	local plats = {
-		mingw32 = 'windows', mingw64 = 'windows',
-		linux32 = 'linux', linux64 = 'linux',
-		osx32 = 'macosx', osx64 = 'macosx',
+		mingw64 = 'windows',
+		linux64 = 'linux',
+		osx64 = 'macosx',
 	}
 	for pl in pairs(lp.platforms(pkg)) do
 		plat[plats[pl]] = true
