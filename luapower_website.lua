@@ -11,8 +11,8 @@ local tuple = require'tuple'
 lp.persistent_cache = config('luapower_persistent_cache', false)
 
 --in our current setup, the dependency db must be updated manually.
-lp.auto_update_db = false
-lp.allow_update_db_locally = false
+lp.auto_update_db          = config('luapower_allow_update_db_locally', false)
+lp.allow_update_db_locally = config('luapower_allow_update_db_locally', false)
 
 local pandoc_cmd = 'bin/'..lp.current_platform()..'/pandoc'
 if ffi.abi'win' then pandoc_cmd = pandoc_cmd:gsub('/', '\\') end
@@ -497,10 +497,13 @@ local function package_dep_maps(pkg, platforms)
 			nil, pkg, platform)
 		local pall = packages_of_all(lp.module_requires_loadtime_all,
 			nil, pkg, platform)
+		local penv = packages_of_all(lp.module_environment,
+			nil, pkg, platform)
 		glue.update(pext, lp.bin_deps(pkg, platform))
 		glue.update(pall, lp.bin_deps_all(pkg, platform))
+		glue.update(pall, penv)
 		for p in pairs(pall) do
-			pt[p] = {kind = pext[p] and 'external' or 'indirect'}
+			pt[p] = {kind = pext[p] and 'external' or penv[p] and 'environment' or 'indirect'}
 		end
 	end
 	return pts
@@ -556,13 +559,16 @@ local function module_package_dep_maps(pkg, mod, platforms)
 			lp.module_requires_loadtime_ext, mod, pkg, platform)
 		local pall = packages_of(
 			lp.module_requires_loadtime_all, mod, pkg, platform)
+		local penv = packages_of(
+			lp.module_environment, mod, pkg, platform)
 		glue.update(pext, filter(lp.bin_deps(pkg, platform),
 			lp.module_platforms(mod, pkg)))
 		glue.update(pall, filter(lp.bin_deps_all(pkg, platform),
 			lp.module_platforms(mod, pkg)))
+		glue.update(pall, penv)
 		local pt = {}
 		for p in pairs(pall) do
-			pt[p] = {kind = pext[p] and 'direct' or 'indirect'}
+			pt[p] = {kind = pext[p] and 'direct' or penv[p] and 'environment' or 'indirect'}
 		end
 		pts[platform] = pt
 	end
@@ -589,13 +595,15 @@ local function module_module_dep_maps(pkg, mod, platforms)
 	for platform in pairs(platforms) do
 		local mext = lp.module_requires_loadtime_ext(mod, pkg, platform)
 		local mall = lp.module_requires_loadtime_all(mod, pkg, platform)
+		local menv = lp.module_environment(mod, pkg, platform)
+		glue.update(mall, menv)
 		local mt = {}
 		for m in pairs(mall) do
 			local pkg = lp.module_package(m)
 			local path = lp.modules(pkg)[m]
 			mt[m] = {
 				kind = mext[m] and 'external'
-					or mint[m] and 'internal' or 'indirect',
+					or mint[m] and 'internal' or menv[m] and 'environment' or 'indirect',
 				dep_package = pkg,
 				dep_source_url = source_url(pkg, path, m),
 			}
@@ -786,9 +794,7 @@ local function package_info(pkg, doc)
 		end
 	end
 	if not next(t.platforms) then
-		local runtime =
-			package_type == 'Lua+ffi' and 'LuaJIT'
-			or package_type == 'Lua' and 'Lua'
+		local runtime = package_type == 'Lua+ffi' and 'LuaJIT' or package_type
 		table.insert(t.platforms,
 			{name = runtime and 'all '..runtime..' platforms'})
 	end

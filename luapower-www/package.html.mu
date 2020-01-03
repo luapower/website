@@ -219,6 +219,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					This is a combined list of packages required by <b><i>all modules</i></b> of this<br>
 					package on each supported platform, plus <b><i>binary dependencies</i></b> if any.<br>
 					Darker names, if present, represent indirect dependencies.<br>
+					Purlpe names, if present, represent packages that contain modules that must be already be loaded.<br>
 					<br>
 					<b>Note:</b> These are only the dependencies required for the modules to <i>load</i>.<br>
 					Runtime dependencies, if any, are shown separately below.<br>
@@ -293,7 +294,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					<a class="infotip">
 						This is the list of modules for this package.<br>
 						On the right column you have the required packages for each module.<br>
-						Darker names, if present, represent indirect dependencies.
+						Darker names, if present, represent indirect dependencies.<br>
+						Purlpe names, if present, represent dependencies that must already be loaded before loading the respective module.
 					</a>
 				</span>
 				<span class="module_deps module_deps_modules hidden">
@@ -302,6 +304,7 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 						On the right column you have the required modules for each module.<br>
 						Darker names, if present, represent indirect dependencies.<br>
 						Even darker names are internal dependencies.<br>
+						Purlpe names are modules that must already be loaded before loading the respective module.<br>
 					</a>
 				</span>
 				&nbsp;
