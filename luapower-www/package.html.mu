@@ -443,12 +443,12 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					only if and when accessing those APIs. See <a href="/glue#autoload">glue.autoload</a> for how this works.
 				</div>
 			</h2>
-			{{#modules}}{{#module_has_autoloads}}
 			<table>
+			{{#modules}}{{#module_has_autoloads}}
 				<tr>
 					<th></th>
-					<th align=left valign=top style="padding-bottom: 1em">module.field</th>
-					<th align=left valign=top>implementation module</th>
+					<th align=left valign=bottom style="padding-top: 1em">{{module}}</th>
+					<th align=left valign=bottom>implementation module</th>
 				</tr>
 				{{#autoloads}}
 				<tr>
@@ -463,8 +463,8 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 					</td>
 				</tr>
 				{{/autoloads}}
-			</table>
 			{{/module_has_autoloads}}{{/modules}}
+			</table>
 			{{/has_autoloads}}
 
 			{{#has_runtime_deps}}
