@@ -70,11 +70,11 @@ local function timeago(time)
 end
 
 local function format_time(time)
-	return os.date('%b %e \'%y %H:%M', time)
+	return time and os.date('%b %m \'%y %H:%M', time) or ''
 end
 
 local function format_date(time)
-	return os.date('%b %e \'%y', time)
+	return time and os.date('%b %m \'%y', time) or ''
 end
 
 --widgets --------------------------------------------------------------------
