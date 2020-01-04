@@ -683,33 +683,45 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 				{{/c_version}}
 				<tr>
 					<td align=left valign=top colspan=2>
-						<span class="gray requires_label">Requires:</span>
-						<span style="white-space: normal" class=deps_sidebar>
-						{{#package_deps}}
-							{{#icon}}<span class="gray platform_icon icon-{{icon}}"></span>{{/icon}}
-							{{#packages}}
-								{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
-							{{/packages}}
-						{{/package_deps}}
-						{{^package_deps}}
-						<span class=smallnote>none</span>
-						{{/package_deps}}
+						<div class=deps_sidebar_container>
+						<input type="checkbox" id="expanded1">
+						<p>
+							<span class="gray requires_label">Requires:</span>
+							<span style="white-space: normal" class=deps_sidebar>
+							{{#package_deps}}
+								{{#icon}}<span class="gray platform_icon icon-{{icon}}"></span>{{/icon}}
+								{{#packages}}
+									{{#icon}}<span class=gray>&#43;</span>{{/icon}}<a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								{{/packages}}
+							{{/package_deps}}
+							{{^package_deps}}
+							<span class=smallnote>none</span>
+							{{/package_deps}}
+						</p>
+						<label for="expanded1" role="button">more...</label>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td align=left valign=top colspan=2>
-						<span class="gray requires_label">Required by: </span>
-						<span style="white-space: normal" class=deps_sidebar>
-						{{#package_rdeps}}
-							{{#icon}}<span class="gray platform_icon icon-{{icon}}"></span>{{/icon}}
-							{{#packages}}
-								<span></span><a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
-							{{/packages}}
-						{{/package_rdeps}}
-						</span>
-						{{^package_rdeps}}
-						<span class=smallnote>none</span>
-						{{/package_rdeps}}
+						<div class=deps_sidebar_container>
+						<input type="checkbox" id="expanded2">
+						<p>
+							<span class="gray requires_label">Required by: </span>
+							<span style="white-space: normal" class=deps_sidebar>
+							{{#package_rdeps}}
+								{{#icon}}<span class="gray platform_icon icon-{{icon}}"></span>{{/icon}}
+								{{#packages}}
+									<span></span><a href="/{{dep_package}}" class="{{kind}}">{{dep_package}}</a>&nbsp;
+								{{/packages}}
+							{{/package_rdeps}}
+							</span>
+							{{^package_rdeps}}
+							<span class=smallnote>none</span>
+							{{/package_rdeps}}
+						</p>
+						<label for="expanded2" role="button">more...</label>
+						</div>
 					</td>
 					<script>
 						// prevent icons from showing up alone at the end of the line.
@@ -720,10 +732,23 @@ luarocks install --server=http://rocks.moonscript.org/m/luapower {{package}}
 								.add($(this).next().next()) // first text
 								.wrapAll('<span class=nowrap></span>')
 						})
+
+						// truncate text and add "more..." button.
+						const ps = document.querySelectorAll('.deps_sidebar_container p')
+						const observer = new ResizeObserver(entries => {
+							for (let entry of entries) {
+								entry.target.classList[entry.target.scrollHeight > entry.contentRect.height ? 'add' : 'remove']('truncated')
+							}
+							$(window).scroll()
+						})
+						ps.forEach(p => {
+						  observer.observe(p)
+						})
 					</script>
 				</tr>
 			</table>
 			<br>
+			<div></div><!-- docnav's y is this div's y -->
 			<div id=docnav></div>
 		</td>
 	</tr>
