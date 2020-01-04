@@ -194,6 +194,8 @@ warn {
 .icon-osx:before { content: "\e609"; }
 .icon-osx32:before { content: "\e60a"; }
 .icon-osx64:before { content: "\e60b"; }
+.icon-resty:before { content: "\e60c"; }
+.icon-terra:before { content: "\e60d"; }
 
 /* main template ---------------------------------------------------------- */
 

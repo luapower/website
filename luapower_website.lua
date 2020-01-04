@@ -389,8 +389,17 @@ local function package_icons(ptype, platforms, small)
 
 	local t = {}
 
-	--add Lua/LuaJIT icon
-	if has_ffi then
+	if ptype == 'Terra' then
+		table.insert(t, {
+			name = 'terra',
+			title = 'written in Terra',
+		})
+	elseif ptype == 'Resty' then
+		table.insert(t, {
+			name = 'resty',
+			title = 'written in Lua for OpenResty',
+		})
+	elseif has_ffi then
 		table.insert(t, {
 			name = 'luajit',
 			title = 'written in Lua with ffi extension',
