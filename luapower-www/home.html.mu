@@ -140,7 +140,7 @@ cd luapower
 	persistent=1>
 	Packages
 	&nbsp;
-	<a class="hastip" switch_for=".package_list" title="view condensed package list"><i class="fa fa-align-justify"></i></a>
+	<a class="hastip" switch_for=".package_list" title="view condensed package list"><i class="fa fa-align-left"></i></a>
 	<a class="hastip" switch_for=".package_table" title="view full package table"><i class="fa fa-table"></i></a>
 	<a class="hastip" switch_for=".package_cards" title="view info cards"><i class="fa fa-th"></i></a>
 	<span style="padding-right: 20px"></span>
