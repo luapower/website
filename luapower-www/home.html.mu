@@ -249,7 +249,7 @@ cd luapower
 	{{#load_errors}}
 	<tr>
 		<td><span class="icon icon-{{platform}}"></span></td>
-		<td>{{package}}</td>
+		<td><a href="/{{package}}">{{package}}</a></td>
 		<td>{{module}}</td>
 		<td>{{error}}</td>
 	</tr>
