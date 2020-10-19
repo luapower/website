@@ -23,7 +23,7 @@ and the build toolchain is specified for each platform, so building binaries
 is no longer a hit-or-miss experience.
 
 The build toolchain contains only easy-to-get open source components (no need
-to install Visual Studio) and you don't have to learn a new build ssystem
+to install Visual Studio) and you don't have to learn a new build system
 because luapower uses only simple bash scripts to build everything.
 
 Luapower tracks dependencies between modules automatically so you don't have
