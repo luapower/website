@@ -125,7 +125,7 @@ $(function() {
 
 	// make the doc nav follow the scroll.
 	$(window).scroll(function() {
-		var top0 = nav.offset().top
+		var top0 = nav.parent().offset().top
 		var scrolltop = $(window).scrollTop()
 		// compute the vertical space (min_y, max_y) that we have available for the nav.
 		var min_y = Math.max(20, top0 - scrolltop)
