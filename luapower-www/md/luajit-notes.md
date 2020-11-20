@@ -57,9 +57,8 @@ Both problems can be solved easily with a NULL->nil converter which must be
 applied on all pointers that flow into Lua (so mostly in constructors):
 
 ~~~{.lua}
-local NULL = ffi.new'void*'
 function ptr(p)
-	return p ~= NULL and p or nil
+	return p ~= nil and p or nil
 end
 ~~~
 
