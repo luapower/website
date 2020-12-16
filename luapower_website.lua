@@ -2,7 +2,10 @@
 --main entry point for all URIs that are not static files.
 --dispatches URIs to individual actions.
 
+if not ... then require'luapower_server'; return end
+
 require'webb'
+require'webb_action'
 local ffi = require'ffi'
 local lp = require'luapower'
 local fs = require'fs'
@@ -16,8 +19,6 @@ lp.allow_update_db_locally = config('luapower_allow_update_db_locally', false)
 
 local pandoc_cmd = 'bin/'..lp.current_platform()..'/pandoc'
 if ffi.abi'win' then pandoc_cmd = pandoc_cmd:gsub('/', '\\') end
-
-local action = {} --{name->handler}
 
 --helpers --------------------------------------------------------------------
 
@@ -179,8 +180,7 @@ end
 
 local function www_docfile(doc)
 	local docfile = wwwpath('md/'..doc..'.md')
-	if not fs.is(docfile) then return end
-	return docfile
+	return docfile and fs.is(docfile) and docfile or nil
 end
 
 local function action_docfile(doc)
@@ -208,7 +208,7 @@ local function action_docfile(doc)
 		end
 	end
 	table.sort(t.docs, function(a, b) return a.name < b.name end)
-	out(render_main('doc', t))
+	setcontent(check_etag(render_main('doc', t)))
 end
 
 --package info ---------------------------------------------------------------
@@ -1133,7 +1133,7 @@ local function action_package(pkg, doc, what)
 			t.doc_html = h and render_docheader(pkg, doc, h)
 		end
 	end
-	out(render_main('package', t))
+	setcontent(check_etag(render_main('package', t)))
 end
 
 local function load_errors()
@@ -1209,7 +1209,7 @@ local function action_home()
 	local size = size and string.format('%d MB', size / 1024 / 1024) or '&nbsp;'
 	data.all_download_size = size
 
-	out(render_main('home', data))
+	setcontent(check_etag(render_main('home', data)))
 end
 
 --annotated tree -------------------------------------------------------------
@@ -1435,11 +1435,11 @@ end)
 
 action['tree.json'] = function()
 	setmime'json'
-	out(tree_json())
+	setcontent(check_etag(tree_json()))
 end
 
 function action.tree()
-	out(render_main('tree', {}))
+	setcontent(check_etag(render_main('tree', {})))
 end
 
 --status page ----------------------------------------------------------------
@@ -1467,7 +1467,7 @@ function action.status()
 		end
 		table.insert(statuses, t)
 	end
-	out(render_main('status', {statuses = statuses}))
+	setcontent(check_etag(render_main('status', {statuses = statuses})))
 end
 
 --grepping through the source code and documentation -------------------------
@@ -1610,7 +1610,7 @@ function action.grep(s)
 		results.message = #results.results > 0 and '' or 'Nothing found.'
 		results.searched = true
 	end
-	out(render_main('grep', results))
+	setcontent(render_main('grep', results))
 end
 
 --update via github ----------------------------------------------------------
@@ -1631,7 +1631,7 @@ function action.clear_cache(package)
 	setmime'txt'
 	lp.clear_cache(package)
 	lp.unload_db()
-	out('cache cleared for '..(package or 'all')..'\n')
+	setcontent('cache cleared for '..(package or 'all')..'\n')
 end
 
 function action.update_db(package)
@@ -1714,7 +1714,7 @@ end
 
 --action dispatch ------------------------------------------------------------
 
-local function default_action(s, ...)
+action['404'] = function(s, ...)
 	local hs = s and s:match'^(.-)%.html$' or s
 	if not s or s == '' then
 		return action_home()
@@ -1731,12 +1731,10 @@ local function default_action(s, ...)
 		if lp.installed_packages()[pkg] then
 			return action_rockspec(pkg)
 		end
-	else
-		if www_docfile(hs) then
-			return action_docfile(hs, ...)
-		end
+	elseif www_docfile(hs) then
+		return action_docfile(hs, ...)
 	end
-	http_error(404, 'Not found')
+	check(false)
 end
 
 --webb_nginx module ----------------------------------------------------------
@@ -1744,10 +1742,7 @@ end
 local M = {}
 
 function M.respond()
-	local act = args()[1]
-	local action = act and action[act]
-	local action_ = action or default_action
-	action_(unpack(args(), action and 2 or 1))
+	check(action(unpack(args())))
 end
 
 return M
