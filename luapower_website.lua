@@ -8,6 +8,7 @@ local lp = require'luapower'
 local fs = require'fs'
 local tuple = require'tuple'
 
+lp.luapower_dir = config('luapower_dir', '.')
 lp.persistent_cache = config('luapower_persistent_cache', false)
 
 --in our current setup, the dependency db must be updated manually.
