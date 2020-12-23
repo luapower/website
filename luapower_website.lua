@@ -209,6 +209,7 @@ local function action_docfile(doc)
 		end
 	end
 	table.sort(t.docs, function(a, b) return a.name < b.name end)
+	setmime'html'
 	out(render_main('doc', t))
 end
 
@@ -1134,6 +1135,7 @@ local function action_package(pkg, doc, what)
 			t.doc_html = h and render_docheader(pkg, doc, h)
 		end
 	end
+	setmime'html'
 	out(render_main('package', t))
 end
 
@@ -1210,6 +1212,7 @@ local function action_home()
 	local size = size and string.format('%d MB', size / 1024 / 1024) or '&nbsp;'
 	data.all_download_size = size
 
+	setmime'html'
 	out(render_main('home', data))
 end
 
@@ -1440,6 +1443,7 @@ action['tree.json'] = function()
 end
 
 function action.tree()
+	setmime'html'
 	out(render_main('tree', {}))
 end
 
@@ -1468,6 +1472,7 @@ function action.status()
 		end
 		table.insert(statuses, t)
 	end
+	setmime'html'
 	out(render_main('status', {statuses = statuses}))
 end
 
@@ -1611,6 +1616,7 @@ function action.grep(s)
 		results.message = #results.results > 0 and '' or 'Nothing found.'
 		results.searched = true
 	end
+	setmime'html'
 	out(render_main('grep', results))
 end
 
