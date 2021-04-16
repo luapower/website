@@ -19,8 +19,8 @@ I got my first paying job when I was 17 when I wrote an online shop in php.
 In the past I did a lot of Delphi, C++, Python, php and JavaScript but over
 the years I settled on Lua, C, JavaScript and an obscure language called Terra.
 
-I currently live in Bucharest and work as a developer and consultant
-at [my own company](https://allegory.ro/) with a focus on business software.
+I currently live in Bucharest and work as a consultant and developer
+with a focus on business software.
 
 My most significant open source project to date is luapower, the place which
 gets most of the output of my current research interests, which include
