@@ -1,6 +1,6 @@
 <center>
 	<a href="/faq"><img class="home_logo" title="FAQ" src="/luapower.png" alt="LUA POWER"></a>
-	<h1 class=home_tagline>the LuaJIT distribution for Windows, Linux and OS X</h1>
+	<h1 class=home_tagline>the LuaJIT distribution for Windows, Linux <strike>and Mac</strike></h1>
 </center>
 
 <table class=quick_faq>
