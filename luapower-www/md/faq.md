@@ -118,11 +118,18 @@ directory to your LUA_PATH and keep it separated from your own stuff
 
   * Windows 7 x64 SP2
   * Ubuntu 18 64bit (i.e. EGLIBC 2.27)
-  * OSX 10.12
+  * ~~OSX 10.12~~
 
 That being said, OSX binaries are built with OSX 10.9 compatiblity, and many
 Linux binaries do support older GLIBC versions, however this is neither tested
 nor supported.
+
+## Why is Mac not supported anymore?
+
+Because it was a drag building and testing for Mac since I'm not on a Mac
+myself (I'm on Windows) and because Macs have a very slim market share
+on the desktop and no market share in the data center, so the only users left
+are Google employees and they don't dig Lua.
 
 ## How do I compile the binaries?
 
