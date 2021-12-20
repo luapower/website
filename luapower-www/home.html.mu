@@ -9,9 +9,8 @@
 			<h3>What is luapower?</h3>
 
 			Luapower is a binary+source module distribution for
-			<a href="http://luajit.org/luajit.html">LuaJIT</a>,
-			<a href="http://terralang.org">Terra</a> and
-			<a href="http://openresty.org">OpenResty</a> and a way of
+			<a href="http://luajit.org/luajit.html">LuaJIT</a>
+			and <a href="http://terralang.org">Terra</a> and a way of
 			deploying and sharing Lua modules. <a href="/faq">Learn more...</a>
 
 			<h3>How do I get started?</h3>
