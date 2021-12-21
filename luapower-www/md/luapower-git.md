@@ -15,12 +15,14 @@ which contains the current list of packages. Finally, clone the packages:
 
 <div class="shell_btn"></div>
 <div class=unix_shell>
+	export MULTIGIT_FETCH_OPTS=--depth=1   # optional, don't fetch history.
 	git clone https://github.com/capr/multigit luapower
 	cd luapower
 	./mgit clone https://github.com/luapower/luapower-repos
 	./mgit clone-all
 </div>
 <div class=windows_shell>
+	set MULTIGIT_FETCH_OPTS=--depth=1      # optional, don't fetch history.
 	git clone https://github.com/capr/multigit luapower
 	cd luapower
 	mgit clone https://github.com/luapower/luapower-repos
