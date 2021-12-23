@@ -20,15 +20,15 @@
 				<div class="shell_btn"></div>
 				<div class=doc style="padding-right: 0;">
 				<pre class="windows_shell"><code>git clone https://github.com/capr/multigit luapower
-set MULTIGIT_FETCH_OPTS=--depth=1 # optional, no history
 cd luapower
+set MULTIGIT_FETCH_OPTS=--depth=1 # optional, no history
 mgit clone https://github.com/luapower/luapower-repos
 mgit clone-all
 </code></pre>
 
 				<pre class="unix_shell"><code>git clone https://github.com/capr/multigit luapower
-export MULTIGIT_FETCH_OPTS=--depth=1 # optional, no history
 cd luapower
+export MULTIGIT_FETCH_OPTS=--depth=1 # optional, no history
 ./mgit clone https://github.com/luapower/luapower-repos
 ./mgit clone-all
 </code></pre>
