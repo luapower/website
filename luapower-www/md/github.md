@@ -7,7 +7,8 @@ It comes with documentation, binaries and the ability to create single-executabl
 Its website **luapower.com** was taken offline after 14 yesrs of operation. Nevertheless, all the code is still on github for the interested scavanger.
 Note that the documentation for each project is not in README.md as expected but in <module_name>.md because all the files from all the modules 
 are supposed to be dumped together in the same directory - [see this](luapower-git.md), so make sure to click on <module_name>.md to see what the module is about. 
-Also note that the documentation is not written in Github's flavor of Markdown, it's in Pandoc Markdown, so things may look scrambled on github occasonally (esp. tables), sorry.
+But note that the docs are not written in Github's flavor of Markdown but in Pandoc Markdown, so things may look scrambled on github occasonally (esp. tables).
+The best way to view the docs is to open them in your code editor (that's how they were meant to be used anyway so that they can also be easily _written_).
 
 # Getting Started
 
@@ -22,7 +23,7 @@ Also note that the documentation is not written in Github's flavor of Markdown, 
 
 # Modules
 
-Here's some of the modules, in no particular order (there are many more in there):
+Here's some of the modules, in no particular order (there are many more [in there](https://github.com/luapower)):
 
   * [winapi](https://github.com/luapower/winapi), a binding of Windows API, including windows, common controls and dialogs, message loop and system APIs.
   * [cairo](https://github.com/luapower/cairo), a binding of the cairo 2D vector graphics library.
