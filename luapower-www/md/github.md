@@ -4,9 +4,9 @@ Luapower is a modular and portable LuaJIT toolkit for Windows and Linux,
 with everything from native OS API bindings to portable sockets, threads, windows, graphics, etc. 
 It comes with documentation, binaries and the ability to create single-executable apps (desktop or command-line). 
 
-Its website **luapower.com** was taken offline after 14 yesrs of operation. 
+Its website **luapower.com** was taken offline in 2024 after 14 years of operation. 
 Nevertheless, all the code and docs are still on github and everything works
-as before (lupaower was designed to not have to depend on the website at all).
+as before (lupaower was designed to not have to depend on any website at all).
 Note that the documentation for each project is not in README.md as expected 
 but in <module_name>.md because all the files from all the modules are supposed
 to be dumped together in the same directory - [see this](luapower-git.md), 
