@@ -35,7 +35,7 @@ easy to write and amend).
   1. download [luajit](https://github.com/luapower/luajit)
   2. choose & download wanted packages and their dependencies
   3. unzip all _over the same directory_
-  4. (optional) [rebuild]((building.md) binaries
+  4. (optional) [rebuild](building.md) binaries
   5. run a demo: `luajit ..._demo.lua`
 
 This will give you an instantly **portable luajit distro** that will work reagardless of where you run it from.
