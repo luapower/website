@@ -4,22 +4,59 @@ Luapower is a modular and portable LuaJIT toolkit for Windows and Linux,
 with everything from native OS API bindings to portable sockets, threads, windows, graphics, etc. 
 It comes with documentation, binaries and the ability to create single-executable apps (desktop or command-line). 
 
-Its website **luapower.com** was taken offline after 14 yesrs of operation. Nevertheless, all the code is still on github for the interested scavanger.
-Note that the documentation for each project is not in README.md as expected but in <module_name>.md because all the files from all the modules 
-are supposed to be dumped together in the same directory - [see this](luapower-git.md), so make sure to click on <module_name>.md to see what the module is about. 
-But note that the docs are not written in Github's flavor of Markdown but in Pandoc Markdown, so things may look scrambled on github occasonally (esp. tables).
-The best way to view the docs is to open them in your code editor (that's how they were meant to be used anyway so that they can also be easily _written_).
+Its website **luapower.com** was taken offline after 14 yesrs of operation. 
+Nevertheless, all the code and docs are still on github and everything works
+as before (lupaower was designed to not have to depend on the website at all).
+Note that the documentation for each project is not in README.md as expected 
+but in <module_name>.md because all the files from all the modules are supposed
+to be dumped together in the same directory - [see this](luapower-git.md), 
+so make sure to click on <module_name>.md to see what the module is about. 
+But note that the docs are not written in Github's flavor of Markdown but 
+in Pandoc Markdown, so things may look scrambled on github occasonally (esp. tables).
+The best way to view the docs is to open them in your code editor 
+(that's how they were meant to be used in the first place so that they are also 
+easy to write and amend).
 
-# Getting Started
+# Features
 
-  * [Homepage](old_index.md)
+  * __LOW-TECH__: based on http, zip, and git
+  * __PORTABLE__: no install, no deploy, just run
+  * __MODULAR__: each module is a separate git project
+  * __ON GITHUB__: fork/pull-request-based collaboration
+  * __NO DIRECTORIES__: all modules in a single directory
+  * __BINARIES__ for all platforms: get code running in minutes
+  * __SOURCES & BUILD SCRIPTS__: upgrade it yourself, don't wait for others
+  * __PACKAGE DATABASE__: self-maintaining, auto-generated
+  * __DOCUMENTED__: online browsing or offline grepping; powered by pandoc
+  * __FREE__: no-strings attached
+
+## Get Started, the download-and-unzip way
+
+  1. download [luajit](https://github.com/luapower/luajit)
+  2. choose & download wanted packages and their dependencies
+  3. unzip all _over the same directory_
+  4. (optional) [rebuild]((building.md) binaries
+  5. run a demo: `luajit ..._demo.lua`
+
+This will give you an instantly **portable luajit distro** that will work reagardless of where you run it from.
+The luajit binary is in `bin/<your-platform>/` (cross-platform shell wrappers are in the root dir).
+
+## Get Started, the git-clone way
+
+Alternatively you can go the git way with [multigit](luapower-git.md) which allows you to:
+
+  * clone/build everything in one shot,
+  * keep your modules up-to-date by pulling,
+  * [create your own modules](get-involved.md) and publish them.
+
+## More to read
+
   * [FAQ](faq.md) and [Philosohy](philosophy.md)
-  * [Getting started with multigit](luapower-git.md)
   * [Building binaries](building.md)
-  * [Coding style](coding-style.md)
-  * [Notes on LuaJIT](luajit-notes.md)
   * [How to make build scripts](build-scripts.md)
   * [How to make packages](get-involved.md)
+  * [Coding style](coding-style.md)
+  * [Notes on LuaJIT](luajit-notes.md)
 
 # Modules
 
